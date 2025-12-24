@@ -42,7 +42,6 @@ public class EntryView : MonoBehaviour
         // 完成Action
         Action finishAction = async () =>
         {
-            Debug.Log("下載完成");
             TargetProgress = 1;
 
             float timeout = 0;
@@ -53,8 +52,7 @@ public class EntryView : MonoBehaviour
             }
             ProgressBar.value = 1f;
 
-            Debug.Log("下載完成2");
-
+            // 完成後等待
             timeout = 0;
             while (timeout < 1f)
             {
@@ -62,8 +60,7 @@ public class EntryView : MonoBehaviour
                 await Task.Yield();
             }
 
-            Debug.Log("下載完成3");
-
+            // 進入登入場景
             SceneManagement.Instance.LoadScene(
                 sceneEnum: SceneEnum.Login,
                 callback: async () =>

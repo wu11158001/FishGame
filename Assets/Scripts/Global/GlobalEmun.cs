@@ -16,6 +16,15 @@ public enum CanvasEnum
 }
 
 /// <summary>
+/// 語言
+/// </summary>
+public enum Language
+{
+    zh_TW,
+    en,
+}
+
+/// <summary>
 /// 介面
 /// </summary>
 public enum ViewEnum
