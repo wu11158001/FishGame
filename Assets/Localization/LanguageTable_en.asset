@@ -58,6 +58,26 @@ MonoBehaviour:
     m_Localized: Confirm Password...
     m_Metadata:
       m_Items: []
+  - m_Id: 430478448070656
+    m_Localized: Incorrect account password!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 434065483960320
+    m_Localized: Wiring error!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 436218453757952
+    m_Localized: Incorrect password
+    m_Metadata:
+      m_Items: []
+  - m_Id: 436669827977216
+    m_Localized: The account already exists!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 436960002510848
+    m_Localized: Registration failed!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

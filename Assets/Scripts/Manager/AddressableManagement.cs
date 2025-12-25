@@ -71,15 +71,17 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 移除介面
     /// </summary>
-    public void RemoveView(ViewEnum viewEnum)
+    /// <param name="viewEnum">介面</param>
+    /// <param name="isFirstRemove">true = 移除先產生, false = 最後產生的移除</param>
+    private void RemoveView(ViewEnum viewEnum, bool isFirstRemove = false)
     {
         try
         {
             if (ViewDic.TryGetValue(viewEnum, out var list) && list.Count > 0)
             {
                 // 取出最後一個開啟的介面
-                var lastIndex = list.Count - 1;
-                var viewItem = list[lastIndex];
+                var takeIndex = isFirstRemove ? 0 : list.Count - 1;
+                var viewItem = list[takeIndex];
 
                 // 摧毀場景上的物件
                 if (viewItem.Go != null)
@@ -89,7 +91,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
                 Addressables.Release(viewItem.Handle);
 
                 // 從列表中移除
-                list.RemoveAt(lastIndex);
+                list.RemoveAt(takeIndex);
 
                 // 如果該類型介面都關了，就把 List 也砍了
                 if (list.Count == 0)
@@ -141,13 +143,29 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
 
             if (loadHandle.Status == AsyncOperationStatus.Succeeded)
             {
-                Transform parent =
-                    canvasEnum == CanvasEnum.Canvas_Overlay ?
-                    Canvas_Overlay.transform :
-                    Canvas_Camera.transform;
+                Transform parent = null;
+                switch (canvasEnum)
+                {
+                    case CanvasEnum.Canvas_Overlay:
+                        parent = Canvas_Overlay.transform;
+
+                        break;
+                    case CanvasEnum.Canvas_Camera:
+                        parent = Canvas_Camera.transform;
+                        break;
+
+                    case CanvasEnum.Canvas_Global:
+                        parent = Canvas_Global.Instance.GlobalCanvas.transform;
+                        break;
+
+                    default:
+                        parent = Canvas_Overlay.transform;
+                        break;
+                }
 
                 GameObject prefab = loadHandle.Result;
                 GameObject go = Instantiate(prefab, parent);
+                go.transform.SetSiblingIndex(parent.childCount + 1);
 
                 var newInstance = new ViewInstance { Go = go, Handle = loadHandle };
 
@@ -171,26 +189,60 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
 
     #endregion
 
-    #region 介面
+    #region 介面(Canvas_Overlay)
 
     /// <summary>
     /// 開啟登入介面
     /// </summary>
     public async Task OpenLoginView(Action closeAction = null)
     {
+        ViewEnum view = ViewEnum.LoginView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveView(view);
+        };
+
         await OpenView(
-            viewEnum: ViewEnum.LoginView,
-            callback: (view) =>
+            viewEnum: view,
+            callback: (viewObj) =>
             {
-                view.GetComponent<LoginView>().SetData(
-                    closeAction: () =>
-                    {
-                        closeAction?.Invoke();
-                        RemoveView(ViewEnum.LoginView);
-                    });
+                var viewComponent = viewObj.GetComponent<LoginView>();
+                viewComponent.SetData(
+                    closeAction: viewCloseAction);
             });
     }
 
     #endregion
 
+
+    #region 介面(Canvas_Global)
+
+    /// <summary>
+    /// 顯示吐司訊息
+    /// </summary>
+    public async void ShowToast(string messageKey)
+    {
+        ViewEnum view = ViewEnum.Toast;
+
+        Action viewCloseAction = () =>
+        {
+            RemoveView(viewEnum: view, isFirstRemove: true);
+        };
+
+        await OpenView(
+            viewEnum: view,
+            callback: (viewObj) =>
+            {
+                var viewComponent = viewObj.GetComponent<Toast>();
+                viewComponent.SetData(
+                    messageKey: messageKey,
+                    closeAction: viewCloseAction);
+            },
+            IsCanStack: true,
+            canvasEnum: CanvasEnum.Canvas_Global);
+    }
+
+    #endregion
 }

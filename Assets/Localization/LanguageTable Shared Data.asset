@@ -55,6 +55,26 @@ MonoBehaviour:
     m_Key: Confirm Password Tip
     m_Metadata:
       m_Items: []
+  - m_Id: 430478448070656
+    m_Key: Account Error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 436218453757952
+    m_Key: Password Error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 434065483960320
+    m_Key: Wiring Error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 436669827977216
+    m_Key: Account Exist
+    m_Metadata:
+      m_Items: []
+  - m_Id: 436960002510848
+    m_Key: Registration Failed
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

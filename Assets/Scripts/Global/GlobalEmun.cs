@@ -13,6 +13,9 @@ public enum CanvasEnum
 {
     Canvas_Overlay,
     Canvas_Camera,
+
+    /// <summary> 最高層級Canvas </summary>
+    Canvas_Global,
 }
 
 /// <summary>
@@ -32,8 +35,11 @@ public enum Language
 /// </summary>
 public enum ViewEnum
 {
+    /// <summary> 吐司訊息 </summary>
+    Toast,
+
     /// <summary> 登入 </summary>
-    LoginView,              
+    LoginView,  
 }
 
 /// <summary>

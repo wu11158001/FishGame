@@ -15,11 +15,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     private static extern void SaveDataToFirestore(string collectionName, string docId, string jsonData, string callbackObjName, string callbackMethod);
     public void SaveDataToFirestore(FirestoreCollectionName collectionName, string docId, string jsonData, string callbackObjName, string callbackMethod)
     {
-#if UNITY_WEBGL && !UNITY_EDITOR
         SaveDataToFirestore(collectionName.ToString(), docId, jsonData, callbackObjName, callbackMethod);
-#else
-        Debug.Log($"編輯器寫入新資料:\n {jsonData}");
-#endif
     }
 
     /// <summary>
@@ -34,11 +30,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     private static extern void UpdateDataToFirestore(string collectionName, string docId, string jsonData, string callbackObjName, string callbackMethod);
     public void UpdateDataToFirestore(FirestoreCollectionName collectionName, string docId, string jsonData, string callbackObjName, string callbackMethod)
     {
-#if UNITY_WEBGL && !UNITY_EDITOR
         UpdateDataToFirestore(collectionName.ToString(), docId, jsonData, callbackObjName, callbackMethod);
-#else
-        Debug.Log($"編輯器更新資料:\n {jsonData}");
-#endif
     }
 
     /// <summary>
@@ -52,11 +44,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     private static extern void GetDataFromFirestore(string collectionName, string docId, string callbackObjName, string callbackMethod);
     public void GetDataFromFirestore(FirestoreCollectionName collectionName, string docId, string callbackObjName, string callbackMethod)
     {
-#if UNITY_WEBGL && !UNITY_EDITOR
-            GetDataFromFirestore(collectionName.ToString(), docId, callbackObjName, callbackMethod);
-#else
-        Debug.Log($"編輯器查詢與讀取資料");
-#endif
+        GetDataFromFirestore(collectionName.ToString(), docId, callbackObjName, callbackMethod);
     }
 }
 

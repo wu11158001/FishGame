@@ -214,11 +214,16 @@ public class LoginView : BasicView
         if (!LoginBtn.interactable)
             return;
 
+#if UNITY_WEBGL && !UNITY_EDITOR
         FirestoreManagement.Instance.GetDataFromFirestore(
             collectionName: FirestoreCollectionName.AccountData,
             docId: AccountIF_Login.text,
             callbackObjName: gameObject.name,
             callbackMethod: nameof(SendLoginCallback));
+#else
+        SendLoginCallback("NotFound");
+#endif
+
     }
 
     /// <summary>
@@ -229,12 +234,14 @@ public class LoginView : BasicView
     {
         if (result == "NotFound")
         {
+            AddressableManagement.Instance.ShowToast("Account Error");
             Debug.LogError("找不到此帳號");
             return;
         }
 
         if (result.StartsWith("Error"))
         {
+            AddressableManagement.Instance.ShowToast("Wiring Error");
             Debug.LogError($"連線錯誤: {result}");
             return;
         }
@@ -251,12 +258,14 @@ public class LoginView : BasicView
                 }
                 else
                 {
+                    AddressableManagement.Instance.ShowToast("Password Error");
                     Debug.LogError("密碼錯誤");
                 }
             }
         }
         catch (System.Exception e)
         {
+            AddressableManagement.Instance.ShowToast("Wiring Error");
             Debug.LogError($"JSON 解析異常: {e.Message}");
         }
     }
@@ -269,12 +278,14 @@ public class LoginView : BasicView
         if (!RegisterBtn.interactable)
             return;
 
+#if UNITY_WEBGL && !UNITY_EDITOR
         // 檢查註冊帳戶是否存在
         FirestoreManagement.Instance.GetDataFromFirestore(
             collectionName: FirestoreCollectionName.AccountData,
             docId: AccountIF_Register.text,
             callbackObjName: gameObject.name,
             callbackMethod: nameof(CheckRegisterAccount));
+#endif
     }
 
     /// <summary>
@@ -285,6 +296,7 @@ public class LoginView : BasicView
     {
         if (result.StartsWith("Error"))
         {
+            AddressableManagement.Instance.ShowToast("Wiring Error");
             Debug.LogError($"連線錯誤: {result}");
             return;
         }
@@ -301,15 +313,18 @@ public class LoginView : BasicView
 
             string json = JsonUtility.ToJson(data);
 
+#if UNITY_WEBGL && !UNITY_EDITOR
             FirestoreManagement.Instance.SaveDataToFirestore(
                 collectionName: FirestoreCollectionName.AccountData,
                 docId: AccountIF_Register.text,
                 jsonData: json,
                 callbackObjName: gameObject.name,
                 callbackMethod: nameof(SendRegisterCallback));
+#endif
         }
         else
         {
+            AddressableManagement.Instance.ShowToast("Account Exist");      
             Debug.LogError("帳號已存在");
         }
     }
@@ -326,6 +341,7 @@ public class LoginView : BasicView
         }
         else
         {
+            AddressableManagement.Instance.ShowToast("Registration Failed");
             Debug.LogError($"註冊失敗: {result}");
         }
     }
