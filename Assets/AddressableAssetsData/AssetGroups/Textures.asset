@@ -10,19 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Prefab
+  m_Name: Textures
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Prefab
-  m_GUID: ace4c7fa93c57f44c8418ad04300c388
+  m_GroupName: Textures
+  m_GUID: b05fcd507bff742409b879673cdcf554
   m_SerializeEntries:
-  - m_GUID: 052601c01aca4c748a2e5ccc4d4e0ed3
-    m_Address: LoginView
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PreLoad
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d528c63562cee6a469c09a20204fa076
-    m_Address: Toast
+  - m_GUID: 8e3c97c9f645cec4c82994860f88d166
+    m_Address: Spinner
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -30,5 +24,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: a6ffe8b80cdb34646b6c359c3c6733cf, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 53fe1eb7dee16564a9422da95923e977, type: 2}
-    - {fileID: 11400000, guid: 8c519136ed2beb14496ce24460d16161, type: 2}
+    - {fileID: 11400000, guid: e8ce1f51d79d9674dbd07cd21bbcc8eb, type: 2}
+    - {fileID: 11400000, guid: 024552a31e172f445886f24cf1b6ca57, type: 2}

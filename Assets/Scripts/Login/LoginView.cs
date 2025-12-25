@@ -55,6 +55,8 @@ public class LoginView : BasicView
 
     private void Initialize()
     {
+        MainCanvasGroup.alpha = 0;
+
         SwitchPanel(PanelType.Login);
 
         LoginTog.isOn = true;
@@ -62,6 +64,8 @@ public class LoginView : BasicView
 
         CheckLoginData();
         CheckRegisterData();
+
+        StartCoroutine(IYieldShow());
     }
 
     private void Start()
@@ -214,6 +218,8 @@ public class LoginView : BasicView
         if (!LoginBtn.interactable)
             return;
 
+        AddressableManagement.Instance.ShowLoading();
+
 #if UNITY_WEBGL && !UNITY_EDITOR
         FirestoreManagement.Instance.GetDataFromFirestore(
             collectionName: FirestoreCollectionName.AccountData,
@@ -230,8 +236,10 @@ public class LoginView : BasicView
     /// 登入Callback
     /// </summary>
     /// <param name="result">NotFound = 沒找到資料, Error = 錯誤訊息</param>
-    public void SendLoginCallback(string result)
+    public async void SendLoginCallback(string result)
     {
+        AddressableManagement.Instance.CloseLoading();
+
         if (result == "NotFound")
         {
             AddressableManagement.Instance.ShowToast("Account Error");
@@ -263,7 +271,7 @@ public class LoginView : BasicView
                 }
             }
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             AddressableManagement.Instance.ShowToast("Wiring Error");
             Debug.LogError($"JSON 解析異常: {e.Message}");
@@ -277,6 +285,8 @@ public class LoginView : BasicView
     {
         if (!RegisterBtn.interactable)
             return;
+
+        AddressableManagement.Instance.ShowLoading();
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         // 檢查註冊帳戶是否存在
@@ -296,6 +306,7 @@ public class LoginView : BasicView
     {
         if (result.StartsWith("Error"))
         {
+            AddressableManagement.Instance.CloseLoading();
             AddressableManagement.Instance.ShowToast("Wiring Error");
             Debug.LogError($"連線錯誤: {result}");
             return;
@@ -303,6 +314,8 @@ public class LoginView : BasicView
 
         if (result == "NotFound")
         {
+            AddressableManagement.Instance.ShowLoading();
+
             // 寫入註冊資料
             AccountData data = new()
             {
@@ -324,6 +337,7 @@ public class LoginView : BasicView
         }
         else
         {
+            AddressableManagement.Instance.CloseLoading();
             AddressableManagement.Instance.ShowToast("Account Exist");      
             Debug.LogError("帳號已存在");
         }
@@ -335,7 +349,9 @@ public class LoginView : BasicView
     /// <param name="result">Success = 成功, Fail = 失敗, Error = 錯誤訊息</param>
     public void SendRegisterCallback(string result)
     {
-        if(result == "Success")
+        AddressableManagement.Instance.CloseLoading();
+
+        if (result == "Success")
         {
             Debug.Log("註冊成功");
         }

@@ -4518,6 +4518,7 @@ GameObject:
   - component: {fileID: 1958738771318962363}
   - component: {fileID: 8864429051173710682}
   - component: {fileID: 5234475605650108295}
+  - component: {fileID: 6290990974565850853}
   m_Layer: 0
   m_Name: LoginView
   m_TagString: Untagged
@@ -4557,6 +4558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee8a42902e8e4484bb508353b16bc887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoginView
+  MainCanvasGroup: {fileID: 6290990974565850853}
   AccountIF_Login: {fileID: 7696224634685652608}
   PasswordIF_Login: {fileID: 8450634466311302359}
   AccountIF_Register: {fileID: 1900591068605403324}
@@ -4609,6 +4611,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &6290990974565850853
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5167230297752830012}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5359881569219454830
 GameObject:
   m_ObjectHideFlags: 0

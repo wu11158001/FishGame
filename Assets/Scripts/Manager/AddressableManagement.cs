@@ -21,7 +21,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     private Canvas Canvas_Camera;
     private Canvas Canvas_Overlay;
 
-    #region 
+    private GameObject CurrLoadingObj;
 
     /// <summary>
     /// 設置當前場景Canvas
@@ -39,8 +39,6 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             throw;
         }
     }
-
-    #endregion
 
     #region 資源加載
 
@@ -124,7 +122,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 開啟介面
     /// </summary>
-    public async Task OpenView(ViewEnum viewEnum, Action<GameObject> callback, bool IsCanStack = false, CanvasEnum canvasEnum = CanvasEnum.Canvas_Overlay)
+    private async Task OpenView(ViewEnum viewEnum, Action<GameObject> callback = null, bool IsCanStack = false, CanvasEnum canvasEnum = CanvasEnum.Canvas_Overlay)
     {
         // 避免重複加載資源
         if (LoadViewAsyncSet.Contains(viewEnum))
@@ -208,9 +206,10 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             viewEnum: view,
             callback: (viewObj) =>
             {
-                var viewComponent = viewObj.GetComponent<LoginView>();
-                viewComponent.SetData(
-                    closeAction: viewCloseAction);
+                if(viewObj != null)
+                {
+                    viewObj.GetComponent<LoginView>().SetData(closeAction: viewCloseAction);
+                }
             });
     }
 
@@ -218,6 +217,49 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
 
 
     #region 介面(Canvas_Global)
+
+    /// <summary>
+    /// 顯示Loading
+    /// </summary>
+    public async void ShowLoading()
+    {
+        ViewEnum view = ViewEnum.Loading;
+
+        Action viewCloseAction = () =>
+        {
+            CurrLoadingObj = null;
+            RemoveView(viewEnum: view);
+        };
+
+        await OpenView(
+            viewEnum: view,
+            callback: (viewObj) =>
+            {
+                if(viewObj != null)
+                {
+                    CurrLoadingObj = viewObj;
+
+                    if (viewObj != null)
+                    {
+                        viewObj.GetComponent<Loading>().SetData(
+                            closeAction: viewCloseAction);
+                    }
+                }                
+            },
+            canvasEnum: CanvasEnum.Canvas_Global);
+    }
+
+    /// <summary>
+    /// 關閉Loading
+    /// </summary>
+    public void CloseLoading()
+    {
+        if (CurrLoadingObj != null)
+        {
+            CurrLoadingObj = null;
+            RemoveView(viewEnum: ViewEnum.Loading);
+        }
+    }
 
     /// <summary>
     /// 顯示吐司訊息
@@ -235,10 +277,12 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             viewEnum: view,
             callback: (viewObj) =>
             {
-                var viewComponent = viewObj.GetComponent<Toast>();
-                viewComponent.SetData(
-                    messageKey: messageKey,
-                    closeAction: viewCloseAction);
+                if(viewObj != null)
+                {
+                    viewObj.GetComponent<Toast>().SetData(
+                        messageKey: messageKey,
+                        closeAction: viewCloseAction);
+                }                
             },
             IsCanStack: true,
             canvasEnum: CanvasEnum.Canvas_Global);

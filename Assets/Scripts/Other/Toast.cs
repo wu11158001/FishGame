@@ -42,6 +42,9 @@ public class Toast : BasicView
             .Append(PanelRect.DOAnchorPos(StopPos, MoveTime).SetEase(Ease.OutQuad))// 滑進            
             .AppendInterval(StopTime)// 停頓            
             .Append(PanelRect.DOAnchorPos(startPos, MoveTime).SetEase(Ease.InQuad))// 滑出
-            .OnComplete(() => { Close(); });
+            .OnComplete(() => 
+            {
+                Close(); 
+            });
     }
 }

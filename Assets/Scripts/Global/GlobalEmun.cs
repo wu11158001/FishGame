@@ -35,6 +35,9 @@ public enum Language
 /// </summary>
 public enum ViewEnum
 {
+    /// <summary> 等待畫面 </summary>
+    Loading,
+
     /// <summary> 吐司訊息 </summary>
     Toast,
 
