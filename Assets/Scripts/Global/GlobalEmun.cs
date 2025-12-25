@@ -20,7 +20,10 @@ public enum CanvasEnum
 /// </summary>
 public enum Language
 {
+    /// <summary> 中文 </summary>
     zh_TW,
+
+    /// <summary> 英文 </summary>
     en,
 }
 
@@ -29,7 +32,8 @@ public enum Language
 /// </summary>
 public enum ViewEnum
 {
-    LoginView,              // 登入
+    /// <summary> 登入 </summary>
+    LoginView,              
 }
 
 /// <summary>
@@ -37,5 +41,6 @@ public enum ViewEnum
 /// </summary>
 public enum FirestoreCollectionName
 {
-    AccountData,        // 帳戶資料
+    /// <summary> 帳戶資料 </summary>
+    AccountData,
 }

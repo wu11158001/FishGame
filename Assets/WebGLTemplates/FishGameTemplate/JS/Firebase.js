@@ -9,10 +9,8 @@ const firebaseConfig = {
     measurementId: "G-8CSR9MJ6FQ"
 };
 
-// 立即初始化
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
+// 初始化 Firebase
+firebase.initializeApp(firebaseConfig);
 window.db = firebase.firestore();
+
 console.log("Firestore 已經就緒");

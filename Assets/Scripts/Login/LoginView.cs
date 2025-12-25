@@ -214,7 +214,51 @@ public class LoginView : BasicView
         if (!LoginBtn.interactable)
             return;
 
-        Debug.Log("登入");
+        FirestoreManagement.Instance.GetDataFromFirestore(
+            collectionName: FirestoreCollectionName.AccountData,
+            docId: AccountIF_Login.text,
+            callbackObjName: gameObject.name,
+            callbackMethod: nameof(SendLoginCallback));
+    }
+
+    /// <summary>
+    /// 登入Callback
+    /// </summary>
+    /// <param name="result">NotFound = 沒找到資料, Error = 錯誤訊息</param>
+    public void SendLoginCallback(string result)
+    {
+        if (result == "NotFound")
+        {
+            Debug.LogError("找不到此帳號");
+            return;
+        }
+
+        if (result.StartsWith("Error"))
+        {
+            Debug.LogError($"連線錯誤: {result}");
+            return;
+        }
+
+        try
+        {
+            AccountData data = JsonUtility.FromJson<AccountData>(result);
+            if (data != null)
+            {
+                string currPsw = StringUtility.ToHash256(PasswordIF_Login.text);
+                if (data.Password == currPsw)
+                {
+                    Debug.Log("登入成功");
+                }
+                else
+                {
+                    Debug.LogError("密碼錯誤");
+                }
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"JSON 解析異常: {e.Message}");
+        }
     }
 
     /// <summary>
@@ -225,37 +269,64 @@ public class LoginView : BasicView
         if (!RegisterBtn.interactable)
             return;
 
-        AccountData data = new()
-        {
-            LoginState = false,
-            Account = AccountIF_Register.text,
-            Password = PasswordIF_Register.text,
-            Coins = 0,
-        };
-
-        string json = JsonUtility.ToJson(data);
-
-        FirestoreManagement.Instance.SaveDataToFirestore(
-            name: FirestoreCollectionName.AccountData,
-            docId: "",
-            jsonData: json,
+        // 檢查註冊帳戶是否存在
+        FirestoreManagement.Instance.GetDataFromFirestore(
+            collectionName: FirestoreCollectionName.AccountData,
+            docId: AccountIF_Register.text,
             callbackObjName: gameObject.name,
-            callbackMethod: nameof(SendRegisterCallback));
+            callbackMethod: nameof(CheckRegisterAccount));
+    }
+
+    /// <summary>
+    /// 檢查註冊帳戶是否存在
+    /// </summary>
+    /// <param name="result">NotFound = 沒找到資料, Error = 錯誤訊息</param>
+    public void CheckRegisterAccount(string result)
+    {
+        if (result.StartsWith("Error"))
+        {
+            Debug.LogError($"連線錯誤: {result}");
+            return;
+        }
+
+        if (result == "NotFound")
+        {
+            // 寫入註冊資料
+            AccountData data = new()
+            {
+                Account = AccountIF_Register.text,
+                Password = StringUtility.ToHash256(PasswordIF_Register.text),
+                Coins = 0,
+            };
+
+            string json = JsonUtility.ToJson(data);
+
+            FirestoreManagement.Instance.SaveDataToFirestore(
+                collectionName: FirestoreCollectionName.AccountData,
+                docId: AccountIF_Register.text,
+                jsonData: json,
+                callbackObjName: gameObject.name,
+                callbackMethod: nameof(SendRegisterCallback));
+        }
+        else
+        {
+            Debug.LogError("帳號已存在");
+        }
     }
 
     /// <summary>
     /// 註冊Callback
     /// </summary>
-    /// <param name="result">success = 成功, fail = 失敗</param>
+    /// <param name="result">Success = 成功, Fail = 失敗, Error = 錯誤訊息</param>
     public void SendRegisterCallback(string result)
     {
-        if(result == "success")
+        if(result == "Success")
         {
             Debug.Log("註冊成功");
         }
         else
         {
-            Debug.LogError("註冊失敗");
+            Debug.LogError($"註冊失敗: {result}");
         }
     }
 }
