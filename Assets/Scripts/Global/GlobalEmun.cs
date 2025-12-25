@@ -31,3 +31,11 @@ public enum ViewEnum
 {
     LoginView,              // 登入
 }
+
+/// <summary>
+/// Firestore Database 集合名稱
+/// </summary>
+public enum FirestoreCollectionName
+{
+    AccountData,        // 帳戶資料
+}

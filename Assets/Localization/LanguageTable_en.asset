@@ -35,11 +35,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 43040802279424
-    m_Localized: 'Account (4-12 characters: numbers & alphanumeric):'
+    m_Localized: 'Account : (4-12 characters: numbers & alphanumeric):'
     m_Metadata:
       m_Items: []
   - m_Id: 43122901585920
-    m_Localized: 'Password (4-12 characters: numbers & alphanumeric):'
+    m_Localized: 'Password : (4-12 characters: numbers & alphanumeric):'
     m_Metadata:
       m_Items: []
   - m_Id: 43253466075136

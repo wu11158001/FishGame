@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: R_20
+  m_Name: R_08
   m_Shader: {fileID: 4800000, guid: 0162a17359546d3479ae73858a9226ab, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -90,7 +90,7 @@ Material:
     - _NStarPolygonOffset: {r: 0, g: 0, b: 0, a: 0}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _PentagonCornerRadius: {r: 0, g: 0, b: 0, a: 0}
-    - _RectangleCornerRadius: {r: 20, g: 20, b: 20, a: 20}
+    - _RectangleCornerRadius: {r: 8, g: 8, b: 8, a: 8}
     - _TextureSize: {r: 1, g: 1, b: 1, a: 1}
     - _TriangleCornerRadius: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

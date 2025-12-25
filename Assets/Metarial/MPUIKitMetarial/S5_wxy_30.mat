@@ -7,12 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: R_50
+  m_Name: S5_wxy_30
   m_Shader: {fileID: 4800000, guid: 0162a17359546d3479ae73858a9226ab, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - RECTANGLE
+  - STROKE
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -30,7 +31,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ChamferSize: 0
+    - _ChamferSize: 0.48
     - _CircleFitRadius: 0
     - _CircleRadius: 0
     - _ColorMask: 15
@@ -50,7 +51,7 @@ Material:
     - _NStarPolygonSideCount: 3
     - _OutlineWidth: 0
     - _ParallelogramCornerRadius: 0
-    - _ParallelogramSkew: 0
+    - _ParallelogramSkew: 1.7
     - _PentagonTipRadius: 0.001
     - _PentagonTipSize: 1
     - _PixelWorldScale: 2
@@ -60,7 +61,7 @@ Material:
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _StrokeWidth: 0
+    - _StrokeWidth: 5
     - _UseUIAlphaClip: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
@@ -90,7 +91,7 @@ Material:
     - _NStarPolygonOffset: {r: 0, g: 0, b: 0, a: 0}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _PentagonCornerRadius: {r: 0, g: 0, b: 0, a: 0}
-    - _RectangleCornerRadius: {r: 50, g: 50, b: 50, a: 50}
+    - _RectangleCornerRadius: {r: 30, g: 30, b: 0, a: 30}
     - _TextureSize: {r: 1, g: 1, b: 1, a: 1}
     - _TriangleCornerRadius: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

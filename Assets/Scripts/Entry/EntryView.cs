@@ -81,10 +81,7 @@ public class EntryView : MonoBehaviour
     {
         while (ProgressBar.value < 1f)
         {
-            // 平滑地讓當前值趨近目標值
-            // 這裡 0.1f 是平滑係數，數值越大追越快
             ProgressBar.value = Mathf.MoveTowards(ProgressBar.value, TargetProgress, Time.deltaTime * 2f);
-
             yield return null;
         }
     }
