@@ -30,7 +30,15 @@ public class LoginView : BasicView
     [SerializeField] GameObject LoginArea;
     [SerializeField] GameObject RegisterArea;
 
-    [Header("Btn")]
+    [Header("EyesBtn")]
+    [SerializeField] Button EyeOpenBtn_Login;
+    [SerializeField] Button EyeCloseBtn_Login;
+    [SerializeField] Button EyeOpenBtn_Register;
+    [SerializeField] Button EyeCloseBtn_Register;
+    [SerializeField] Button EyeOpenBtn_Confirm;
+    [SerializeField] Button EyeCloseBtn_Confirm;
+
+    [Header("SendBtn")]
     [SerializeField] Button LoginBtn;
     [SerializeField] Button RegisterBtn;
 
@@ -49,8 +57,18 @@ public class LoginView : BasicView
     /// </summary>
     private enum PanelType
     {
-        Login,      // 登入
-        Register    // 註冊
+        Login,
+        Register,
+    }
+
+    /// <summary>
+    /// 密碼顯示控制類型
+    /// </summary>
+    private enum EyesType
+    {
+        Login,
+        Register,
+        Confirm,
     }
 
     private void Initialize()
@@ -101,8 +119,14 @@ public class LoginView : BasicView
         PasswordIF_Register.onValueChanged.AddListener((value) => { CheckRegisterData(); });
         ConfirmPasswordIF_Register.onValueChanged.AddListener((value) => { CheckRegisterData(); });
 
-        LoginBtn.onClick.AddListener(SendLogin);
+        EyeOpenBtn_Login.onClick.AddListener(() => { EyesBtnClisk(eyesType: EyesType.Login, true); });
+        EyeCloseBtn_Login.onClick.AddListener(() => { EyesBtnClisk(eyesType: EyesType.Login, false); });
+        EyeOpenBtn_Register.onClick.AddListener(() => { EyesBtnClisk(eyesType: EyesType.Register, true); });
+        EyeCloseBtn_Register.onClick.AddListener(() => { EyesBtnClisk(eyesType: EyesType.Register, false); });
+        EyeOpenBtn_Confirm.onClick.AddListener(() => { EyesBtnClisk(eyesType: EyesType.Confirm, true); });
+        EyeCloseBtn_Confirm.onClick.AddListener(() => { EyesBtnClisk(eyesType: EyesType.Confirm, false); });
 
+        LoginBtn.onClick.AddListener(SendLogin);
         RegisterBtn.onClick.AddListener(SendRegister);
     }
 
@@ -195,6 +219,47 @@ public class LoginView : BasicView
             panelType == PanelType.Login ?
             SendLogin :
             SendRegister;
+
+        // 密碼顯示控制
+        EyesBtnClisk(eyesType: EyesType.Login, false);
+        EyesBtnClisk(eyesType: EyesType.Register, false);
+        EyesBtnClisk(eyesType: EyesType.Confirm, false);
+    }
+
+    /// <summary>
+    /// 密碼顯示控制事件
+    /// </summary>
+    private void EyesBtnClisk(EyesType eyesType, bool isShowPassword)
+    {
+        TMP_InputField controlField = null;
+        GameObject openBtn = null;
+        GameObject closeBtn = null;
+
+        switch (eyesType)
+        {
+            case EyesType.Login:
+                controlField = PasswordIF_Login;
+                openBtn = EyeOpenBtn_Login.gameObject;
+                closeBtn = EyeCloseBtn_Login.gameObject;
+                break;
+
+            case EyesType.Register:
+                controlField = PasswordIF_Register;
+                openBtn = EyeOpenBtn_Register.gameObject;
+                closeBtn = EyeCloseBtn_Register.gameObject;
+                break;
+
+            case EyesType.Confirm:
+                controlField = ConfirmPasswordIF_Register;
+                openBtn = EyeOpenBtn_Confirm.gameObject;
+                closeBtn = EyeCloseBtn_Confirm.gameObject;
+                break;
+        }
+
+        controlField.contentType = isShowPassword ? TMP_InputField.ContentType.Standard : TMP_InputField.ContentType.Password;
+        controlField.ForceLabelUpdate();
+        openBtn.SetActive(!isShowPassword);
+        closeBtn.SetActive(isShowPassword);
     }
 
     /// <summary>
