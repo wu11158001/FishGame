@@ -15,10 +15,11 @@ MonoBehaviour:
   m_GroupName: Textures
   m_GUID: b05fcd507bff742409b879673cdcf554
   m_SerializeEntries:
-  - m_GUID: 8e3c97c9f645cec4c82994860f88d166
-    m_Address: Spinner
+  - m_GUID: 77e8a1cbd64de9e4bb8a61571d2cb7ba
+    m_Address: Assets/Textures
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a6ffe8b80cdb34646b6c359c3c6733cf, type: 2}

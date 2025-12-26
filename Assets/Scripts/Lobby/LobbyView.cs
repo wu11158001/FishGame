@@ -3,35 +3,41 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEngine.InputSystem;
+using Newtonsoft.Json;
 
 public class LobbyView : BasicView
 {
+    [SerializeField] TextMeshProUGUI CoinText;
+
     Action CloseAction;
+
+    private void OnDestroy()
+    {
+        FirestoreManagement.Instance.AsccountDataChangeDelete -= AccountDataChange;
+    }
+
+    private void Start()
+    {
+        FirestoreManagement.Instance.AsccountDataChangeDelete += AccountDataChange;
+
+        FirestoreManagement.Instance.StartListenAccountData();
+    }
 
     public void SetData(Action closeAction)
     {
         CloseAction = closeAction;
     }
 
-    private void Update()
+    /// <summary>
+    /// 帳戶資料變更
+    /// </summary>
+    /// <param name="response"></param>
+    private void AccountDataChange(FirestoreResponse response)
     {
-        if(Keyboard.current != null && Keyboard.current.aKey.wasPressedThisFrame)
+        if(response != null)
         {
-            string docid = PlayerPrefs.GetString(PlayerPrefsKeys.USER_ACCOUNT);
-            FirestoreManagement.Instance.DeleteDataFromFirestore(FirestoreCollectionName.AccountData, docid, null);
-        }
-
-        if (Keyboard.current != null && Keyboard.current.sKey.wasPressedThisFrame)
-        {
-            string docid = PlayerPrefs.GetString(PlayerPrefsKeys.USER_ACCOUNT);
-            AccountData data = new()
-            {
-                Coins = 1414
-            };
-
-            string json = JsonUtility.ToJson(data);
-
-            FirestoreManagement.Instance.UpdateDataToFirestore(FirestoreCollectionName.AccountData, docid, json, null);
+            AccountData data = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
+            CoinText.text = data.Coins.ToString();
         }
     }
 }

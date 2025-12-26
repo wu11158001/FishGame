@@ -79,5 +79,8 @@ public enum FirestoreStatus
     UpdateFail,
 
     /// <summary> 刪除資料失敗 </summary>
-    DeleteError
+    DeleteError,
+
+    /// <summary> 監聽資料變更 </summary>
+    DataChanged
 }

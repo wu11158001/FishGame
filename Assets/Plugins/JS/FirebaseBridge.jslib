@@ -151,4 +151,56 @@ mergeInto(LibraryManager.library, {
                 window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(errorResp));
             });
     },
+
+    // 監聽資料變更
+    // path: 集合名稱
+    // docId: 資料表名稱
+    // callbackObj: Unity 回傳物件
+    // callbackMethod: Unity 回傳方法
+    ListenToFirestoreData: function (path, docId, callbackObj, callbackMethod) {
+        var colPath = UTF8ToString(path);
+        var documentId = UTF8ToString(docId);
+        var unityObj = UTF8ToString(callbackObj);
+        var callback = UTF8ToString(callbackMethod);
+
+        // 為了之後能停止監聽，建議將 unsubscribe 函式存在 window 物件中
+        // 這裡使用 documentId 作為 Key，方便辨識
+        if (window.firestoreUnsubscribes === undefined) {
+            window.firestoreUnsubscribes = {};
+        }
+
+        // 如果該文件已經有在監聽，先取消舊的
+        if (window.firestoreUnsubscribes[documentId]) {
+            window.firestoreUnsubscribes[documentId]();
+        }
+
+        // 開始監聽
+        var unsub = window.db.collection(colPath).doc(documentId).onSnapshot(function(doc) {
+            var response = {
+                IsSuccess: doc.exists,
+                Status: doc.exists ? "DataChanged" : "AccountNotFound",
+                JsonData: doc.exists ? JSON.stringify(doc.data()) : ""
+            };
+
+            console.log("Firestore 監聽到資料變更: " + documentId);
+            window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));
+        }, function(error) {
+            console.error("監聽失敗: ", error.message);
+            var errorResp = { Guid: id, IsSuccess: false, Status: "ListenError", JsonData: "" };
+            window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(errorResp));
+        });
+
+        // 儲存取消監聽的函式
+        window.firestoreUnsubscribes[documentId] = unsub;
+    },
+
+    // 停止監聽
+    StopListenToFirestoreData: function (docId) {
+        var documentId = UTF8ToString(docId);
+        if (window.firestoreUnsubscribes && window.firestoreUnsubscribes[documentId]) {
+            window.firestoreUnsubscribes[documentId]();
+            delete window.firestoreUnsubscribes[documentId];
+            console.log("已停止監聽: " + documentId);
+        }
+    }
 });

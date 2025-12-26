@@ -13,10 +13,35 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
 {
 #if !UNITY_WEBGL || UNITY_EDITOR
     FirebaseFirestore db;
+
+    // 專門存儲 Editor 環境下的監聽器(Key: docId, Value: 監聽器執行個體)
+    private Dictionary<string, ListenerRegistration> EditorListeners = new();
 #endif
 
     // 用來儲存所有的回調，Key = GUID
     private Dictionary<string, Action<FirestoreResponse>> PendingCallbacks = new();
+
+    public delegate void AccountDataChange(FirestoreResponse response);
+    public event AccountDataChange AsccountDataChangeDelete;
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+#if !UNITY_WEBGL || UNITY_EDITOR
+        foreach (var listener in EditorListeners.Values)
+        {
+            listener.Stop();
+        }
+        EditorListeners.Clear();
+#endif
+    }
+
+    public void OnDataChanged(string jsonResponse)
+    {
+        // 處理資料邏輯...
+        Debug.Log("收到回傳: " + jsonResponse);
+    }
 
     /// <summary>
     /// DB初始化
@@ -285,6 +310,91 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
                 AddressableManagement.Instance.ShowToast("Writ Fail");
                 break;
         }
+    }
+
+    #endregion
+
+    #region Firestore監聽資料
+
+    /// <summary>
+    /// 監聽資料變更
+    /// </summary>
+    [DllImport("__Internal")]
+    private static extern void ListenToFirestoreData(string path, string docId, string callbackObj, string callbackMethod);
+
+    /// <summary>
+    /// 停止監聽
+    /// </summary>
+    [DllImport("__Internal")]
+    private static extern void StopListenToFirestoreData(string docId);
+
+    /// <summary>
+    /// 開始監聽帳戶資料
+    /// </summary>
+    public void StartListenAccountData()
+    {
+        string path = FirestoreCollectionName.AccountData.ToString();
+        string docId = PlayerPrefs.GetString(PlayerPrefsKeys.USER_ACCOUNT);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        ListenToFirestoreData(path, docId, gameObject.name, nameof(OnDataChanged));
+        Debug.Log($"[WebGL] 開始監聽: {docId}");
+#else
+        // 已經在監聽停止
+        StopListenAccountData();
+
+        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+        DocumentReference docRef = db.Collection(path).Document(docId);
+
+        ListenerRegistration registration = docRef.Listen(snapshot => {
+            if (snapshot == null) return;
+
+            bool exists = snapshot.Exists;
+            string innerJson = exists ? JsonConvert.SerializeObject(snapshot.ToDictionary()) : "";
+
+            var response = new
+            {
+                IsSuccess = exists,
+                Status = exists ? "DataChanged" : "AccountNotFound",
+                JsonData = innerJson
+            };
+
+            OnAccountDataChanged(JsonConvert.SerializeObject(response));
+        });
+
+        // 將監聽器存入 C# 字典
+        EditorListeners.Add(docId, registration);
+        Debug.Log($"[Editor] 開始監聽帳戶資料: {docId}");
+#endif
+    }
+
+    /// <summary>
+    /// 停止監聽帳戶資料
+    /// </summary>
+    public void StopListenAccountData()
+    {
+        string docId = PlayerPrefs.GetString(PlayerPrefsKeys.USER_ACCOUNT);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        // WebGL 端：呼叫 .jslib 刪除 JS 字典裡的監聽
+        StopListenToFirestoreData(docId);
+#else
+        if (EditorListeners.ContainsKey(docId))
+        {
+            EditorListeners[docId].Stop();
+            EditorListeners.Remove(docId);
+            Debug.Log($"[Editor] 停止監聽帳戶資料: {docId}");
+        }
+#endif
+    }
+
+    /// <summary>
+    /// 帳戶資料變更
+    /// </summary>
+    public void OnAccountDataChanged(string jsonResponse)
+    {
+        var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
+        AsccountDataChangeDelete?.Invoke(response);
     }
 
     #endregion
