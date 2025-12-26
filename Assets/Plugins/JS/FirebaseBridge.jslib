@@ -1,94 +1,154 @@
 mergeInto(LibraryManager.library, {
 
-    // 寫入新資料
-    // collectionName: 集合名稱
+    // 寫入資料
+    // path: 集合名稱
     // docId: 資料表名稱
     // jsonData: JSON 格式的內容
-    // callbackObjName: callback物件名稱
+    // callbackObj: callback物件名稱
     // callbackMethod: callback方法
-    SaveDataToFirestore: function (collectionName, docId, jsonData, callbackObjName, callbackMethod) {
-        var collectionPath = UTF8ToString(collectionName);
+    // guid: 唯一識別碼
+    SaveDataToFirestore: function (path, docId, jsonData, callbackObj, callbackMethod, guid) {
+        var collectionPath = UTF8ToString(path);
         var documentPath = UTF8ToString(docId);
         var dataString = UTF8ToString(jsonData);
-        var unityObj = UTF8ToString(callbackObjName);
+        var unityObj = UTF8ToString(callbackObj);
         var callback = UTF8ToString(callbackMethod);
+        var id = UTF8ToString(guid);
 
         try {
             var dataObject = JSON.parse(dataString);
 
-            // 這樣如果 ID 已存在會覆蓋，不存在則建立
             window.db.collection(collectionPath).doc(documentPath).set(dataObject)
                 .then(function() {
-                    console.log("Firestore: 資料已成功寫入 " + collectionPath + "/" + documentPath);
-                    window.unityInstance.SendMessage(unityObj, callback, "Success");
+                    var response = 
+                    {
+                        Guid: id,
+                        IsSuccess: true,
+                        Status: "Success",
+                        JsonData: "", 
+                    };
+
+                    console.log("寫入資料成功 " + collectionPath + "/" + documentPath);
+                    window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));
                 })
                 .catch(function(error) {
-                    console.error("Firestore 寫入錯誤: ", error);
-                    window.unityInstance.SendMessage(unityObj, callback, "Fail:" + error.code);
+                    console.error("寫入資料失敗: ", error.message);
+                    var errorResp = { Guid: id, IsSuccess: false, Status: "WriteFail", JsonData: "" };
+                    window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(errorResp));
                 });
         } catch (e) {
-            console.error("JSON 解析失敗: ", e);
-            window.unityInstance.SendMessage(unityObj, callback, "Error:" + e.message);
+            console.error("JSON 解析失敗: ", e.message);
+            var errorResp = { Guid: id, IsSuccess: false, Status: "Error", JsonData: "" };
+            window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(errorResp));
         }
     },
 
     // 更新資料
-    // collectionName: 集合名稱
+    // path: 集合名稱
     // docId: 資料表名稱
     // jsonData: JSON 格式的內容
-    // callbackObjName: callback物件名稱
+    // callbackObj: callback物件名稱
     // callbackMethod: callback方法
-    UpdateDataToFirestore: function (collectionName, docId, jsonData, callbackObjName, callbackMethod) {
-        var collectionPath = UTF8ToString(collectionName);
+    // guid: 唯一識別碼
+    UpdateDataToFirestore: function (path, docId, jsonData, callbackObj, callbackMethod, guid) {
+        var collectionPath = UTF8ToString(path);
         var documentPath = UTF8ToString(docId);
         var dataString = UTF8ToString(jsonData);
-        var unityObj = UTF8ToString(callbackObjName);
+        var unityObj = UTF8ToString(callbackObj);
         var callback = UTF8ToString(callbackMethod);
+        var id = UTF8ToString(guid);
 
         try {
             var dataObject = JSON.parse(dataString);
             
             window.db.collection(collectionPath).doc(documentPath).update(dataObject)
                 .then(function() {
+                    var response = 
+                    {
+                        Guid: id,
+                        IsSuccess: true,
+                        Status: "Success",
+                        JsonData: "", 
+                    };
+
                     console.log("Firestore: 資料已成功更新 " + collectionPath + "/" + documentPath);
-                    window.unityInstance.SendMessage(unityObj, callback, "Success");
+                    window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));
                 })
                 .catch(function(error) {
-                    console.error("Firestore 寫更新錯誤: ", error);
-                    window.unityInstance.SendMessage(unityObj, callback, "Fail:" + error.code);
+                    console.error("Firestore 更新資料錯誤: ", error.message);
+                    var errorResp = { Guid: id, IsSuccess: false, Status: "UpdateFail", JsonData: "" };
+                    window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(errorResp));
                 });
         } catch (e) {
-            console.error("JSON 解析失敗: ", e);
-            window.unityInstance.SendMessage(unityObj, callback, "Error:" + e.message);
+            console.error("JSON 解析失敗: ", e.message);
+            var errorResp = { Guid: id, IsSuccess: false, Status: "Error", JsonData: "" };
+                    window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(errorResp));
         }
     },
 
     // 查詢/讀取資料
-    // collectionName: 集合名稱
+    // path: 集合名稱
     // docId: 資料表名稱
-    // callbackObjName: callback物件名稱
+    // callbackObj: callback物件名稱
     // callbackMethod: callback方法
-    GetDataFromFirestore: function (collectionName, docId, callbackObjName, callbackMethod) {
-        var colPath = UTF8ToString(collectionName);
+    // guid: 唯一識別碼
+    GetDataFromFirestore: function (path, docId, callbackObj, callbackMethod, guid) {
+        var colPath = UTF8ToString(path);
         var documentId = UTF8ToString(docId);
-        var unityObj = UTF8ToString(callbackObjName);
+        var unityObj = UTF8ToString(callbackObj);
         var callback = UTF8ToString(callbackMethod);
+        var id = UTF8ToString(guid);
 
         window.db.collection(colPath).doc(documentId).get()
             .then(function(doc) {
-                if (doc.exists) {
-                    // 轉為 JSON 字串傳回
-                    var data = doc.data();
-                    var jsonString = JSON.stringify(data);
-                    window.unityInstance.SendMessage(unityObj, callback, jsonString);
-                } else {
-                    // 找不到該 ID 的文件
-                    window.unityInstance.SendMessage(unityObj, callback, "NotFound");
-                }
+                var response = 
+                {
+                    Guid: id,
+                    IsSuccess: doc.exists,
+                    Status: doc.exists ? "Success" : "AccountNotFound",
+                    JsonData: doc.exists ? JSON.stringify(doc.data()) : "" 
+                };
+
+                console.log("查詢/讀取資料成功");
+                window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));            
             })
             .catch(function(error) {
-                console.error("查詢錯誤: ", error);
-                window.unityInstance.SendMessage(unityObj, callback, "Error:" + error.message);
+                console.error("查詢/讀取資料: ", error.message);
+                var errorResp = { Guid: id, IsSuccess: false, Status: "Error", JsonData: "" };
+                window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(errorResp));
+            });
+    },
+
+    // 刪除資料
+    // path: 集合名稱
+    // docId: 資料表名稱
+    // callbackObj: callback物件名稱
+    // callbackMethod: callback方法
+    // guid: 唯一識別碼
+    DeleteDataFromFirestore: function (path, docId, callbackObj, callbackMethod, guid) {
+        var colPath = UTF8ToString(path);
+        var documentId = UTF8ToString(docId);
+        var unityObj = UTF8ToString(callbackObj);
+        var callback = UTF8ToString(callbackMethod);
+        var id = UTF8ToString(guid);
+
+        window.db.collection(colPath).doc(documentId).delete()
+            .then(function() {
+                var response = 
+                {
+                    Guid: id,
+                    IsSuccess: true,
+                    Status: "Success",
+                    JsonData: "" 
+                };
+
+                console.log("刪除資料成功");
+                window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));
+            })
+            .catch(function(error) {
+                console.error("刪除資料: ", error.message);
+                var errorResp = { Guid: id, IsSuccess: false, Status: "DeleteError", JsonData: "" };
+                window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(errorResp));
             });
     },
 });

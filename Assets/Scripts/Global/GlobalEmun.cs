@@ -4,6 +4,7 @@
 public enum SceneEnum
 {
     Login = 1,
+    Lobby
 }
 
 /// <summary>
@@ -41,15 +42,42 @@ public enum ViewEnum
     /// <summary> 吐司訊息 </summary>
     Toast,
 
-    /// <summary> 登入 </summary>
-    LoginView,  
+    /// <summary> 登入介面 </summary>
+    LoginView,
+
+    /// <summary> 大廳介面 </summary>
+    LobbyView,
 }
 
 /// <summary>
-/// Firestore Database 集合名稱
+/// Firestore 集合名稱
 /// </summary>
 public enum FirestoreCollectionName
 {
     /// <summary> 帳戶資料 </summary>
     AccountData,
+}
+
+/// <summary>
+/// Firestore 識別碼
+/// </summary>
+public enum FirestoreStatus
+{
+    /// <summary> 錯誤 </summary>
+    Error,
+
+    /// <summary> 成功 </summary>
+    Success,
+
+    /// <summary> 帳號資料不存在 </summary>
+    AccountNotFound,
+
+    /// <summary> 寫入資料失敗 </summary>
+    WriteFail,
+
+    /// <summary> 更新資料失敗 </summary>
+    UpdateFail,
+
+    /// <summary> 刪除資料失敗 </summary>
+    DeleteError
 }

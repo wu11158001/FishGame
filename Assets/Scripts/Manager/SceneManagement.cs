@@ -8,7 +8,7 @@ public class SceneManagement : SingletonMonoBehaviour<SceneManagement>
     /// <summary>
     /// 載入場景
     /// </summary>
-    public void LoadScene(SceneEnum sceneEnum, Action callback)
+    public void LoadScene(SceneEnum sceneEnum, Action callback = null)
     {
         StartCoroutine(ILoadScene(sceneEnum, callback));
     }

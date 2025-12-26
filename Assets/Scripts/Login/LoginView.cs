@@ -220,62 +220,57 @@ public class LoginView : BasicView
 
         AddressableManagement.Instance.ShowLoading();
 
-#if UNITY_WEBGL && !UNITY_EDITOR
         FirestoreManagement.Instance.GetDataFromFirestore(
-            collectionName: FirestoreCollectionName.AccountData,
+            path: FirestoreCollectionName.AccountData,
             docId: AccountIF_Login.text,
-            callbackObjName: gameObject.name,
-            callbackMethod: nameof(SendLoginCallback));
-#else
-        SendLoginCallback("NotFound");
-#endif
-
+            callback: SendLoginCallback);
     }
 
     /// <summary>
     /// 登入Callback
     /// </summary>
-    /// <param name="result">NotFound = 沒找到資料, Error = 錯誤訊息</param>
-    public async void SendLoginCallback(string result)
+    public void SendLoginCallback(FirestoreResponse response)
     {
         AddressableManagement.Instance.CloseLoading();
 
-        if (result == "NotFound")
-        {
-            AddressableManagement.Instance.ShowToast("Account Error");
-            Debug.LogError("找不到此帳號");
-            return;
-        }
-
-        if (result.StartsWith("Error"))
+        if(response == null)
         {
             AddressableManagement.Instance.ShowToast("Wiring Error");
-            Debug.LogError($"連線錯誤: {result}");
+            Debug.LogError("資料回傳 null");
             return;
         }
 
-        try
+        if(response.IsSuccess)
         {
-            AccountData data = JsonUtility.FromJson<AccountData>(result);
-            if (data != null)
+            try
             {
-                string currPsw = StringUtility.ToHash256(PasswordIF_Login.text);
-                if (data.Password == currPsw)
+                AccountData data = JsonUtility.FromJson<AccountData>(response.JsonData);
+                if (data != null)
                 {
-                    Debug.Log("登入成功");
-                }
-                else
-                {
-                    AddressableManagement.Instance.ShowToast("Password Error");
-                    Debug.LogError("密碼錯誤");
+                    string currPsw = StringUtility.ToHash256(PasswordIF_Login.text);
+                    if (data.Password == currPsw)
+                    {
+                        PlayerPrefs.SetString(PlayerPrefsKeys.USER_ACCOUNT, AccountIF_Login.text);
+                        InLobby();
+                        Debug.Log("登入成功");
+                    }
+                    else
+                    {
+                        AddressableManagement.Instance.ShowToast("Password Error");
+                        Debug.LogError("密碼錯誤");
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                AddressableManagement.Instance.ShowToast("Wiring Error");
+                Debug.LogError($"JSON 解析異常: {e.Message}");
+            }
         }
-        catch (Exception e)
+        else
         {
-            AddressableManagement.Instance.ShowToast("Wiring Error");
-            Debug.LogError($"JSON 解析異常: {e.Message}");
-        }
+            FirestoreManagement.Instance.CallbackFailHandle(response.ResponseStatus);
+        } 
     }
 
     /// <summary>
@@ -287,78 +282,110 @@ public class LoginView : BasicView
             return;
 
         AddressableManagement.Instance.ShowLoading();
-
-#if UNITY_WEBGL && !UNITY_EDITOR
+        
         // 檢查註冊帳戶是否存在
         FirestoreManagement.Instance.GetDataFromFirestore(
-            collectionName: FirestoreCollectionName.AccountData,
+            path: FirestoreCollectionName.AccountData,
             docId: AccountIF_Register.text,
-            callbackObjName: gameObject.name,
-            callbackMethod: nameof(CheckRegisterAccount));
-#endif
+            callback: CheckRegisterAccount);
     }
 
     /// <summary>
     /// 檢查註冊帳戶是否存在
     /// </summary>
-    /// <param name="result">NotFound = 沒找到資料, Error = 錯誤訊息</param>
-    public void CheckRegisterAccount(string result)
+    public void CheckRegisterAccount(FirestoreResponse response)
     {
-        if (result.StartsWith("Error"))
+        AddressableManagement.Instance.CloseLoading();
+
+        if (response == null)
         {
-            AddressableManagement.Instance.CloseLoading();
             AddressableManagement.Instance.ShowToast("Wiring Error");
-            Debug.LogError($"連線錯誤: {result}");
+            Debug.LogError("資料回傳 null");
             return;
         }
 
-        if (result == "NotFound")
+        try
         {
-            AddressableManagement.Instance.ShowLoading();
-
-            // 寫入註冊資料
-            AccountData data = new()
+            if(response.ResponseStatus == FirestoreStatus.Error)
             {
-                Account = AccountIF_Register.text,
-                Password = StringUtility.ToHash256(PasswordIF_Register.text),
-                Coins = 0,
-            };
+                
+                AddressableManagement.Instance.ShowToast("Wiring Error");
+                Debug.LogError($"連線錯誤: {response.JsonData}");
+                return;
+            }
 
-            string json = JsonUtility.ToJson(data);
+            if(response.ResponseStatus ==  FirestoreStatus.AccountNotFound)
+            {
+                AddressableManagement.Instance.ShowLoading();
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-            FirestoreManagement.Instance.SaveDataToFirestore(
-                collectionName: FirestoreCollectionName.AccountData,
-                docId: AccountIF_Register.text,
-                jsonData: json,
-                callbackObjName: gameObject.name,
-                callbackMethod: nameof(SendRegisterCallback));
-#endif
+                // 寫入註冊資料
+                AccountData data = new()
+                {
+                    Account = AccountIF_Register.text,
+                    Password = StringUtility.ToHash256(PasswordIF_Register.text),
+                    Coins = 0,
+                };
+
+                string json = JsonUtility.ToJson(data);
+
+                FirestoreManagement.Instance.SaveDataToFirestore(
+                    path: FirestoreCollectionName.AccountData,
+                    docId: AccountIF_Register.text,
+                    jsonData: json,
+                    SendRegisterCallback);
+            }
+            else
+            {
+                AddressableManagement.Instance.ShowToast("Account Exist");
+                Debug.LogError("帳號已存在");
+            }
         }
-        else
+        catch (Exception e)
         {
-            AddressableManagement.Instance.CloseLoading();
-            AddressableManagement.Instance.ShowToast("Account Exist");      
-            Debug.LogError("帳號已存在");
+            AddressableManagement.Instance.ShowToast("Wiring Error");
+            Debug.LogError($"JSON 解析異常: {e.Message}");
         }
     }
 
     /// <summary>
     /// 註冊Callback
     /// </summary>
-    /// <param name="result">Success = 成功, Fail = 失敗, Error = 錯誤訊息</param>
-    public void SendRegisterCallback(string result)
+    public void SendRegisterCallback(FirestoreResponse response)
     {
         AddressableManagement.Instance.CloseLoading();
 
-        if (result == "Success")
+        if (response == null)
         {
+            AddressableManagement.Instance.ShowToast("Wiring Error");
+            Debug.LogError("資料回傳 null");
+            return;
+        }
+
+        if (response.ResponseStatus == FirestoreStatus.Success)
+        {
+            PlayerPrefs.SetString(PlayerPrefsKeys.USER_ACCOUNT, AccountIF_Register.text);
+            InLobby();
             Debug.Log("註冊成功");
         }
         else
         {
             AddressableManagement.Instance.ShowToast("Registration Failed");
-            Debug.LogError($"註冊失敗: {result}");
+            Debug.LogError($"註冊失敗: {response.Status}");
         }
+    }
+
+    /// <summary>
+    /// 進入大廳
+    /// </summary>
+    private void InLobby()
+    {
+        SceneManagement.Instance.LoadScene(
+                sceneEnum: SceneEnum.Lobby,
+                callback: async () =>
+                {
+                    await AddressableManagement.Instance.OpenLobbyView();
+                });
+
+        Close();
     }
 }

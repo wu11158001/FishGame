@@ -75,6 +75,18 @@ MonoBehaviour:
     m_Key: Registration Failed
     m_Metadata:
       m_Items: []
+  - m_Id: 589019301482496
+    m_Key: Delete Error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 593871708557312
+    m_Key: Update Fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 596362407907328
+    m_Key: Writ Fail
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -59,7 +59,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 430478448070656
-    m_Localized: Incorrect account password!
+    m_Localized: Account information does not exist!
     m_Metadata:
       m_Items: []
   - m_Id: 434065483960320
@@ -76,6 +76,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 436960002510848
     m_Localized: Registration failed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 589019301482496
+    m_Localized: Data deletion failed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 593871708557312
+    m_Localized: Update Fail!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 596362407907328
+    m_Localized: Data writing failed!
     m_Metadata:
       m_Items: []
   references:

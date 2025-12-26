@@ -213,6 +213,30 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             });
     }
 
+    /// <summary>
+    /// 開啟大廳介面
+    /// </summary>
+    public async Task OpenLobbyView(Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.LobbyView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveView(view);
+        };
+
+        await OpenView(
+            viewEnum: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<LobbyView>().SetData(closeAction: viewCloseAction);
+                }
+            });
+    }
+
     #endregion
 
 
