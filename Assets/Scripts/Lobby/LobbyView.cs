@@ -23,6 +23,14 @@ public class LobbyView : BasicView
         FirestoreManagement.Instance.StartListenAccountData();
     }
 
+    private void Update()
+    {
+        if(Keyboard.current != null && Keyboard.current.sKey.wasPressedThisFrame)
+        {
+            FirestoreManagement.Instance.StopListenAccountData();
+        }
+    }
+
     public void SetData(Action closeAction)
     {
         CloseAction = closeAction;

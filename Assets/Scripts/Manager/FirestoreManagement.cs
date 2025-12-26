@@ -337,7 +337,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         string docId = PlayerPrefs.GetString(PlayerPrefsKeys.USER_ACCOUNT);
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-        ListenToFirestoreData(path, docId, gameObject.name, nameof(OnDataChanged));
+        ListenToFirestoreData(path, docId, gameObject.name, nameof(OnAccountDataChanged));
         Debug.Log($"[WebGL] 開始監聽: {docId}");
 #else
         // 已經在監聽停止
