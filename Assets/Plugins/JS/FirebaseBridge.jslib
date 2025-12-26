@@ -195,6 +195,7 @@ mergeInto(LibraryManager.library, {
     },
 
     // 停止監聽
+    // docId: 資料表名稱
     StopListenToFirestoreData: function (docId) {
         var documentId = UTF8ToString(docId);
         if (window.firestoreUnsubscribes && window.firestoreUnsubscribes[documentId]) {

@@ -4,7 +4,8 @@
 public enum SceneEnum
 {
     Login = 1,
-    Lobby
+    Lobby,
+    Game,
 }
 
 /// <summary>

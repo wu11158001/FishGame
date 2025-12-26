@@ -8,27 +8,20 @@ using Newtonsoft.Json;
 public class LobbyView : BasicView
 {
     [SerializeField] TextMeshProUGUI CoinText;
-
-    Action CloseAction;
+    [SerializeField] Button StartBtn;
 
     private void OnDestroy()
     {
-        FirestoreManagement.Instance.AsccountDataChangeDelete -= AccountDataChange;
+        if (FirestoreManagement.Instance != null)
+            FirestoreManagement.Instance.AsccountDataChangeDelete -= AccountDataChange;
     }
 
     private void Start()
     {
+        StartBtn.onClick.AddListener(() => { NetworkRunnerManagement.Instance.JoInRoom(); });
+
         FirestoreManagement.Instance.AsccountDataChangeDelete += AccountDataChange;
-
         FirestoreManagement.Instance.StartListenAccountData();
-    }
-
-    private void Update()
-    {
-        if(Keyboard.current != null && Keyboard.current.sKey.wasPressedThisFrame)
-        {
-            FirestoreManagement.Instance.StopListenAccountData();
-        }
     }
 
     public void SetData(Action closeAction)
@@ -48,4 +41,5 @@ public class LobbyView : BasicView
             CoinText.text = data.Coins.ToString();
         }
     }
+
 }
