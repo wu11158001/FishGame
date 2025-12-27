@@ -334,7 +334,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     public void StartListenAccountData()
     {
         string path = FirestoreCollectionName.AccountData.ToString();
-        string docId = PlayerPrefs.GetString(PlayerPrefsKeys.USER_ACCOUNT);
+        string docId = PlayerPrefsManagement.GetLoginInfo().Account;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         ListenToFirestoreData(path, docId, gameObject.name, nameof(OnAccountDataChanged));
@@ -373,7 +373,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// </summary>
     public void StopListenAccountData()
     {
-        string docId = PlayerPrefs.GetString(PlayerPrefsKeys.USER_ACCOUNT);
+        string docId = PlayerPrefsManagement.GetLoginInfo().Account;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         // WebGL 端：呼叫 .jslib 刪除 JS 字典裡的監聽

@@ -4,6 +4,7 @@ using System;
 using UnityEngine.Localization.Components;
 using TMPro;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine.InputSystem;
 
 public class LoginView : BasicView
@@ -71,7 +72,7 @@ public class LoginView : BasicView
         Confirm,
     }
 
-    private void Initialize()
+    private IEnumerator Initialize()
     {
         MainCanvasGroup.alpha = 0;
 
@@ -83,7 +84,9 @@ public class LoginView : BasicView
         CheckLoginData();
         CheckRegisterData();
 
-        StartCoroutine(IYieldShow());
+        yield return IYieldShow();
+
+        AutoLogin();
     }
 
     private void Start()
@@ -153,7 +156,24 @@ public class LoginView : BasicView
     {
         CloseAction = closeAction;
 
-        Initialize();
+        StartCoroutine(Initialize());
+    }
+
+    /// <summary>
+    /// 自動登入
+    /// </summary>
+    private void AutoLogin()
+    {
+        LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
+        if (loginInfo != null)
+        {
+            AccountIF_Login.text = loginInfo.Account;
+            PasswordIF_Login.text = loginInfo.Password;
+
+            LoginBtn.interactable = true;
+
+            SendLogin();
+        }
     }
 
     /// <summary>
@@ -315,7 +335,7 @@ public class LoginView : BasicView
                     string currPsw = StringUtility.ToHash256(PasswordIF_Login.text);
                     if (data.Password == currPsw)
                     {
-                        PlayerPrefs.SetString(PlayerPrefsKeys.USER_ACCOUNT, AccountIF_Login.text);
+                        SvaeLoginInfo(account: AccountIF_Login.text, password: PasswordIF_Login.text);
                         InLobby();
                         Debug.Log("登入成功");
                     }
@@ -428,7 +448,7 @@ public class LoginView : BasicView
 
         if (response.ResponseStatus == FirestoreStatus.Success)
         {
-            PlayerPrefs.SetString(PlayerPrefsKeys.USER_ACCOUNT, AccountIF_Register.text);
+            SvaeLoginInfo(AccountIF_Register.text, PasswordIF_Register.text);
             InLobby();
             Debug.Log("註冊成功");
         }
@@ -437,6 +457,22 @@ public class LoginView : BasicView
             AddressableManagement.Instance.ShowToast("Registration Failed");
             Debug.LogError($"註冊失敗: {response.Status}");
         }
+    }
+
+    /// <summary>
+    /// 紀錄登入帳號密碼
+    /// </summary>
+    private void SvaeLoginInfo(string account, string password)
+    {
+        LoginInfo loginInfo = new()
+        {
+            Account = AccountIF_Login.text,
+            Password = PasswordIF_Login.text,
+        };
+
+        string loginInfoJson = JsonUtility.ToJson(loginInfo);
+
+        PlayerPrefs.SetString(PlayerPrefsManagement.LOGIN_INFO, loginInfoJson);
     }
 
     /// <summary>
