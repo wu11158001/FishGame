@@ -3,6 +3,7 @@ using Fusion;
 using Fusion.Sockets;
 using System.Collections.Generic;
 using System;
+using UnityEngine.InputSystem;
 
 public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManagement>, INetworkRunnerCallbacks
 {
@@ -10,17 +11,14 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     public delegate void OnRoomListUpdated(NetworkRunner runner, List<SessionInfo> sessionList);
     public event OnRoomListUpdated RoomListUpdatedDelegate;
 
-
     public NetworkRunner NetworkRunner { get; private set; }
-
-    
+    public NetworkSceneManagerDefault NetworkSceneManagerDefault { get; set; }
 
     private void Start()
     {
         NetworkRunner = GetComponent<NetworkRunner>();
+        NetworkSceneManagerDefault = GetComponent<NetworkSceneManagerDefault>();
     }
-
-
 
     #region NetworkRunnerCallbacks
 
@@ -56,7 +54,9 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-       
+        var data = new NetworkInputData();
+        data.MousePosition = Mouse.current.position.ReadValue();
+        input.Set(data);
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
@@ -76,12 +76,12 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-
+        Debug.Log("玩家加入");
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-
+        Debug.Log("玩家離開");
     }
 
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)
@@ -94,14 +94,30 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
     }
 
-    public void OnSceneLoadDone(NetworkRunner runner)
+    /// <summary>
+    /// 場景載入完成
+    /// </summary>
+    public async void OnSceneLoadDone(NetworkRunner runner)
     {
+        Debug.Log("場景載入完成");
 
+        // 產生遊戲地形
+        if(runner.IsSharedModeMasterClient)
+        {
+            await AddressableManagement.Instance.SapwnNetworkObject(
+                    gameNetworkObject: GameNetworkObject.GameTerrain,
+                    Pos: Vector3.zero,
+                    parent: null,
+                    player: PlayerRef.None);
+        }
     }
 
+    /// <summary>
+    /// 場景開始載入
+    /// </summary>
     public void OnSceneLoadStart(NetworkRunner runner)
     {
-
+        Debug.Log("場景開始載入");
     }
 
     /// <summary>

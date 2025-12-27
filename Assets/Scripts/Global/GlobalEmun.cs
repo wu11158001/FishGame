@@ -85,3 +85,15 @@ public enum FirestoreStatus
     /// <summary> 監聽資料變更 </summary>
     DataChanged
 }
+
+/// <summary>
+/// Fusion物件
+/// </summary>
+public enum GameNetworkObject
+{
+    /// <summary> 遊戲地形 </summary>
+    GameTerrain,
+
+    /// <summary> 玩家遊戲物件 </summary>
+    Player,
+}

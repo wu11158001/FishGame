@@ -116,7 +116,7 @@ public class LobbyView : BasicView
             GameMode = GameMode.Shared,
             SessionName = sessionName,
             Scene = SceneRef.FromIndex((int)SceneEnum.Game),
-            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
+            SceneManager = NetworkRunnerManagement.Instance.NetworkSceneManagerDefault,
             PlayerCount = 4,
         });
 
