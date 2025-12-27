@@ -3,37 +3,24 @@ using Fusion;
 using Fusion.Sockets;
 using System.Collections.Generic;
 using System;
-using UnityEngine.SceneManagement;
 
 public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManagement>, INetworkRunnerCallbacks
 {
+    // 房間列表更新
+    public delegate void OnRoomListUpdated(NetworkRunner runner, List<SessionInfo> sessionList);
+    public event OnRoomListUpdated RoomListUpdatedDelegate;
+
+
     public NetworkRunner NetworkRunner { get; private set; }
 
-    /*[SerializeField] NetworkPrefabRef PlayerPrefab;
-
-    private Dictionary<PlayerRef, NetworkObject> PlayerList = new();*/
+    
 
     private void Start()
     {
         NetworkRunner = GetComponent<NetworkRunner>();
     }
 
-    /// <summary>
-    /// 加入房間
-    /// </summary>
-    public async void JoInRoom()
-    {
-        NetworkRunner.ProvideInput = true;
 
-        var result = await NetworkRunner.StartGame(new StartGameArgs()
-        {
-            GameMode = GameMode.Shared,
-            SessionName = null,
-            Scene = SceneRef.FromIndex((int)SceneEnum.Game),
-            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
-            PlayerCount = 4,
-        });
-    }
 
     #region NetworkRunnerCallbacks
 
@@ -117,9 +104,12 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
     }
 
+    /// <summary>
+    /// 房間列表更新
+    /// </summary>
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-  
+        RoomListUpdatedDelegate?.Invoke(runner, sessionList);
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)

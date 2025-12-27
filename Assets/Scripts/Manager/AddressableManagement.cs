@@ -239,7 +239,6 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
 
     #endregion
 
-
     #region 介面(Canvas_Global)
 
     /// <summary>
