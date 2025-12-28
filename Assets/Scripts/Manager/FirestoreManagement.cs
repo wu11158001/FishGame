@@ -76,7 +76,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// </summary>
     [DllImport("__Internal")]
     private static extern void SaveDataToFirestore(string path, string docId, string jsonData, string callbackObj, string callbackMethod, string guid);
-    public void SaveDataToFirestore(FirestoreCollectionName path, string docId, string jsonData, Action<FirestoreResponse> callback)
+    public void SaveDataToFirestore(FirestoreCollectionNameEnum path, string docId, string jsonData, Action<FirestoreResponse> callback)
     {
         string guid = Guid.NewGuid().ToString();
         PendingCallbacks.Add(guid, callback);
@@ -112,7 +112,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// </summary>
     [DllImport("__Internal")]
     private static extern void UpdateDataToFirestore(string path, string docId, string jsonData, string callbackObj, string callbackMethod, string guid);
-    public void UpdateDataToFirestore(FirestoreCollectionName path, string docId, string jsonData, Action<FirestoreResponse> callback)
+    public void UpdateDataToFirestore(FirestoreCollectionNameEnum path, string docId, string jsonData, Action<FirestoreResponse> callback)
     {
         string guid = Guid.NewGuid().ToString();
         PendingCallbacks.Add(guid, callback);
@@ -164,7 +164,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// </summary>
     [DllImport("__Internal")]
     private static extern void GetDataFromFirestore(string path, string docId, string callbackObj, string callbackMethod, string guid);
-    public void GetDataFromFirestore(FirestoreCollectionName path, string docId, Action<FirestoreResponse> callback)
+    public void GetDataFromFirestore(FirestoreCollectionNameEnum path, string docId, Action<FirestoreResponse> callback)
     {
         string guid = Guid.NewGuid().ToString();
         PendingCallbacks.Add(guid, callback);
@@ -218,7 +218,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// </summary>
     [DllImport("__Internal")]
     private static extern void DeleteDataFromFirestore(string path, string docId, string callbackObj, string callbackMethod, string guid);
-    public void DeleteDataFromFirestore(FirestoreCollectionName path, string docId, Action<FirestoreResponse> callback)
+    public void DeleteDataFromFirestore(FirestoreCollectionNameEnum path, string docId, Action<FirestoreResponse> callback)
     {
         string guid = Guid.NewGuid().ToString();
         PendingCallbacks.Add(guid, callback);
@@ -281,32 +281,32 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// <summary>
     /// 顯示回傳資料失敗處理
     /// </summary>
-    public void CallbackFailHandle(FirestoreStatus status)
+    public void CallbackFailHandle(FirestoreStatusEnum status)
     {
         switch(status)
         {
             // 連線錯誤!
-            case FirestoreStatus.Error:
+            case FirestoreStatusEnum.Error:
                 AddressableManagement.Instance.ShowToast("Wiring Error");
                 break;
 
             // 帳號資料不存在!!
-            case FirestoreStatus.AccountNotFound:
+            case FirestoreStatusEnum.AccountNotFound:
                 AddressableManagement.Instance.ShowToast("Account Error");
                 break;
 
             // 刪除資料失敗!
-            case FirestoreStatus.DeleteError:
+            case FirestoreStatusEnum.DeleteError:
                 AddressableManagement.Instance.ShowToast("Delete Error");
                 break;
 
             // 更新失敗!
-            case FirestoreStatus.UpdateFail:
+            case FirestoreStatusEnum.UpdateFail:
                 AddressableManagement.Instance.ShowToast("Update Fail");
                 break;
 
             // 寫入資料失敗!!
-            case FirestoreStatus.WriteFail:
+            case FirestoreStatusEnum.WriteFail:
                 AddressableManagement.Instance.ShowToast("Writ Fail");
                 break;
         }
@@ -333,7 +333,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// </summary>
     public void StartListenAccountData()
     {
-        string path = FirestoreCollectionName.AccountData.ToString();
+        string path = FirestoreCollectionNameEnum.AccountData.ToString();
         string docId = PlayerPrefsManagement.GetLoginInfo().Account;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -411,15 +411,15 @@ public class FirestoreResponse
 
     /// <summary> 狀態碼(Success, NotFound, Error) </summary>
     public string Status;
-    public FirestoreStatus ResponseStatus
+    public FirestoreStatusEnum ResponseStatus
     {
         get
         {
-            if (Enum.TryParse(Status.Replace(" ", ""), true, out FirestoreStatus status))
+            if (Enum.TryParse(Status.Replace(" ", ""), true, out FirestoreStatusEnum status))
             {
                 return status;
             }
-            return FirestoreStatus.Error;
+            return FirestoreStatusEnum.Error;
         }
     }
 

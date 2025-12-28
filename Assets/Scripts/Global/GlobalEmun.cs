@@ -48,12 +48,15 @@ public enum ViewEnum
 
     /// <summary> 大廳介面 </summary>
     LobbyView,
+
+    /// <summary> 遊戲介面 </summary>
+    GameView,
 }
 
 /// <summary>
 /// Firestore 集合名稱
 /// </summary>
-public enum FirestoreCollectionName
+public enum FirestoreCollectionNameEnum
 {
     /// <summary> 帳戶資料 </summary>
     AccountData,
@@ -62,7 +65,7 @@ public enum FirestoreCollectionName
 /// <summary>
 /// Firestore 識別碼
 /// </summary>
-public enum FirestoreStatus
+public enum FirestoreStatusEnum
 {
     /// <summary> 錯誤 </summary>
     Error,
@@ -87,9 +90,9 @@ public enum FirestoreStatus
 }
 
 /// <summary>
-/// Fusion物件
+/// 網路物件
 /// </summary>
-public enum GameNetworkObject
+public enum NetworkPrefabEnum
 {
     /// <summary> 遊戲地形 </summary>
     GameTerrain,

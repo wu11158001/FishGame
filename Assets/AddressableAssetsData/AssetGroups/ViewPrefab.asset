@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: ViewPrefab
   m_GUID: ace4c7fa93c57f44c8418ad04300c388
   m_SerializeEntries:
+  - m_GUID: 0521f254dbcb5fd43a6b50d9e2cb2756
+    m_Address: GameView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 052601c01aca4c748a2e5ccc4d4e0ed3
     m_Address: LoginView
     m_ReadOnly: 0
@@ -34,7 +39,8 @@ MonoBehaviour:
   - m_GUID: d528c63562cee6a469c09a20204fa076
     m_Address: Toast
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a6ffe8b80cdb34646b6c359c3c6733cf, type: 2}

@@ -4,6 +4,7 @@ using Fusion.Sockets;
 using System.Collections.Generic;
 using System;
 using UnityEngine.InputSystem;
+using System.Threading.Tasks;
 
 public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManagement>, INetworkRunnerCallbacks
 {
@@ -18,6 +19,26 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         NetworkRunner = GetComponent<NetworkRunner>();
         NetworkSceneManagerDefault = GetComponent<NetworkSceneManagerDefault>();
+    }
+
+    /// <summary>
+    /// 斷開連線
+    /// </summary>
+    public async Task Shutdown()
+    {
+        await NetworkRunner.Shutdown(false);
+
+        AddressableManagement.Instance.RemoveAllNetworkObject();
+
+        if (NetworkRunner != null)
+        {
+            Destroy(NetworkRunner);
+            NetworkRunner = null;
+        }
+
+        await Task.Yield();
+
+        NetworkRunner = gameObject.AddComponent<NetworkRunner>();
     }
 
     #region NetworkRunnerCallbacks
@@ -54,9 +75,10 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        var data = new NetworkInputData();
-        data.MousePosition = Mouse.current.position.ReadValue();
-        input.Set(data);
+        NetworkInputData inputData = new();
+
+        inputData.MousePosition = Mouse.current.position.ReadValue();
+        input.Set(inputData);
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
@@ -101,15 +123,20 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         Debug.Log("場景載入完成");
 
+        await AddressableManagement.Instance.LoadAllNetworkObject();
+
         // 產生遊戲地形
         if(runner.IsSharedModeMasterClient)
         {
-            await AddressableManagement.Instance.SapwnNetworkObject(
-                    gameNetworkObject: GameNetworkObject.GameTerrain,
-                    Pos: Vector3.zero,
-                    parent: null,
-                    player: PlayerRef.None);
+            AddressableManagement.Instance.SapwnNetworkObject(
+                key: NetworkPrefabEnum.GameTerrain,
+                Pos: Vector3.zero,
+                parent: null,
+                player: PlayerRef.None);
         }
+
+        AddressableManagement.Instance.SetCanvase();
+        await AddressableManagement.Instance.OpenGameView();
     }
 
     /// <summary>

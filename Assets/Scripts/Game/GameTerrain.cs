@@ -32,7 +32,7 @@ public class GameTerrain : NetworkBehaviour
     /// <summary>
     /// 產生本地玩家物件
     /// </summary>
-    private async void OnSpawnLocalObject()
+    private void OnSpawnLocalObject()
     {
         if (isLocalSpawn)
             return;
@@ -43,15 +43,17 @@ public class GameTerrain : NetworkBehaviour
             {
                 var pos = Seats[i].transform.position;
 
-                await AddressableManagement.Instance.SapwnNetworkObject(
-                    gameNetworkObject: GameNetworkObject.Player,
+                AddressableManagement.Instance.SapwnNetworkObject(
+                    key: NetworkPrefabEnum.Player,
                     Pos: pos,
                     parent: Seats[i].transform,
                     player: Runner.LocalPlayer);
 
-                return;
+                break;
             }
         }
+
+        AddressableManagement.Instance.CloseLoading();
     }
 
     /// <summary>

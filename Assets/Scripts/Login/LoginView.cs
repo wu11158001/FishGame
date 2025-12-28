@@ -306,7 +306,7 @@ public class LoginView : BasicView
         AddressableManagement.Instance.ShowLoading();
 
         FirestoreManagement.Instance.GetDataFromFirestore(
-            path: FirestoreCollectionName.AccountData,
+            path: FirestoreCollectionNameEnum.AccountData,
             docId: AccountIF_Login.text,
             callback: SendLoginCallback);
     }
@@ -370,7 +370,7 @@ public class LoginView : BasicView
         
         // 檢查註冊帳戶是否存在
         FirestoreManagement.Instance.GetDataFromFirestore(
-            path: FirestoreCollectionName.AccountData,
+            path: FirestoreCollectionNameEnum.AccountData,
             docId: AccountIF_Register.text,
             callback: CheckRegisterAccount);
     }
@@ -391,7 +391,7 @@ public class LoginView : BasicView
 
         try
         {
-            if(response.ResponseStatus == FirestoreStatus.Error)
+            if(response.ResponseStatus == FirestoreStatusEnum.Error)
             {
                 
                 AddressableManagement.Instance.ShowToast("Wiring Error");
@@ -399,7 +399,7 @@ public class LoginView : BasicView
                 return;
             }
 
-            if(response.ResponseStatus ==  FirestoreStatus.AccountNotFound)
+            if(response.ResponseStatus ==  FirestoreStatusEnum.AccountNotFound)
             {
                 AddressableManagement.Instance.ShowLoading();
 
@@ -414,7 +414,7 @@ public class LoginView : BasicView
                 string json = JsonUtility.ToJson(data);
 
                 FirestoreManagement.Instance.SaveDataToFirestore(
-                    path: FirestoreCollectionName.AccountData,
+                    path: FirestoreCollectionNameEnum.AccountData,
                     docId: AccountIF_Register.text,
                     jsonData: json,
                     SendRegisterCallback);
@@ -446,7 +446,7 @@ public class LoginView : BasicView
             return;
         }
 
-        if (response.ResponseStatus == FirestoreStatus.Success)
+        if (response.ResponseStatus == FirestoreStatusEnum.Success)
         {
             SvaeLoginInfo(AccountIF_Register.text, PasswordIF_Register.text);
             InLobby();

@@ -4,7 +4,7 @@ using System.Collections;
 
 public class Loading : BasicView
 {
-    const float RemoveTime = 5f;
+    const float RemoveTime = 15f;
 
     private void OnDestroy()
     {

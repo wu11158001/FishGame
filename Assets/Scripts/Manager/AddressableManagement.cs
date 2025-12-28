@@ -20,12 +20,12 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     private Dictionary<ViewEnum, List<ViewInstance>> ViewDic = new();
 
     // 紀錄遊戲內物件
-    private class NetworkObjectInstance
+    private class NetworkPrefabInstance
     {
         public GameObject Go;
         public AsyncOperationHandle<GameObject> Handle;
     }
-    private Dictionary<GameNetworkObject, NetworkObjectInstance> NetworkObjectDic = new();
+    private Dictionary<NetworkPrefabEnum, NetworkPrefabInstance> NetworkPrefabDic = new();
 
     private Canvas Canvas_Camera;
     private Canvas Canvas_Overlay;
@@ -249,6 +249,30 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             });
     }
 
+    /// <summary>
+    /// 開啟遊戲介面
+    /// </summary>
+    public async Task OpenGameView(Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.GameView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveView(view);
+        };
+
+        await OpenView(
+            viewEnum: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<GameView>().SetData(closeAction: viewCloseAction);
+                }
+            });
+    }
+
     #endregion
 
     #region 介面(Canvas_Global)
@@ -328,21 +352,53 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     #region 遊戲中物件(NetworkObject)
 
     /// <summary>
-    /// 移除所有遊戲物件
+    /// 載入所有Fusion物件
+    /// 由於Fusion的機制，在進入遊戲前需載入所有相關物件
+    /// </summary>
+    /// <returns></returns>
+    public async Task LoadAllNetworkObject()
+    {
+        foreach (var key in Enum.GetValues(typeof(NetworkPrefabEnum)))
+        {
+            AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(key.ToString());
+            await handle.Task;
+
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                GameObject prefab = handle.Result;
+
+                NetworkPrefabInstance networkObjectInstance = new()
+                {
+                    Go = prefab,
+                    Handle = handle,
+                };
+
+                NetworkPrefabDic.Add((NetworkPrefabEnum)key, networkObjectInstance);
+            }
+            else
+            {
+                Debug.LogError($"載入網路物件失敗 : {key}");
+            }
+        }
+
+        Debug.Log("載入所有Fusion物件 完成");
+    }
+
+    /// <summary>
+    /// 釋放所有Fusion物件資源
     /// </summary>
     public void RemoveAllNetworkObject()
     {
         try
         {
-            foreach (var obj in NetworkObjectDic)
+            foreach (var obj in NetworkPrefabDic)
             {
-                if (obj.Value.Go != null)
-                    Destroy(obj.Value.Go);
-
                 Addressables.Release(obj.Value.Handle);
             }
 
-            NetworkObjectDic.Clear();
+            NetworkPrefabDic.Clear();
+
+            Debug.Log("釋放所有Fusion物件資源 完成");
         }
         catch (Exception e)
         {
@@ -351,12 +407,13 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     }
 
     /// <summary>
-    /// 產生Network遊戲物件
+    /// 產生Fusion物件
     /// </summary>
-    public async Task SapwnNetworkObject(GameNetworkObject gameNetworkObject, Vector3 Pos, PlayerRef player, Transform parent = null)
+    public void SapwnNetworkObject(NetworkPrefabEnum key, Vector3 Pos, PlayerRef player, Transform parent = null, Action<NetworkObject> callback = null)
     {
         var NetworkRunner = NetworkRunnerManagement.Instance.NetworkRunner;
 
+        // 產生完成執行
         NetworkRunner.OnBeforeSpawned onBeforeSpawned = (runner, obj) =>
         {
             if (parent != null)
@@ -364,34 +421,14 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
                 obj.transform.SetParent(parent);
                 obj.transform.localPosition = Vector3.zero;
             }
+
+            callback?.Invoke(obj);
         };
 
-        if (NetworkObjectDic.ContainsKey(gameNetworkObject))
+        if (NetworkPrefabDic.ContainsKey(key))
         {
-            var obj = NetworkObjectDic[gameNetworkObject].Go;
+            var obj = NetworkPrefabDic[key].Go;
             NetworkRunner.Spawn(obj, Pos, Quaternion.identity, player, onBeforeSpawned);
-            return;
-        }
-
-        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(gameNetworkObject.ToString());
-        await handle.Task;
-
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            GameObject prefab = handle.Result;
-
-            NetworkObjectInstance networkObjectInstance = new()
-            {
-                Go = prefab,
-                Handle = handle,
-            };
-
-            NetworkObjectDic.Add(gameNetworkObject, networkObjectInstance);
-            NetworkRunner.Spawn(prefab, Pos, Quaternion.identity, player, onBeforeSpawned);
-        }
-        else
-        {
-            Debug.LogError("產生遊戲物件失敗");
         }
     }
 
