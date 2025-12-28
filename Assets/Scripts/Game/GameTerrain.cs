@@ -41,14 +41,13 @@ public class GameTerrain : NetworkBehaviour
         {
             if (SeatPlayerIDs[i] == Runner.LocalPlayer.PlayerId)
             {
-                var pos = Seats[i].transform.position;
+                var pos = Vector3.zero;
 
-                AddressableManagement.Instance.SapwnNetworkObject(
+                NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                     key: NetworkPrefabEnum.Player,
                     Pos: pos,
                     parent: Seats[i].transform,
                     player: Runner.LocalPlayer);
-
                 break;
             }
         }

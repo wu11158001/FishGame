@@ -28,8 +28,6 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         await NetworkRunner.Shutdown(false);
 
-        AddressableManagement.Instance.RemoveAllNetworkObject();
-
         if (NetworkRunner != null)
         {
             Destroy(NetworkRunner);
@@ -123,12 +121,10 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         Debug.Log("場景載入完成");
 
-        await AddressableManagement.Instance.LoadAllNetworkObject();
-
         // 產生遊戲地形
         if(runner.IsSharedModeMasterClient)
         {
-            AddressableManagement.Instance.SapwnNetworkObject(
+            NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                 key: NetworkPrefabEnum.GameTerrain,
                 Pos: Vector3.zero,
                 parent: null,

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1434808478902774355}
   - component: {fileID: 138506298775373126}
+  - component: {fileID: 3111527231183809788}
   m_Layer: 0
   m_Name: UserSeat3
   m_TagString: Untagged
@@ -91,6 +92,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &3111527231183809788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91539589686417959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 3804401144
+  ObjectInterest: 1
+  Flags: 786433
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &1207396067173202399
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,6 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6972828699044630168}
   - component: {fileID: 732924682220736134}
+  - component: {fileID: 5978759464731775102}
   m_Layer: 0
   m_Name: UserSeat1
   m_TagString: Untagged
@@ -182,6 +202,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &5978759464731775102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207396067173202399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 3129789993
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &2627256162801739647
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,6 +356,7 @@ GameObject:
   m_Component:
   - component: {fileID: 120966461559651038}
   - component: {fileID: 2121571053725627120}
+  - component: {fileID: 3736086824587005441}
   m_Layer: 0
   m_Name: UserSeat0
   m_TagString: Untagged
@@ -399,6 +438,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &3736086824587005441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4136501032311471753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 2941349653
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &4743146370798967890
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,6 +466,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2386968121885100608}
   - component: {fileID: 7709589304744571617}
+  - component: {fileID: 1589175384917835985}
   m_Layer: 0
   m_Name: UserSeat2
   m_TagString: Untagged
@@ -490,6 +548,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1589175384917835985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4743146370798967890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 2536445268
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &7643845842323837020
 GameObject:
   m_ObjectHideFlags: 0
@@ -558,7 +634,11 @@ MonoBehaviour:
   SortKey: 4108677809
   ObjectInterest: 1
   Flags: 131073
-  NestedObjects: []
+  NestedObjects:
+  - {fileID: 3736086824587005441}
+  - {fileID: 5978759464731775102}
+  - {fileID: 1589175384917835985}
+  - {fileID: 3111527231183809788}
   NetworkedBehaviours:
   - {fileID: 4605175632265743735}
   ForceRemoteRenderTimeframe: 0

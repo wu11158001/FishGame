@@ -7,6 +7,13 @@ public class Player : NetworkBehaviour
     // 同步角度變數
     [Networked] public float NetworkedAngle { get; set; }
 
+    bool IsSetLocalPosition;
+
+    public override void Spawned()
+    {
+        
+    }
+
     public override void FixedUpdateNetwork()   
     {
         // 轉向
@@ -20,5 +27,21 @@ public class Player : NetworkBehaviour
         }
 
         transform.rotation = Quaternion.Euler(0, 0, NetworkedAngle);
+    }
+
+    public override void Render()
+    {
+        if(!IsSetLocalPosition && transform.parent != null)
+        {
+            IsSetLocalPosition = true;
+
+            transform.localPosition = Vector3.zero;
+            Debug.Log("我在裡面");
+        }
+        else
+        {
+            if(!IsSetLocalPosition)
+            Debug.Log("我在外面");
+        }
     }
 }
