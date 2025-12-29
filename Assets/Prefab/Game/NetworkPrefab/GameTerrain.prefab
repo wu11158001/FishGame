@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1434808478902774355}
   - component: {fileID: 138506298775373126}
-  - component: {fileID: 3111527231183809788}
+  - component: {fileID: 3660832720825608907}
+  - component: {fileID: 195311264511823660}
   m_Layer: 0
   m_Name: UserSeat3
   m_TagString: Untagged
@@ -92,7 +93,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &3111527231183809788
+--- !u!114 &3660832720825608907
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -104,12 +105,30 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 3804401144
+  SortKey: 3665326040
   ObjectInterest: 1
-  Flags: 786433
+  Flags: 524289
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 195311264511823660}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &195311264511823660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91539589686417959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &1207396067173202399
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,7 +139,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6972828699044630168}
   - component: {fileID: 732924682220736134}
-  - component: {fileID: 5978759464731775102}
+  - component: {fileID: 7880609391056840137}
+  - component: {fileID: 4295012548846685070}
   m_Layer: 0
   m_Name: UserSeat1
   m_TagString: Untagged
@@ -202,7 +222,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &5978759464731775102
+--- !u!114 &7880609391056840137
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -214,12 +234,30 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 3129789993
+  SortKey: 1705609691
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 4295012548846685070}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &4295012548846685070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207396067173202399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &2627256162801739647
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,7 +394,8 @@ GameObject:
   m_Component:
   - component: {fileID: 120966461559651038}
   - component: {fileID: 2121571053725627120}
-  - component: {fileID: 3736086824587005441}
+  - component: {fileID: 3454640577209685315}
+  - component: {fileID: 7695100333139977738}
   m_Layer: 0
   m_Name: UserSeat0
   m_TagString: Untagged
@@ -438,7 +477,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &3736086824587005441
+--- !u!114 &3454640577209685315
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -450,12 +489,30 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 2941349653
+  SortKey: 250926548
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 7695100333139977738}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &7695100333139977738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4136501032311471753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &4743146370798967890
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,7 +523,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2386968121885100608}
   - component: {fileID: 7709589304744571617}
-  - component: {fileID: 1589175384917835985}
+  - component: {fileID: 4761135232477996936}
+  - component: {fileID: 490475828872368079}
   m_Layer: 0
   m_Name: UserSeat2
   m_TagString: Untagged
@@ -548,7 +606,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &1589175384917835985
+--- !u!114 &4761135232477996936
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -560,12 +618,30 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 2536445268
+  SortKey: 3112018371
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 490475828872368079}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &490475828872368079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4743146370798967890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &7643845842323837020
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,6 +653,7 @@ GameObject:
   - component: {fileID: 7747983482266266891}
   - component: {fileID: 4605175632265743735}
   - component: {fileID: 8927304616545405679}
+  - component: {fileID: 1350743142145259702}
   m_Layer: 0
   m_Name: GameTerrain
   m_TagString: Untagged
@@ -633,12 +710,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
   SortKey: 4108677809
   ObjectInterest: 1
-  Flags: 131073
+  Flags: 524289
   NestedObjects:
-  - {fileID: 3736086824587005441}
-  - {fileID: 5978759464731775102}
-  - {fileID: 1589175384917835985}
-  - {fileID: 3111527231183809788}
+  - {fileID: 3454640577209685315}
+  - {fileID: 7880609391056840137}
+  - {fileID: 4761135232477996936}
+  - {fileID: 3660832720825608907}
   NetworkedBehaviours:
   - {fileID: 4605175632265743735}
+  - {fileID: 1350743142145259702}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &1350743142145259702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7643845842323837020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 1
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
