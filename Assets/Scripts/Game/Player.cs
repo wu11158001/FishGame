@@ -1,22 +1,39 @@
 using UnityEngine;
 using Fusion;
-using UnityEngine.InputSystem;
 
 public class Player : NetworkBehaviour
 {
-    // 同步角度變數
-    [Networked] public float NetworkedAngle { get; set; }
+    [SerializeField] Transform ShotPoint;
+    [SerializeField] float FireRate = 0.5f;
 
-    bool IsSetLocalPosition;
+    // 同步角度變數
+    [Networked]
+    private float NetworkedAngle { get; set; }
+
+    //射速
+    [Networked]
+    private TickTimer Delay { get; set; }
+
+    Transform BulletPool;
 
     public override void Spawned()
     {
-        
+        BulletPool = GameObject.Find("BulletPool").transform;
+
+        transform.localPosition = Vector3.zero;
     }
 
     public override void FixedUpdateNetwork()   
     {
-        // 轉向
+        OnRotation();
+        OnFire();
+    }
+
+    /// <summary>
+    /// 轉向
+    /// </summary>
+    private void OnRotation()
+    {
         if (GetInput(out NetworkInputData input))
         {
             float distanceToCamera = Mathf.Abs(Camera.main.transform.position.z - transform.position.z);
@@ -29,19 +46,25 @@ public class Player : NetworkBehaviour
         transform.rotation = Quaternion.Euler(0, 0, NetworkedAngle);
     }
 
-    public override void Render()
+    /// <summary>
+    /// 發射
+    /// </summary>
+    private void OnFire()
     {
-        if(!IsSetLocalPosition && transform.parent != null)
+        if(GetInput(out NetworkInputData input))
         {
-            IsSetLocalPosition = true;
+            if(input.IsFirePressed && Delay.ExpiredOrNotRunning(Runner))
+            {
+                // 重製冷卻時間
+                Delay = TickTimer.CreateFromSeconds(Runner, FireRate);
 
-            transform.localPosition = Vector3.zero;
-            Debug.Log("我在裡面");
-        }
-        else
-        {
-            if(!IsSetLocalPosition)
-            Debug.Log("我在外面");
+                NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                 key: NetworkPrefabEnum.Bullet,
+                 Pos: ShotPoint.position,
+                 rot: transform.localRotation,
+                 parent: BulletPool,
+                 player: Object.InputAuthority);
+            }
         }
     }
 }

@@ -3,10 +3,13 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using TMPro;
 
 public class EntryView : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI VersionText;
     [SerializeField] Slider ProgressBar;
+    
 
     float TargetProgress;
 

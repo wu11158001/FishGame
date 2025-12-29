@@ -111,16 +111,9 @@ public class LobbyView : BasicView
     /// </summary>
     private async void JoinRoom(string sessionName)
     {
-        var result = await NetworkRunner.StartGame(new StartGameArgs()
-        {
-            GameMode = GameMode.Shared,
-            SessionName = sessionName,
-            Scene = SceneRef.FromIndex((int)SceneEnum.Game),
-            SceneManager = NetworkRunnerManagement.Instance.NetworkSceneManagerDefault,
-            PlayerCount = 4,
-        });
+        var result = await NetworkRunnerManagement.Instance.StartGame(sessionName);
 
-        if(!result.Ok)
+        if (!result.Ok)
         {
             Debug.LogError($"無法加入房間: {result.ShutdownReason}");
             AddressableManagement.Instance.CloseLoading();

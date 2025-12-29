@@ -46,6 +46,7 @@ public class GameTerrain : NetworkBehaviour
                 NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                     key: NetworkPrefabEnum.Player,
                     Pos: pos,
+                    rot: Quaternion.identity,
                     parent: Seats[i].transform,
                     player: Runner.LocalPlayer);
                 break;

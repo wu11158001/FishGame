@@ -14,11 +14,30 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
     public NetworkRunner NetworkRunner { get; private set; }
     public NetworkSceneManagerDefault NetworkSceneManagerDefault { get; set; }
+    public FusionPoolManager FusionPoolManager { get; set; }
 
     private void Start()
     {
         NetworkRunner = GetComponent<NetworkRunner>();
         NetworkSceneManagerDefault = GetComponent<NetworkSceneManagerDefault>();
+        FusionPoolManager = GetComponent<FusionPoolManager>();
+    }
+
+    /// <summary>
+    /// 開始遊戲
+    /// </summary>
+    public async Task<StartGameResult> StartGame(string sessionName)
+    {
+        return await NetworkRunner.StartGame(new StartGameArgs()
+        {
+            GameMode = GameMode.Shared,
+            ObjectProvider = FusionPoolManager,
+            SessionName = sessionName,
+            Scene = SceneRef.FromIndex((int)SceneEnum.Game),
+            SceneManager = NetworkSceneManagerDefault,
+            PlayerCount = 4,
+        });
+
     }
 
     /// <summary>
@@ -33,6 +52,8 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
             Destroy(NetworkRunner);
             NetworkRunner = null;
         }
+
+        FusionPoolManager.ClearPool();
 
         await Task.Yield();
 
@@ -76,6 +97,10 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         NetworkInputData inputData = new();
 
         inputData.MousePosition = Mouse.current.position.ReadValue();
+
+        if (Mouse.current != null)
+            inputData.IsFirePressed = Mouse.current.leftButton.isPressed;
+
         input.Set(inputData);
     }
 
@@ -127,6 +152,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
             NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                 key: NetworkPrefabEnum.GameTerrain,
                 Pos: Vector3.zero,
+                rot: Quaternion.identity,
                 parent: null,
                 player: PlayerRef.None);
         }

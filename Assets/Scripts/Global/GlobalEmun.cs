@@ -99,4 +99,7 @@ public enum NetworkPrefabEnum
 
     /// <summary> 玩家遊戲物件 </summary>
     Player,
+
+    /// <summary> 子彈物件 </summary>
+    Bullet,
 }
