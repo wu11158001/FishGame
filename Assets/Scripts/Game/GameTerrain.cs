@@ -1,6 +1,7 @@
 using Fusion;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class GameTerrain : NetworkBehaviour
 {
@@ -25,8 +26,6 @@ public class GameTerrain : NetworkBehaviour
 
     public override void Spawned()
     {
-        Debug.Log("產生地形");
-
         if (Object.HasStateAuthority)
         {
             // 初始化座位
@@ -36,7 +35,25 @@ public class GameTerrain : NetworkBehaviour
             }
         }
 
-        JoinSeat();
+        StartCoroutine(IJoinSeat());
+    }
+
+    /// <summary>
+    /// 加入座位
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator IJoinSeat()
+    {
+        yield return null;
+
+        if (Object != null && Object.IsValid)
+        {
+            JoinSeat();
+        }
+
+        yield return null;
+
+        OnSpawnLocalObject();
     }
 
     /// <summary>
@@ -44,7 +61,7 @@ public class GameTerrain : NetworkBehaviour
     /// </summary>
     private void OnSpawnLocalObject()
     {
-        if (isLocalSpawn)
+        if (isLocalSpawn) 
             return;
 
         for (int i = 0; i < SeatPlayerIDs.Length; i++)
@@ -74,19 +91,61 @@ public class GameTerrain : NetworkBehaviour
     /// </summary>
     private void LeftRoom(NetworkRunner runner, PlayerRef player)
     {
-        RPC_LeftRoom(player);
+        // 原房主離開後，Photon Cloud 會瞬間指派新的 Master Client
+        if (Runner.IsSharedModeMasterClient)
+        {
+            // 請求地形權限
+            if (!Object.HasStateAuthority)
+            {
+                Object.RequestStateAuthority();
+            }
+
+            // 請求座位權限
+            foreach (var seatGo in Seats)
+            {
+                if (seatGo != null && seatGo.TryGetComponent<NetworkObject>(out var seatNO))
+                {
+                    if (!seatNO.HasStateAuthority)
+                    {
+                        seatNO.RequestStateAuthority();
+                    }
+                }
+            }
+
+            StartCoroutine(IYieldResetSeat(player));
+        }
     }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_LeftRoom(PlayerRef player)
+    /// <summary>
+    /// 等待獲取權限重設離開玩家座位
+    /// </summary>
+    /// <param name="leftPlayer"></param>
+    /// <returns></returns>
+    private IEnumerator IYieldResetSeat(PlayerRef leftPlayer)
     {
-        for (int i = 0; i < SeatPlayerIDs.Length; i++)
+        float timer = 0;
+        while (!Object.HasStateAuthority && timer < 2.0f)
         {
-            if(SeatPlayerIDs[i] == player.PlayerId)
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        if (Object.HasStateAuthority)
+        {
+            // 既然我是權限者了，直接改 Networked Array
+            for (int i = 0; i < SeatPlayerIDs.Length; i++)
             {
-                SeatPlayerIDs.Set(i, -1);
-                break;
+                if (SeatPlayerIDs[i] == leftPlayer.PlayerId)
+                {
+                    Debug.Log($"[新房主] 成功取得權限，清理座位 Index: {i}");
+                    SeatPlayerIDs.Set(i, -1);
+                    break;
+                }
             }
+        }
+        else
+        {
+            Debug.LogError("取得權限超時，無法清理座位");
         }
     }
 
@@ -104,7 +163,8 @@ public class GameTerrain : NetworkBehaviour
         // 已經有位置
         for (int i = 0; i < SeatPlayerIDs.Length; i++)
         {
-            if (SeatPlayerIDs[i] == player.PlayerId) return; 
+            if (SeatPlayerIDs[i] == player.PlayerId) 
+                return; 
         }
 
         // 設置座位

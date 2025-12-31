@@ -20,8 +20,6 @@ public class Player : NetworkBehaviour
 
     public override void Spawned()
     {
-        Debug.Log($"產生玩家: {Id}");
-
         BulletPool = GameObject.Find("BulletPool").transform;
     }
 
@@ -29,7 +27,6 @@ public class Player : NetworkBehaviour
     {
         if(!IsSetPosition && transform.parent != null)
         {
-            Debug.Log($"設置玩家父物件: {transform.parent.name}");
             IsSetPosition = true;
         }
     }

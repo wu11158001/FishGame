@@ -46,7 +46,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     /// <summary>
     /// 斷開連線
     /// </summary>
-    public async Task Shutdown()
+    public async void Shutdown()
     {
         await NetworkRunner.Shutdown(false);
 
@@ -166,8 +166,6 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     /// </summary>
     public async void OnSceneLoadDone(NetworkRunner runner)
     {
-        Debug.Log("場景載入完成");
-
         // 產生遊戲地形
         if(runner.IsSharedModeMasterClient)
         {
@@ -188,7 +186,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     /// </summary>
     public void OnSceneLoadStart(NetworkRunner runner)
     {
-        Debug.Log("場景開始載入");
+
     }
 
     /// <summary>
@@ -201,7 +199,15 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-      
+        Debug.Log($"斷開連線");
+
+        SceneManagement.Instance.LoadScene(
+          sceneEnum: SceneEnum.Lobby,
+          callback: async () =>
+          {
+              await AddressableManagement.Instance.OpenLobbyView();
+              AddressableManagement.Instance.CloseLoading();
+          });
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)

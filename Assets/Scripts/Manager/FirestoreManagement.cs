@@ -364,7 +364,6 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
 
         // 將監聽器存入 C# 字典
         EditorListeners.Add(docId, registration);
-        Debug.Log($"[Editor] 開始監聽帳戶資料: {docId}");
 #endif
     }
 
@@ -383,7 +382,6 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         {
             EditorListeners[docId].Stop();
             EditorListeners.Remove(docId);
-            Debug.Log($"[Editor] 停止監聽帳戶資料: {docId}");
         }
 #endif
     }

@@ -74,8 +74,6 @@ public class FusionPoolManager : NetworkObjectProviderDefault
     /// </summary>
     public override void ReleaseInstance(NetworkRunner runner, in NetworkObjectReleaseContext context)
     {
-        Debug.Log($"回收物件: {context.Object.transform.name}");
-
         var instance = context.Object;
 
         // 如果物件正在被銷毀（例如 Runner 正在關閉），則不進池
@@ -127,8 +125,6 @@ public class FusionPoolManager : NetworkObjectProviderDefault
     {
         if (instance.GetComponent<Player>() != null)
         {
-            Debug.Log($"玩家物件不進池，直接銷毀: {instance.name}");
-
             if (context.TypeId.IsPrefab)
             {
                 runner.Prefabs.RemoveInstance(context.TypeId.AsPrefabId);

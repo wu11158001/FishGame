@@ -337,7 +337,6 @@ public class LoginView : BasicView
                     {
                         SvaeLoginInfo(account: AccountIF_Login.text, password: PasswordIF_Login.text);
                         InLobby();
-                        Debug.Log("登入成功");
                     }
                     else
                     {

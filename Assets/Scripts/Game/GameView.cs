@@ -20,18 +20,9 @@ public class GameView : BasicView
     /// <summary>
     /// 斷開連接離開
     /// </summary>
-    private async void Shutdown()
+    private void Shutdown()
     {
         AddressableManagement.Instance.ShowLoading();
-
-        await NetworkRunnerManagement.Instance.Shutdown();
-
-        SceneManagement.Instance.LoadScene(
-            sceneEnum: SceneEnum.Lobby,
-            callback: async () =>
-            {
-                await AddressableManagement.Instance.OpenLobbyView();
-                AddressableManagement.Instance.CloseLoading();
-            });
+        NetworkRunnerManagement.Instance.Shutdown();
     }
 }

@@ -28,7 +28,6 @@ mergeInto(LibraryManager.library, {
                         JsonData: "", 
                     };
 
-                    console.log("寫入資料成功 " + collectionPath + "/" + documentPath);
                     window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));
                 })
                 .catch(function(error) {
@@ -71,7 +70,6 @@ mergeInto(LibraryManager.library, {
                         JsonData: "", 
                     };
 
-                    console.log("Firestore: 資料已成功更新 " + collectionPath + "/" + documentPath);
                     window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));
                 })
                 .catch(function(error) {
@@ -109,7 +107,6 @@ mergeInto(LibraryManager.library, {
                     JsonData: doc.exists ? JSON.stringify(doc.data()) : "" 
                 };
 
-                console.log("查詢/讀取資料成功");
                 window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));            
             })
             .catch(function(error) {
@@ -142,7 +139,6 @@ mergeInto(LibraryManager.library, {
                     JsonData: "" 
                 };
 
-                console.log("刪除資料成功");
                 window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));
             })
             .catch(function(error) {
@@ -182,7 +178,6 @@ mergeInto(LibraryManager.library, {
                 JsonData: doc.exists ? JSON.stringify(doc.data()) : ""
             };
 
-            console.log("Firestore 監聽到資料變更: " + documentId);
             window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));
         }, function(error) {
             console.error("監聽失敗: ", error.message);
@@ -201,7 +196,6 @@ mergeInto(LibraryManager.library, {
         if (window.firestoreUnsubscribes && window.firestoreUnsubscribes[documentId]) {
             window.firestoreUnsubscribes[documentId]();
             delete window.firestoreUnsubscribes[documentId];
-            console.log("已停止監聽: " + documentId);
         }
     }
 });
