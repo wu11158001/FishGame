@@ -14,13 +14,24 @@ public class Player : NetworkBehaviour
     [Networked]
     private TickTimer Delay { get; set; }
 
+    Camera MainCamera;
     Transform BulletPool;
+    bool IsSetPosition;
 
     public override void Spawned()
     {
-        BulletPool = GameObject.Find("BulletPool").transform;
+        Debug.Log($"產生玩家: {Id}");
 
-        transform.localPosition = Vector3.zero;
+        BulletPool = GameObject.Find("BulletPool").transform;
+    }
+
+    public override void Render()
+    {
+        if(!IsSetPosition && transform.parent != null)
+        {
+            Debug.Log($"設置玩家父物件: {transform.parent.name}");
+            IsSetPosition = true;
+        }
     }
 
     public override void FixedUpdateNetwork()   
@@ -36,8 +47,14 @@ public class Player : NetworkBehaviour
     {
         if (GetInput(out NetworkInputData input))
         {
-            float distanceToCamera = Mathf.Abs(Camera.main.transform.position.z - transform.position.z);
-            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(new Vector3(input.MousePosition.x, input.MousePosition.y, distanceToCamera));
+            if (MainCamera == null)
+            {
+                MainCamera = Camera.main;
+                if (MainCamera == null) return;
+            }
+
+            float distanceToCamera = Mathf.Abs(MainCamera.transform.position.z - transform.position.z);
+            Vector3 mouseWorldPos = MainCamera.ScreenToWorldPoint(new Vector3(input.MousePosition.x, input.MousePosition.y, distanceToCamera));
             Vector2 dir = (Vector2)mouseWorldPos - (Vector2)transform.position;
 
             NetworkedAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;

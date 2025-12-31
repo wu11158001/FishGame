@@ -7,6 +7,8 @@ using TMPro;
 
 public class EntryView : MonoBehaviour
 {
+    [SerializeField] string VersionNumber;
+
     [SerializeField] TextMeshProUGUI VersionText;
     [SerializeField] Slider ProgressBar;
     
@@ -20,6 +22,8 @@ public class EntryView : MonoBehaviour
 
     private void Initialize()
     {
+        VersionText.text = VersionNumber;
+
         ProgressBar.value = 0;
     }
 

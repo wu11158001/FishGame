@@ -9,8 +9,11 @@ using System.Threading.Tasks;
 public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManagement>, INetworkRunnerCallbacks
 {
     // 房間列表更新
-    public delegate void OnRoomListUpdated(NetworkRunner runner, List<SessionInfo> sessionList);
-    public event OnRoomListUpdated RoomListUpdatedDelegate;
+    public delegate void RoomListUpdatedDelegate(NetworkRunner runner, List<SessionInfo> sessionList);
+    public event RoomListUpdatedDelegate RoomListUpdatedEvent;
+
+    public delegate void PlayerLeftDelegate(NetworkRunner runner, PlayerRef player);
+    public event PlayerLeftDelegate PlayerLeftEvent;
 
     public NetworkRunner NetworkRunner { get; private set; }
     public NetworkSceneManagerDefault NetworkSceneManagerDefault { get; set; }
@@ -119,14 +122,35 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
   
     }
 
+    /// <summary>
+    /// 玩家加入
+    /// </summary>
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        Debug.Log("玩家加入");
+        Debug.Log($"玩家加入: {player.PlayerId}");
     }
 
+    /// <summary>
+    /// 玩家離開
+    /// </summary>
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        Debug.Log("玩家離開");
+        Debug.Log($"玩家離開: {player.PlayerId}");
+
+        if (runner.IsSharedModeMasterClient)
+        {
+            // 尋找場景中所有屬於該斷線玩家的物件
+            foreach (var no in runner.GetAllNetworkObjects())
+            {
+                // 如果該物件的輸入權限屬於該斷線玩家
+                if (no.InputAuthority == player)
+                {
+                    runner.Despawn(no);
+                }
+            }
+        }
+
+        PlayerLeftEvent?.Invoke(runner, player);
     }
 
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)
@@ -174,7 +198,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     /// </summary>
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        RoomListUpdatedDelegate?.Invoke(runner, sessionList);
+        RoomListUpdatedEvent?.Invoke(runner, sessionList);
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)

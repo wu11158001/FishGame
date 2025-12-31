@@ -13,10 +13,7 @@ public enum SceneEnum
 /// </summary>
 public enum CanvasEnum
 {
-    Canvas_Overlay,
-    Canvas_Camera,
-
-    /// <summary> 最高層級Canvas </summary>
+    Canvas_Scene,
     Canvas_Global,
 }
 

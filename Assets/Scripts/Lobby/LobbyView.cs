@@ -21,14 +21,14 @@ public class LobbyView : BasicView
             FirestoreManagement.Instance.AsccountDataChangeDelete -= AccountDataChange;
 
         if(NetworkRunnerManagement.Instance != null)
-            NetworkRunnerManagement.Instance.RoomListUpdatedDelegate -= OnRoomListUpdatedUpdate;
+            NetworkRunnerManagement.Instance.RoomListUpdatedEvent -= OnRoomListUpdatedUpdate;
     }
 
     private void Start()
     {
         StartBtn.onClick.AddListener(StartJoInGame);
 
-        NetworkRunnerManagement.Instance.RoomListUpdatedDelegate += OnRoomListUpdatedUpdate;
+        NetworkRunnerManagement.Instance.RoomListUpdatedEvent += OnRoomListUpdatedUpdate;
 
         FirestoreManagement.Instance.AsccountDataChangeDelete += AccountDataChange;
         FirestoreManagement.Instance.StartListenAccountData();
@@ -88,8 +88,7 @@ public class LobbyView : BasicView
     /// </summary>
     private async void StartJoInGame()
     {
-        if (IsMatchmaking)
-            return;
+        if (IsMatchmaking) return;
 
         IsMatchmaking = true;
         AddressableManagement.Instance.ShowLoading();

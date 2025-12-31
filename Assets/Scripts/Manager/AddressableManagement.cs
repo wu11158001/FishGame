@@ -4,10 +4,13 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using Fusion;
+using UnityEngine.UI;
 
 public class AddressableManagement : SingletonMonoBehaviour<AddressableManagement>
 {
+    //原始解析度比例
+    public Vector2 TargetResolution { get; private set; } = new(1920, 1080);
+
     //避免重複加載資源
     HashSet<ViewEnum> LoadViewAsyncSet = new();
 
@@ -19,17 +22,10 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     }
     private Dictionary<ViewEnum, List<ViewInstance>> ViewDic = new();
 
-    // 紀錄遊戲內物件
-    private class NetworkPrefabInstance
-    {
-        public GameObject Go;
-        public AsyncOperationHandle<GameObject> Handle;
-    }
-    private Dictionary<NetworkPrefabEnum, NetworkPrefabInstance> NetworkPrefabDic = new();
+    private RectTransform SafeArea_Scene;
+    private RectTransform SafeArea_Global;
 
-    private Canvas Canvas_Camera;
-    private Canvas Canvas_Overlay;
-
+    // 防止Loading物件創建多個
     private GameObject CurrLoadingObj;
 
     /// <summary>
@@ -39,12 +35,40 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     {
         try
         {
-            Canvas_Camera = GameObject.Find("Canvas_Camera").GetComponent<Canvas>();
-            Canvas_Overlay = GameObject.Find("Canvas_Overlay").GetComponent<Canvas>();
+            SetSafeArea(canvasObj: GameObject.Find("Canvas_Scene"), safeArea: ref SafeArea_Scene);
+            SetSafeArea(canvasObj: GameObject.Find("Canvas_Global"), safeArea: ref SafeArea_Global);
         }
         catch (Exception e)
         {
             Debug.LogError($"設置當前場景Canvas錯誤: {e}");
+        }
+    }
+
+    /// <summary>
+    /// 設置介面產生父物件
+    /// </summary>
+    private void SetSafeArea(GameObject canvasObj, ref RectTransform safeArea)
+    {
+        if (canvasObj == null) return;
+
+        Transform found = canvasObj.transform.Find("SafeArea");
+
+        if (found != null)
+        {
+            safeArea = found as RectTransform;
+        }
+        else
+        {
+            GameObject newObj = new GameObject("SafeArea", typeof(RectTransform));
+            newObj.transform.SetParent(canvasObj.transform, false);
+            safeArea = newObj.GetComponent<RectTransform>();
+        }
+
+        if (safeArea != null)
+        {
+            safeArea.anchorMin = new Vector2(0.5f, 0.5f);
+            safeArea.anchorMax = new Vector2(0.5f, 0.5f);
+            safeArea.sizeDelta = TargetResolution;
         }
     }
 
@@ -81,7 +105,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 開啟介面
     /// </summary>
-    private async Task OpenView(ViewEnum viewEnum, Action<GameObject> callback = null, bool IsCanStack = false, CanvasEnum canvasEnum = CanvasEnum.Canvas_Overlay)
+    private async Task OpenView(ViewEnum viewEnum, Action<GameObject> callback = null, bool IsCanStack = false, CanvasEnum canvasEnum = CanvasEnum.Canvas_Scene)
     {
         // 避免重複加載資源
         if (LoadViewAsyncSet.Contains(viewEnum))
@@ -103,20 +127,16 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
                 Transform parent = null;
                 switch (canvasEnum)
                 {
-                    case CanvasEnum.Canvas_Overlay:
-                        parent = Canvas_Overlay.transform;
-
-                        break;
-                    case CanvasEnum.Canvas_Camera:
-                        parent = Canvas_Camera.transform;
+                    case CanvasEnum.Canvas_Scene:
+                        parent = SafeArea_Scene;
                         break;
 
                     case CanvasEnum.Canvas_Global:
-                        parent = Canvas_Global.Instance.GlobalCanvas.transform;
+                        parent = SafeArea_Global;
                         break;
 
                     default:
-                        parent = Canvas_Overlay.transform;
+                        parent = SafeArea_Scene;
                         break;
                 }
 
@@ -199,7 +219,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
 
     #endregion
 
-    #region 介面(Canvas_Overlay)
+    #region 介面(Canvas_Scene)
 
     /// <summary>
     /// 開啟登入介面

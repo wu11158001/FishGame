@@ -1,22 +1,32 @@
 using Fusion;
 using UnityEngine;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 public class GameTerrain : NetworkBehaviour
 {
     [SerializeField] List<GameObject> Seats;
 
     /// <summary> 紀錄座位上玩家ID </summary>
-    [HideInInspector]
     [Networked, Capacity(4)]
     [OnChangedRender(nameof(OnSpawnLocalObject))]
-    public NetworkArray<int> SeatPlayerIDs => default;
+    private NetworkArray<int> SeatPlayerIDs { get; }
 
     bool isLocalSpawn;
 
+    private void OnDestroy()
+    {
+        NetworkRunnerManagement.Instance.PlayerLeftEvent -= LeftRoom;
+    }
+
+    private void Start()
+    {
+        NetworkRunnerManagement.Instance.PlayerLeftEvent += LeftRoom;
+    }
+
     public override void Spawned()
     {
+        Debug.Log("產生地形");
+
         if (Object.HasStateAuthority)
         {
             // 初始化座位
@@ -41,14 +51,17 @@ public class GameTerrain : NetworkBehaviour
         {
             if (SeatPlayerIDs[i] == Runner.LocalPlayer.PlayerId)
             {
+                isLocalSpawn = true;
+
                 var pos = Vector3.zero;
 
                 NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                     key: NetworkPrefabEnum.Player,
-                    Pos: pos,
+                    Pos: Seats[i].transform.position,
                     rot: Quaternion.identity,
                     parent: Seats[i].transform,
                     player: Runner.LocalPlayer);
+
                 break;
             }
         }
@@ -57,15 +70,36 @@ public class GameTerrain : NetworkBehaviour
     }
 
     /// <summary>
+    /// 離開房間
+    /// </summary>
+    private void LeftRoom(NetworkRunner runner, PlayerRef player)
+    {
+        RPC_LeftRoom(player);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_LeftRoom(PlayerRef player)
+    {
+        for (int i = 0; i < SeatPlayerIDs.Length; i++)
+        {
+            if(SeatPlayerIDs[i] == player.PlayerId)
+            {
+                SeatPlayerIDs.Set(i, -1);
+                break;
+            }
+        }
+    }
+
+    /// <summary>
     /// 加入座位
     /// </summary>
     private void JoinSeat()
     {
-        RPC_RequestSeat(Runner.LocalPlayer);
+        RPC_JoinSeat(Runner.LocalPlayer);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_RequestSeat(PlayerRef player)
+    public void RPC_JoinSeat(PlayerRef player)
     {
         // 已經有位置
         for (int i = 0; i < SeatPlayerIDs.Length; i++)
