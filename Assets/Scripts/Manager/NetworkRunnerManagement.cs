@@ -139,10 +139,8 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
         if (runner.IsSharedModeMasterClient)
         {
-            // 尋找場景中所有屬於該斷線玩家的物件
             foreach (var no in runner.GetAllNetworkObjects())
             {
-                // 如果該物件的輸入權限屬於該斷線玩家
                 if (no.InputAuthority == player)
                 {
                     runner.Despawn(no);

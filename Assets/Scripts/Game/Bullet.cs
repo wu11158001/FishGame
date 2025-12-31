@@ -3,25 +3,18 @@ using Fusion;
 
 public class Bullet : NetworkBehaviour
 {
-    public float Speed = 20f;
-    public float lifeTime = 2f;
-
     [Networked] 
     private Vector2 Direction { get; set; }
 
-    private Vector2 MinBounds;
-    private Vector2 MaxBounds;
+    Vector2 MinBounds = new(-9.6f, -5.4f);
+    Vector2 MaxBounds = new(9.6f, 5.4f);
+    float Speed = 10f;
 
     [Networked]
     private int Count { get; set; }
 
     public override void Spawned()
     {
-        // 取得螢幕邊界的計算 (世界座標)
-        Camera cam = Camera.main;
-        MinBounds = cam.ViewportToWorldPoint(new Vector2(0, 0));
-        MaxBounds = cam.ViewportToWorldPoint(new Vector2(1, 1));
-
         Direction = transform.rotation * Vector2.right;
         Count = 0;
     }
