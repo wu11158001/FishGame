@@ -44,11 +44,11 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     }
 
     /// <summary>
-    /// 斷開連線
+    /// 重製Runner
     /// </summary>
-    public async void Shutdown()
+    private async Task ResetRunner()
     {
-        await NetworkRunner.Shutdown(false);
+        await Task.Yield();
 
         if (NetworkRunner != null)
         {
@@ -58,9 +58,22 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
         FusionPoolManager.ClearPool();
 
-        await Task.Yield();
-
         NetworkRunner = gameObject.AddComponent<NetworkRunner>();
+    }
+
+    /// <summary>
+    /// 斷開連線
+    /// </summary>
+    public async void Shutdown()
+    {
+        AddressableManagement.Instance.ShowLoading();
+
+        if (NetworkRunner != null && NetworkRunner.IsRunning)
+        {
+            await NetworkRunner.Shutdown(false);
+        }
+
+        await ResetRunner();
     }
 
     #region NetworkRunnerCallbacks
@@ -197,17 +210,19 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         RoomListUpdatedEvent?.Invoke(runner, sessionList);
     }
 
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    public async void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
         Debug.Log($"斷開連線");
 
+        await ResetRunner();
+
         SceneManagement.Instance.LoadScene(
-          sceneEnum: SceneEnum.Lobby,
-          callback: async () =>
-          {
-              await AddressableManagement.Instance.OpenLobbyView();
-              AddressableManagement.Instance.CloseLoading();
-          });
+         sceneEnum: SceneEnum.Lobby,
+         callback: async () =>
+         {
+             await AddressableManagement.Instance.OpenLobbyView();
+             AddressableManagement.Instance.CloseLoading();
+         });
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)

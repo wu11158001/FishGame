@@ -86,8 +86,10 @@ public class FusionPoolManager : NetworkObjectProviderDefault
             return;
         }
 
+        // 不進物件池直接銷毀
         if(IsNotPoolObject(runner, context, instance))
         {
+            Destroy(instance.gameObject);
             return;
         }
 
@@ -119,7 +121,7 @@ public class FusionPoolManager : NetworkObjectProviderDefault
     }
 
     /// <summary>
-    /// 是否不進物件池直接銷毀
+    /// 是否不進物件池
     /// </summary>
     private bool IsNotPoolObject(NetworkRunner runner, NetworkObjectReleaseContext context, NetworkObject instance)
     {
@@ -130,7 +132,6 @@ public class FusionPoolManager : NetworkObjectProviderDefault
                 runner.Prefabs.RemoveInstance(context.TypeId.AsPrefabId);
             }
 
-            Destroy(instance.gameObject);
             return true;
         }
 

@@ -22,7 +22,6 @@ public class GameView : BasicView
     /// </summary>
     private void Shutdown()
     {
-        AddressableManagement.Instance.ShowLoading();
-        NetworkRunnerManagement.Instance.Shutdown();
+        NetworkRunnerManagement.Instance.Shutdown(); 
     }
 }

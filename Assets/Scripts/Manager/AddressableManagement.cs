@@ -331,8 +331,12 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 關閉Loading
     /// </summary>
-    public void CloseLoading()
+    public async void CloseLoading()
     {
+        await Task.Yield();
+        await Task.Yield();
+        await Task.Yield();
+
         if (CurrLoadingObj != null)
         {
             CurrLoadingObj = null;
