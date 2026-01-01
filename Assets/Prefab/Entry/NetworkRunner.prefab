@@ -9,10 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6342190357893054576}
-  - component: {fileID: 4239828937628617883}
   - component: {fileID: 8247652979272663838}
   - component: {fileID: 7292763180806763227}
-  - component: {fileID: 8684118439600870592}
   m_Layer: 0
   m_Name: NetworkRunner
   m_TagString: Untagged
@@ -35,18 +33,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4239828937628617883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4586419393930879846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1199893898, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkRunner
 --- !u!114 &8247652979272663838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,16 +61,3 @@ MonoBehaviour:
   LogSceneLoadErrors: 1
   DestroySpawnedPrefabsOnSceneUnload: 1
   AddressableScenesLabel: FusionScenes
---- !u!114 &8684118439600870592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4586419393930879846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ddc56876b513d8429a0c8b529423a12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FusionPoolManager
-  DelayIfSceneManagerIsBusy: 1

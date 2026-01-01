@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FusionPoolManager : NetworkObjectProviderDefault
+public class FusionPool : NetworkObjectProviderDefault
 {
     private Dictionary<NetworkPrefabId, Stack<NetworkObject>> Pool = new();
 

@@ -12,7 +12,6 @@ public class LobbyView : BasicView
     [SerializeField] TextMeshProUGUI CoinText;
     [SerializeField] Button StartBtn;
 
-    NetworkRunner NetworkRunner;
     bool IsMatchmaking;
 
     private void OnDestroy()
@@ -32,8 +31,6 @@ public class LobbyView : BasicView
 
         FirestoreManagement.Instance.AsccountDataChangeDelete += AccountDataChange;
         FirestoreManagement.Instance.StartListenAccountData();
-
-        NetworkRunner = NetworkRunnerManagement.Instance.NetworkRunner;
     }
 
     public void SetData(Action closeAction)
@@ -93,10 +90,14 @@ public class LobbyView : BasicView
         IsMatchmaking = true;
         AddressableManagement.Instance.ShowLoading();
 
-        NetworkRunner.ProvideInput = true;
+        NetworkRunnerManagement.Instance.ResetRunner();
+
+        var runner = NetworkRunnerManagement.Instance.NetworkRunner;
+
+        runner.ProvideInput = true;
 
         // 加入大廳
-        var result = await NetworkRunner.JoinSessionLobby(SessionLobby.Shared);
+        var result = await runner.JoinSessionLobby(SessionLobby.Shared);
 
         if (!result.Ok)
         {

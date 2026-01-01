@@ -17,13 +17,30 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
     public NetworkRunner NetworkRunner { get; private set; }
     public NetworkSceneManagerDefault NetworkSceneManagerDefault { get; set; }
-    public FusionPoolManager FusionPoolManager { get; set; }
+
+    FusionPool FusionPool;
 
     private void Start()
     {
-        NetworkRunner = GetComponent<NetworkRunner>();
         NetworkSceneManagerDefault = GetComponent<NetworkSceneManagerDefault>();
-        FusionPoolManager = GetComponent<FusionPoolManager>();
+    }
+
+    /// <summary>
+    /// 重設Runner
+    /// </summary>
+    public void ResetRunner()
+    {
+        if(NetworkRunner != null)
+        {
+            Destroy(NetworkRunner.gameObject);
+            NetworkRunner = null;
+        }
+
+        // 建立新的"Runner
+        var runnerObj = new GameObject("Runner Object");
+        runnerObj.transform.SetParent(gameObject.transform);
+        NetworkRunner = runnerObj.AddComponent<NetworkRunner>();
+        NetworkRunner.AddCallbacks(this);
     }
 
     /// <summary>
@@ -31,34 +48,25 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     /// </summary>
     public async Task<StartGameResult> StartGame(string sessionName)
     {
+        if (FusionPool != null)
+        {
+            Destroy(FusionPool.gameObject);
+            FusionPool = null;
+        }
+
+        var poolObj = new GameObject("Fusion Pool Object");
+        poolObj.transform.SetParent(gameObject.transform);
+        FusionPool = poolObj.AddComponent<FusionPool>();
+
         return await NetworkRunner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
-            ObjectProvider = FusionPoolManager,
+            ObjectProvider = FusionPool,
             SessionName = sessionName,
             Scene = SceneRef.FromIndex((int)SceneEnum.Game),
             SceneManager = NetworkSceneManagerDefault,
             PlayerCount = 4,
         });
-
-    }
-
-    /// <summary>
-    /// 重製Runner
-    /// </summary>
-    private async Task ResetRunner()
-    {
-        await Task.Yield();
-
-        if (NetworkRunner != null)
-        {
-            Destroy(NetworkRunner);
-            NetworkRunner = null;
-        }
-
-        FusionPoolManager.ClearPool();
-
-        NetworkRunner = gameObject.AddComponent<NetworkRunner>();
     }
 
     /// <summary>
@@ -66,14 +74,10 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     /// </summary>
     public async void Shutdown()
     {
-        AddressableManagement.Instance.ShowLoading();
-
         if (NetworkRunner != null && NetworkRunner.IsRunning)
         {
-            await NetworkRunner.Shutdown(false);
+            await NetworkRunner.Shutdown(true);
         }
-
-        await ResetRunner();
     }
 
     #region NetworkRunnerCallbacks
@@ -210,12 +214,20 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         RoomListUpdatedEvent?.Invoke(runner, sessionList);
     }
 
-    public async void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
         Debug.Log($"斷開連線");
 
-        await ResetRunner();
+        AddressableManagement.Instance.ShowLoading();
 
+        // 移除物件池
+        if(FusionPool != null)
+        {
+            Destroy(FusionPool.gameObject);
+            FusionPool = null;
+        }
+
+        // 回大廳
         SceneManagement.Instance.LoadScene(
          sceneEnum: SceneEnum.Lobby,
          callback: async () =>
