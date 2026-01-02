@@ -2,6 +2,8 @@ using Fusion;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System;
+using System.Linq;
 
 public class GameTerrain : NetworkBehaviour
 {
@@ -10,9 +12,28 @@ public class GameTerrain : NetworkBehaviour
     /// <summary> 紀錄座位上玩家ID </summary>
     [Networked, Capacity(4)]
     [OnChangedRender(nameof(OnSpawnLocalObject))]
-    private NetworkArray<int> SeatPlayerIDs { get; }
+    NetworkArray<int> SeatPlayerIDs { get; }
 
+    /// <summary>
+    /// 產生一般魚計時器
+    /// </summary>
+    [Networked] 
+    TickTimer SpawnTimer { get; set; }
+
+    MainWayPoint MainWayPoint;
+    Transform FishPool;
+
+    // 一般魚Enum
+    List<NetworkPrefabEnum> NormalFishTypes = new();
+
+    // 本地玩家是否已生成
     bool isLocalSpawn;
+    // 一般魚生成時間
+    float NormalFishCreatTime = 5;
+    // 一般魚一次生成最小數量
+    int MinCreateNormalFish = 2;
+    // 一般魚一次生成最大數量
+    int MaxCreateNormalFish = 5;
 
     private void OnDestroy()
     {
@@ -37,6 +58,19 @@ public class GameTerrain : NetworkBehaviour
 
         StartCoroutine(IJoinSeat());
     }
+
+    public override void FixedUpdateNetwork()
+    {
+        if (!Object.HasStateAuthority) return;
+
+        if (SpawnTimer.ExpiredOrNotRunning(Runner))
+        {
+            CreatNormalFish();
+            SpawnTimer = TickTimer.CreateFromSeconds(Runner, NormalFishCreatTime);
+        }
+    }
+
+    #region 玩家
 
     /// <summary>
     /// 加入座位
@@ -177,4 +211,74 @@ public class GameTerrain : NetworkBehaviour
             }
         }
     }
+
+    #endregion
+
+    #region 魚
+
+    /// <summary>
+    /// 產生一般魚
+    /// </summary>
+    private void CreatNormalFish()
+    {
+        if (!Object.HasStateAuthority)
+            return;
+
+        if(FishPool == null)
+            FishPool = GameObject.Find(PoolNameEnum.FishPool.ToString()).transform;
+
+        if(MainWayPoint == null)
+            MainWayPoint = GameObject.Find($"{GamePrefabEnum.MainWayPoint}(Clone)").GetComponent<MainWayPoint>();
+
+        if(NormalFishTypes == null || NormalFishTypes.Count == 0)
+        {
+            NormalFishTypes = Enum.GetValues(typeof(NetworkPrefabEnum))
+                .Cast<NetworkPrefabEnum>()
+                .Where(e => e.ToString().StartsWith("NormalFish"))
+                .ToList();
+        }
+
+        if(FishPool == null || MainWayPoint == null || NormalFishTypes == null || NormalFishTypes.Count == 0)
+        {
+            Debug.LogError("產生一般魚錯誤!");
+            return;
+        }
+
+        // 總生成數量
+        int totalCount = UnityEngine.Random.Range(MinCreateNormalFish, MaxCreateNormalFish + 1);
+        for (int i = 0; i < totalCount; i++)
+        {
+            // 隨機魚種類
+            int fishTypeIndex = UnityEngine.Random.Range(0, NormalFishTypes.Count);
+            NetworkPrefabEnum fishType = NormalFishTypes[fishTypeIndex];
+
+            // 隨機選擇路線
+            List<WayPoint> wayPoints = MainWayPoint.GetWayPoints();
+            int wayPointIndex = UnityEngine.Random.Range(0, wayPoints.Count);
+
+            WayPoint wayPoint = wayPoints[wayPointIndex];
+
+            // 面向左或右
+            bool isMirror = UnityEngine.Random.value > 0.5f;
+            Vector3 initPos =
+                isMirror ?
+                wayPoint.Points[0].position :
+                wayPoint.Points[wayPoint.Points.Count - 1].position;
+
+            NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                       key: fishType,
+                       Pos: initPos,
+                       rot: Quaternion.identity,
+                       parent: FishPool,
+                       player: Runner.LocalPlayer,
+                       callback: (fish) =>
+                       {
+                           NormalFish normalFish = fish.GetComponent<NormalFish>();
+                           if (normalFish != null)
+                               normalFish.SetData(isMirror: isMirror, wayPoint: wayPoint);
+                       });
+        }
+    }
+
+    #endregion
 }

@@ -20,7 +20,7 @@ public class Player : NetworkBehaviour
 
     public override void Spawned()
     {
-        BulletPool = GameObject.Find("BulletPool").transform;
+        BulletPool = GameObject.Find(PoolNameEnum.BulletPool.ToString()).transform;
     }
 
     public override void Render()

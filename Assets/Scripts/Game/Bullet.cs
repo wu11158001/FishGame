@@ -21,7 +21,6 @@ public class Bullet : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        // 只有狀態權限者計算位移與反彈
         if (Object.HasStateAuthority)
         {
             Move();

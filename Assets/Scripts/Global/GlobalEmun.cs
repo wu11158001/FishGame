@@ -99,4 +99,41 @@ public enum NetworkPrefabEnum
 
     /// <summary> 子彈物件 </summary>
     Bullet,
+
+    /// <summary> 一般魚魚物件 </summary>
+    NormalFish_0,
+    NormalFish_1,
+    NormalFish_2,
+    NormalFish_3,
+    NormalFish_4,
+}
+
+/// <summary>
+/// 路徑點類型
+/// </summary>
+public enum WayPointEnum
+{
+    /// <summary> 一般路線 </summary>
+    Normal,
+}
+
+/// <summary>
+/// 遊戲預製物
+/// </summary>
+public enum GamePrefabEnum
+{
+    /// <summary> 路線主物件 </summary>
+    MainWayPoint,
+}
+
+/// <summary>
+/// 物件池容器名稱
+/// </summary>
+public enum PoolNameEnum
+{
+    /// <summary> 子彈容器 </summary>
+    BulletPool,
+
+    /// <summary> 魚容器 </summary>
+    FishPool
 }

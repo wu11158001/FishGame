@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.UI;
 
 public class AddressableManagement : SingletonMonoBehaviour<AddressableManagement>
 {
@@ -13,20 +12,25 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
 
     //避免重複加載資源
     HashSet<ViewEnum> LoadViewAsyncSet = new();
+    HashSet<GamePrefabEnum> LoadGamePrefabAsyncSet = new();
 
     // 紀錄已開啟介面
-    private class ViewInstance
-    {
-        public GameObject Go;
-        public AsyncOperationHandle<GameObject> Handle;
-    }
-    private Dictionary<ViewEnum, List<ViewInstance>> ViewDic = new();
+    private Dictionary<ViewEnum, List<PrefabInstance>> ViewDic = new();
+
+    // 紀錄已開啟遊戲預製物
+    private Dictionary<GamePrefabEnum, List<PrefabInstance>> GamePrefabDic = new();
 
     private RectTransform SafeArea_Scene;
     private RectTransform SafeArea_Global;
 
     // 防止Loading物件創建多個
     private GameObject CurrLoadingObj;
+
+    private class PrefabInstance
+    {
+        public GameObject Go;
+        public AsyncOperationHandle<GameObject> Handle;
+    }
 
     /// <summary>
     /// 設置當前場景Canvas
@@ -105,21 +109,21 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 開啟介面
     /// </summary>
-    private async Task OpenView(ViewEnum viewEnum, Action<GameObject> callback = null, bool IsCanStack = false, CanvasEnum canvasEnum = CanvasEnum.Canvas_Scene)
+    private async Task OpenView(ViewEnum viewType, Action<GameObject> callback = null, bool IsCanStack = false, CanvasEnum canvasEnum = CanvasEnum.Canvas_Scene)
     {
         // 避免重複加載資源
-        if (LoadViewAsyncSet.Contains(viewEnum))
+        if (LoadViewAsyncSet.Contains(viewType))
             return;
 
         // 不可重複開啟
-        if (!IsCanStack && ViewDic.ContainsKey(viewEnum))
+        if (!IsCanStack && ViewDic.ContainsKey(viewType))
             return;
 
-        LoadViewAsyncSet.Add(viewEnum);
+        LoadViewAsyncSet.Add(viewType);
 
         try
         {
-            AsyncOperationHandle<GameObject> loadHandle = Addressables.LoadAssetAsync<GameObject>(viewEnum.ToString());
+            AsyncOperationHandle<GameObject> loadHandle = Addressables.LoadAssetAsync<GameObject>(viewType.ToString());
             await loadHandle.Task;
 
             if (loadHandle.Status == AsyncOperationStatus.Succeeded)
@@ -144,12 +148,12 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
                 GameObject go = Instantiate(prefab, parent);
                 go.transform.SetSiblingIndex(parent.childCount + 1);
 
-                var newInstance = new ViewInstance { Go = go, Handle = loadHandle };
+                var newInstance = new PrefabInstance { Go = go, Handle = loadHandle };
 
-                if (!ViewDic.ContainsKey(viewEnum))
-                    ViewDic[viewEnum] = new List<ViewInstance>();
+                if (!ViewDic.ContainsKey(viewType))
+                    ViewDic[viewType] = new List<PrefabInstance>();
 
-                ViewDic[viewEnum].Add(newInstance);
+                ViewDic[viewType].Add(newInstance);
 
                 callback?.Invoke(go);
             }
@@ -160,7 +164,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         }
         finally
         {
-            LoadViewAsyncSet.Remove(viewEnum);
+            LoadViewAsyncSet.Remove(viewType);
         }
     }
 
@@ -235,7 +239,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         };
 
         await OpenView(
-            viewEnum: view,
+            viewType: view,
             callback: (viewObj) =>
             {
                 if(viewObj != null)
@@ -259,7 +263,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         };
 
         await OpenView(
-            viewEnum: view,
+            viewType: view,
             callback: (viewObj) =>
             {
                 if (viewObj != null)
@@ -283,7 +287,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         };
 
         await OpenView(
-            viewEnum: view,
+            viewType: view,
             callback: (viewObj) =>
             {
                 if (viewObj != null)
@@ -311,7 +315,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         };
 
         await OpenView(
-            viewEnum: view,
+            viewType: view,
             callback: (viewObj) =>
             {
                 if(viewObj != null)
@@ -357,7 +361,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         };
 
         await OpenView(
-            viewEnum: view,
+            viewType: view,
             callback: (viewObj) =>
             {
                 if(viewObj != null)
@@ -369,6 +373,68 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             },
             IsCanStack: true,
             canvasEnum: CanvasEnum.Canvas_Global);
+    }
+
+    #endregion
+
+    #region 遊戲預製物
+
+    /// <summary>
+    /// 清空遊戲預置物
+    /// </summary>
+    public void ClearGamePrefab()
+    {
+        foreach (var prefab in GamePrefabDic.Values)
+        {
+            foreach (var item in prefab)
+            {
+                if (item.Go != null) Destroy(item.Go);
+                if (item.Handle.IsValid()) Addressables.Release(item.Handle);
+            }
+        }
+        GamePrefabDic.Clear();
+        LoadGamePrefabAsyncSet.Clear();
+    }
+
+    /// <summary>
+    /// 創建遊戲預製物
+    /// </summary>
+    public  async Task CreateGamePrefab(GamePrefabEnum prefabType, Action<GameObject> callback = null)
+    {
+        // 避免重複加載資源
+        if (LoadGamePrefabAsyncSet.Contains(prefabType))
+            return;
+
+        LoadGamePrefabAsyncSet.Add(prefabType);
+
+        try
+        {
+            AsyncOperationHandle<GameObject> loadHandle = Addressables.LoadAssetAsync<GameObject>(prefabType.ToString());
+            await loadHandle.Task;
+
+            if (loadHandle.Status == AsyncOperationStatus.Succeeded)
+            {               
+                GameObject prefab = loadHandle.Result;
+                GameObject go = Instantiate(prefab);
+
+                var newInstance = new PrefabInstance { Go = go, Handle = loadHandle };
+
+                if (!GamePrefabDic.ContainsKey(prefabType))
+                    GamePrefabDic[prefabType] = new List<PrefabInstance>();
+
+                GamePrefabDic[prefabType].Add(newInstance);
+
+                callback?.Invoke(go);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"創建遊戲預製物{prefabType}錯誤: {e}");
+        }
+        finally
+        {
+            LoadGamePrefabAsyncSet.Remove(prefabType);
+        }
     }
 
     #endregion

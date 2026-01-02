@@ -183,8 +183,11 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     /// </summary>
     public async void OnSceneLoadDone(NetworkRunner runner)
     {
+        // 產生路線主物件
+        await AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.MainWayPoint);
+
         // 產生遊戲地形
-        if(runner.IsSharedModeMasterClient)
+        if (runner.IsSharedModeMasterClient)
         {
             NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                 key: NetworkPrefabEnum.GameTerrain,
@@ -226,6 +229,9 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
             Destroy(FusionPool.gameObject);
             FusionPool = null;
         }
+
+        // 清空遊戲預置物
+        AddressableManagement.Instance.ClearGamePrefab();
 
         // 回大廳
         SceneManagement.Instance.LoadScene(
