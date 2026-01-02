@@ -275,7 +275,10 @@ public class GameTerrain : NetworkBehaviour
                        {
                            NormalFish normalFish = fish.GetComponent<NormalFish>();
                            if (normalFish != null)
-                               normalFish.SetData(isMirror: isMirror, wayPoint: wayPoint);
+                               normalFish.SetData(
+                                   fishType: fishType,
+                                   isMirror: isMirror, 
+                                   wayPoint: wayPoint);
                        });
         }
     }

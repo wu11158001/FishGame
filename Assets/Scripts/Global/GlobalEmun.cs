@@ -57,6 +57,9 @@ public enum FirestoreCollectionNameEnum
 {
     /// <summary> 帳戶資料 </summary>
     AccountData,
+
+    /// <summary> 魚群資料 </summary>
+    FishData,
 }
 
 /// <summary>

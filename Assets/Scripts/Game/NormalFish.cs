@@ -1,41 +1,77 @@
 using UnityEngine;
 using Fusion;
 using System.Linq;
+using Newtonsoft.Json;
 
 public class NormalFish : NetworkBehaviour
 {
     [Networked] TickTimer MoveTimer { get; set; }
     [Networked] TickTimer ActiveTimer { get; set; }
     [Networked] float TotalDuration { get; set; }
+    [Networked] bool IsGetData { get; set; }
 
     [SerializeField] GameObject VisualModel;
 
     Vector3[] PathPoints;
-    float DelayActiveTime = 0.1f;
 
-    public void SetData(bool isMirror, WayPoint wayPoint)
+
+    // 防止閃爍隱藏時間
+    const float DelayActiveTime = 0.1f;
+
+    public void SetData(NetworkPrefabEnum fishType, bool isMirror, WayPoint wayPoint)
     {
+        // 移動路徑獲取
         var query = wayPoint.Points.Select(t => t.position);
         if (isMirror) query = query.Reverse();
         PathPoints = query.ToArray();
 
-        TotalDuration = 5;
+        if(Object.HasStateAuthority)
+        {
+            IsGetData = false;
+        }        
+
+        // 獲取魚資料
+        FirestoreManagement.Instance.GetDataFromFirestore(
+            path: FirestoreCollectionNameEnum.FishData,
+            docId: fishType.ToString(),
+            callback: FishDataCallback);
+    }
+
+    /// <summary>
+    /// 獲取魚資料Callback
+    /// </summary>
+    /// <param name="response"></param>
+    private void FishDataCallback(FirestoreResponse response)
+    {
+        FishData data = JsonConvert.DeserializeObject<FishData>(response.JsonData);
+
+        if(data == null)
+        {
+            Runner.Despawn(Object);
+            return;
+        }
+
+        if (Object.HasStateAuthority)
+        {
+            IsGetData = true;
+            TotalDuration = data.Duration;
+
+            ActiveTimer = TickTimer.CreateFromSeconds(Runner, DelayActiveTime);
+            MoveTimer = TickTimer.CreateFromSeconds(Runner, data.Duration + DelayActiveTime);
+        }
     }
 
     public override void Spawned()
     {
-        if (Object.HasStateAuthority)
-        {
-            ActiveTimer = TickTimer.CreateFromSeconds(Runner, DelayActiveTime);
-            MoveTimer = TickTimer.CreateFromSeconds(Runner, TotalDuration + DelayActiveTime);
-        }
-
         // 初始狀態先隱藏，避免第一幀閃爍
         if (VisualModel != null) VisualModel.SetActive(false);
     }
 
     public override void Render()
     {
+        if (!IsGetData)
+            return;
+
         // 如果延遲計時器還沒跑完，隱藏模型
         bool shouldShow = ActiveTimer.Expired(Runner);
         if (VisualModel.activeSelf != shouldShow)
@@ -46,6 +82,9 @@ public class NormalFish : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        if (!IsGetData)
+            return;
+
         if (PathPoints == null || PathPoints.Length < 2) return;
 
         // 計算總進度 (0 ~ 1)

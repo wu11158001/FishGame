@@ -440,3 +440,19 @@ public class AccountData
     /// <summary> 金幣 </summary>
     public int Coins;
 }
+
+/// <summary>
+/// 魚群資料
+/// </summary>
+[Serializable]
+public class FishData
+{
+    /// <summary> 移動時間 </summary>
+    public float Duration;
+
+    /// <summary> 擊中機率(%) </summary>
+    public int Rate;
+
+    /// <summary> 獎勵金幣 </summary>
+    public int Reward;
+}
