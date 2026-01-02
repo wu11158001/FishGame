@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Fusion;
+using Unity.Collections;
 
 #if !UNITY_WEBGL || UNITY_EDITOR
 using Firebase.Firestore;
@@ -447,6 +449,56 @@ public class AccountData
 [Serializable]
 public class FishData
 {
+    /// <summary> 識別名稱 </summary>
+    private string _fishName;
+    public string FishName
+    {
+        get => _fishName;
+        set
+        {
+            _fishName = value;
+            if (Enum.TryParse(_fishName, out NetworkPrefabEnum type))
+                FishType = type;
+            else
+                FishType = NetworkPrefabEnum.None;
+        }
+    }
+
+    /// <summary> 魚類型 </summary>
+    public NetworkPrefabEnum FishType;
+
+    /// <summary> 移動時間 </summary>
+    public float Duration;
+
+    /// <summary> 擊中機率(%) </summary>
+    public int Rate;
+
+    /// <summary> 獎勵金幣 </summary>
+    public int Reward;
+
+    /// <summary>
+    /// 轉換成NetworkStruct
+    /// </summary>
+    public FishData_Network ToNetworkStruct()
+    {
+        return new FishData_Network
+        {
+            FishType = this.FishType,
+            Duration = this.Duration,
+            Rate = this.Rate,
+            Reward = this.Reward
+        };
+    }
+}
+
+/// <summary>
+/// 魚群資料_Network
+/// </summary>
+public struct FishData_Network : INetworkStruct
+{
+    /// <summary> 魚類型 </summary>
+    public NetworkPrefabEnum FishType;
+
     /// <summary> 移動時間 </summary>
     public float Duration;
 

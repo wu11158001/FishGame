@@ -45,27 +45,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkPrefabManagement
   NetworkPrefabList:
-  - Key: 0
-    PrefabRef:
-      RawGuidValue: ffc19def1ae48cd468f5539ca2bf2465
   - Key: 1
     PrefabRef:
-      RawGuidValue: 02c0d5ca862da2c4b88d6f9c320fcbef
+      RawGuidValue: ffc19def1ae48cd468f5539ca2bf2465
   - Key: 2
     PrefabRef:
-      RawGuidValue: 31acf654c98095145b37616ed2d4534d
+      RawGuidValue: 02c0d5ca862da2c4b88d6f9c320fcbef
   - Key: 3
     PrefabRef:
-      RawGuidValue: a0c809410b9b184488de5d36281782a0
+      RawGuidValue: 31acf654c98095145b37616ed2d4534d
   - Key: 4
     PrefabRef:
-      RawGuidValue: 90f88275502b0bf429ea129b6af1f606
+      RawGuidValue: a0c809410b9b184488de5d36281782a0
   - Key: 5
     PrefabRef:
-      RawGuidValue: eff9e6860f6dc454f8a2306abc99f07d
+      RawGuidValue: d6d3e066dd0fa7c418e4117226ee0f3a
   - Key: 6
     PrefabRef:
-      RawGuidValue: 18c5b3f91a991ce44993a4ebd75e027a
+      RawGuidValue: c072a690cffbc5445acf2a78d809a460
   - Key: 7
     PrefabRef:
-      RawGuidValue: 6656377df2381584ca54fbb918ec9c20
+      RawGuidValue: e028e4ab84ef9b94d86cdd1d01b42fb1
+  - Key: 8
+    PrefabRef:
+      RawGuidValue: 00ab0c231e09047419b73404f8afec96

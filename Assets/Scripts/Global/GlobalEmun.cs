@@ -94,6 +94,9 @@ public enum FirestoreStatusEnum
 /// </summary>
 public enum NetworkPrefabEnum
 {
+    /// <summary> 預設 </summary>
+    None,
+
     /// <summary> 遊戲地形 </summary>
     GameTerrain,
 
@@ -109,15 +112,6 @@ public enum NetworkPrefabEnum
     NormalFish_2,
     NormalFish_3,
     NormalFish_4,
-}
-
-/// <summary>
-/// 路徑點類型
-/// </summary>
-public enum WayPointEnum
-{
-    /// <summary> 一般路線 </summary>
-    Normal,
 }
 
 /// <summary>

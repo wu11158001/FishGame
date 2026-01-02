@@ -273,7 +273,7 @@ public class GameTerrain : NetworkBehaviour
                        player: Runner.LocalPlayer,
                        callback: (fish) =>
                        {
-                           NormalFish normalFish = fish.GetComponent<NormalFish>();
+                           Fish normalFish = fish.GetComponent<Fish>();
                            if (normalFish != null)
                                normalFish.SetData(
                                    fishType: fishType,

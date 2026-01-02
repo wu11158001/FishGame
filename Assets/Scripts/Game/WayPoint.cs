@@ -4,16 +4,9 @@ using System.Linq;
 
 public class WayPoint : MonoBehaviour
 {
-    [SerializeField] WayPointEnum WayPointType = WayPointEnum.Normal;
     [SerializeField] Color LineColor = Color.green;
-    [SerializeField] bool IsShow = false;
 
     public List<Transform> Points { get; private set; } = new();
-
-    private void Start()
-    {
-        IsShow = false;
-    }
 
     [ContextMenu(nameof(SetPoint))]
     public void SetPoint()
@@ -28,9 +21,9 @@ public class WayPoint : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
-        if (!IsShow || Points == null || Points.Count < 2)
+        if (Points == null || Points.Count < 2)
             return;
 
         Gizmos.color = LineColor;

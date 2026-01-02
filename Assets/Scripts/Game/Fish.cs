@@ -3,20 +3,27 @@ using Fusion;
 using System.Linq;
 using Newtonsoft.Json;
 
-public class NormalFish : NetworkBehaviour
+public class Fish : NetworkBehaviour
 {
+    // 移動計時器
     [Networked] TickTimer MoveTimer { get; set; }
+    // 激活物件計時器
     [Networked] TickTimer ActiveTimer { get; set; }
+    // 總移動時間
     [Networked] float TotalDuration { get; set; }
+    // 是否已獲取Firestore資料
     [Networked] bool IsGetData { get; set; }
+    // 魚資料
+    [Networked] FishData_Network FishData_Network { get; set; }
 
-    [SerializeField] GameObject VisualModel;
+    // 激活物件
+    [SerializeField] GameObject FishModel;
 
+    // 移動路徑
     Vector3[] PathPoints;
 
-
     // 防止閃爍隱藏時間
-    const float DelayActiveTime = 0.1f;
+    const float DelayActiveTime = 0.5f;
 
     public void SetData(NetworkPrefabEnum fishType, bool isMirror, WayPoint wayPoint)
     {
@@ -55,6 +62,7 @@ public class NormalFish : NetworkBehaviour
         {
             IsGetData = true;
             TotalDuration = data.Duration;
+            FishData_Network = data.ToNetworkStruct();
 
             ActiveTimer = TickTimer.CreateFromSeconds(Runner, DelayActiveTime);
             MoveTimer = TickTimer.CreateFromSeconds(Runner, data.Duration + DelayActiveTime);
@@ -63,8 +71,8 @@ public class NormalFish : NetworkBehaviour
 
     public override void Spawned()
     {
-        // 初始狀態先隱藏，避免第一幀閃爍
-        if (VisualModel != null) VisualModel.SetActive(false);
+        // 初始狀態先隱藏，避免閃爍
+        if (FishModel != null) FishModel.SetActive(false);
     }
 
     public override void Render()
@@ -74,9 +82,9 @@ public class NormalFish : NetworkBehaviour
 
         // 如果延遲計時器還沒跑完，隱藏模型
         bool shouldShow = ActiveTimer.Expired(Runner);
-        if (VisualModel.activeSelf != shouldShow)
+        if (FishModel.activeSelf != shouldShow)
         {
-            VisualModel.SetActive(shouldShow);
+            FishModel.SetActive(shouldShow);
         }
     }
 
@@ -110,8 +118,6 @@ public class NormalFish : NetworkBehaviour
         }
     }
 
-
-
     /// <summary>
     /// 曲線旋轉
     /// </summary>
@@ -137,5 +143,28 @@ public class NormalFish : NetworkBehaviour
             (2f * p0 - 5f * p1 + 4f * p2 - p3) * weight * weight +
             (-p0 + 3f * p1 - 3f * p2 + p3) * weight * weight * weight
         );
+    }
+
+    /// <summary>
+    /// 獲取魚資料
+    /// </summary>
+    public FishData_Network GetFishData()
+    {
+        return FishData_Network;
+    }
+
+    /// <summary>
+    /// 魚被擊中
+    /// </summary>
+    /// <param name="player"></param>
+    public void GetHit(PlayerRef player)
+    {
+        RPC_GetHit(player);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_GetHit(PlayerRef player)
+    {
+        Runner.Despawn(Object);
     }
 }
