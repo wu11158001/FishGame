@@ -4,10 +4,14 @@ using System.Linq;
 
 public class NormalFish : NetworkBehaviour
 {
-    [Networked] private TickTimer MoveTimer { get; set; }
-    [Networked] private float TotalDuration { get; set; }
+    [Networked] TickTimer MoveTimer { get; set; }
+    [Networked] TickTimer ActiveTimer { get; set; }
+    [Networked] float TotalDuration { get; set; }
 
-    private Vector3[] PathPoints;
+    [SerializeField] GameObject VisualModel;
+
+    Vector3[] PathPoints;
+    float DelayActiveTime = 0.1f;
 
     public void SetData(bool isMirror, WayPoint wayPoint)
     {
@@ -22,7 +26,21 @@ public class NormalFish : NetworkBehaviour
     {
         if (Object.HasStateAuthority)
         {
-            MoveTimer = TickTimer.CreateFromSeconds(Runner, TotalDuration);
+            ActiveTimer = TickTimer.CreateFromSeconds(Runner, DelayActiveTime);
+            MoveTimer = TickTimer.CreateFromSeconds(Runner, TotalDuration + DelayActiveTime);
+        }
+
+        // 初始狀態先隱藏，避免第一幀閃爍
+        if (VisualModel != null) VisualModel.SetActive(false);
+    }
+
+    public override void Render()
+    {
+        // 如果延遲計時器還沒跑完，隱藏模型
+        bool shouldShow = ActiveTimer.Expired(Runner);
+        if (VisualModel.activeSelf != shouldShow)
+        {
+            VisualModel.SetActive(shouldShow);
         }
     }
 
@@ -52,6 +70,8 @@ public class NormalFish : NetworkBehaviour
             Runner.Despawn(Object);
         }
     }
+
+
 
     /// <summary>
     /// 曲線旋轉

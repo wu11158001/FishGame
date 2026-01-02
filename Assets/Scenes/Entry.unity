@@ -157,7 +157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4678052332638421202, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
       propertyPath: VersionNumber
-      value: 1.0.6
+      value: 1.0.7
       objectReference: {fileID: 0}
     - target: {fileID: 8704877394024652682, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
       propertyPath: m_text

@@ -3,8 +3,7 @@ using Fusion;
 
 public class Bullet : NetworkBehaviour
 {
-    [Networked] 
-    private Vector2 Direction { get; set; }
+    [Networked] Vector2 Direction { get; set; }
 
     Vector2 MinBounds = new(-9.6f, -5.4f);
     Vector2 MaxBounds = new(9.6f, 5.4f);
