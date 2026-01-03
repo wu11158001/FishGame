@@ -14,8 +14,11 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     HashSet<ViewEnum> LoadViewAsyncSet = new();
     HashSet<GamePrefabEnum> LoadGamePrefabAsyncSet = new();
 
-    // 紀錄已開啟介面
-    private Dictionary<ViewEnum, List<PrefabInstance>> ViewDic = new();
+    // 紀錄場景已開啟介面
+    private Dictionary<ViewEnum, List<PrefabInstance>> SceneViewDic = new();
+
+    // 紀錄全域已開啟介面
+    private Dictionary<ViewEnum, List<PrefabInstance>> GlobalViewDic = new();
 
     // 紀錄已開啟遊戲預製物
     private Dictionary<GamePrefabEnum, List<PrefabInstance>> GamePrefabDic = new();
@@ -116,7 +119,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             return;
 
         // 不可重複開啟
-        if (!IsCanStack && ViewDic.ContainsKey(viewType))
+        if (!IsCanStack && SceneViewDic.ContainsKey(viewType))
             return;
 
         LoadViewAsyncSet.Add(viewType);
@@ -150,10 +153,29 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
 
                 var newInstance = new PrefabInstance { Go = go, Handle = loadHandle };
 
-                if (!ViewDic.ContainsKey(viewType))
-                    ViewDic[viewType] = new List<PrefabInstance>();
+                switch (canvasEnum)
+                {
+                    case CanvasEnum.Canvas_Scene:
+                        if (!SceneViewDic.ContainsKey(viewType))
+                            SceneViewDic[viewType] = new List<PrefabInstance>();
 
-                ViewDic[viewType].Add(newInstance);
+                        SceneViewDic[viewType].Add(newInstance);
+                        break;
+
+                    case CanvasEnum.Canvas_Global:
+                        if (!GlobalViewDic.ContainsKey(viewType))
+                            GlobalViewDic[viewType] = new List<PrefabInstance>();
+
+                        GlobalViewDic[viewType].Add(newInstance);
+                        break;
+
+                    default:
+                        if (!SceneViewDic.ContainsKey(viewType))
+                            SceneViewDic[viewType] = new List<PrefabInstance>();
+
+                        SceneViewDic[viewType].Add(newInstance);
+                        break;
+                }
 
                 callback?.Invoke(go);
             }
@@ -169,15 +191,15 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     }
 
     /// <summary>
-    /// 移除介面
+    /// 移除場景介面
     /// </summary>
     /// <param name="viewEnum">介面</param>
     /// <param name="isFirstRemove">true = 移除先產生, false = 最後產生的移除</param>
-    private void RemoveView(ViewEnum viewEnum, bool isFirstRemove = false)
+    private void RemoveSceneView(ViewEnum viewEnum, bool isFirstRemove = false)
     {
         try
         {
-            if (ViewDic.TryGetValue(viewEnum, out var list) && list.Count > 0)
+            if (SceneViewDic.TryGetValue(viewEnum, out var list) && list.Count > 0)
             {
                 // 取出最後一個開啟的介面
                 var takeIndex = isFirstRemove ? 0 : list.Count - 1;
@@ -195,21 +217,57 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
 
                 // 如果該類型介面都關了，就把 List 也砍了
                 if (list.Count == 0)
-                    ViewDic.Remove(viewEnum);
+                    SceneViewDic.Remove(viewEnum);
             }
         }
         catch (Exception e)
         {
-            Debug.LogError($"移除介面錯誤: {e}");
+            Debug.LogError($"移除場景介面錯誤: {e}");
         }
     }
 
     /// <summary>
-    /// 清除所有介面
+    /// 移除全域介面
     /// </summary>
-    public void ClearAllViews()
+    /// <param name="viewEnum">介面</param>
+    /// <param name="isFirstRemove">true = 移除先產生, false = 最後產生的移除</param>
+    private void RemoveGlobalView(ViewEnum viewEnum, bool isFirstRemove = false)
     {
-        foreach (var viewList in ViewDic.Values)
+        try
+        {
+            if (GlobalViewDic.TryGetValue(viewEnum, out var list) && list.Count > 0)
+            {
+                // 取出最後一個開啟的介面
+                var takeIndex = isFirstRemove ? 0 : list.Count - 1;
+                var viewItem = list[takeIndex];
+
+                // 摧毀場景上的物件
+                if (viewItem.Go != null)
+                    Destroy(viewItem.Go);
+
+                // 釋放 Addressables 資源引用
+                Addressables.Release(viewItem.Handle);
+
+                // 從列表中移除
+                list.RemoveAt(takeIndex);
+
+                // 如果該類型介面都關了，就把 List 也砍了
+                if (list.Count == 0)
+                    GlobalViewDic.Remove(viewEnum);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"移除全域介面錯誤: {e}");
+        }
+    }
+
+    /// <summary>
+    /// 清除所有場景介面
+    /// </summary>
+    public void ClearAllSceneViews()
+    {
+        foreach (var viewList in SceneViewDic.Values)
         {
             foreach (var item in viewList)
             {
@@ -217,7 +275,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
                 if (item.Handle.IsValid()) Addressables.Release(item.Handle);
             }
         }
-        ViewDic.Clear();
+        SceneViewDic.Clear();
         LoadViewAsyncSet.Clear();
     }
 
@@ -235,7 +293,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         Action viewCloseAction = () =>
         {
             closeAction?.Invoke();
-            RemoveView(view);
+            RemoveSceneView(view);
         };
 
         await OpenView(
@@ -259,7 +317,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         Action viewCloseAction = () =>
         {
             closeAction?.Invoke();
-            RemoveView(view);
+            RemoveSceneView(view);
         };
 
         await OpenView(
@@ -283,7 +341,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         Action viewCloseAction = () =>
         {
             closeAction?.Invoke();
-            RemoveView(view);
+            RemoveSceneView(view);
         };
 
         await OpenView(
@@ -311,7 +369,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         Action viewCloseAction = () =>
         {
             CurrLoadingObj = null;
-            RemoveView(viewEnum: view);
+            RemoveGlobalView(viewEnum: view);
         };
 
         await OpenView(
@@ -338,13 +396,11 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     public async void CloseLoading()
     {
         await Task.Yield();
-        await Task.Yield();
-        await Task.Yield();
 
         if (CurrLoadingObj != null)
         {
             CurrLoadingObj = null;
-            RemoveView(viewEnum: ViewEnum.Loading);
+            RemoveGlobalView(viewEnum: ViewEnum.Loading);
         }
     }
 
@@ -357,7 +413,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
 
         Action viewCloseAction = () =>
         {
-            RemoveView(viewEnum: view, isFirstRemove: true);
+            RemoveGlobalView(viewEnum: view, isFirstRemove: true);
         };
 
         await OpenView(

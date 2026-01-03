@@ -50,6 +50,8 @@ public class LobbyView : BasicView
         {
             AccountData data = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
             CoinText.text = data.Coins.ToString();
+
+            AddressableManagement.Instance.CloseLoading();
         }
     }
 

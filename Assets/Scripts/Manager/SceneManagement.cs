@@ -23,7 +23,7 @@ public class SceneManagement : SingletonMonoBehaviour<SceneManagement>
             yield return null;
         }
 
-        AddressableManagement.Instance.ClearAllViews();
+        AddressableManagement.Instance.ClearAllSceneViews();
         AddressableManagement.Instance.SetCanvase();
         callback?.Invoke();
     }

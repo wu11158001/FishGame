@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Fusion;
 using Unity.Collections;
 using System.Linq;
+using System.Collections;
 
 #if !UNITY_WEBGL || UNITY_EDITOR
 using Firebase.Firestore;
@@ -27,6 +28,11 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     public delegate void AccountDataChange(FirestoreResponse response);
     public event AccountDataChange AsccountDataChangeDelete;
 
+    Coroutine HeartbeatCoroutine;
+
+    // 心跳包發送間格時間(秒)
+    public int HeartbeatTime { get; private set; } = 30;
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -38,6 +44,8 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         }
         EditorListeners.Clear();
 #endif
+
+        StopAllCoroutines();
     }
 
     public void OnDataChanged(string jsonResponse)
@@ -71,6 +79,51 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
 
         return null;
     }
+
+    #region 心跳包
+
+    /// <summary>
+    /// 開始心跳包發送
+    /// </summary>
+    public void StartHeartbeat()
+    {
+        if (HeartbeatCoroutine != null)
+            StopCoroutine(HeartbeatCoroutine);
+
+        HeartbeatCoroutine = StartCoroutine(ISendHeartbeat());
+    }
+
+    /// <summary>
+    /// 心跳包發送
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ISendHeartbeat()
+    {
+        while (true)
+        {
+            // 獲取當前 Unix 時間戳 (秒)
+            long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+            var updates = new Dictionary<string, object>
+            {
+                { "HeartbeatUpdateTime", currentTimestamp }
+            };
+
+            LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
+
+            UpdateDataToFirestore(
+                path: FirestoreCollectionNameEnum.AccountData,
+                docId: loginInfo.Account,
+                updates: updates,
+                callback: (res) => {
+                    if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
+                });
+
+            yield return new WaitForSeconds(HeartbeatTime);
+        }
+    }
+
+    #endregion
 
     #region Firestore資料處理
 
@@ -115,50 +168,31 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// </summary>
     [DllImport("__Internal")]
     private static extern void UpdateDataToFirestore(string path, string docId, string jsonData, string callbackObj, string callbackMethod, string guid);
-    public void UpdateDataToFirestore(FirestoreCollectionNameEnum path, string docId, string jsonData, Action<FirestoreResponse> callback)
+    public void UpdateDataToFirestore(FirestoreCollectionNameEnum path, string docId, Dictionary<string, object> updates, Action<FirestoreResponse> callback)
     {
         string guid = Guid.NewGuid().ToString();
         PendingCallbacks.Add(guid, callback);
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-        UpdateDataToFirestore(path.ToString(), docId, jsonData, gameObject.name, nameof(FirestoreCallback), guid);
+        string json = JsonConvert.SerializeObject(updates);
+        UpdateDataToFirestore(path.ToString(), docId, json, gameObject.name, nameof(FirestoreCallback), guid);
 #else
+        // Editor 或行動裝置端
         DBInstance();
-        var dict = GetJsonDataToDictionary(jsonData);
+        DocumentReference docRef = db.Collection(path.ToString()).Document(docId);
 
-        if(dict != null)
-        {
-            DocumentReference docRef = db.Collection(path.ToString()).Document(docId);
-
-            docRef.UpdateAsync(dict).ContinueWithOnMainThread(task => {
-
-                bool isSuccess = true;
-                string status = "Success";
-
-                if (task.IsFaulted)
-                {
-                    isSuccess = false;
-                    status = "Update Fail";
-                    Debug.LogError($"更新失敗: {task.Exception}");
-                }
-                else if (task.IsCanceled)
-                {
-                    isSuccess = false;
-                    status = "UpdateFail";
-                    Debug.LogError($"更新失敗: Task Canceled");
-                }
-
-                FirestoreResponse response = new()
-                {
-                    Guid = guid,
-                    IsSuccess = isSuccess,
-                    Status = status,
-                    JsonData = jsonData
-                };
-
-                FirestoreCallback(JsonUtility.ToJson(response));
-            });
-        }
+        // 直接傳入 Dictionary，Firestore 只會更新裡面有的 Key
+        docRef.UpdateAsync(updates).ContinueWithOnMainThread(task => {
+            bool isSuccess = !task.IsFaulted && !task.IsCanceled;
+            FirestoreResponse response = new()
+            {
+                Guid = guid,
+                IsSuccess = isSuccess,
+                Status = isSuccess ? "Success" : "Update Fail",
+                JsonData = "" // 部分更新通常不需要傳回完整 JSON
+            };
+            FirestoreCallback(JsonUtility.ToJson(response));
+        });
 #endif
     }
 
@@ -219,14 +253,14 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// 獲取集合內所有資料
     /// </summary>
     [DllImport("__Internal")]
-    private static extern void GetAllDocumentsFromCollection(string path, string callbackObj, string callbackMethod);
+    private static extern void GetAllDocumentsFromCollection(string path, string callbackObj, string callbackMethod, string guid);
     public void GetAllDocumentsFromCollection(FirestoreCollectionNameEnum path, Action<FirestoreResponse> callback)
     {
         string guid = Guid.NewGuid().ToString();
         PendingCallbacks.Add(guid, callback);
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-        GetAllDocumentsFromCollection(path.ToString(), gameObject.name, nameof(FirestoreCallback));
+        GetAllDocumentsFromCollection(path.ToString(), gameObject.name, nameof(FirestoreCallback), guid);
 #else
         DBInstance();
         db.Collection(path.ToString()).GetSnapshotAsync().ContinueWithOnMainThread(task => {
@@ -471,6 +505,9 @@ public class FirestoreResponse
 [Serializable]
 public class AccountData
 {
+    /// <summary> 心跳包最後更新時間 </summary>
+    public long HeartbeatUpdateTime;
+
     /// <summary> 帳號 </summary>
     public string Account;
 
@@ -479,6 +516,8 @@ public class AccountData
 
     /// <summary> 金幣 </summary>
     public int Coins;
+
+    
 }
 
 /// <summary>

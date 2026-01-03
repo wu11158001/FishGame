@@ -239,7 +239,6 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
          callback: async () =>
          {
              await AddressableManagement.Instance.OpenLobbyView();
-             AddressableManagement.Instance.CloseLoading();
          });
     }
 

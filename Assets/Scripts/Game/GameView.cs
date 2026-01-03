@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using Fusion;
+using System.Threading.Tasks;
 
 public class GameView : BasicView
 {
@@ -22,6 +22,7 @@ public class GameView : BasicView
     /// </summary>
     private void Shutdown()
     {
+        AddressableManagement.Instance.ShowLoading();
         NetworkRunnerManagement.Instance.Shutdown(); 
     }
 }

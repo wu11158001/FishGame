@@ -90,6 +90,10 @@ MonoBehaviour:
     m_Localized: Data writing failed!
     m_Metadata:
       m_Items: []
+  - m_Id: 3577005899190272
+    m_Localized: Account logged in!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
