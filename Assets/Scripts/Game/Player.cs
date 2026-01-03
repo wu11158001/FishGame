@@ -1,5 +1,6 @@
 using UnityEngine;
 using Fusion;
+using UnityEngine.EventSystems;
 
 public class Player : NetworkBehaviour
 {
@@ -21,6 +22,12 @@ public class Player : NetworkBehaviour
     public override void Spawned()
     {
         BulletPool = GameObject.Find(PoolNameEnum.BulletPool.ToString()).transform;
+
+        if(Object.HasStateAuthority)
+        {
+            AddressableManagement.Instance.CloseLoading();
+            TempDataManagement.Instance.StartTimingUpdateAccountData();
+        }
     }
 
     public override void Render()
@@ -67,8 +74,26 @@ public class Player : NetworkBehaviour
     {
         if(GetInput(out NetworkInputData input))
         {
-            if(input.IsFirePressed && Delay.ExpiredOrNotRunning(Runner))
+            // 點擊UI
+            if (EventSystem.current.IsPointerOverGameObject())
+            {                
+                return;
+            }
+
+            if (input.IsFirePressed && Delay.ExpiredOrNotRunning(Runner))
             {
+                // 判斷子彈花費
+                int accountCoin = TempDataManagement.Instance.TempAccountData.Coins;
+                int currCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
+
+                if(accountCoin < currCost)
+                {
+                    Debug.Log("金幣不足!");
+                    return;
+                }
+
+                TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -currCost);
+
                 // 重製冷卻時間
                 Delay = TickTimer.CreateFromSeconds(Runner, FireRate);
 

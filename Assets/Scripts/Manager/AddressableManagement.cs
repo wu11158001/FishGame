@@ -336,7 +336,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 開啟遊戲介面
     /// </summary>
-    public async Task OpenGameView(Action closeAction = null)
+    public async Task OpenGameView(int localSeat, Action closeAction = null)
     {
         ViewEnum view = ViewEnum.GameView;
 
@@ -352,7 +352,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             {
                 if (viewObj != null)
                 {
-                    viewObj.GetComponent<GameView>().SetData(closeAction: viewCloseAction);
+                    viewObj.GetComponent<GameView>().SetData(localSeat: localSeat, closeAction: viewCloseAction);
                 }
             });
     }

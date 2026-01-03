@@ -100,7 +100,9 @@ public class GameTerrain : NetworkBehaviour
 
         for (int i = 0; i < SeatPlayerIDs.Length; i++)
         {
-            if (SeatPlayerIDs[i] == Runner.LocalPlayer.PlayerId)
+            int index = i;
+
+            if (SeatPlayerIDs[index] == Runner.LocalPlayer.PlayerId)
             {
                 isLocalSpawn = true;
 
@@ -108,23 +110,23 @@ public class GameTerrain : NetworkBehaviour
 
                 NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                     key: NetworkPrefabEnum.Player,
-                    Pos: Seats[i].transform.position,
+                    Pos: Seats[index].transform.position,
                     rot: Quaternion.identity,
-                    parent: Seats[i].transform,
+                    parent: Seats[index].transform,
                     player: Runner.LocalPlayer);
 
                 // 位置在3.4攝影機顛倒
-                if(i >= 2)
+                if(index >= 2)
                 {
                     Transform cameraTr = Camera.main.transform;
                     cameraTr.rotation = Quaternion.Euler(0, 0, 180);
                 }
 
+                _ = AddressableManagement.Instance.OpenGameView(localSeat: index);
+
                 break;
             }
         }
-
-        AddressableManagement.Instance.CloseLoading();
     }
 
     /// <summary>

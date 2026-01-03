@@ -13,12 +13,14 @@ public class LobbyView : BasicView
     [SerializeField] Button StartBtn;
     [SerializeField] Button LogoutBtn;
 
+    Dictionary<CheckJoinRoomDataEnum, bool> CheckJoinRoomDic = new();
+
     bool IsMatchmaking;
 
     private void OnDestroy()
     {
         if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AsccountDataChangeDelete -= AccountDataChange;
+            FirestoreManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
 
         if(NetworkRunnerManagement.Instance != null)
             NetworkRunnerManagement.Instance.RoomListUpdatedEvent -= OnRoomListUpdatedUpdate;
@@ -31,7 +33,7 @@ public class LobbyView : BasicView
 
         NetworkRunnerManagement.Instance.RoomListUpdatedEvent += OnRoomListUpdatedUpdate;
 
-        FirestoreManagement.Instance.AsccountDataChangeDelete += AccountDataChange;
+        FirestoreManagement.Instance.AsccountDataChangeDelegate += AccountDataChange;
         FirestoreManagement.Instance.StartListenAccountData();
     }
 
@@ -45,7 +47,7 @@ public class LobbyView : BasicView
     /// </summary>
     private void Logout()
     {
-        FirestoreManagement.Instance.StopHeartbeat(isLogout: true);
+        FirestoreManagement.Instance.StopHeartbeat();
 
         SceneManagement.Instance.LoadScene(
             sceneEnum: SceneEnum.Login,
@@ -110,8 +112,42 @@ public class LobbyView : BasicView
 
         IsMatchmaking = true;
         AddressableManagement.Instance.ShowLoading();
+        CheckJoinRoomDic.Clear();
 
-        DataManagement.Instance.GetAllFishData(JoInLobby);
+        foreach (CheckJoinRoomDataEnum item in Enum.GetValues(typeof(CheckJoinRoomDataEnum)))
+        {
+            CheckJoinRoomDic.Add(item, false);
+        }
+
+        // 獲取魚群資料
+        TempDataManagement.Instance.GetAllFishData(CheckJoinRoomData);
+
+        // 獲取關卡資料
+        TempDataManagement.Instance.GetCurrentLevelData(levelType: LevelEnum.ClassicLevel, callback: CheckJoinRoomData);
+
+        // 獲取帳戶資料
+        TempDataManagement.Instance.GetTempAccountData(callback: CheckJoinRoomData);
+    }
+
+    /// <summary>
+    /// 檢查加入房間資料獲取狀態
+    /// </summary>
+    /// <param name="dataType"></param>
+    private void CheckJoinRoomData(CheckJoinRoomDataEnum dataType)
+    {
+        if(!CheckJoinRoomDic.ContainsKey(dataType))
+        {
+            Debug.LogError($"檢查加入房間資料獲取狀態錯誤: {dataType}");
+            return;
+        }
+
+        CheckJoinRoomDic[dataType] = true;
+
+        if(CheckJoinRoomDic.All(x => x.Value == true))
+        {
+            Debug.Log("進入房間資料獲取完成");
+            JoInLobby();
+        }
     }
 
     /// <summary>

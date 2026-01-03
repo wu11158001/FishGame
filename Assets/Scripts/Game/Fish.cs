@@ -31,7 +31,7 @@ public class Fish : NetworkBehaviour
         PathPoints = query.ToArray();
 
         // 魚資料獲取
-        FishData fishData = DataManagement.Instance.GetFishData(FishType);
+        FishData fishData = TempDataManagement.Instance.GetFishData(FishType);
 
         if (fishData != null)
             FishData_Network = fishData.ToNetworkStruct();

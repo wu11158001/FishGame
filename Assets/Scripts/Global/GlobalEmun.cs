@@ -60,6 +60,9 @@ public enum FirestoreCollectionNameEnum
 
     /// <summary> 魚群資料 </summary>
     FishData,
+
+    /// <summary> 關卡資料 </summary>
+    LevelData,
 }
 
 /// <summary>
@@ -133,4 +136,28 @@ public enum PoolNameEnum
 
     /// <summary> 魚容器 </summary>
     FishPool
+}
+
+/// <summary>
+/// 關卡名稱
+/// </summary>
+public enum LevelEnum
+{
+    /// <summary> 經典關卡 </summary>
+    ClassicLevel,
+}
+
+/// <summary>
+/// 檢查進入房間資料獲取
+/// </summary>
+public enum CheckJoinRoomDataEnum
+{
+    /// <summary> 魚群資料 </summary>
+    FishData,
+
+    /// <summary> 關卡資料 </summary>
+    LevelData,
+
+    /// <summary> 帳戶資料 </summary>
+    Account
 }

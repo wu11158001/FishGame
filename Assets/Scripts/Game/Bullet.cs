@@ -91,6 +91,7 @@ public class Bullet : NetworkBehaviour
         if (hitValue <= data.Rate)
         {
             fish.GetHit(Runner.LocalPlayer);
+            TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: data.Reward);
         }
 
         Runner.Despawn(Object);

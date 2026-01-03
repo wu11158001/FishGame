@@ -26,12 +26,12 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     private Dictionary<string, Action<FirestoreResponse>> PendingCallbacks = new();
 
     public delegate void AccountDataChange(FirestoreResponse response);
-    public event AccountDataChange AsccountDataChangeDelete;
+    public event AccountDataChange AsccountDataChangeDelegate;
 
     Coroutine HeartbeatCoroutine;
 
     // 心跳包發送間格時間(秒)
-    public int HeartbeatTime { get; private set; } = 30;
+    public int HeartbeatTime { get; private set; } = 180;
 
     protected override void OnDestroy()
     {
@@ -45,6 +45,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         EditorListeners.Clear();
 #endif
 
+        StopHeartbeat();
         StopAllCoroutines();
     }
 
@@ -90,6 +91,33 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     #region 心跳包
 
     /// <summary>
+    /// 停止心跳包發送
+    /// </summary>
+    public void StopHeartbeat()
+    {
+        if (HeartbeatCoroutine != null)
+            StopCoroutine(HeartbeatCoroutine);
+
+        // 獲取當前 Unix 時間戳 - 心跳包時間 (秒)
+        long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - HeartbeatTime;
+
+        LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
+
+        var updates = new Dictionary<string, object>
+            {
+                { "HeartbeatUpdateTime", currentTimestamp }
+            };
+
+        UpdateDataToFirestore(
+            path: FirestoreCollectionNameEnum.AccountData,
+            docId: loginInfo.Account,
+            updates: updates,
+            callback: (res) => {
+                if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
+            });
+    }
+
+    /// <summary>
     /// 開始心跳包發送
     /// </summary>
     public void StartHeartbeat()
@@ -98,36 +126,6 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
             StopCoroutine(HeartbeatCoroutine);
 
         HeartbeatCoroutine = StartCoroutine(ISendHeartbeat());
-    }
-
-    /// <summary>
-    /// 停止心跳包發送
-    /// </summary>
-    public void StopHeartbeat(bool isLogout)
-    {
-        if (HeartbeatCoroutine != null)
-            StopCoroutine(HeartbeatCoroutine);
-
-        if(isLogout)
-        {
-            // 獲取當前 Unix 時間戳 - 心跳包時間 (秒)
-            long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - HeartbeatTime;
-
-            LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
-
-            var updates = new Dictionary<string, object>
-            {
-                { "HeartbeatUpdateTime", currentTimestamp }
-            };
-
-            UpdateDataToFirestore(
-                path: FirestoreCollectionNameEnum.AccountData,
-                docId: loginInfo.Account,
-                updates: updates,
-                callback: (res) => {
-                    if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
-                });
-        }
     }
 
     /// <summary>
@@ -214,7 +212,6 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         string json = JsonConvert.SerializeObject(updates);
         UpdateDataToFirestore(path.ToString(), docId, json, gameObject.name, nameof(FirestoreCallback), guid);
 #else
-        // Editor 或行動裝置端
         DBInstance();
         DocumentReference docRef = db.Collection(path.ToString()).Document(docId);
 
@@ -503,7 +500,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     public void OnAccountDataChanged(string jsonResponse)
     {
         var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
-        AsccountDataChangeDelete?.Invoke(response);
+        AsccountDataChangeDelegate?.Invoke(response);
     }
 
     #endregion
@@ -517,7 +514,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     private static extern void RegisterOnCloseEvent(string callbackObj, string callbackMethod);
     public void OnBrowserClose()
     {
-        StopHeartbeat(isLogout: true);
+        StopHeartbeat();
     }
 
     #endregion
@@ -567,8 +564,6 @@ public class AccountData
 
     /// <summary> 金幣 </summary>
     public int Coins;
-
-    
 }
 
 /// <summary>
@@ -635,4 +630,22 @@ public struct FishData_Network : INetworkStruct
 
     /// <summary> 獎勵金幣 </summary>
     public int Reward;
+}
+
+/// <summary>
+/// 遊戲關卡資料
+/// </summary>
+public class LevelData
+{
+    /// <summary> 子彈花費梯度 </summary>
+    public int Gradient;
+
+    /// <summary> 最大每發子彈花費 </summary>
+    public int MaxCost;
+
+    /// <summary> 最小每發子彈花費 </summary>
+    public int MinCost;
+
+    /// <summary> 預設子彈花費 </summary>
+    public int DefaultCost;
 }
