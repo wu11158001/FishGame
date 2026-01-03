@@ -113,6 +113,13 @@ public class GameTerrain : NetworkBehaviour
                     parent: Seats[i].transform,
                     player: Runner.LocalPlayer);
 
+                // 位置在3.4攝影機顛倒
+                if(i >= 2)
+                {
+                    Transform cameraTr = Camera.main.transform;
+                    cameraTr.rotation = Quaternion.Euler(0, 0, 180);
+                }
+
                 break;
             }
         }
