@@ -70,7 +70,7 @@ public class LobbyView : BasicView
         if(response != null)
         {
             AccountData data = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
-            CoinText.text = data.Coins.ToString();
+            CoinText.text = StringUtility.CurrencyFormat(data.Coins);
 
             AddressableManagement.Instance.CloseLoading();
         }

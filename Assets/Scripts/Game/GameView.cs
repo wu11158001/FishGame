@@ -43,8 +43,8 @@ public class GameView : BasicView
             LeftSeatPosision :
             RightSeatPosision;
 
-        CurrCostText.text = $"{TempDataManagement.Instance.CurrentLevelData.DefaultCost}";
-        AccountCoinText.text = $"{TempDataManagement.Instance.TempAccountData.Coins}";
+        CurrCostText.text = $"{StringUtility.CurrencyFormat(TempDataManagement.Instance.CurrentLevelData.DefaultCost)}";
+        AccountCoinText.text = $"{StringUtility.CurrencyFormat(TempDataManagement.Instance.TempAccountData.Coins)}";
 
         StartCoroutine(IYieldShow());
     }
@@ -54,7 +54,7 @@ public class GameView : BasicView
     /// </summary>
     private void TempAccountDataChange(int coin)
     {
-        AccountCoinText.text = $"{coin}";
+        AccountCoinText.text = $"{StringUtility.CurrencyFormat(coin)}";
     }
 
     /// <summary>

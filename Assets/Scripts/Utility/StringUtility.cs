@@ -49,4 +49,14 @@ public static class StringUtility
             return Color.white;
         }
     }
+
+    /// <summary>
+    /// 貨幣格式
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static string CurrencyFormat(int value)
+    {
+        return $"{value:N0}";
+    }
 }
