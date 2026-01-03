@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Fusion;
 using Unity.Collections;
+using System.Linq;
 
 #if !UNITY_WEBGL || UNITY_EDITOR
 using Firebase.Firestore;
@@ -175,7 +176,6 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         GetDataFromFirestore(path.ToString(), docId, gameObject.name, nameof(FirestoreCallback), guid);
 #else
         DBInstance();
-
         db.Collection(path.ToString()).Document(docId).GetSnapshotAsync().ContinueWithOnMainThread(task => {
             bool isSuccess = false;
             string status = "Success";
@@ -210,6 +210,44 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
                 JsonData = jsonData
             };
 
+            FirestoreCallback(JsonUtility.ToJson(response));
+        });
+#endif
+    }
+
+    /// <summary>
+    /// 獲取集合內所有資料
+    /// </summary>
+    [DllImport("__Internal")]
+    private static extern void GetAllDocumentsFromCollection(string path, string callbackObj, string callbackMethod);
+    public void GetAllDocumentsFromCollection(FirestoreCollectionNameEnum path, Action<FirestoreResponse> callback)
+    {
+        string guid = Guid.NewGuid().ToString();
+        PendingCallbacks.Add(guid, callback);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        GetAllDocumentsFromCollection(path.ToString(), gameObject.name, nameof(FirestoreCallback));
+#else
+        DBInstance();
+        db.Collection(path.ToString()).GetSnapshotAsync().ContinueWithOnMainThread(task => {
+            bool isSuccess = false;
+            string jsonData = "[]";
+
+            if (!task.IsFaulted && !task.IsCanceled)
+            {
+                isSuccess = true;
+                // 將所有 Document 轉成 List 後序列化成 JSON 陣列
+                var allDocs = task.Result.Documents.Select(d => d.ToDictionary()).ToList();
+                jsonData = JsonConvert.SerializeObject(allDocs);
+            }
+
+            FirestoreResponse response = new()
+            {
+                Guid = guid,
+                IsSuccess = isSuccess,
+                Status = isSuccess ? "Success" : "Error",
+                JsonData = jsonData
+            };
             FirestoreCallback(JsonUtility.ToJson(response));
         });
 #endif

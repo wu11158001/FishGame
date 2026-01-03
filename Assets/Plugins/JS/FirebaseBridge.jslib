@@ -197,5 +197,37 @@ mergeInto(LibraryManager.library, {
             window.firestoreUnsubscribes[documentId]();
             delete window.firestoreUnsubscribes[documentId];
         }
-    }
+    },
+
+    // 獲取集合內所有資料
+    // callbackObj: Unity 回傳物件
+    // callbackMethod: Unity 回傳方法
+    GetAllDocumentsFromCollection: function (path, callbackObj, callbackMethod) {
+        var colPath = UTF8ToString(path);
+        var unityObj = UTF8ToString(callbackObj);
+        var callback = UTF8ToString(callbackMethod);
+
+        // 使用 .get() 獲取整個集合
+        window.db.collection(colPath).get()
+            .then(function(querySnapshot) {
+                var allData = [];
+                querySnapshot.forEach(function(doc) {
+                    // 將每個 doc 的數據加入陣列
+                    allData.push(doc.data());
+                });
+
+                var response = {
+                    IsSuccess: true,
+                    Status: "Success",
+                    JsonData: JSON.stringify(allData) 
+                };
+
+                window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));
+            })
+            .catch(function(error) {
+                console.error("獲取集合失敗: ", error.message);
+                var errorResp = { IsSuccess: false, Status: "Error", JsonData: "[]" };
+                window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(errorResp));
+            });
+    },
 });

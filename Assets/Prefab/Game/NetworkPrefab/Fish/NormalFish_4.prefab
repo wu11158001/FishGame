@@ -231,7 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c2393655d406c4dbc022b3e5ec7b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NormalFish
-  VisualModel: {fileID: 5775335614566633081}
+  FishModel: {fileID: 5775335614566633081}
 --- !u!114 &5276619912991246378
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -83,13 +83,21 @@ public class LobbyView : BasicView
     /// <summary>
     /// 開始加入遊戲
     /// </summary>
-    private async void StartJoInGame()
+    private void StartJoInGame()
     {
         if (IsMatchmaking) return;
 
         IsMatchmaking = true;
         AddressableManagement.Instance.ShowLoading();
 
+        DataManagement.Instance.GetAllFishData(JoInLobby);
+    }
+
+    /// <summary>
+    /// 加入大廳
+    /// </summary>
+    private async void JoInLobby()
+    {
         NetworkRunnerManagement.Instance.ResetRunner();
 
         var runner = NetworkRunnerManagement.Instance.NetworkRunner;

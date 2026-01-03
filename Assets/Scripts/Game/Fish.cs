@@ -1,25 +1,21 @@
 using UnityEngine;
 using Fusion;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Collections;
 
 public class Fish : NetworkBehaviour
 {
     // 移動計時器
     [Networked] TickTimer MoveTimer { get; set; }
-    // 激活物件計時器
-    [Networked] TickTimer ActiveTimer { get; set; }
     // 總移動時間
     [Networked] float TotalDuration { get; set; }
-    // 是否已獲取Firestore資料
-    [Networked] bool IsGetData { get; set; }
     // 魚資料
     [Networked] FishData_Network FishData_Network { get; set; }
 
     // 激活物件
     [SerializeField] GameObject FishModel;
 
-    // 移動路徑
+    NetworkPrefabEnum FishType;
     Vector3[] PathPoints;
 
     // 防止閃爍隱藏時間
@@ -27,72 +23,44 @@ public class Fish : NetworkBehaviour
 
     public void SetData(NetworkPrefabEnum fishType, bool isMirror, WayPoint wayPoint)
     {
+        FishType = fishType;
+
         // 移動路徑獲取
         var query = wayPoint.Points.Select(t => t.position);
         if (isMirror) query = query.Reverse();
         PathPoints = query.ToArray();
 
-        if(Object.HasStateAuthority)
-        {
-            IsGetData = false;
-        }        
+        // 魚資料獲取
+        FishData fishData = DataManagement.Instance.GetFishData(FishType);
 
-        // 獲取魚資料
-        FirestoreManagement.Instance.GetDataFromFirestore(
-            path: FirestoreCollectionNameEnum.FishData,
-            docId: fishType.ToString(),
-            callback: FishDataCallback);
-    }
-
-    /// <summary>
-    /// 獲取魚資料Callback
-    /// </summary>
-    /// <param name="response"></param>
-    private void FishDataCallback(FirestoreResponse response)
-    {
-        FishData data = JsonConvert.DeserializeObject<FishData>(response.JsonData);
-
-        if(data == null)
-        {
-            Runner.Despawn(Object);
-            return;
-        }
-
-        if (Object.HasStateAuthority)
-        {
-            IsGetData = true;
-            TotalDuration = data.Duration;
-            FishData_Network = data.ToNetworkStruct();
-
-            ActiveTimer = TickTimer.CreateFromSeconds(Runner, DelayActiveTime);
-            MoveTimer = TickTimer.CreateFromSeconds(Runner, data.Duration + DelayActiveTime);
-        }
+        if (fishData != null)
+            FishData_Network = fishData.ToNetworkStruct();
     }
 
     public override void Spawned()
     {
-        // 初始狀態先隱藏，避免閃爍
-        if (FishModel != null) FishModel.SetActive(false);
+        if (Object.HasStateAuthority)
+        {
+            TotalDuration = FishData_Network.Duration;
+            MoveTimer = TickTimer.CreateFromSeconds(Runner, FishData_Network.Duration + DelayActiveTime);
+        }
+
+        StartCoroutine(IYieldShow());
     }
 
-    public override void Render()
+    /// <summary>
+    /// 防止閃爍延遲顯示
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator IYieldShow()
     {
-        if (!IsGetData)
-            return;
-
-        // 如果延遲計時器還沒跑完，隱藏模型
-        bool shouldShow = ActiveTimer.Expired(Runner);
-        if (FishModel.activeSelf != shouldShow)
-        {
-            FishModel.SetActive(shouldShow);
-        }
+        FishModel.SetActive(false);
+        yield return new WaitForSeconds(DelayActiveTime);
+        FishModel.SetActive(true);
     }
 
     public override void FixedUpdateNetwork()
     {
-        if (!IsGetData)
-            return;
-
         if (PathPoints == null || PathPoints.Length < 2) return;
 
         // 計算總進度 (0 ~ 1)
