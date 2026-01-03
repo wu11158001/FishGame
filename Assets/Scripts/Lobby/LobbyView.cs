@@ -11,6 +11,7 @@ public class LobbyView : BasicView
 {
     [SerializeField] TextMeshProUGUI CoinText;
     [SerializeField] Button StartBtn;
+    [SerializeField] Button LogoutBtn;
 
     bool IsMatchmaking;
 
@@ -26,6 +27,7 @@ public class LobbyView : BasicView
     private void Start()
     {
         StartBtn.onClick.AddListener(StartJoInGame);
+        LogoutBtn.onClick.AddListener(Logout);
 
         NetworkRunnerManagement.Instance.RoomListUpdatedEvent += OnRoomListUpdatedUpdate;
 
@@ -36,6 +38,23 @@ public class LobbyView : BasicView
     public void SetData(Action closeAction)
     {
         CloseAction = closeAction;
+    }
+
+    /// <summary>
+    /// 登出
+    /// </summary>
+    private void Logout()
+    {
+        FirestoreManagement.Instance.StopHeartbeat(isLogout: true);
+
+        SceneManagement.Instance.LoadScene(
+            sceneEnum: SceneEnum.Login,
+            callback: async () =>
+            {
+                await AddressableManagement.Instance.OpenLoginView(isLogout: true);
+            });
+
+        CloseAction?.Invoke();
     }
 
     #region 資料變更監聽

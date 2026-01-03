@@ -233,4 +233,16 @@ mergeInto(LibraryManager.library, {
             delete window.firestoreUnsubscribes[documentId];
         }
     },
+
+    // 註冊瀏覽器關閉監聽器
+    // callbackObj: Unity 回傳物件
+    // callbackMethod: Unity 回傳方法
+    RegisterOnCloseEvent: function (callbackObj, callbackMethod) {
+        window.onbeforeunload = function (e) {
+            var unityObj = UTF8ToString(callbackObj);
+            var callback = UTF8ToString(callbackMethod);
+
+            SendMessage(unityObj, callback);
+        };
+    },
 });

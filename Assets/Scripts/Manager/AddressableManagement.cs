@@ -286,7 +286,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 開啟登入介面
     /// </summary>
-    public async Task OpenLoginView(Action closeAction = null)
+    public async Task OpenLoginView(bool isLogout = false, Action closeAction = null)
     {
         ViewEnum view = ViewEnum.LoginView;
 
@@ -302,7 +302,9 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             {
                 if(viewObj != null)
                 {
-                    viewObj.GetComponent<LoginView>().SetData(closeAction: viewCloseAction);
+                    viewObj.GetComponent<LoginView>().SetData(
+                        isLogout: isLogout, 
+                        closeAction: viewCloseAction);
                 }
             });
     }

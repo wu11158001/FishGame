@@ -48,6 +48,13 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         StopAllCoroutines();
     }
 
+    private void Start()
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        RegisterOnCloseEvent(gameObject.name, nameof(OnBrowserClose));
+#endif
+    }
+
     public void OnDataChanged(string jsonResponse)
     {
         // 處理資料邏輯...
@@ -91,6 +98,36 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
             StopCoroutine(HeartbeatCoroutine);
 
         HeartbeatCoroutine = StartCoroutine(ISendHeartbeat());
+    }
+
+    /// <summary>
+    /// 停止心跳包發送
+    /// </summary>
+    public void StopHeartbeat(bool isLogout)
+    {
+        if (HeartbeatCoroutine != null)
+            StopCoroutine(HeartbeatCoroutine);
+
+        if(isLogout)
+        {
+            // 獲取當前 Unix 時間戳 - 心跳包時間 (秒)
+            long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - HeartbeatTime;
+
+            LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
+
+            var updates = new Dictionary<string, object>
+            {
+                { "HeartbeatUpdateTime", currentTimestamp }
+            };
+
+            UpdateDataToFirestore(
+                path: FirestoreCollectionNameEnum.AccountData,
+                docId: loginInfo.Account,
+                updates: updates,
+                callback: (res) => {
+                    if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
+                });
+        }
     }
 
     /// <summary>
@@ -467,6 +504,20 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     {
         var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
         AsccountDataChangeDelete?.Invoke(response);
+    }
+
+    #endregion
+
+    #region 視窗事件
+    
+    /// <summary>
+    /// 視窗關閉事件
+    /// </summary>
+    [DllImport("__Internal")]
+    private static extern void RegisterOnCloseEvent(string callbackObj, string callbackMethod);
+    public void OnBrowserClose()
+    {
+        StopHeartbeat(isLogout: true);
     }
 
     #endregion

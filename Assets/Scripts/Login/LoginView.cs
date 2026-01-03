@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.InputSystem;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 public class LoginView : BasicView
 {
@@ -28,9 +29,15 @@ public class LoginView : BasicView
     [SerializeField] Toggle EnglishTog;
 
     [Header("SwitchArea")]
-    [SerializeField] LocalizeStringEvent TitleText;
+    [SerializeField] TextMeshProUGUI TutleText;
+    [SerializeField] LocalizeStringEvent TitleLocalize;
     [SerializeField] GameObject LoginArea;
     [SerializeField] GameObject RegisterArea;
+
+    [Header("RecordArea")]
+    [SerializeField] GameObject RecordArea;
+    [SerializeField] RectTransform AccountPanel;
+    [SerializeField] RecordUnit RecordUnit;
 
     [Header("EyesBtn")]
     [SerializeField] Button EyeOpenBtn_Login;
@@ -49,6 +56,7 @@ public class LoginView : BasicView
     // 當前面板發送按鈕事件
     Action EnterAction;
 
+    bool IsLogout;
     int TABIndex;
 
     // 最小資料長度
@@ -82,12 +90,32 @@ public class LoginView : BasicView
         LoginTog.isOn = true;
         ChineseTog.isOn = true;
 
+        RecordArea.SetActive(false);
+
         CheckLoginData();
         CheckRegisterData();
 
         yield return IYieldShow();
 
-        AutoLogin();
+        // 自動填寫紀錄帳號
+        LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
+        if (loginInfo != null)
+        {
+            AccountIF_Login.text = loginInfo.Account;
+            PasswordIF_Login.text = loginInfo.Password;
+
+            LoginBtn.interactable = true;
+        }
+
+        // 判斷是否主動登出
+        if (!IsLogout)
+        {
+            SendLogin();
+        }
+        else
+        {
+            ShowRecord();
+        }            
     }
 
     private void Start()
@@ -115,6 +143,9 @@ public class LoginView : BasicView
             if (value == true)
                 LocalizationManagement.Instance.ChangeLanguage(Language.en);
         });
+
+        AccountIF_Login.onSelect.AddListener((value) => { ShowRecord(); });
+        AccountIF_Login.onDeselect.AddListener((value) => { StartCoroutine(ICloseRecord()); });
 
         AccountIF_Login.onValueChanged.AddListener((value) => { CheckLoginData(); });
         PasswordIF_Login.onValueChanged.AddListener((value) => { CheckLoginData(); });
@@ -153,28 +184,69 @@ public class LoginView : BasicView
         }
     }
 
-    public void SetData(Action closeAction)
+    public void SetData(bool isLogout, Action closeAction)
     {
+        IsLogout = isLogout;
         CloseAction = closeAction;
 
         StartCoroutine(Initialize());
     }
 
     /// <summary>
-    /// 自動登入
+    /// 顯示紀錄帳號
     /// </summary>
-    private void AutoLogin()
+    private void ShowRecord()
     {
-        LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
-        if (loginInfo != null)
+        RecordLoginInfo recordLoginInfo = PlayerPrefsManagement.GetRecordLoginInfo();
+
+        if (recordLoginInfo == null || recordLoginInfo.RecordLogins == null || recordLoginInfo.RecordLogins.Count == 0)
         {
-            AccountIF_Login.text = loginInfo.Account;
-            PasswordIF_Login.text = loginInfo.Password;
-
-            LoginBtn.interactable = true;
-
-            SendLogin();
+            RecordArea.SetActive(false);
+            return;
         }
+
+        RecordArea.SetActive(true);
+        RecordUnit.gameObject.SetActive(false);
+
+        for (int i = 1; i < AccountPanel.childCount; i++)
+        {
+            Destroy(AccountPanel.GetChild(i).gameObject);
+        }
+
+        int index = 0;
+        foreach (var record in recordLoginInfo.RecordLogins)
+        {
+            index++;
+
+            GameObject recordObj = Instantiate(RecordUnit.gameObject, AccountPanel);
+            recordObj.SetActive(true);
+            RecordUnit recordUnit = recordObj.GetComponent<RecordUnit>();
+            recordUnit.SetData(
+                account: record.Account,
+                isFinal: index >= recordLoginInfo.RecordLogins.Count,
+                clickAction: () =>
+                {
+                    PasswordIF_Login.Select();
+                    PasswordIF_Login.ActivateInputField();
+
+                    AccountIF_Login.text = record.Account;
+                    PasswordIF_Login.text = record.Password;
+
+                    LoginBtn.interactable = true;
+
+                    RecordArea.SetActive(false);
+                });
+        }
+    }
+
+    /// <summary>
+    /// 關閉記錄帳號
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ICloseRecord()
+    {
+        yield return new WaitForSeconds(0.1f);
+        RecordArea.SetActive(false);
     }
 
     /// <summary>
@@ -214,8 +286,13 @@ public class LoginView : BasicView
             "Log In" :
             "Register";
 
+        TutleText.color =
+            panelType == PanelType.Login ?
+            StringUtility.GetColor("00A114") :
+            StringUtility.GetColor("1586E0");
+            
         LocalizationManagement.Instance.UpdateKey(
-            localizeEvent: TitleText,
+            localizeEvent: TitleLocalize,
             newKey: newKey);
 
         SelectInputField(panelType == PanelType.Login ? AccountIF_Login : AccountIF_Register);
@@ -343,7 +420,7 @@ public class LoginView : BasicView
                         {
                             AddressableManagement.Instance.CloseLoading();
                             AddressableManagement.Instance.ShowToast("Account logged in");
-                            Debug.LogError($"帳號已登入! 差距: {difference} 秒");
+                            Debug.LogError($"帳號已登入!");
                         }
                         else
                         {
@@ -477,6 +554,7 @@ public class LoginView : BasicView
     /// </summary>
     private void SvaeLoginInfo(string account, string password)
     {
+        // 紀錄登入帳號訊息
         LoginInfo loginInfo = new()
         {
             Account = AccountIF_Login.text,
@@ -484,8 +562,27 @@ public class LoginView : BasicView
         };
 
         string loginInfoJson = JsonUtility.ToJson(loginInfo);
-
         PlayerPrefs.SetString(PlayerPrefsManagement.LOGIN_INFO, loginInfoJson);
+
+        // 紀錄曾經登入帳號訊息
+        RecordLoginInfo recordData = PlayerPrefsManagement.GetRecordLoginInfo();
+
+        if (recordData == null) recordData = new RecordLoginInfo();
+        if (recordData.RecordLogins == null) recordData.RecordLogins = new List<LoginInfo>();
+
+        // 登入帳號移到第一筆
+        recordData.RecordLogins.RemoveAll(x => x.Account == account);
+        recordData.RecordLogins.Insert(0, loginInfo);
+
+        // 限制最多紀錄 3 筆
+        if (recordData.RecordLogins.Count > 3)
+        {
+            recordData.RecordLogins.RemoveRange(3, recordData.RecordLogins.Count - 3);
+        }
+
+        string json = JsonUtility.ToJson(recordData);
+        PlayerPrefs.SetString(PlayerPrefsManagement.RECORD_LOGIN_INFO, json);
+        PlayerPrefs.Save();
     }
 
     /// <summary>
