@@ -42,41 +42,18 @@ public class Bullet : NetworkBehaviour
     /// </summary>
     private void CheckBounds()
     {
-        /*Vector2 nextPos = (Vector2)transform.position + Direction * Speed * Runner.DeltaTime;
-
-        // 檢查左右邊界
-        if (nextPos.x < MinBounds.x || nextPos.x > MaxBounds.x)
-        {
-            Direction = new Vector2(-Direction.x, Direction.y);
-        }
-
-        // 檢查上下邊界
-        if (nextPos.y < MinBounds.y || nextPos.y > MaxBounds.y)
-        {
-            Direction = new(Direction.x, -Direction.y);
-        }
-
-        transform.position += (Vector3)Direction * Speed * Runner.DeltaTime;
-
-        // 讓子彈朝向移動方向 (2D 旋轉)
-        float angle = Mathf.Atan2(Direction.y, Direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);*/
-
         Vector3 pos = transform.position;
 
-        // 檢查 X 軸邊界
         if (pos.x < MinBounds.x || pos.x > MaxBounds.x)
         {
             Direction = new Vector3(-Direction.x, 0, Direction.z);
         }
-        // 檢查 Z 軸邊界 (3D 的前後等於 2D 的上下)
+
         if (pos.z < MinBounds.y || pos.z > MaxBounds.y)
         {
             Direction = new Vector3(Direction.x, 0, -Direction.z);
         }
 
-        // 讓子彈的 Sprite 轉向 (如果你的子彈圖片是有方向性的)
-        // 在 3D 中，如果是水平飛，通常是旋轉 Y 軸
         transform.forward = Direction;
     }
 
