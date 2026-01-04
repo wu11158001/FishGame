@@ -65,7 +65,7 @@ public class GameTerrain : NetworkBehaviour
 
         if (SpawnTimer.ExpiredOrNotRunning(Runner))
         {
-            CreatNormalFish();
+            //CreatNormalFish();
             SpawnTimer = TickTimer.CreateFromSeconds(Runner, NormalFishCreatTime);
         }
     }

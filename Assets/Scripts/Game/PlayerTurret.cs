@@ -66,30 +66,22 @@ public class PlayerTurret : NetworkBehaviour
                 if (MainCamera == null) return;
             }
 
-            // 1. 從攝影機射出一條射線到滑鼠指向的地面（假設平面在 Y = 0）
             Ray ray = MainCamera.ScreenPointToRay(input.MousePosition);
-            Plane groundPlane = new Plane(Vector3.up, transform.position); // 建立一個通過物件位置的水平面
+            Plane groundPlane = new Plane(Vector3.up, transform.position);
 
             if (groundPlane.Raycast(ray, out float enter))
             {
                 Vector3 mouseWorldPos = ray.GetPoint(enter);
-
-                // 2. 計算方向向量，並忽略高度差 (Y 軸) 以確保旋轉平穩
                 Vector3 dir = mouseWorldPos - transform.position;
                 dir.y = 0;
 
                 if (dir.sqrMagnitude > 0.1f) // 避免向量過小時產生抖動
                 {
-                    // 3. 使用 Atan2 計算角度，注意 3D 中通常是 (dir.x, dir.z)
-                    // 在 Unity 座標系中，Atan2(x, z) 得到的弧度轉角度後即為 Y 軸旋轉值
                     NetworkedAngle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
                 }
             }
         }
 
-        // 4. 套用到 Y 軸旋轉
-        // 如果 CurrBarrel 是子物件，建議使用 localRotation 以免受父物件旋轉干擾
-        // 或者直接給予世界旋轉值：
         CurrBarrel.rotation = Quaternion.Euler(0, NetworkedAngle, 0);
     }
 

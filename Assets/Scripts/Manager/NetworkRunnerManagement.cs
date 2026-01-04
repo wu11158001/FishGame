@@ -194,7 +194,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
             NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                 key: NetworkPrefabEnum.GameTerrain,
                 Pos: Vector3.zero,
-                rot: Quaternion.identity,
+                rot: Quaternion.Euler(90, 0, 0),
                 parent: null,
                 player: PlayerRef.None);
         }        

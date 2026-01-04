@@ -67,7 +67,7 @@ public class CameraResizer : MonoBehaviour
     {
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = MainCamera;
-        canvas.planeDistance = 100;
+        canvas.planeDistance = 10;
         canvas.sortingOrder = order;
 
         if (scaler == null) scaler = canvas.gameObject.GetComponent<CanvasScaler>();
