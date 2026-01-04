@@ -125,7 +125,8 @@ public class FusionPool : NetworkObjectProviderDefault
     /// </summary>
     private bool IsNotPoolObject(NetworkRunner runner, NetworkObjectReleaseContext context, NetworkObject instance)
     {
-        if (instance.GetComponent<Player>() != null)
+        // 砲台
+        if (instance.GetComponent<PlayerTurret>() != null)
         {
             if (context.TypeId.IsPrefab)
             {

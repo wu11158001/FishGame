@@ -1,0 +1,179 @@
+using UnityEngine;
+using Fusion;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
+using System.Linq;
+
+public class PlayerTurret : NetworkBehaviour
+{
+    [SerializeField] List<GameObject> Turrets = new();
+
+    [SerializeField] float FireRate = 0.5f;
+
+    // 使用砲台
+    [OnChangedRender(nameof(ChangeTurret))]
+    [Networked] int TurretIndex { get; set; }
+
+    // 同步角度變數
+    [Networked] float NetworkedAngle { get; set; }
+
+    //射速
+    [Networked]
+    private TickTimer Delay { get; set; }
+
+    Camera MainCamera;
+    Transform BulletPool;
+
+    List<Transform> CurrShotPoints = new();
+    Transform CurrBarrel;
+
+    public void SetData(int turretIndex)
+    {
+        TurretIndex = turretIndex;
+        ChangeTurret();
+    }
+
+    public override void Spawned()
+    {
+        BulletPool = GameObject.Find(PoolNameEnum.BulletPool.ToString()).transform;
+
+        if(Object.HasStateAuthority)
+        {
+            AddressableManagement.Instance.CloseLoading();
+            TempDataManagement.Instance.StartTimingUpdateAccountData();
+        }
+    }
+
+    public override void FixedUpdateNetwork()   
+    {       
+        OnFire();
+        OnRotation();
+    }
+
+    /// <summary>
+    /// 轉向
+    /// </summary>
+    private void OnRotation()
+    {
+        if (CurrBarrel == null)
+            return;
+
+        if (GetInput(out NetworkInputData input))
+        {
+            if (MainCamera == null)
+            {
+                MainCamera = Camera.main;
+                if (MainCamera == null) return;
+            }
+
+            // 1. 從攝影機射出一條射線到滑鼠指向的地面（假設平面在 Y = 0）
+            Ray ray = MainCamera.ScreenPointToRay(input.MousePosition);
+            Plane groundPlane = new Plane(Vector3.up, transform.position); // 建立一個通過物件位置的水平面
+
+            if (groundPlane.Raycast(ray, out float enter))
+            {
+                Vector3 mouseWorldPos = ray.GetPoint(enter);
+
+                // 2. 計算方向向量，並忽略高度差 (Y 軸) 以確保旋轉平穩
+                Vector3 dir = mouseWorldPos - transform.position;
+                dir.y = 0;
+
+                if (dir.sqrMagnitude > 0.1f) // 避免向量過小時產生抖動
+                {
+                    // 3. 使用 Atan2 計算角度，注意 3D 中通常是 (dir.x, dir.z)
+                    // 在 Unity 座標系中，Atan2(x, z) 得到的弧度轉角度後即為 Y 軸旋轉值
+                    NetworkedAngle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+                }
+            }
+        }
+
+        // 4. 套用到 Y 軸旋轉
+        // 如果 CurrBarrel 是子物件，建議使用 localRotation 以免受父物件旋轉干擾
+        // 或者直接給予世界旋轉值：
+        CurrBarrel.rotation = Quaternion.Euler(0, NetworkedAngle, 0);
+    }
+
+    /// <summary>
+    /// 發射
+    /// </summary>
+    private void OnFire()
+    {
+        if (GetInput(out NetworkInputData input))
+        {
+            // 點擊UI
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
+
+            if (CurrShotPoints == null || CurrShotPoints.Count == 0)
+                return;
+
+            if (CurrBarrel == null)
+                return;
+
+            if (input.IsFirePressed && Delay.ExpiredOrNotRunning(Runner))
+            {
+                // 判斷子彈花費
+                int accountCoin = TempDataManagement.Instance.TempAccountData.Coins;
+                int currCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
+                int totalCost = currCost * CurrShotPoints.Count;
+
+                if (accountCoin < currCost)
+                {
+                    Debug.Log("金幣不足!");
+                    return;
+                }
+
+                if (Runner.IsForward)
+                    TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -currCost);
+
+                for (int i = 0; i < CurrShotPoints.Count; i++)
+                {
+                    // 重製冷卻時間
+                    Delay = TickTimer.CreateFromSeconds(Runner, FireRate);
+
+                    NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                        key: NetworkPrefabEnum.Bullet,
+                        Pos: CurrShotPoints[i].position,
+                        rot: CurrBarrel.localRotation,
+                        parent: BulletPool,
+                        player: Object.InputAuthority);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 更換砲台
+    /// </summary>
+    private void ChangeTurret()
+    {
+        Debug.Log($"更換砲台 : {TurretIndex}");
+
+        // 隱藏所有砲台
+        for (int i = 0; i < Turrets.Count; i++)
+        {
+            if (Turrets[i] != null)
+                Turrets[i].SetActive(i == TurretIndex);
+        }
+
+        // 獲取當前使用的砲台物件
+        GameObject activeTurret = Turrets[TurretIndex];
+        if (activeTurret == null) return;
+
+        // 設定砲管
+        CurrBarrel = activeTurret.transform.Find("Barrel");
+
+        // 更新發射點 (優化：只找當前砲台下的 ShotPoint)
+        CurrShotPoints.Clear();
+
+        // 更新發射點
+        var childTransforms = activeTurret.GetComponentsInChildren<Transform>();
+        foreach (var t in childTransforms)
+        {
+            if (t.name.StartsWith("ShotPoint"))
+            {
+                CurrShotPoints.Add(t);
+            }
+        }
+    }
+}

@@ -11,7 +11,7 @@ public class GameTerrain : NetworkBehaviour
 
     /// <summary> 紀錄座位上玩家ID </summary>
     [Networked, Capacity(4)]
-    [OnChangedRender(nameof(OnSpawnLocalObject))]
+    [OnChangedRender(nameof(OnSpawnLocalTurret))]
     NetworkArray<int> SeatPlayerIDs { get; }
 
     /// <summary>
@@ -87,13 +87,13 @@ public class GameTerrain : NetworkBehaviour
 
         yield return null;
 
-        OnSpawnLocalObject();
+        OnSpawnLocalTurret();
     }
 
     /// <summary>
-    /// 產生本地玩家物件
+    /// 產生本地玩家砲台
     /// </summary>
-    private void OnSpawnLocalObject()
+    private void OnSpawnLocalTurret()
     {
         if (isLocalSpawn) 
             return;
@@ -109,11 +109,19 @@ public class GameTerrain : NetworkBehaviour
                 var pos = Vector3.zero;
 
                 NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
-                    key: NetworkPrefabEnum.Player,
+                    key: NetworkPrefabEnum.PlayerTurret,
                     Pos: Seats[index].transform.position,
                     rot: Quaternion.identity,
                     parent: Seats[index].transform,
-                    player: Runner.LocalPlayer);
+                    player: Runner.LocalPlayer,
+                    callback: (obj) =>
+                    {
+                        PlayerTurret playerTurret = obj.GetComponent<PlayerTurret>();
+                        if(playerTurret != null)
+                        {
+                            playerTurret.SetData(turretIndex: 0);
+                        }
+                    });
 
                 // 位置在3.4攝影機顛倒
                 if(index >= 2)

@@ -103,8 +103,8 @@ public enum NetworkPrefabEnum
     /// <summary> 遊戲地形 </summary>
     GameTerrain,
 
-    /// <summary> 玩家遊戲物件 </summary>
-    Player,
+    /// <summary> 玩家砲台 </summary>
+    PlayerTurret,
 
     /// <summary> 子彈物件 </summary>
     Bullet,
