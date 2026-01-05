@@ -5,8 +5,6 @@ using System.Collections;
 
 public class Fish : NetworkBehaviour
 {
-    [SerializeField] GameObject FishModel;
-
     // 移動計時器
     [Networked] TickTimer MoveTimer { get; set; }
     // 總移動時間
@@ -18,9 +16,6 @@ public class Fish : NetworkBehaviour
 
     NetworkPrefabEnum FishType;
     Vector3[] PathPoints;
-
-    // 防止閃爍隱藏時間
-    const float DelayActiveTime = 0.5f;
 
     public void SetData(NetworkPrefabEnum fishType, bool isMirror, float depth, WayPoint wayPoint)
     {
@@ -43,33 +38,33 @@ public class Fish : NetworkBehaviour
     {
         if (Object.HasStateAuthority)
         {
+            IsShowModel = false;
             TotalDuration = FishData_Network.Duration;
-            MoveTimer = TickTimer.CreateFromSeconds(Runner, FishData_Network.Duration + DelayActiveTime);
+            MoveTimer = TickTimer.CreateFromSeconds(Runner, FishData_Network.Duration);
         }
-
-        //StartCoroutine(IYieldShow());
-    }
-
-    /// <summary>
-    /// 防止閃爍延遲顯示
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator IYieldShow()
-    {
-        FishModel.SetActive(false);
-        yield return new WaitForSeconds(DelayActiveTime);
-        FishModel.SetActive(true);
     }
 
     public override void FixedUpdateNetwork()
     {
-        if (PathPoints == null || PathPoints.Length < 2) return;
+        if(Object.HasStateAuthority)
+        {
+            Move();
+        }
+    }
+
+    /// <summary>
+    /// 移動
+    /// </summary>
+    private void Move()
+    {
+        if (PathPoints == null || PathPoints.Length < 2)
+            return;
 
         float elapsed = TotalDuration - (MoveTimer.RemainingTime(Runner) ?? 0);
         float t = Mathf.Clamp01(elapsed / TotalDuration);
 
         Vector3 nextPos = GetCatmullRomPosition(t, PathPoints);
-        nextPos.y += Depth;
+        nextPos.y = Depth;
         Vector3 direction = nextPos - transform.position;
 
         if (direction.sqrMagnitude > 0.0001f)
