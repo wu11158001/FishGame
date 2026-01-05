@@ -6,9 +6,15 @@ using System.Linq;
 
 public class PlayerTurret : NetworkBehaviour
 {
+    [Header("Turrets")]
     [SerializeField] List<GameObject> Turrets = new();
 
+    [Header("Fire")]
     [SerializeField] float FireRate = 0.5f;
+
+    [Header("HandleRecoil")]
+    [SerializeField] float RecoilDistance = 0.2f; // 後退距離
+    [SerializeField] float ReturnSpeed = 5f;      // 回彈速度
 
     // 使用砲台
     [OnChangedRender(nameof(ChangeTurret))]
@@ -18,8 +24,10 @@ public class PlayerTurret : NetworkBehaviour
     [Networked] float NetworkedAngle { get; set; }
 
     //射速
-    [Networked]
-    private TickTimer Delay { get; set; }
+    [Networked] TickTimer Delay { get; set; }
+
+    // 當前後座力
+    [Networked] float CurrentRecoil { get; set; }
 
     Camera MainCamera;
     Transform BulletPool;
@@ -48,6 +56,7 @@ public class PlayerTurret : NetworkBehaviour
     {       
         OnFire();
         OnRotation();
+        HandleRecoil();
     }
 
     /// <summary>
@@ -115,8 +124,12 @@ public class PlayerTurret : NetworkBehaviour
                     return;
                 }
 
+                // 扣除金幣
                 if (Runner.IsForward)
                     TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -currCost);
+
+                // 觸發後座力
+                CurrentRecoil = RecoilDistance;
 
                 for (int i = 0; i < CurrShotPoints.Count; i++)
                 {
@@ -135,6 +148,17 @@ public class PlayerTurret : NetworkBehaviour
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 發射後座力
+    /// </summary>
+    private void HandleRecoil()
+    {
+        if (CurrBarrel == null) return;
+
+        CurrentRecoil = Mathf.Lerp(CurrentRecoil, 0, Runner.DeltaTime * ReturnSpeed);
+        CurrBarrel.localPosition = -CurrBarrel.transform.forward * CurrentRecoil;
     }
 
     /// <summary>

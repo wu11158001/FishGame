@@ -1,7 +1,6 @@
 using UnityEngine;
 using Fusion;
 using System.Linq;
-using System.Collections;
 
 public class Fish : NetworkBehaviour
 {
@@ -38,7 +37,6 @@ public class Fish : NetworkBehaviour
     {
         if (Object.HasStateAuthority)
         {
-            IsShowModel = false;
             TotalDuration = FishData_Network.Duration;
             MoveTimer = TickTimer.CreateFromSeconds(Runner, FishData_Network.Duration);
         }

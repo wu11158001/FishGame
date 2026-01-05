@@ -25,20 +25,24 @@ public class GameTerrain : NetworkBehaviour
 
     // 一般魚Enum
     List<NetworkPrefabEnum> NormalFishTypes = new();
+    Coroutine CreateFishCoroutine;
 
     // 本地玩家是否已生成
     bool isLocalSpawn;
     // 一般魚生成時間(秒)
-    float NormalFishCreatTime = 5;
+    float NormalFishCreatTime = 7;
     // 一般魚一次生成最小數量
-    int MinCreateNormalFish = 1;
+    int MinCreateNormalFish = 3;
     // 一般魚一次生成最大數量
-    int MaxCreateNormalFish = 1;
+    int MaxCreateNormalFish = 6;
 
     private void OnDestroy()
     {
         if (NetworkRunnerManagement.Instance != null)
             NetworkRunnerManagement.Instance.PlayerLeftEvent -= LeftRoom;
+
+        if (CreateFishCoroutine != null)
+            StopCoroutine(CreateFishCoroutine);
     }
 
     private void Start()
@@ -66,8 +70,13 @@ public class GameTerrain : NetworkBehaviour
 
         if (SpawnTimer.ExpiredOrNotRunning(Runner))
         {
-            CreatNormalFish();
             SpawnTimer = TickTimer.CreateFromSeconds(Runner, NormalFishCreatTime);
+
+            if (CreateFishCoroutine != null)
+                StopCoroutine(CreateFishCoroutine);
+
+            StartCoroutine(ICreatNormalFish());
+            
         }
     }
 
@@ -237,10 +246,10 @@ public class GameTerrain : NetworkBehaviour
     /// <summary>
     /// 產生一般魚
     /// </summary>
-    private void CreatNormalFish()
+    private IEnumerator ICreatNormalFish()
     {
         if (!Object.HasStateAuthority)
-            return;
+            yield break;
 
         if(FishPool == null)
             FishPool = GameObject.Find(PoolNameEnum.FishPool.ToString()).transform;
@@ -259,7 +268,7 @@ public class GameTerrain : NetworkBehaviour
         if(FishPool == null || WayPointMain == null || NormalFishTypes == null || NormalFishTypes.Count == 0)
         {
             Debug.LogError("產生一般魚錯誤!");
-            return;
+            yield break;
         }
 
         // 總生成數量
@@ -267,7 +276,7 @@ public class GameTerrain : NetworkBehaviour
         for (int i = 0; i < totalCount; i++)
         {
             // 隨機魚種類
-            int fishTypeIndex = 0;//UnityEngine.Random.Range(0, NormalFishTypes.Count);
+            int fishTypeIndex = UnityEngine.Random.Range(0, NormalFishTypes.Count);
             NetworkPrefabEnum fishType = NormalFishTypes[fishTypeIndex];
 
             // 隨機選擇路線
@@ -302,6 +311,8 @@ public class GameTerrain : NetworkBehaviour
                                    depth: depth,
                                    wayPoint: wayPoint);
                        });
+
+            yield return new WaitForSeconds(0.2f);
         }
     }
 

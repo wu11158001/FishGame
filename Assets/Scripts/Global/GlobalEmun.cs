@@ -123,6 +123,9 @@ public enum GamePrefabEnum
 {
     /// <summary> 魚群路線主物件 </summary>
     WayPointMain,
+
+    /// <summary> 場景特效 </summary>
+    SceneEffect,
 }
 
 /// <summary>

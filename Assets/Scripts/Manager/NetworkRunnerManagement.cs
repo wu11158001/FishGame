@@ -185,6 +185,9 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         AddressableManagement.Instance.SetCanvase();
 
+        // 產生場景特效
+        _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.SceneEffect);
+
         // 產生路線主物件
         await AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.WayPointMain);
 
