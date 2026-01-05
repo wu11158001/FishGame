@@ -8,11 +8,15 @@ public class Bullet : NetworkBehaviour
 
     [Networked] Vector3 Direction { get; set; }
 
+    Transform EffectPool;
+
     readonly Vector2 MinBounds = new(-9.6f, -5.4f);
     readonly Vector2 MaxBounds = new(9.6f, 5.4f);
     
     public override void Spawned()
     {
+        EffectPool = GameObject.Find(FusionPoolNameEnum.EffectPool.ToString()).transform;
+
         Direction = transform.forward;
     }
 
@@ -74,6 +78,15 @@ public class Bullet : NetworkBehaviour
     /// <param name="hit"></param>
     private void HitTarget(Collider hit)
     {
+        // 產生擊中效果
+        NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                        key: NetworkPrefabEnum.HitEffect,
+                        Pos: transform.position,
+                        rot: Quaternion.identity,
+                        parent: EffectPool,
+                        player: Object.InputAuthority);
+
+        // 判斷是否擊中
         var fish = hit.GetComponent<Fish>();
         FishData_Network data = fish.GetFishData();
 

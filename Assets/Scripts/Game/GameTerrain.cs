@@ -252,7 +252,7 @@ public class GameTerrain : NetworkBehaviour
             yield break;
 
         if(FishPool == null)
-            FishPool = GameObject.Find(PoolNameEnum.FishPool.ToString()).transform;
+            FishPool = GameObject.Find(FusionPoolNameEnum.FishPool.ToString()).transform;
 
         if(WayPointMain == null)
             WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}(Clone)").GetComponent<WayPointMain>();

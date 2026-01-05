@@ -1958,7 +1958,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c2393655d406c4dbc022b3e5ec7b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
-  FishModel: {fileID: 3201909838559245476}
 --- !u!114 &9013133534017025471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2037,8 +2036,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.91, y: 2.38, z: 3.39}
-  m_Center: {x: 0.17, y: 0.56, z: 0.74}
+  m_Size: {x: 0.82, y: 2.08, z: 3.51}
+  m_Center: {x: 0.2, y: 0.65, z: 0.74}
 --- !u!1 &6187525230964846624
 GameObject:
   m_ObjectHideFlags: 0

@@ -43,7 +43,7 @@ public class PlayerTurret : NetworkBehaviour
 
     public override void Spawned()
     {
-        BulletPool = GameObject.Find(PoolNameEnum.BulletPool.ToString()).transform;
+        BulletPool = GameObject.Find(FusionPoolNameEnum.BulletPool.ToString()).transform;
 
         if(Object.HasStateAuthority)
         {

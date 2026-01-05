@@ -189,7 +189,8 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.SceneEffect);
 
         // 產生路線主物件
-        await AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.WayPointMain);
+        var task1 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.WayPointMain);
+        await Task.WhenAll(task1);
 
         // 產生遊戲地形
         if (runner.IsSharedModeMasterClient)

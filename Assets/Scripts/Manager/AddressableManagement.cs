@@ -182,7 +182,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         }
         catch (Exception e)
         {
-            Debug.LogError($"開啟介面錯誤: {e}");
+            Debug.LogError($"{viewType}開啟介面錯誤: {e}");
         }
         finally
         {
@@ -460,7 +460,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 創建遊戲預製物
     /// </summary>
-    public  async Task CreateGamePrefab(GamePrefabEnum prefabType, Action<GameObject> callback = null)
+    public async Task CreateGamePrefab(GamePrefabEnum prefabType, Action<GameObject> callback = null)
     {
         // 避免重複加載資源
         if (LoadGamePrefabAsyncSet.Contains(prefabType))

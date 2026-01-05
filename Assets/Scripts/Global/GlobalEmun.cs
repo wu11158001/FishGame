@@ -93,7 +93,7 @@ public enum FirestoreStatusEnum
 }
 
 /// <summary>
-/// 網路物件
+/// 網路物件(只能往下加，不然要改產生的字典)
 /// </summary>
 public enum NetworkPrefabEnum
 {
@@ -108,6 +108,9 @@ public enum NetworkPrefabEnum
 
     /// <summary> 子彈物件 </summary>
     Bullet,
+
+    /// <summary> 擊中特效 </summary>
+    HitEffect,
 
     /// <summary> 一般魚魚物件 </summary>
     NormalFish_0,
@@ -129,15 +132,18 @@ public enum GamePrefabEnum
 }
 
 /// <summary>
-/// 物件池容器名稱
+/// Fusion物件池容器名稱
 /// </summary>
-public enum PoolNameEnum
+public enum FusionPoolNameEnum
 {
     /// <summary> 子彈容器 </summary>
     BulletPool,
 
-    /// <summary> 魚容器 </summary>
-    FishPool
+    /// <summary> 魚群容器 </summary>
+    FishPool,
+
+    /// <summary> 效果容器 </summary>
+    EffectPool,
 }
 
 /// <summary>
