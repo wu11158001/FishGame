@@ -10,6 +10,9 @@ public class SceneManagement : SingletonMonoBehaviour<SceneManagement>
     /// </summary>
     public void LoadScene(SceneEnum sceneEnum, Action callback = null)
     {
+        if (!Application.isPlaying)
+            return;
+
         StartCoroutine(ILoadScene(sceneEnum, callback));
     }
 
@@ -17,7 +20,7 @@ public class SceneManagement : SingletonMonoBehaviour<SceneManagement>
     {
         AsyncOperation operation = SceneManager.LoadSceneAsync((int)sceneEnum);
 
-        while (!operation.isDone)
+        while (operation != null && !operation.isDone)
         {
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
             yield return null;

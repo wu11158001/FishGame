@@ -238,12 +238,15 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
             TempDataManagement.Instance.StopTimingUpdateAccountData();
 
         // 回大廳
-        SceneManagement.Instance.LoadScene(
-         sceneEnum: SceneEnum.Lobby,
-         callback: async () =>
-         {
-             await AddressableManagement.Instance.OpenLobbyView();
-         });
+        if(SceneManagement.Instance != null)
+        {
+            SceneManagement.Instance.LoadScene(
+                sceneEnum: SceneEnum.Lobby,
+                callback: async () =>
+                {
+                    await AddressableManagement.Instance.OpenLobbyView();
+                });
+        }
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
