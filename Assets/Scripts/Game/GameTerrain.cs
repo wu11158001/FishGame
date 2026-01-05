@@ -37,7 +37,8 @@ public class GameTerrain : NetworkBehaviour
 
     private void OnDestroy()
     {
-        NetworkRunnerManagement.Instance.PlayerLeftEvent -= LeftRoom;
+        if (NetworkRunnerManagement.Instance != null)
+            NetworkRunnerManagement.Instance.PlayerLeftEvent -= LeftRoom;
     }
 
     private void Start()
@@ -266,7 +267,7 @@ public class GameTerrain : NetworkBehaviour
         for (int i = 0; i < totalCount; i++)
         {
             // 隨機魚種類
-            int fishTypeIndex = 0;// UnityEngine.Random.Range(0, NormalFishTypes.Count);
+            int fishTypeIndex = 3;// UnityEngine.Random.Range(0, NormalFishTypes.Count);
             NetworkPrefabEnum fishType = NormalFishTypes[fishTypeIndex];
 
             // 隨機選擇路線

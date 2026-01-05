@@ -230,10 +230,12 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         }
 
         // 清空遊戲預置物
-        AddressableManagement.Instance.ClearGamePrefab();
+        if (AddressableManagement.Instance != null)
+            AddressableManagement.Instance.ClearGamePrefab();
 
         // 停止計時更新Firestore帳戶資料
-        TempDataManagement.Instance.StopTimingUpdateAccountData();
+        if (TempDataManagement.Instance != null)
+            TempDataManagement.Instance.StopTimingUpdateAccountData();
 
         // 回大廳
         SceneManagement.Instance.LoadScene(

@@ -366,6 +366,9 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// </summary>
     public async void ShowLoading()
     {
+        if (!Application.isPlaying)
+            return;
+
         ViewEnum view = ViewEnum.Loading;
 
         Action viewCloseAction = () =>
