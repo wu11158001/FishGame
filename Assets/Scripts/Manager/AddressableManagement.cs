@@ -114,6 +114,11 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// </summary>
     private async Task OpenView(ViewEnum viewType, Action<GameObject> callback = null, bool IsCanStack = false, CanvasEnum canvasEnum = CanvasEnum.Canvas_Scene)
     {
+        if (!Application.isPlaying)
+        {
+            Debug.LogError($"關閉執行開啟介面:{viewType}");
+        }
+
         // 避免重複加載資源
         if (LoadViewAsyncSet.Contains(viewType))
             return;
