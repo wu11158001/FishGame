@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1112613889804985152}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: joint3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3736432620027084038}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tail1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1424199420489066565}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8478326405780349681}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: joint10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1525919214517761339}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: joint8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2146799086794337663}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Taile3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +198,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7365282940302127426}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Taile2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,7 +231,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6279202348396069706}
   - component: {fileID: 2313013405593995607}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FishModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,7 +332,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4953040476546375718}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Left_Wing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -364,7 +364,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3103654525343663969}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Right_Wing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +396,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6443355032769326443}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: joint2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -435,7 +435,7 @@ GameObject:
   - component: {fileID: 6283603754715314768}
   - component: {fileID: 9050656029021909188}
   - component: {fileID: 8332115185731646915}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: NormalFish_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8128491360536403849}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_tail_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6211394841340483751}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin8_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8187909582600694402}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_r_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7657028495267276173}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_jaw_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7735983619307738107}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 67884815041617452}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +204,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2952617391096360969}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_l_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5002497796578670741}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoral1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1123456501026936897}
   - component: {fileID: 2955841976900682336}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fins1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,7 +386,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6023776718369101474}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin1_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -418,7 +418,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6559539860042334354}
   - component: {fileID: 5231381550201366559}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_body3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -541,7 +541,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1150131872401123693}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin4_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -572,7 +572,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1627961448938256234}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoral2_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -603,7 +603,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1383926989965196950}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_r_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -635,7 +635,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5053826456974564503}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_l_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -667,7 +667,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1048816873601629103}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_r_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -699,7 +699,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6779788721024122089}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -733,7 +733,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8977292134769448108}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoral3_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -765,7 +765,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2536716457222893847}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -800,7 +800,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4267224847745939924}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -834,7 +834,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3735824878123450659}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_r_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -866,7 +866,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5153139580063904647}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FishModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -899,7 +899,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8018322226438794065}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_r_3_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -930,7 +930,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9185770355418478900}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_l_3_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -961,7 +961,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8255100998672520585}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_l_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -992,7 +992,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 777794314753015086}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_l_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1024,7 +1024,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8194106770850813285}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1056,7 +1056,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5108357712478948198}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_r_2_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1087,7 +1087,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8622547334857856663}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_l_2_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1118,7 +1118,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6568314603512488807}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin7_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1150,7 +1150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3215140467660832126}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_r_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1182,7 +1182,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3450386892140970172}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1220,7 +1220,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2417213464297495465}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_tail_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1252,7 +1252,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5133041951149364313}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1287,7 +1287,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8131338856515577684}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin8_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1319,7 +1319,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5332982590000959952}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_eye_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1350,7 +1350,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8860315865799743232}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoral4_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1381,7 +1381,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7999201098220230761}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_eye_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1412,7 +1412,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1444483423806971668}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin3_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1443,7 +1443,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3935536604853139845}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin6_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1474,7 +1474,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4170863306374823301}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_l_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1506,7 +1506,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1329242756912583906}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin6_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1538,7 +1538,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1400532735740994375}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoral3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1570,7 +1570,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2077058320916633667}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin2_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1601,7 +1601,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8455742116463257192}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_l_1_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1632,7 +1632,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3012287180398096220}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_tail_3_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1663,7 +1663,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2251731224139501229}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1695,7 +1695,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5728275168242818178}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin8_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1726,7 +1726,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3461621113438502656}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_l_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1758,7 +1758,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 948284990908768496}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_r_4_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1789,7 +1789,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4274445931329197629}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_tail_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1821,7 +1821,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6562975966574532543}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1853,7 +1853,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2927819050023280419}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_l_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1885,7 +1885,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7313394434184959707}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_r_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1922,7 +1922,7 @@ GameObject:
   - component: {fileID: 7763787902867839959}
   - component: {fileID: 5188342334272845423}
   - component: {fileID: 3515799776323744681}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: NormalFish_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2048,7 +2048,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8634794530251320194}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoral3_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2079,7 +2079,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4218819261408963664}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoral1_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2110,7 +2110,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6384891055119655759}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin7_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2141,7 +2141,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3062257671203901059}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2173,7 +2173,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4926596282733369572}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_r_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2204,7 +2204,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4408000137048577754}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_r_1_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2235,7 +2235,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 862959783837005973}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_l_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2267,7 +2267,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2392204295450591514}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2301,7 +2301,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2845757292425748577}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_l_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2333,7 +2333,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2693383411927646797}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_l_4_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2364,7 +2364,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6045118043147100788}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2399,7 +2399,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 230327959889637536}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2431,7 +2431,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6497204448037694460}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoral2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2463,7 +2463,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8273617523424964398}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoral4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2495,7 +2495,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 875304174672434925}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2527,7 +2527,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6520954166664476478}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_r_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2559,7 +2559,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9095463730244455588}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoral4_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2591,7 +2591,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9080624661067586403}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_l_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2623,7 +2623,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4263928470159160170}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin5_tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2654,7 +2654,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1871811538586163027}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_jaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2686,7 +2686,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4288259431159833267}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_pectoralFront_r_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2718,7 +2718,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5558033090569707325}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_spine_fin7_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2750,7 +2750,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9019394721585482575}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EmperorAngelfish_fin_r_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

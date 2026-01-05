@@ -3,19 +3,17 @@ using Fusion;
 
 public class Bullet : NetworkBehaviour
 {
+    [SerializeField] float Speed = 10;
+    [SerializeField] float RayDistance = 30f;
+
     [Networked] Vector3 Direction { get; set; }
 
-    [SerializeField] float HitRadius;
-
-    Vector2 MinBounds = new(-9.6f, -5.4f);
-    Vector2 MaxBounds = new(9.6f, 5.4f);
-    [SerializeField]float Speed;
-
+    readonly Vector2 MinBounds = new(-9.6f, -5.4f);
+    readonly Vector2 MaxBounds = new(9.6f, 5.4f);
+    
     public override void Spawned()
     {
         Direction = transform.forward;
-
-        Speed = 10;
     }
 
     public override void FixedUpdateNetwork()
@@ -33,8 +31,7 @@ public class Bullet : NetworkBehaviour
     /// </summary>
     private void Move()
     {
-        //transform.Translate(Vector3.right * Speed * Runner.DeltaTime);
-        transform.position += Direction * Speed * Runner.DeltaTime;
+        transform.Translate(Vector3.forward * Speed * Runner.DeltaTime);
     }
 
     /// <summary>
@@ -62,14 +59,12 @@ public class Bullet : NetworkBehaviour
     /// </summary>
     private void CheckHit()
     {
-        Collider2D hit = Physics2D.OverlapCircle(
-            point: transform.position,
-            radius: HitRadius,
-            layerMask: LayerMask.GetMask("Fish"));
+        RaycastHit hit;
+        LayerMask mask = LayerMask.GetMask("Fish");
 
-        if (hit != null)
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, RayDistance, mask))
         {
-            HitTarget(hit);
+            HitTarget(hit.collider);
         }
     }
 
@@ -77,7 +72,7 @@ public class Bullet : NetworkBehaviour
     /// 擊中目標
     /// </summary>
     /// <param name="hit"></param>
-    private void HitTarget(Collider2D hit)
+    private void HitTarget(Collider hit)
     {
         var fish = hit.GetComponent<Fish>();
         FishData_Network data = fish.GetFishData();
@@ -94,7 +89,9 @@ public class Bullet : NetworkBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, HitRadius);
+        Gizmos.color = Color.red;
+        Vector3 startPos = transform.position;
+        Vector3 direction = Vector3.down * RayDistance;
+        Gizmos.DrawRay(startPos, direction);
     }
 }

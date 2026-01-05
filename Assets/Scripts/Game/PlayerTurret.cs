@@ -123,9 +123,12 @@ public class PlayerTurret : NetworkBehaviour
                     // 重製冷卻時間
                     Delay = TickTimer.CreateFromSeconds(Runner, FireRate);
 
+                    Vector3 pos = CurrShotPoints[i].position;
+                    pos.y = 0;
+
                     NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                         key: NetworkPrefabEnum.Bullet,
-                        Pos: CurrShotPoints[i].position,
+                        Pos: pos,
                         rot: CurrBarrel.localRotation,
                         parent: BulletPool,
                         player: Object.InputAuthority);

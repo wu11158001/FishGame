@@ -220,7 +220,8 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         Debug.Log($"斷開連線");
 
-        AddressableManagement.Instance.ShowLoading();
+        if (AddressableManagement.Instance != null)
+            AddressableManagement.Instance.ShowLoading();
 
         // 移除物件池
         if(FusionPool != null)
