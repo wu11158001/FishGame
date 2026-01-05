@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 120002519472452773}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.4, y: -2.08, z: 0}
+  m_LocalPosition: {x: -11.2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 337462189082068444}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.72, y: -9.24, z: 0}
+  m_LocalPosition: {x: 8.95, y: 0, z: 4.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -87,7 +87,7 @@ Transform:
   m_GameObject: {fileID: 721566350206313495}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.2, y: 4.02, z: 0}
+  m_LocalPosition: {x: 8.2, y: 0, z: 1.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -118,7 +118,7 @@ Transform:
   m_GameObject: {fileID: 767353020397706536}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.09, y: 2.76, z: 0}
+  m_LocalPosition: {x: -6.11, y: 0, z: 3.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -149,7 +149,7 @@ Transform:
   m_GameObject: {fileID: 969390343162878456}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12, y: -3.25, z: 0}
+  m_LocalPosition: {x: 9.84, y: 0, z: -3.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -180,7 +180,7 @@ Transform:
   m_GameObject: {fileID: 1144637579897712447}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.24, y: -4.42, z: 0}
+  m_LocalPosition: {x: 1.21, y: 0, z: -1.84}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -211,7 +211,7 @@ Transform:
   m_GameObject: {fileID: 1285162062426247847}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.66, y: 7.47, z: 0}
+  m_LocalPosition: {x: 11.55, y: 0, z: 2.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -242,7 +242,7 @@ Transform:
   m_GameObject: {fileID: 1350491637960221535}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.79, y: -3.93, z: 0}
+  m_LocalPosition: {x: -0.79, y: 0, z: -1.92}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -273,7 +273,7 @@ Transform:
   m_GameObject: {fileID: 1969397288289060682}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.29, y: 1.48, z: 0}
+  m_LocalPosition: {x: 7.83, y: 0, z: 3.96}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -304,7 +304,7 @@ Transform:
   m_GameObject: {fileID: 2063192787571696496}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.13, y: -1.53, z: 0}
+  m_LocalPosition: {x: 0.13, y: 0, z: -0.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -335,7 +335,7 @@ Transform:
   m_GameObject: {fileID: 2083883001071446375}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.29, y: -7.44, z: 0}
+  m_LocalPosition: {x: 1.64, y: 0, z: 1.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -366,7 +366,7 @@ Transform:
   m_GameObject: {fileID: 2258122633643879899}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.03, y: -2.15, z: 0}
+  m_LocalPosition: {x: -2.03, y: 0, z: 0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -397,7 +397,7 @@ Transform:
   m_GameObject: {fileID: 2585154273136723430}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.17, y: -5.65, z: 0}
+  m_LocalPosition: {x: -1.96, y: 0, z: -2.69}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -428,7 +428,7 @@ Transform:
   m_GameObject: {fileID: 2921110035855767442}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.61, y: -2.69, z: 0}
+  m_LocalPosition: {x: -5.61, y: 0, z: -0.92}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -460,7 +460,7 @@ Transform:
   m_GameObject: {fileID: 3054700121632615206}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.14, y: 6.7, z: 0}
+  m_LocalPosition: {x: 0.14, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -484,9 +484,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d0f5e0c6fd071e4c9abc9aec553ab34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WayPoint
-  WayPointType: 0
+  IsSelectShow: 1
   LineColor: {r: 0.23066425, g: 1, b: 0, a: 1}
-  IsShow: 1
 --- !u!1 &3731123241692269101
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,7 +511,7 @@ Transform:
   m_GameObject: {fileID: 3731123241692269101}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.67, y: -6, z: 0}
+  m_LocalPosition: {x: 3.67, y: 0, z: -3.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -543,7 +542,7 @@ Transform:
   m_GameObject: {fileID: 3969714276534593424}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.92, y: -2.73, z: 0}
+  m_LocalPosition: {x: 4.66, y: 0, z: -1.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -575,7 +574,7 @@ Transform:
   m_GameObject: {fileID: 4025190196470201366}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.62, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -599,9 +598,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d0f5e0c6fd071e4c9abc9aec553ab34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WayPoint
-  WayPointType: 0
+  IsSelectShow: 1
   LineColor: {r: 1, g: 0.49331054, b: 0, a: 1}
-  IsShow: 1
 --- !u!1 &4155399007487285242
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,7 +625,7 @@ Transform:
   m_GameObject: {fileID: 4155399007487285242}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.4, y: -2.08, z: 0}
+  m_LocalPosition: {x: -12.15, y: 0, z: 2.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -683,9 +681,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d0f5e0c6fd071e4c9abc9aec553ab34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WayPoint
-  WayPointType: 0
+  IsSelectShow: 1
   LineColor: {r: 1, g: 0, b: 0.051799774, a: 1}
-  IsShow: 1
 --- !u!1 &4604354775648871188
 GameObject:
   m_ObjectHideFlags: 0
@@ -711,7 +708,7 @@ Transform:
   m_GameObject: {fileID: 4604354775648871188}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.76, y: -12.11, z: 0}
+  m_LocalPosition: {x: 9.33, y: 0, z: -1.89}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -742,7 +739,7 @@ Transform:
   m_GameObject: {fileID: 4641535292951115921}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.04, y: 0, z: 0}
+  m_LocalPosition: {x: 11.66, y: 0, z: 4.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -773,7 +770,7 @@ Transform:
   m_GameObject: {fileID: 4670357436347996864}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.4, y: -2.08, z: 0}
+  m_LocalPosition: {x: -9.86, y: 0, z: -1.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -804,7 +801,7 @@ Transform:
   m_GameObject: {fileID: 4685508896865718081}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.1, y: 2.24, z: 0}
+  m_LocalPosition: {x: 3.61, y: 0, z: 2.42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -835,7 +832,7 @@ Transform:
   m_GameObject: {fileID: 4892323685539265815}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.87, y: 0.9, z: 0}
+  m_LocalPosition: {x: 4.87, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -866,7 +863,7 @@ Transform:
   m_GameObject: {fileID: 5128101021737968574}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.57, y: -1.5, z: 0}
+  m_LocalPosition: {x: 2.57, y: 0, z: -1.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -898,7 +895,7 @@ Transform:
   m_GameObject: {fileID: 5341329230624836934}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.14, y: 5.65, z: 0}
+  m_LocalPosition: {x: 0.14, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -922,9 +919,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d0f5e0c6fd071e4c9abc9aec553ab34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WayPoint
-  WayPointType: 0
+  IsSelectShow: 1
   LineColor: {r: 0.63479793, g: 1, b: 0, a: 1}
-  IsShow: 1
 --- !u!1 &5468618361698418910
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,7 +946,7 @@ Transform:
   m_GameObject: {fileID: 5468618361698418910}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.35, y: -8.72, z: 0}
+  m_LocalPosition: {x: 6.27, y: 0, z: -2.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -981,7 +977,7 @@ Transform:
   m_GameObject: {fileID: 5632270338208819636}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.3, y: 2.56, z: 0}
+  m_LocalPosition: {x: -11.45, y: 0, z: 3.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1012,7 +1008,7 @@ Transform:
   m_GameObject: {fileID: 5800767168374620847}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.09, y: -3.03, z: 0}
+  m_LocalPosition: {x: -6.09, y: 0, z: -1.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1081,7 +1077,7 @@ Transform:
   m_GameObject: {fileID: 6040667468027219833}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.68, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1105,9 +1101,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d0f5e0c6fd071e4c9abc9aec553ab34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WayPoint
-  WayPointType: 0
+  IsSelectShow: 1
   LineColor: {r: 1, g: 0.97662324, b: 0, a: 1}
-  IsShow: 1
 --- !u!1 &6416403671969559421
 GameObject:
   m_ObjectHideFlags: 0
@@ -1133,7 +1128,7 @@ Transform:
   m_GameObject: {fileID: 6416403671969559421}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.4, y: -5.48, z: 0}
+  m_LocalPosition: {x: -9.64, y: 0, z: -3.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1164,7 +1159,7 @@ Transform:
   m_GameObject: {fileID: 6479980883455178819}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.99, y: -2.55, z: 0}
+  m_LocalPosition: {x: -5.99, y: 0, z: 0.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1195,7 +1190,7 @@ Transform:
   m_GameObject: {fileID: 6534125670632453101}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.6, y: -4.74, z: 0}
+  m_LocalPosition: {x: -2.92, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1226,7 +1221,7 @@ Transform:
   m_GameObject: {fileID: 6797913501223245104}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.73, y: 1.68, z: 0}
+  m_LocalPosition: {x: -1.34, y: 0, z: 1.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1257,7 +1252,7 @@ Transform:
   m_GameObject: {fileID: 7055022065721455723}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.75, y: -6.38, z: 0}
+  m_LocalPosition: {x: -5.75, y: 0, z: -3.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1288,7 +1283,7 @@ Transform:
   m_GameObject: {fileID: 7136147461778886226}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.99, y: -2.55, z: 0}
+  m_LocalPosition: {x: -5.99, y: 0, z: 0.63}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1319,7 +1314,7 @@ Transform:
   m_GameObject: {fileID: 7322742504022777422}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.38, y: -1.53, z: 0}
+  m_LocalPosition: {x: 11.38, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1350,7 +1345,7 @@ Transform:
   m_GameObject: {fileID: 7460901792706130593}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.73, y: -8.86, z: 0}
+  m_LocalPosition: {x: 5.7, y: 0, z: 2.78}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1367,7 +1362,7 @@ GameObject:
   - component: {fileID: 3417023253893265183}
   - component: {fileID: -6507707202506347666}
   m_Layer: 0
-  m_Name: MainWayPoint
+  m_Name: WayPointMain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1427,7 +1422,7 @@ Transform:
   m_GameObject: {fileID: 7802124127872080913}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.14, y: 6.7, z: 0}
+  m_LocalPosition: {x: 0.14, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1451,9 +1446,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d0f5e0c6fd071e4c9abc9aec553ab34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WayPoint
-  WayPointType: 0
+  IsSelectShow: 1
   LineColor: {r: 0, g: 1, b: 0.9270866, a: 1}
-  IsShow: 1
 --- !u!1 &7826960983097900937
 GameObject:
   m_ObjectHideFlags: 0
@@ -1479,7 +1473,7 @@ Transform:
   m_GameObject: {fileID: 7826960983097900937}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.4, y: -2.08, z: 0}
+  m_LocalPosition: {x: -10.37, y: 0, z: -2.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1510,7 +1504,7 @@ Transform:
   m_GameObject: {fileID: 8863984819916419191}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.96, y: -2.16, z: 0}
+  m_LocalPosition: {x: 6.96, y: 0, z: -1.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

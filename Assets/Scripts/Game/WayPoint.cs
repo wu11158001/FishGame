@@ -4,6 +4,7 @@ using System.Linq;
 
 public class WayPoint : MonoBehaviour
 {
+    [SerializeField] bool IsSelectShow;
     [SerializeField] Color LineColor = Color.green;
 
     public List<Transform> Points { get; private set; } = new();
@@ -23,7 +24,29 @@ public class WayPoint : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (Points == null || Points.Count < 2)
+        if (!IsSelectShow || Points == null || Points.Count < 2)
+            return;
+
+        Gizmos.color = LineColor;
+
+        for (int i = 0; i < Points.Count; i++)
+        {
+            Vector3 currentPos = Points[i].transform.position;
+            Vector3 nextPos;
+
+            if (i < Points.Count - 1)
+            {
+                nextPos = Points[i + 1].transform.position;
+                Gizmos.DrawLine(currentPos, nextPos);
+            }
+
+            Gizmos.DrawSphere(currentPos, 0.2f);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (IsSelectShow || Points == null || Points.Count < 2)
             return;
 
         Gizmos.color = LineColor;

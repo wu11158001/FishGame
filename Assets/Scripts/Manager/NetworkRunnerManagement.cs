@@ -186,7 +186,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         AddressableManagement.Instance.SetCanvase();
 
         // 產生路線主物件
-        await AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.MainWayPoint);
+        await AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.WayPointMain);
 
         // 產生遊戲地形
         if (runner.IsSharedModeMasterClient)

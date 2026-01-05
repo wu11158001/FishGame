@@ -16,7 +16,7 @@ MonoBehaviour:
   m_GUID: a45ad5a0e51ffee4288d8d2bd65dba55
   m_SerializeEntries:
   - m_GUID: 402ddfa21f9680c4c9ec31a0825b89ff
-    m_Address: MainWayPoint
+    m_Address: WayPointMain
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

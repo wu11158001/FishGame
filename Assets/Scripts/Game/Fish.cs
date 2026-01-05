@@ -5,15 +5,16 @@ using System.Collections;
 
 public class Fish : NetworkBehaviour
 {
+    [SerializeField] GameObject FishModel;
+
     // 移動計時器
     [Networked] TickTimer MoveTimer { get; set; }
     // 總移動時間
     [Networked] float TotalDuration { get; set; }
     // 魚資料
     [Networked] FishData_Network FishData_Network { get; set; }
-
-    // 激活物件
-    [SerializeField] GameObject FishModel;
+    // 深度
+    [Networked] float Depth { get; set; }
 
     NetworkPrefabEnum FishType;
     Vector3[] PathPoints;
@@ -21,7 +22,7 @@ public class Fish : NetworkBehaviour
     // 防止閃爍隱藏時間
     const float DelayActiveTime = 0.5f;
 
-    public void SetData(NetworkPrefabEnum fishType, bool isMirror, WayPoint wayPoint)
+    public void SetData(NetworkPrefabEnum fishType, bool isMirror, float depth, WayPoint wayPoint)
     {
         FishType = fishType;
 
@@ -32,9 +33,10 @@ public class Fish : NetworkBehaviour
 
         // 魚資料獲取
         FishData fishData = TempDataManagement.Instance.GetFishData(FishType);
-
         if (fishData != null)
             FishData_Network = fishData.ToNetworkStruct();
+
+        Depth = depth;
     }
 
     public override void Spawned()
@@ -45,7 +47,7 @@ public class Fish : NetworkBehaviour
             MoveTimer = TickTimer.CreateFromSeconds(Runner, FishData_Network.Duration + DelayActiveTime);
         }
 
-        StartCoroutine(IYieldShow());
+        //StartCoroutine(IYieldShow());
     }
 
     /// <summary>
@@ -63,19 +65,16 @@ public class Fish : NetworkBehaviour
     {
         if (PathPoints == null || PathPoints.Length < 2) return;
 
-        // 計算總進度 (0 ~ 1)
         float elapsed = TotalDuration - (MoveTimer.RemainingTime(Runner) ?? 0);
         float t = Mathf.Clamp01(elapsed / TotalDuration);
 
-        // 取得 Catmull-Rom 座標
         Vector3 nextPos = GetCatmullRomPosition(t, PathPoints);
-
-        // 旋轉處理 (2D 朝向移動方向)
+        nextPos.y += Depth;
         Vector3 direction = nextPos - transform.position;
+
         if (direction.sqrMagnitude > 0.0001f)
         {
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0, 0, angle);
+            transform.rotation = Quaternion.LookRotation(direction);
         }
 
         transform.position = nextPos;
@@ -87,7 +86,7 @@ public class Fish : NetworkBehaviour
     }
 
     /// <summary>
-    /// 曲線旋轉
+    /// 取得 Catmull-Rom 座標 (此座標應包含 3D 的 X, Y, Z)
     /// </summary>
     private Vector3 GetCatmullRomPosition(float t, Vector3[] points)
     {

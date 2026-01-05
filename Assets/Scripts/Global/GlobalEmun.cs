@@ -122,8 +122,8 @@ public enum NetworkPrefabEnum
 /// </summary>
 public enum GamePrefabEnum
 {
-    /// <summary> 路線主物件 </summary>
-    MainWayPoint,
+    /// <summary> 魚群路線主物件 </summary>
+    WayPointMain,
 }
 
 /// <summary>

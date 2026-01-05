@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-public class MainWayPoint : MonoBehaviour
+public class WayPointMain : MonoBehaviour
 {
     public List<WayPoint> WayPoints { get; private set; } = new();
 

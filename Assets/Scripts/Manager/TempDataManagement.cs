@@ -29,6 +29,8 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     public delegate void TempAccountCoinChange(int changeValue);
     public event TempAccountCoinChange TempAccountCoinChangeDelegate;
     Coroutine UpdateAccountCoroutine;
+    // 定時更新帳戶時間(秒)
+    const float UpdateAccountDataTime = 60f;
 
     #region 當前關卡資料
 
@@ -66,82 +68,6 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
                 Debug.LogError($"獲取當前關卡資料錯誤: {e}");
             }
         }
-    }
-
-    /// <summary>
-    /// 變更當前子彈花費
-    /// </summary>
-    public void ChangeCurrCost(bool isReduce)
-    {
-        int changeValue =
-            isReduce ?
-            -CurrentLevelData.Gradient :
-            CurrentLevelData.Gradient;
-
-        int currCost = CurrentLevelData.DefaultCost;
-        currCost += changeValue;
-
-        if (currCost <= CurrentLevelData.MinCost) currCost = CurrentLevelData.MinCost;
-        if (currCost >= CurrentLevelData.MaxCost) currCost = CurrentLevelData.MaxCost;
-
-        CurrentLevelData.DefaultCost = currCost;
-
-        CurrCostChangeDelegate?.Invoke(currCost);
-    }
-
-    /// <summary>
-    /// 停止計時更新Firestore帳戶資料
-    /// </summary>
-    public void StopTimingUpdateAccountData()
-    {
-        if (UpdateAccountCoroutine != null)
-            StopCoroutine(UpdateAccountCoroutine);
-
-        SendUpdateAccountData();
-    }
-
-    /// <summary>
-    /// 開始計時更新Firestore帳戶資料
-    /// </summary>
-    public void StartTimingUpdateAccountData()
-    {
-        if (UpdateAccountCoroutine != null)
-            StopCoroutine(UpdateAccountCoroutine);
-
-        UpdateAccountCoroutine = StartCoroutine(ITimingUpdateAccountData());
-    }
-
-    /// <summary>
-    /// 計時更新Firestore帳戶資料
-    /// </summary>
-    private IEnumerator ITimingUpdateAccountData()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(60);
-            SendUpdateAccountData();
-        }        
-    }
-
-    /// <summary>
-    /// 發送更新Firestore帳戶資料
-    /// </summary>
-    public void SendUpdateAccountData()
-    {
-        LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
-
-        var updates = new Dictionary<string, object>
-        {
-            { "Coins", TempAccountData.Coins }
-        };
-
-        FirestoreManagement.Instance.UpdateDataToFirestore(
-            path: FirestoreCollectionNameEnum.AccountData,
-            docId: loginInfo.Account,
-            updates: updates,
-            callback: (res) => {
-                if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶資料失敗");
-            });
     }
 
     #endregion
@@ -265,6 +191,82 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
         TempAccountData.Coins += changeValue;
 
         TempAccountCoinChangeDelegate?.Invoke(TempAccountData.Coins);
+    }
+
+    /// <summary>
+    /// 變更當前子彈花費
+    /// </summary>
+    public void ChangeCurrCost(bool isReduce)
+    {
+        int changeValue =
+            isReduce ?
+            -CurrentLevelData.Gradient :
+            CurrentLevelData.Gradient;
+
+        int currCost = CurrentLevelData.DefaultCost;
+        currCost += changeValue;
+
+        if (currCost <= CurrentLevelData.MinCost) currCost = CurrentLevelData.MinCost;
+        if (currCost >= CurrentLevelData.MaxCost) currCost = CurrentLevelData.MaxCost;
+
+        CurrentLevelData.DefaultCost = currCost;
+
+        CurrCostChangeDelegate?.Invoke(currCost);
+    }
+
+    /// <summary>
+    /// 停止計時更新Firestore帳戶資料
+    /// </summary>
+    public void StopTimingUpdateAccountData()
+    {
+        if (UpdateAccountCoroutine != null)
+            StopCoroutine(UpdateAccountCoroutine);
+
+        SendUpdateAccountData();
+    }
+
+    /// <summary>
+    /// 開始計時更新Firestore帳戶資料
+    /// </summary>
+    public void StartTimingUpdateAccountData()
+    {
+        if (UpdateAccountCoroutine != null)
+            StopCoroutine(UpdateAccountCoroutine);
+
+        UpdateAccountCoroutine = StartCoroutine(ITimingUpdateAccountData());
+    }
+
+    /// <summary>
+    /// 計時更新Firestore帳戶資料
+    /// </summary>
+    private IEnumerator ITimingUpdateAccountData()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(UpdateAccountDataTime);
+            SendUpdateAccountData();
+        }
+    }
+
+    /// <summary>
+    /// 發送更新Firestore帳戶資料
+    /// </summary>
+    public void SendUpdateAccountData()
+    {
+        LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
+
+        var updates = new Dictionary<string, object>
+        {
+            { "Coins", TempAccountData.Coins }
+        };
+
+        FirestoreManagement.Instance.UpdateDataToFirestore(
+            path: FirestoreCollectionNameEnum.AccountData,
+            docId: loginInfo.Account,
+            updates: updates,
+            callback: (res) => {
+                if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶資料失敗");
+            });
     }
 
     #endregion

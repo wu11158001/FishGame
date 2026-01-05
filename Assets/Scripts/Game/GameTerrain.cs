@@ -20,7 +20,7 @@ public class GameTerrain : NetworkBehaviour
     [Networked] 
     TickTimer SpawnTimer { get; set; }
 
-    MainWayPoint MainWayPoint;
+    WayPointMain WayPointMain;
     Transform FishPool;
 
     // 一般魚Enum
@@ -31,9 +31,9 @@ public class GameTerrain : NetworkBehaviour
     // 一般魚生成時間
     float NormalFishCreatTime = 5;
     // 一般魚一次生成最小數量
-    int MinCreateNormalFish = 2;
+    int MinCreateNormalFish = 1;
     // 一般魚一次生成最大數量
-    int MaxCreateNormalFish = 5;
+    int MaxCreateNormalFish = 1;
 
     private void OnDestroy()
     {
@@ -65,7 +65,7 @@ public class GameTerrain : NetworkBehaviour
 
         if (SpawnTimer.ExpiredOrNotRunning(Runner))
         {
-            //CreatNormalFish();
+            CreatNormalFish();
             SpawnTimer = TickTimer.CreateFromSeconds(Runner, NormalFishCreatTime);
         }
     }
@@ -244,8 +244,8 @@ public class GameTerrain : NetworkBehaviour
         if(FishPool == null)
             FishPool = GameObject.Find(PoolNameEnum.FishPool.ToString()).transform;
 
-        if(MainWayPoint == null)
-            MainWayPoint = GameObject.Find($"{GamePrefabEnum.MainWayPoint}(Clone)").GetComponent<MainWayPoint>();
+        if(WayPointMain == null)
+            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}(Clone)").GetComponent<WayPointMain>();
 
         if(NormalFishTypes == null || NormalFishTypes.Count == 0)
         {
@@ -255,7 +255,7 @@ public class GameTerrain : NetworkBehaviour
                 .ToList();
         }
 
-        if(FishPool == null || MainWayPoint == null || NormalFishTypes == null || NormalFishTypes.Count == 0)
+        if(FishPool == null || WayPointMain == null || NormalFishTypes == null || NormalFishTypes.Count == 0)
         {
             Debug.LogError("產生一般魚錯誤!");
             return;
@@ -266,11 +266,11 @@ public class GameTerrain : NetworkBehaviour
         for (int i = 0; i < totalCount; i++)
         {
             // 隨機魚種類
-            int fishTypeIndex = UnityEngine.Random.Range(0, NormalFishTypes.Count);
+            int fishTypeIndex = 0;// UnityEngine.Random.Range(0, NormalFishTypes.Count);
             NetworkPrefabEnum fishType = NormalFishTypes[fishTypeIndex];
 
             // 隨機選擇路線
-            List<WayPoint> wayPoints = MainWayPoint.GetWayPoints();
+            List<WayPoint> wayPoints = WayPointMain.GetWayPoints();
             int wayPointIndex = UnityEngine.Random.Range(0, wayPoints.Count);
 
             WayPoint wayPoint = wayPoints[wayPointIndex];
@@ -281,6 +281,9 @@ public class GameTerrain : NetworkBehaviour
                 isMirror ?
                 wayPoint.Points[0].position :
                 wayPoint.Points[wayPoint.Points.Count - 1].position;
+
+            // 深度            
+            int depth = UnityEngine.Random.Range(-30, -1);
 
             NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                        key: fishType,
@@ -294,7 +297,8 @@ public class GameTerrain : NetworkBehaviour
                            if (normalFish != null)
                                normalFish.SetData(
                                    fishType: fishType,
-                                   isMirror: isMirror, 
+                                   isMirror: isMirror,
+                                   depth: depth,
                                    wayPoint: wayPoint);
                        });
         }
