@@ -563,7 +563,7 @@ public class AccountData
     public string Password;
 
     /// <summary> 金幣 </summary>
-    public int Coins;
+    public double Coins;
 }
 
 /// <summary>
@@ -593,11 +593,11 @@ public class FishData
     /// <summary> 移動時間 </summary>
     public float Duration;
 
-    /// <summary> 擊中機率(%) </summary>
-    public int Rate;
+    /// <summary> 擊中機率(0~1) </summary>
+    public double Probability;
 
-    /// <summary> 獎勵金幣 </summary>
-    public int Reward;
+    /// <summary> 獎勵金幣倍數 </summary>
+    public double Magnification;
 
     /// <summary>
     /// 轉換成NetworkStruct
@@ -608,8 +608,8 @@ public class FishData
         {
             FishType = this.FishType,
             Duration = this.Duration,
-            Rate = this.Rate,
-            Reward = this.Reward
+            Probability = this.Probability,
+            Magnification = this.Magnification
         };
     }
 }
@@ -625,11 +625,11 @@ public struct FishData_Network : INetworkStruct
     /// <summary> 移動時間 </summary>
     public float Duration;
 
-    /// <summary> 擊中機率(%) </summary>
-    public int Rate;
+    /// <summary> 擊中機率(0~1) </summary>
+    public double Probability;
 
-    /// <summary> 獎勵金幣 </summary>
-    public int Reward;
+    /// <summary> 獎勵金幣倍數 </summary>
+    public double Magnification;
 }
 
 /// <summary>
@@ -638,14 +638,14 @@ public struct FishData_Network : INetworkStruct
 public class LevelData
 {
     /// <summary> 子彈花費梯度 </summary>
-    public int Gradient;
+    public double Gradient;
 
     /// <summary> 最大每發子彈花費 </summary>
-    public int MaxCost;
+    public double MaxCost;
 
     /// <summary> 最小每發子彈花費 </summary>
-    public int MinCost;
+    public double MinCost;
 
     /// <summary> 預設子彈花費 </summary>
-    public int DefaultCost;
+    public double DefaultCost;
 }

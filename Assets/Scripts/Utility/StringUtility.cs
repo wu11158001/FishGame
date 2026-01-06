@@ -55,8 +55,8 @@ public static class StringUtility
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static string CurrencyFormat(int value)
+    public static string CurrencyFormat(double value)
     {
-        return $"{value:N0}";
+        return value.ToString("#,##0.##");
     }
 }

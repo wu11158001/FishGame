@@ -114,9 +114,9 @@ public class PlayerTurret : NetworkBehaviour
             if (input.IsFirePressed && Delay.ExpiredOrNotRunning(Runner))
             {
                 // 判斷子彈花費
-                int accountCoin = TempDataManagement.Instance.TempAccountData.Coins;
-                int currCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
-                int totalCost = currCost * CurrShotPoints.Count;
+                double accountCoin = TempDataManagement.Instance.TempAccountData.Coins;
+                double currCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
+                double totalCost = currCost * CurrShotPoints.Count;
 
                 if (accountCoin < currCost)
                 {

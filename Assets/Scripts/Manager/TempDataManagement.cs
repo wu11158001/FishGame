@@ -12,7 +12,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     /// </summary>
     public LevelData CurrentLevelData { get; private set; } = new();
     Action<CheckJoinRoomDataEnum> GetCurrentLevelDataAction;
-    public delegate void CueeCostChange(int cost);
+    public delegate void CueeCostChange(double cost);
     public event CueeCostChange CurrCostChangeDelegate;
 
     /// <summary>
@@ -26,7 +26,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     /// </summary>
     public AccountData TempAccountData { get; private set; } = new();
     Action<CheckJoinRoomDataEnum> GetTempAccountDataAction;
-    public delegate void TempAccountCoinChange(int changeValue);
+    public delegate void TempAccountCoinChange(double changeValue);
     public event TempAccountCoinChange TempAccountCoinChangeDelegate;
     Coroutine UpdateAccountCoroutine;
     // 定時更新帳戶時間(秒)
@@ -183,7 +183,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     /// <summary>
     /// 變更暫存帳戶金幣
     /// </summary>
-    public void ChangeTempAccountCoin(int changeValue)
+    public void ChangeTempAccountCoin(double changeValue)
     {
         if (TempAccountData == null)
             return;
@@ -198,12 +198,12 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     /// </summary>
     public void ChangeCurrCost(bool isReduce)
     {
-        int changeValue =
+        double changeValue =
             isReduce ?
             -CurrentLevelData.Gradient :
             CurrentLevelData.Gradient;
 
-        int currCost = CurrentLevelData.DefaultCost;
+        double currCost = CurrentLevelData.DefaultCost;
         currCost += changeValue;
 
         if (currCost <= CurrentLevelData.MinCost) currCost = CurrentLevelData.MinCost;

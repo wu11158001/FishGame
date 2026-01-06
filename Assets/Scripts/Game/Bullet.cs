@@ -90,11 +90,17 @@ public class Bullet : NetworkBehaviour
         var fish = hit.GetComponent<Fish>();
         FishData_Network data = fish.GetFishData();
 
-        int hitValue = UnityEngine.Random.Range(0, 101);
-        if (hitValue <= data.Rate)
+        double hitValue = UnityEngine.Random.value;
+        Debug.LogError($"擊中:{hitValue} / 魚: {data.Probability}");
+        if (hitValue <= data.Probability)
         {
             fish.GetHit(Runner.LocalPlayer);
-            TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: data.Reward);
+
+            // 獲得金幣
+            double currDefaultCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
+            double reward = currDefaultCost * data.Magnification;
+            Debug.LogError($"獲得金幣:{currDefaultCost} * {(decimal)data.Magnification} = {reward}");
+            TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward);
         }
 
         Runner.Despawn(Object);

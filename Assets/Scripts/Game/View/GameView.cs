@@ -52,7 +52,7 @@ public class GameView : BasicView
     /// <summary>
     /// 暫存資料變更
     /// </summary>
-    private void TempAccountDataChange(int coin)
+    private void TempAccountDataChange(double coin)
     {
         AccountCoinText.text = $"{StringUtility.CurrencyFormat(coin)}";
     }
@@ -61,9 +61,9 @@ public class GameView : BasicView
     /// 當前子彈花費變更
     /// </summary>
     /// <param name="cost"></param>
-    private void CurrCostChange(int cost)
+    private void CurrCostChange(double cost)
     {
-        CurrCostText.text = $"{cost}";
+        CurrCostText.text = $"{StringUtility.CurrencyFormat(cost)}";
     }
 
     /// <summary>
