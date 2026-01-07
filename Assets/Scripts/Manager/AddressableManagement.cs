@@ -465,7 +465,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 創建遊戲預製物
     /// </summary>
-    public async Task CreateGamePrefab(GamePrefabEnum prefabType, Action<GameObject> callback = null)
+    public async Task CreateGamePrefab(GamePrefabEnum prefabType, Transform parent = null, Action<GameObject> callback = null)
     {
         // 避免重複加載資源
         if (LoadGamePrefabAsyncSet.Contains(prefabType))
@@ -481,7 +481,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             if (loadHandle.Status == AsyncOperationStatus.Succeeded)
             {               
                 GameObject prefab = loadHandle.Result;
-                GameObject go = Instantiate(prefab);
+                GameObject go = Instantiate(prefab, parent);
 
                 var newInstance = new PrefabInstance { Go = go, Handle = loadHandle };
 

@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: GamePrefab
   m_GUID: a45ad5a0e51ffee4288d8d2bd65dba55
   m_SerializeEntries:
+  - m_GUID: 1e0a25e2006e1fd4e83bb3d97e2a2a6c
+    m_Address: CoinText_0
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 402ddfa21f9680c4c9ec31a0825b89ff
     m_Address: WayPointMain
     m_ReadOnly: 0
@@ -22,6 +27,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 73c17fbc335403d4d8b63fcea757bdfc
     m_Address: SceneEffect
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b751d2847fd3fe44f8472b3f65d73681
+    m_Address: LocalPool
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

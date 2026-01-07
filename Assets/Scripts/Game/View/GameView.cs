@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
-using Newtonsoft.Json;
 
 public class GameView : BasicView
 {
@@ -17,8 +16,10 @@ public class GameView : BasicView
     [Header("AccountInfoArea")]
     [SerializeField] TextMeshProUGUI AccountCoinText;
 
-    Vector2 LeftSeatPosision = new(-594, -495);
-    Vector2 RightSeatPosision = new(594, -495);
+    RectTransform GetCoinTextPool;
+
+    readonly Vector2 LeftSeatPosision = new(-594, -495);
+    readonly Vector2 RightSeatPosision = new(594, -495);
 
     private void Start()
     {
@@ -29,6 +30,9 @@ public class GameView : BasicView
 
         TempDataManagement.Instance.TempAccountCoinChangeDelegate += TempAccountDataChange;
         TempDataManagement.Instance.CurrCostChangeDelegate += CurrCostChange;
+
+        // 產生爆金物件池
+
     }
 
     public void SetData(int localSeat, Action closeAction)
@@ -43,8 +47,8 @@ public class GameView : BasicView
             LeftSeatPosision :
             RightSeatPosision;
 
-        CurrCostText.text = $"{StringUtility.CurrencyFormat(TempDataManagement.Instance.CurrentLevelData.DefaultCost)}";
-        AccountCoinText.text = $"{StringUtility.CurrencyFormat(TempDataManagement.Instance.TempAccountData.Coins)}";
+        CurrCostText.text = StringUtility.CurrencyFormat(TempDataManagement.Instance.CurrentLevelData.DefaultCost);
+        AccountCoinText.text = StringUtility.CurrencyFormat(TempDataManagement.Instance.TempAccountData.Coins);
 
         StartCoroutine(IYieldShow());
     }
@@ -54,7 +58,7 @@ public class GameView : BasicView
     /// </summary>
     private void TempAccountDataChange(double coin)
     {
-        AccountCoinText.text = $"{StringUtility.CurrencyFormat(coin)}";
+        AccountCoinText.text = StringUtility.CurrencyFormat(coin);
     }
 
     /// <summary>
@@ -63,7 +67,7 @@ public class GameView : BasicView
     /// <param name="cost"></param>
     private void CurrCostChange(double cost)
     {
-        CurrCostText.text = $"{StringUtility.CurrencyFormat(cost)}";
+        CurrCostText.text = StringUtility.CurrencyFormat(cost);
     }
 
     /// <summary>

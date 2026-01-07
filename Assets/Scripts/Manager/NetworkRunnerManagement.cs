@@ -54,6 +54,8 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
             FusionPool = null;
         }
 
+        AddressableManagement.Instance.ClearAllSceneViews();
+
         var poolObj = new GameObject("Fusion Pool Object");
         poolObj.transform.SetParent(gameObject.transform);
         FusionPool = poolObj.AddComponent<FusionPool>();
@@ -185,6 +187,9 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         AddressableManagement.Instance.SetCanvase();
 
+        // 產生本地物件池
+        _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.LocalPool);
+
         // 產生場景特效
         _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.SceneEffect);
 
@@ -236,7 +241,9 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
         // 清空遊戲預置物
         if (AddressableManagement.Instance != null)
+        {
             AddressableManagement.Instance.ClearGamePrefab();
+        }            
 
         // 停止計時更新Firestore帳戶資料
         if (TempDataManagement.Instance != null)

@@ -129,6 +129,12 @@ public enum GamePrefabEnum
 
     /// <summary> 場景特效 </summary>
     SceneEffect,
+
+    /// <summary> 本地物件池 </summary>
+    LocalPool,
+
+    /// <summary> 爆金文字 </summary>
+    CoinText_0,
 }
 
 /// <summary>
@@ -144,6 +150,15 @@ public enum FusionPoolNameEnum
 
     /// <summary> 效果容器 </summary>
     EffectPool,
+}
+
+/// <summary>
+/// 本地物件池容器名稱
+/// </summary>
+public enum LocalPoolNamEnum
+{
+    /// <summary> 爆金文字容器 </summary>
+    CoinTextPool,
 }
 
 /// <summary>

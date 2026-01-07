@@ -131,14 +131,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EntryView
       objectReference: {fileID: 0}
-    - target: {fileID: 1081766498779280803, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -1400
-      objectReference: {fileID: 0}
-    - target: {fileID: 1081766498779280803, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1382060428250214908, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -146,30 +138,6 @@ PrefabInstance:
     - target: {fileID: 1382060428250214908, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1715529353115731360, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
-      propertyPath: m_Color.b
-      value: 0.33420923
-      objectReference: {fileID: 0}
-    - target: {fileID: 1715529353115731360, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
-      propertyPath: m_Color.g
-      value: 0.3679245
-      objectReference: {fileID: 0}
-    - target: {fileID: 1715529353115731360, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
-      propertyPath: m_Color.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2765182140838116473, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -24
-      objectReference: {fileID: 0}
-    - target: {fileID: 4678052332638421202, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
-      propertyPath: VersionNumber
-      value: 1.0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8704877394024652682, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
-      propertyPath: m_text
-      value: 1.0.0
       objectReference: {fileID: 0}
     - target: {fileID: 8785232892771157914, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
       propertyPath: m_Pivot.x

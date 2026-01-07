@@ -276,7 +276,7 @@ public class GameTerrain : NetworkBehaviour
         for (int i = 0; i < totalCount; i++)
         {
             // 隨機魚種類
-            int fishTypeIndex = UnityEngine.Random.Range(0, NormalFishTypes.Count);
+            int fishTypeIndex = 0;//UnityEngine.Random.Range(0, NormalFishTypes.Count);
             NetworkPrefabEnum fishType = NormalFishTypes[fishTypeIndex];
 
             // 隨機選擇路線
