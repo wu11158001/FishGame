@@ -133,12 +133,13 @@ public class GameTerrain : NetworkBehaviour
                         }
                     });
 
-                // 位置在3.4攝影機顛倒
-                if(index >= 2)
+                // 位置在1.3攝影機顛倒
+                if(index == 1 || index == 3)
                 {
                     Transform cameraTr = Camera.main.transform;
                     cameraTr.rotation = Quaternion.Euler(0, 0, 180);
                 }
+                TempDataManagement.Instance.IsMirror = index == 1 || index == 3;
 
                 _ = AddressableManagement.Instance.OpenGameView(localSeat: index);
 

@@ -14,6 +14,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     Action<CheckJoinRoomDataEnum> GetCurrentLevelDataAction;
     public delegate void CueeCostChange(double cost);
     public event CueeCostChange CurrCostChangeDelegate;
+    public bool IsMirror { get; set; }
 
     /// <summary>
     /// 紀錄魚群資料
