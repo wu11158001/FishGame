@@ -118,17 +118,21 @@ public class Bullet : NetworkBehaviour
     /// </summary>
     private void ShowCoinText(double fishMagnification, double reward)
     {
-        // 依照魚的倍率判斷顯示的爆金文字
-        /*if(fishMagnification < 1)
-        {
+        GamePrefabEnum coinTextType = GamePrefabEnum.CoinText_0;
 
-        }*/
+        // 依照魚的倍率判斷顯示的爆金文字
+        if (fishMagnification >= 0.1f)
+            coinTextType = GamePrefabEnum.CoinText_0;
+        else if(fishMagnification >= 0.05f)
+            coinTextType = GamePrefabEnum.CoinText_1;
+        else
+            coinTextType = GamePrefabEnum.CoinText_0;
 
         Vector3 createPos = transform.position;
         createPos.y = 1;
 
         LocalPool.AcquirePrefabInstance<CoinText>(
-            prefabType: GamePrefabEnum.CoinText_0,
+            prefabType: coinTextType,
             parent: CoinTextPool,
             pos: createPos,
             callback: (coinText) =>

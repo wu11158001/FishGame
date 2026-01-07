@@ -135,6 +135,7 @@ public enum GamePrefabEnum
 
     /// <summary> 爆金文字 </summary>
     CoinText_0,
+    CoinText_1,
 }
 
 /// <summary>
