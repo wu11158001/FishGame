@@ -9,18 +9,21 @@ public class PlayerTurret : NetworkBehaviour
     [SerializeField] List<GameObject> Turrets = new();
 
     [Header("Fire")]
-    [SerializeField] float FireRate = 0.5f;
+    // 射擊頻率
+    [SerializeField] float FireRate = 0.5f;     
 
     [Header("HandleRecoil")]
-    [SerializeField] float RecoilDistance = 0.2f; // 後退距離
-    [SerializeField] float ReturnSpeed = 5f;      // 回彈速度
+    // 後座力後退距離
+    [SerializeField] float RecoilDistance = 0.2f;
+    // 後座力回彈速度
+    [SerializeField] float ReturnSpeed = 5f;      
 
     // 使用砲台
     [OnChangedRender(nameof(ChangeTurret))]
-    [Networked] public int TurretIndex { get; set; }
+    [Networked] int TurretIndex { get; set; }
 
     // 同步角度變數
-    [Networked] public float NetworkedAngle { get; set; }
+    [Networked] float NetworkedAngle { get; set; }
 
     //射速
     [Networked] TickTimer Delay { get; set; }
