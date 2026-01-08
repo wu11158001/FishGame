@@ -6,6 +6,7 @@ public class Fish : NetworkBehaviour
 {
     // 爆金物件
     [SerializeField] GamePrefabEnum CoinTextType = GamePrefabEnum.CoinText_0;
+    [SerializeField] GameObject FishModel;
 
     // 移動計時器
     [Networked] TickTimer MoveTimer { get; set; }
@@ -41,6 +42,9 @@ public class Fish : NetworkBehaviour
 
     public override void Spawned()
     {
+        if (FishModel != null)
+            FishModel.SetActive(true);
+
         if (Object.HasStateAuthority)
         {
             TotalDuration = FishData_Network.Duration;
@@ -157,6 +161,9 @@ public class Fish : NetworkBehaviour
         // 顯示爆金文字
         ShowCoinText(
             reward: reward);
+
+        if (FishModel != null)
+            FishModel.SetActive(false);
 
         RPC_GetHit(player);
     }

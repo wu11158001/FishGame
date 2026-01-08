@@ -56,12 +56,6 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
 #endif
     }
 
-    public void OnDataChanged(string jsonResponse)
-    {
-        // 處理資料邏輯...
-        Debug.Log("收到回傳: " + jsonResponse);
-    }
-
     /// <summary>
     /// DB初始化
     /// </summary>
@@ -514,7 +508,6 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     private static extern void RegisterOnCloseEvent(string callbackObj, string callbackMethod);
     public void OnBrowserClose()
     {
-        Debug.Log("視窗關閉事件");
         StopHeartbeat();
     }
 

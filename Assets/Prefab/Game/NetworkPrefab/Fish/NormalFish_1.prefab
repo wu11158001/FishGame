@@ -1980,6 +1980,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
   CoinTextType: 6
+  FishModel: {fileID: 3201909838559245476}
 --- !u!114 &9013133534017025471
 MonoBehaviour:
   m_ObjectHideFlags: 0

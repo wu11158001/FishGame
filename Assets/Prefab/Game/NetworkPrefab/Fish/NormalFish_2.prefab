@@ -363,6 +363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
   CoinTextType: 4
+  FishModel: {fileID: 2937606296494201058}
 --- !u!114 &7540506100158636857
 MonoBehaviour:
   m_ObjectHideFlags: 0
