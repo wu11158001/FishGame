@@ -367,54 +367,6 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     #region 介面(Canvas_Global)
 
     /// <summary>
-    /// 顯示Loading
-    /// </summary>
-    public async void ShowLoading()
-    {
-        if (!Application.isPlaying)
-            return;
-
-        ViewEnum view = ViewEnum.Loading;
-
-        Action viewCloseAction = () =>
-        {
-            CurrLoadingObj = null;
-            RemoveGlobalView(viewEnum: view);
-        };
-
-        await OpenView(
-            viewType: view,
-            callback: (viewObj) =>
-            {
-                if(viewObj != null)
-                {
-                    CurrLoadingObj = viewObj;
-
-                    if (viewObj != null)
-                    {
-                        viewObj.GetComponent<Loading>().SetData(
-                            closeAction: viewCloseAction);
-                    }
-                }                
-            },
-            canvasEnum: CanvasEnum.Canvas_Global);
-    }
-
-    /// <summary>
-    /// 關閉Loading
-    /// </summary>
-    public async void CloseLoading()
-    {
-        await Task.Yield();
-
-        if (CurrLoadingObj != null)
-        {
-            CurrLoadingObj = null;
-            RemoveGlobalView(viewEnum: ViewEnum.Loading);
-        }
-    }
-
-    /// <summary>
     /// 顯示吐司訊息
     /// </summary>
     public async void ShowToast(string messageKey)

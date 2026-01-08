@@ -2,7 +2,6 @@ using UnityEngine;
 using Fusion;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using System.Linq;
 
 public class PlayerTurret : NetworkBehaviour
 {
@@ -18,10 +17,10 @@ public class PlayerTurret : NetworkBehaviour
 
     // 使用砲台
     [OnChangedRender(nameof(ChangeTurret))]
-    [Networked] int TurretIndex { get; set; }
+    [Networked] public int TurretIndex { get; set; }
 
     // 同步角度變數
-    [Networked] float NetworkedAngle { get; set; }
+    [Networked] public float NetworkedAngle { get; set; }
 
     //射速
     [Networked] TickTimer Delay { get; set; }
@@ -33,12 +32,11 @@ public class PlayerTurret : NetworkBehaviour
     Transform BulletPool;
 
     List<Transform> CurrShotPoints = new();
-    Transform CurrBarrel;
+    public Transform CurrBarrel;
 
     public void SetData(int turretIndex)
     {
         TurretIndex = turretIndex;
-        ChangeTurret();
     }
 
     public override void Spawned()
@@ -47,26 +45,36 @@ public class PlayerTurret : NetworkBehaviour
 
         if(Object.HasStateAuthority)
         {
-            AddressableManagement.Instance.CloseLoading();
+            Canvas_Global.Instance.CloseLoading();
             TempDataManagement.Instance.StartTimingUpdateAccountData();
         }
+
+        ChangeTurret();
     }
 
-    public override void FixedUpdateNetwork()   
-    {       
-        OnFire();
+    public override void Render()
+    {
+        if (Object == null || !Object.IsValid)
+            return;
+
         OnRotation();
         HandleRecoil();
     }
 
-    /// <summary>
-    /// 轉向
-    /// </summary>
-    private void OnRotation()
+    public override void FixedUpdateNetwork()   
     {
-        if (CurrBarrel == null)
+        if (Object == null || !Object.IsValid)
             return;
 
+        OnFire();
+        OnRotationControl();
+    }
+
+    /// <summary>
+    /// 轉向控制
+    /// </summary>
+    private void OnRotationControl()
+    {      
         if (GetInput(out NetworkInputData input))
         {
             if (MainCamera == null)
@@ -90,8 +98,6 @@ public class PlayerTurret : NetworkBehaviour
                 }
             }
         }
-
-        CurrBarrel.rotation = Quaternion.Euler(0, NetworkedAngle, 0);
     }
 
     /// <summary>
@@ -155,10 +161,22 @@ public class PlayerTurret : NetworkBehaviour
     /// </summary>
     private void HandleRecoil()
     {
-        if (CurrBarrel == null) return;
+        if (CurrBarrel != null)
+        {
+            CurrentRecoil = Mathf.Lerp(CurrentRecoil, 0, Runner.DeltaTime * ReturnSpeed);
+            CurrBarrel.localPosition = -CurrBarrel.transform.forward * CurrentRecoil;
+        }
+    }
 
-        CurrentRecoil = Mathf.Lerp(CurrentRecoil, 0, Runner.DeltaTime * ReturnSpeed);
-        CurrBarrel.localPosition = -CurrBarrel.transform.forward * CurrentRecoil;
+    /// <summary>
+    /// 轉向
+    /// </summary>
+    private void OnRotation()
+    {
+        if (CurrBarrel != null)
+        {
+            CurrBarrel.rotation = Quaternion.Euler(0, NetworkedAngle, 0);
+        }
     }
 
     /// <summary>
@@ -182,7 +200,7 @@ public class PlayerTurret : NetworkBehaviour
         // 設定砲管
         CurrBarrel = activeTurret.transform.Find("Barrel");
 
-        // 更新發射點 (優化：只找當前砲台下的 ShotPoint)
+        // 更新發射點
         CurrShotPoints.Clear();
 
         // 更新發射點

@@ -72,7 +72,7 @@ public class LobbyView : BasicView
             AccountData data = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
             CoinText.text = StringUtility.CurrencyFormat(data.Coins);
 
-            AddressableManagement.Instance.CloseLoading();
+            Canvas_Global.Instance.CloseLoading();
         }
     }
 
@@ -111,7 +111,7 @@ public class LobbyView : BasicView
         if (IsMatchmaking) return;
 
         IsMatchmaking = true;
-        AddressableManagement.Instance.ShowLoading();
+        Canvas_Global.Instance.ShowLoading();
         CheckJoinRoomDic.Clear();
 
         foreach (CheckJoinRoomDataEnum item in Enum.GetValues(typeof(CheckJoinRoomDataEnum)))
@@ -181,7 +181,7 @@ public class LobbyView : BasicView
         if (!result.Ok)
         {
             Debug.LogError($"無法加入房間: {result.ShutdownReason}");
-            AddressableManagement.Instance.CloseLoading();
+            Canvas_Global.Instance.CloseLoading();
             IsMatchmaking = false;
         }
     }

@@ -66,7 +66,11 @@ public class GameTerrain : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (!Object.HasStateAuthority) return;
+        if (Object == null || !Object.IsValid)
+            return;
+
+        if (!Object.HasStateAuthority)
+            return;
 
         if (SpawnTimer.ExpiredOrNotRunning(Runner))
         {
@@ -137,7 +141,7 @@ public class GameTerrain : NetworkBehaviour
                 if(index == 1 || index == 3)
                 {
                     Transform cameraTr = Camera.main.transform;
-                    cameraTr.rotation = Quaternion.Euler(0, 0, 180);
+                    cameraTr.rotation = Quaternion.Euler(90, 0, 180);
                 }
                 TempDataManagement.Instance.IsMirror = index == 1 || index == 3;
                 TempDataManagement.Instance.SeatPosition = Seats[index].transform.position;

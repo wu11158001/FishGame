@@ -22,12 +22,6 @@ public class Fish : NetworkBehaviour
     LocalPool LocalPool;
     Transform CoinTextPool;
 
-    private void Start()
-    {
-        LocalPool = GameObject.FindFirstObjectByType<LocalPool>();
-        CoinTextPool = GameObject.Find(LocalPoolNamEnum.CoinTextPool.ToString()).transform;
-    }
-
     public void SetData(NetworkPrefabEnum fishType, bool isMirror, float depth, WayPoint wayPoint)
     {
         FishType = fishType;
@@ -56,10 +50,10 @@ public class Fish : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if(Object.HasStateAuthority)
-        {
-            Move();
-        }
+        if (Object == null || !Object.IsValid)
+            return;
+
+        Move();
     }
 
     /// <summary>
@@ -67,6 +61,9 @@ public class Fish : NetworkBehaviour
     /// </summary>
     private void Move()
     {
+        if (!Object.HasStateAuthority)
+            return;
+
         if (PathPoints == null || PathPoints.Length < 2)
             return;
 
@@ -130,6 +127,15 @@ public class Fish : NetworkBehaviour
     /// </summary>
     private void ShowCoinText(double reward)
     {
+        if (LocalPool == null)
+            LocalPool = GameObject.FindFirstObjectByType<LocalPool>();
+
+        if (CoinTextPool == null)
+            CoinTextPool = GameObject.Find(LocalPoolNamEnum.CoinTextPool.ToString()).transform;
+
+        if (LocalPool == null || CoinTextPool == null)
+            return;
+
         Vector3 createPos = transform.position;
         createPos.y = 1;
 

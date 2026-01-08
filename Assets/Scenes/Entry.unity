@@ -139,6 +139,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4678052332638421202, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
+      propertyPath: VersionNumber
+      value: 1.1.0
+      objectReference: {fileID: 0}
     - target: {fileID: 8785232892771157914, guid: 2f2029a23b1c1fd468b5432eeda31cfb, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -311,14 +315,6 @@ PrefabInstance:
     - target: {fileID: 654917421855331009, guid: ea7fe42da7c43f34bbe912e094df9817, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275756479508778114, guid: ea7fe42da7c43f34bbe912e094df9817, type: 3}
-      propertyPath: m_RenderMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275756479508778114, guid: ea7fe42da7c43f34bbe912e094df9817, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8725374009460213099, guid: ea7fe42da7c43f34bbe912e094df9817, type: 3}
       propertyPath: m_Name

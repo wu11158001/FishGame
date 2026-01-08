@@ -185,17 +185,17 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     /// </summary>
     public async void OnSceneLoadDone(NetworkRunner runner)
     {
+        Debug.Log("場景載入完成");
+
         AddressableManagement.Instance.SetCanvase();
-
-        // 產生本地物件池
-        _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.LocalPool);
-
-        // 產生場景特效
-        _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.SceneEffect);
 
         // 產生路線主物件
         var task1 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.WayPointMain);
-        await Task.WhenAll(task1);
+        // 產生本地物件池
+        var task2 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.LocalPool);
+        // 產生場景特效
+        var task3 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.SceneEffect);
+        await Task.WhenAll(task1, task2, task3);
 
         // 產生遊戲地形
         if (runner.IsSharedModeMasterClient)
@@ -230,7 +230,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         Debug.Log($"斷開連線");
 
         if (AddressableManagement.Instance != null)
-            AddressableManagement.Instance.ShowLoading();
+            Canvas_Global.Instance.ShowLoading();
 
         // 移除物件池
         if(FusionPool != null)

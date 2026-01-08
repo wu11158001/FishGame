@@ -2,23 +2,29 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-public class Loading : BasicView
+public class Loading : MonoBehaviour
 {
-    const float RemoveTime = 30f;
+    const float CloseTime = 30f;
+
+    Coroutine CloseCoroutine;
 
     private void OnDestroy()
     {
         StopAllCoroutines();
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        StartCoroutine(IYieldRemove());
+        if (CloseCoroutine != null)
+            StopCoroutine(CloseCoroutine);
     }
 
-    public void SetData(Action closeAction)
+    private void OnEnable()
     {
-        CloseAction = closeAction;
+        if (CloseCoroutine != null)
+            StopCoroutine(CloseCoroutine);
+
+        CloseCoroutine = StartCoroutine(IYieldRemove());
     }
 
     /// <summary>
@@ -27,7 +33,6 @@ public class Loading : BasicView
     /// <returns></returns>
     private IEnumerator IYieldRemove()
     {
-        yield return new WaitForSeconds(RemoveTime);
-        Close();
+        yield return new WaitForSeconds(CloseTime);
     }
 }

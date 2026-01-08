@@ -381,7 +381,7 @@ public class LoginView : BasicView
         if (!LoginBtn.interactable)
             return;
 
-        AddressableManagement.Instance.ShowLoading();
+        Canvas_Global.Instance.ShowLoading();
 
         FirestoreManagement.Instance.GetDataFromFirestore(
             path: FirestoreCollectionNameEnum.AccountData,
@@ -392,15 +392,17 @@ public class LoginView : BasicView
     /// <summary>
     /// 登入Callback
     /// </summary>
-    public void SendLoginCallback(FirestoreResponse response)
+    public async void SendLoginCallback(FirestoreResponse response)
     {
-        if(response == null)
+        Canvas_Global.Instance.CloseLoading();
+        if (response == null)
         {
-            AddressableManagement.Instance.CloseLoading();
             AddressableManagement.Instance.ShowToast("Wiring Error");
             Debug.LogError("資料回傳 null");
             return;
         }
+
+        await Task.Yield();
 
         if(response.IsSuccess)
         {
@@ -418,19 +420,18 @@ public class LoginView : BasicView
 
                         if (lastHeartbeat > 0 && difference < FirestoreManagement.Instance.HeartbeatTime)
                         {
-                            AddressableManagement.Instance.CloseLoading();
                             AddressableManagement.Instance.ShowToast("Account logged in");
                             Debug.LogError($"帳號已登入!");
                         }
                         else
                         {
+                            Canvas_Global.Instance.ShowLoading();
                             SvaeLoginInfo(account: AccountIF_Login.text, password: PasswordIF_Login.text);
                             InLobby();
                         }
                     }
                     else
                     {
-                        AddressableManagement.Instance.CloseLoading();
                         AddressableManagement.Instance.ShowToast("Password Error");
                         Debug.LogError("密碼錯誤");
                     }
@@ -438,14 +439,12 @@ public class LoginView : BasicView
             }
             catch (Exception e)
             {
-                AddressableManagement.Instance.CloseLoading();
                 AddressableManagement.Instance.ShowToast("Wiring Error");
                 Debug.LogError($"JSON 解析異常: {e.Message}");
             }
         }
         else
         {
-            AddressableManagement.Instance.CloseLoading();
             FirestoreManagement.Instance.CallbackFailHandle(response.ResponseStatus);
         } 
     }
@@ -458,7 +457,7 @@ public class LoginView : BasicView
         if (!RegisterBtn.interactable)
             return;
 
-        AddressableManagement.Instance.ShowLoading();
+        Canvas_Global.Instance.ShowLoading();
         
         // 檢查註冊帳戶是否存在
         FirestoreManagement.Instance.GetDataFromFirestore(
@@ -472,9 +471,10 @@ public class LoginView : BasicView
     /// </summary>
     public void CheckRegisterAccount(FirestoreResponse response)
     {
+        Canvas_Global.Instance.CloseLoading();
+
         if (response == null)
         {
-            AddressableManagement.Instance.CloseLoading();
             AddressableManagement.Instance.ShowToast("Wiring Error");
             Debug.LogError("資料回傳 null");
             return;
@@ -484,7 +484,6 @@ public class LoginView : BasicView
         {
             if(response.ResponseStatus == FirestoreStatusEnum.Error)
             {
-                AddressableManagement.Instance.CloseLoading();
                 AddressableManagement.Instance.ShowToast("Wiring Error");
                 Debug.LogError($"連線錯誤: {response.JsonData}");
                 return;
@@ -492,6 +491,8 @@ public class LoginView : BasicView
 
             if(response.ResponseStatus ==  FirestoreStatusEnum.AccountNotFound)
             {
+                Canvas_Global.Instance.ShowLoading();
+
                 // 寫入註冊資料
                 AccountData data = new()
                 {
@@ -510,7 +511,6 @@ public class LoginView : BasicView
             }
             else
             {
-                AddressableManagement.Instance.CloseLoading();
                 AddressableManagement.Instance.ShowToast("Account Exist");
                 Debug.LogError("帳號已存在");
             }
@@ -527,9 +527,10 @@ public class LoginView : BasicView
     /// </summary>
     public void SendRegisterCallback(FirestoreResponse response)
     {
+        Canvas_Global.Instance.CloseLoading();
+
         if (response == null)
         {
-            AddressableManagement.Instance.CloseLoading();
             AddressableManagement.Instance.ShowToast("Wiring Error");
             Debug.LogError("資料回傳 null");
             return;
@@ -537,13 +538,13 @@ public class LoginView : BasicView
 
         if (response.ResponseStatus == FirestoreStatusEnum.Success)
         {
+            Canvas_Global.Instance.ShowLoading();
             SvaeLoginInfo(AccountIF_Register.text, PasswordIF_Register.text);
             InLobby();
             Debug.Log("註冊成功");
         }
         else
         {
-            AddressableManagement.Instance.CloseLoading();
             AddressableManagement.Instance.ShowToast("Registration Failed");
             Debug.LogError($"註冊失敗: {response.Status}");
         }

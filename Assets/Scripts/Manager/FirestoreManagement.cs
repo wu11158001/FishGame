@@ -31,7 +31,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     Coroutine HeartbeatCoroutine;
 
     // 心跳包發送間格時間(秒)
-    public int HeartbeatTime { get; private set; } = 180;
+    public int HeartbeatTime { get; private set; } = 30;
 
     protected override void OnDestroy()
     {
@@ -514,6 +514,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     private static extern void RegisterOnCloseEvent(string callbackObj, string callbackMethod);
     public void OnBrowserClose()
     {
+        Debug.Log("視窗關閉事件");
         StopHeartbeat();
     }
 

@@ -270,11 +270,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3cd8c4f3da38a644b8c129bafc7fa40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Toast
+  MainCanvasGroup: {fileID: 0}
   PanelRect: {fileID: 8981201328796160031}
   MessageText: {fileID: 2720216790438704444}
-  MoveTime: 0.2
-  StopPos: {x: 0, y: -150}
-  StopTime: 3
 --- !u!1 &7308470225303685754
 GameObject:
   m_ObjectHideFlags: 0
@@ -520,8 +518,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Message
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: bfe670e875231734598b8ffdcd4d7d20, type: 2}
-  m_sharedMaterial: {fileID: 6105520199779406489, guid: bfe670e875231734598b8ffdcd4d7d20, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa67b823fbca4cc4da606b7c1e5f2cc6, type: 2}
+  m_sharedMaterial: {fileID: 6105520199779406489, guid: aa67b823fbca4cc4da606b7c1e5f2cc6, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

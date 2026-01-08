@@ -15,21 +15,18 @@ public class Bullet : NetworkBehaviour
     
     public override void Spawned()
     {
-
         EffectPool = GameObject.Find(FusionPoolNameEnum.EffectPool.ToString()).transform;
-
-
         Direction = transform.forward;
     }
 
     public override void FixedUpdateNetwork()
     {
-        if (Object.HasStateAuthority)
-        {
-            Move();
-            CheckBounds();
-            CheckHit();
-        }
+        if (Object == null || !Object.IsValid) 
+            return;
+
+        Move();
+        CheckBounds();
+        CheckHit();
     }
 
     /// <summary>
@@ -37,6 +34,9 @@ public class Bullet : NetworkBehaviour
     /// </summary>
     private void Move()
     {
+        if (!Object.HasStateAuthority)
+            return;
+
         transform.Translate(Vector3.forward * Speed * Runner.DeltaTime);
     }
 
@@ -45,6 +45,9 @@ public class Bullet : NetworkBehaviour
     /// </summary>
     private void CheckBounds()
     {
+        if (!Object.HasStateAuthority)
+            return;
+
         Vector3 pos = transform.position;
 
         if (pos.x < MinBounds.x || pos.x > MaxBounds.x)
@@ -65,6 +68,9 @@ public class Bullet : NetworkBehaviour
     /// </summary>
     private void CheckHit()
     {
+        if (!Object.HasStateAuthority)
+            return;
+
         RaycastHit hit;
         LayerMask mask = LayerMask.GetMask("Fish");
 
