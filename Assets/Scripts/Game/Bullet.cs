@@ -8,18 +8,16 @@ public class Bullet : NetworkBehaviour
 
     [Networked] Vector3 Direction { get; set; }
 
-    LocalPool LocalPool;
     Transform EffectPool;
-    Transform CoinTextPool;
 
     readonly Vector2 MinBounds = new(-9.6f, -5.4f);
     readonly Vector2 MaxBounds = new(9.6f, 5.4f);
     
     public override void Spawned()
     {
-        LocalPool = GameObject.FindFirstObjectByType<LocalPool>();
+
         EffectPool = GameObject.Find(FusionPoolNameEnum.EffectPool.ToString()).transform;
-        CoinTextPool = GameObject.Find(LocalPoolNamEnum.CoinTextPool.ToString()).transform;
+
 
         Direction = transform.forward;
     }
@@ -92,53 +90,29 @@ public class Bullet : NetworkBehaviour
 
         // 判斷是否擊中
         var fish = hit.GetComponent<Fish>();
+        if(fish == null)
+            fish = hit.GetComponentInParent<Fish>();
+
+        if(fish == null)
+        {
+            Debug.LogError("找不到擊中魚的腳本");
+            return;
+        }
+
         FishData_Network data = fish.GetFishData();
 
         double hitValue = UnityEngine.Random.value;
         if (hitValue <= data.Probability)
         {
-            fish.GetHit(Runner.LocalPlayer);
-
             // 獲得金幣
             double currDefaultCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
             double reward = currDefaultCost * data.Magnification;
             TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward);
 
-            // 顯示爆金文字
-            ShowCoinText(
-                data.Magnification, 
-                reward: reward);
+            fish.GetHit(player: Runner.LocalPlayer, reward: reward);
         }
 
         Runner.Despawn(Object);
-    }
-
-    /// <summary>
-    /// 顯示爆金文字
-    /// </summary>
-    private void ShowCoinText(double fishMagnification, double reward)
-    {
-        GamePrefabEnum coinTextType = GamePrefabEnum.CoinText_0;
-
-        // 依照魚的倍率判斷顯示的爆金文字
-        if (fishMagnification >= 0.1f)
-            coinTextType = GamePrefabEnum.CoinText_0;
-        else if(fishMagnification >= 0.05f)
-            coinTextType = GamePrefabEnum.CoinText_1;
-        else
-            coinTextType = GamePrefabEnum.CoinText_0;
-
-        Vector3 createPos = transform.position;
-        createPos.y = 1;
-
-        LocalPool.AcquirePrefabInstance<CoinText>(
-            prefabType: coinTextType,
-            parent: CoinTextPool,
-            pos: createPos,
-            callback: (coinText) =>
-            {
-                coinText.SetData(value: reward);
-            });
     }
 
     private void OnDrawGizmosSelected()

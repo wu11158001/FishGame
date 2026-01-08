@@ -62,7 +62,7 @@ Transform:
   m_Children:
   - {fileID: 7365282940302127426}
   m_Father: {fileID: 1424199420489066565}
-  m_LocalEulerAnglesHint: {x: 1.0403289e-14, y: 151.1417, z: 6.145346e-15}
+  m_LocalEulerAnglesHint: {x: 7.316796e-15, y: 160.2854, z: 6.1193184e-15}
 --- !u!1 &2271335463512570805
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +126,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4953040476546375718}
-  m_LocalEulerAnglesHint: {x: 3.9428676e-15, y: -154.0189, z: 6.307591e-15}
+  m_LocalEulerAnglesHint: {x: 2.9922106e-15, y: -154.0189, z: 4.78678e-15}
 --- !u!1 &3889824700329471800
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,7 +220,7 @@ Transform:
   m_Children:
   - {fileID: 2146799086794337663}
   m_Father: {fileID: 3736432620027084038}
-  m_LocalEulerAnglesHint: {x: -73.5288, y: 154.26369, z: 180}
+  m_LocalEulerAnglesHint: {x: -72.82626, y: 142.68633, z: -162.87871}
 --- !u!1 &6666053332829180253
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,7 +354,7 @@ Transform:
   m_Children:
   - {fileID: 8478326405780349681}
   m_Father: {fileID: 6443355032769326443}
-  m_LocalEulerAnglesHint: {x: 23.735817, y: -80.12503, z: 113.04617}
+  m_LocalEulerAnglesHint: {x: 25.435701, y: -92.107666, z: 85.17948}
 --- !u!1 &7021262761770469866
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,7 +386,7 @@ Transform:
   m_Children:
   - {fileID: 1525919214517761339}
   m_Father: {fileID: 6443355032769326443}
-  m_LocalEulerAnglesHint: {x: 17.777903, y: 96.91205, z: -67.89349}
+  m_LocalEulerAnglesHint: {x: 18.966904, y: 88.53095, z: -94.60283}
 --- !u!1 &8618805885420687196
 GameObject:
   m_ObjectHideFlags: 0
@@ -420,7 +420,7 @@ Transform:
   - {fileID: 4953040476546375718}
   - {fileID: 3103654525343663969}
   m_Father: {fileID: 1424199420489066565}
-  m_LocalEulerAnglesHint: {x: 90, y: 2.8434227, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 1.6521938, z: 0}
 --- !u!1 &8684528587351328612
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,6 +471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c2393655d406c4dbc022b3e5ec7b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
+  CoinTextType: 5
 --- !u!114 &3247019587191361611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,4 +551,4 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 8.23, y: 8.39, z: 21}
-  m_Center: {x: 0.16, y: 0.77, z: 4.3}
+  m_Center: {x: 0.16, y: -0.74, z: 4.3}

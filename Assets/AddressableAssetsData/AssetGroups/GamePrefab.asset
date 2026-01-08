@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5523c3695c4ef334983111ea3f06a868
+    m_Address: Coin
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 73c17fbc335403d4d8b63fcea757bdfc
     m_Address: SceneEffect
     m_ReadOnly: 0
@@ -35,8 +40,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bda0114ab75613a46a73b5a4d5782556
+    m_Address: CoinText_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c9829efd372c065499cfe26d5fb54e18
     m_Address: CoinText_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: caeee904a894b324cb5351a1a8c40a7d
+    m_Address: CoinText_2
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

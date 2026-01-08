@@ -134,8 +134,11 @@ public enum GamePrefabEnum
     LocalPool,
 
     /// <summary> 爆金文字 </summary>
+    Coin,
     CoinText_0,
     CoinText_1,
+    CoinText_2,
+    CoinText_3,
 }
 
 /// <summary>

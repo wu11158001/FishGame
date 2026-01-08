@@ -140,6 +140,7 @@ public class GameTerrain : NetworkBehaviour
                     cameraTr.rotation = Quaternion.Euler(0, 0, 180);
                 }
                 TempDataManagement.Instance.IsMirror = index == 1 || index == 3;
+                TempDataManagement.Instance.SeatPosition = Seats[index].transform.position;
 
                 _ = AddressableManagement.Instance.OpenGameView(localSeat: index);
 
@@ -277,7 +278,7 @@ public class GameTerrain : NetworkBehaviour
         for (int i = 0; i < totalCount; i++)
         {
             // 隨機魚種類
-            int fishTypeIndex = 0;//UnityEngine.Random.Range(0, NormalFishTypes.Count);
+            int fishTypeIndex = UnityEngine.Random.Range(0, NormalFishTypes.Count);
             NetworkPrefabEnum fishType = NormalFishTypes[fishTypeIndex];
 
             // 隨機選擇路線

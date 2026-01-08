@@ -4,6 +4,9 @@ using System.Linq;
 
 public class Fish : NetworkBehaviour
 {
+    // 爆金物件
+    [SerializeField] GamePrefabEnum CoinTextType = GamePrefabEnum.CoinText_0;
+
     // 移動計時器
     [Networked] TickTimer MoveTimer { get; set; }
     // 總移動時間
@@ -15,6 +18,15 @@ public class Fish : NetworkBehaviour
 
     NetworkPrefabEnum FishType;
     Vector3[] PathPoints;
+
+    LocalPool LocalPool;
+    Transform CoinTextPool;
+
+    private void Start()
+    {
+        LocalPool = GameObject.FindFirstObjectByType<LocalPool>();
+        CoinTextPool = GameObject.Find(LocalPoolNamEnum.CoinTextPool.ToString()).transform;
+    }
 
     public void SetData(NetworkPrefabEnum fishType, bool isMirror, float depth, WayPoint wayPoint)
     {
@@ -114,11 +126,32 @@ public class Fish : NetworkBehaviour
     }
 
     /// <summary>
+    /// 顯示爆金文字
+    /// </summary>
+    private void ShowCoinText(double reward)
+    {
+        Vector3 createPos = transform.position;
+        createPos.y = 1;
+
+        LocalPool.AcquirePrefabInstance<CoinText>(
+            prefabType: CoinTextType,
+            parent: CoinTextPool,
+            pos: createPos,
+            callback: (coinText) =>
+            {
+                coinText.SetData(value: reward);
+            });
+    }
+
+    /// <summary>
     /// 魚被擊中
     /// </summary>
-    /// <param name="player"></param>
-    public void GetHit(PlayerRef player)
+    public void GetHit(PlayerRef player, double reward)
     {
+        // 顯示爆金文字
+        ShowCoinText(
+            reward: reward);
+
         RPC_GetHit(player);
     }
 

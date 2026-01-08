@@ -15,6 +15,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     public delegate void CueeCostChange(double cost);
     public event CueeCostChange CurrCostChangeDelegate;
     public bool IsMirror { get; set; }
+    public Vector3 SeatPosition { get; set; }
 
     /// <summary>
     /// 紀錄魚群資料
