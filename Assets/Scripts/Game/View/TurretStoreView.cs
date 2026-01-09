@@ -31,14 +31,12 @@ public class TurretStoreView : BasicView
         }
         StoreTuretUnits.Clear();
 
-        List<TurretEnum> turretTypes = Enum.GetValues(typeof(TurretEnum))
-            .Cast<TurretEnum>()
-            .Where(e => e.ToString().StartsWith("Turret"))
-            .ToList();
-
         int index = 0;
-        foreach (TurretEnum turretType in turretTypes)
+        foreach (TurretEnum turretType in Enum.GetValues(typeof(TurretEnum)))
         {
+            if (turretType == TurretEnum.None)
+                continue;
+
             GameObject obj = Instantiate(TempStoreTuretUnit.gameObject, ContentRect);
             StoreTuretUnit storeTuretUnit = obj.GetComponent<StoreTuretUnit>();
 

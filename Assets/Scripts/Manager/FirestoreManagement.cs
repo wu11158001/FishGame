@@ -561,6 +561,28 @@ public class AccountData
 
     /// <summary> 預設砲台編號 </summary>
     public int DefaultTurret;
+
+    /// <summary> 擁有砲台編號(","隔開) </summary>
+    public string OwnTurret;
+
+
+
+    /// <summary> 獲取擁有砲台編號列表 </summary>
+    public List<int> GetOwnTurretList()
+    {
+        List<int> ownList = new();
+        if (string.IsNullOrEmpty(OwnTurret)) return new();
+
+        var parts = OwnTurret.Split(',');
+        foreach (var p in parts)
+        {
+            if (int.TryParse(p, out int id)) ownList.Add(id);
+        }
+
+        return ownList;
+    }
+
+
 }
 
 /// <summary>

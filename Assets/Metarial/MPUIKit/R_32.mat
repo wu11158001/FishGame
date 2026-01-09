@@ -90,7 +90,7 @@ Material:
     - _NStarPolygonOffset: {r: 0, g: 0, b: 0, a: 0}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _PentagonCornerRadius: {r: 0, g: 0, b: 0, a: 0}
-    - _RectangleCornerRadius: {r: 30, g: 30, b: 30, a: 30}
+    - _RectangleCornerRadius: {r: 32, g: 32, b: 32, a: 32}
     - _TextureSize: {r: 1, g: 1, b: 1, a: 1}
     - _TriangleCornerRadius: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

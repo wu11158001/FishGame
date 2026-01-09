@@ -133,7 +133,7 @@ public class GameTerrain : NetworkBehaviour
                         PlayerTurret playerTurret = obj.GetComponent<PlayerTurret>();
                         if(playerTurret != null)
                         {
-                            playerTurret.SetData(turretIndex: 0);
+                            playerTurret.SetData(turretIndex: TempDataManagement.Instance.TempAccountData.DefaultTurret);
                         }
                     });
 

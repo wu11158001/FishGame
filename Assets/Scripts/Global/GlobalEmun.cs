@@ -203,7 +203,7 @@ public enum CheckJoinRoomDataEnum
 /// </summary>
 public enum TurretEnum
 {
-    None,
+    None = -1,
     Turret_0,
     Turret_1,
     Turret_2,

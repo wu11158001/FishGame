@@ -229,7 +229,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         Debug.Log($"斷開連線");
 
-        if (AddressableManagement.Instance != null)
+        if (Canvas_Global.Instance != null)
             Canvas_Global.Instance.ShowLoading();
 
         // 移除物件池
@@ -241,9 +241,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
         // 清空遊戲預置物
         if (AddressableManagement.Instance != null)
-        {
             AddressableManagement.Instance.ClearGamePrefab();
-        }            
 
         // 停止計時更新Firestore帳戶資料
         if (TempDataManagement.Instance != null)

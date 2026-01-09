@@ -502,6 +502,7 @@ public class LoginView : BasicView
                     Password = StringUtility.ToHash256(PasswordIF_Register.text),
                     Coins = 0,
                     DefaultTurret = 0,
+                    OwnTurret = "0",
                 };
 
                 string json = JsonUtility.ToJson(data);

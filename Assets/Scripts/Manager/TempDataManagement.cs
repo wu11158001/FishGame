@@ -34,9 +34,17 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     /// </summary>
     public AccountData TempAccountData { get; private set; } = new();
     Action<CheckJoinRoomDataEnum> GetTempAccountDataAction;
+    // 金幣變更事件
     public delegate void TempAccountCoinChange(double changeValue);
     public event TempAccountCoinChange TempAccountCoinChangeDelegate;
-    Coroutine UpdateAccountCoroutine;
+    // 預設砲台變更事件
+    public delegate void TempAccountDefaultTurretChange(TurretEnum turretType);
+    public event TempAccountDefaultTurretChange TempAccountDefaultTurretChangeDelegate;
+    // 擁有砲台變更事件
+    public delegate void TempAccountOwnTurretChange();
+    public event TempAccountOwnTurretChange TempAccountOwnTurretChangeDelegate;
+    // 帳戶金幣定時更新
+    Coroutine UpdateAccountCoinCoroutine;
     // 前一次更新帳戶金幣金額
     double PreUpdateCoin;
     // 定時更新帳戶時間(秒)
@@ -229,8 +237,8 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     /// </summary>
     public void StopTimingUpdateAccountData()
     {
-        if (UpdateAccountCoroutine != null)
-            StopCoroutine(UpdateAccountCoroutine);
+        if (UpdateAccountCoinCoroutine != null)
+            StopCoroutine(UpdateAccountCoinCoroutine);
 
         SendUpdateAccountCoinData();
     }
@@ -240,10 +248,10 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     /// </summary>
     public void StartTimingUpdateAccountData()
     {
-        if (UpdateAccountCoroutine != null)
-            StopCoroutine(UpdateAccountCoroutine);
+        if (UpdateAccountCoinCoroutine != null)
+            StopCoroutine(UpdateAccountCoinCoroutine);
 
-        UpdateAccountCoroutine = StartCoroutine(ITimingUpdateAccountData());
+        UpdateAccountCoinCoroutine = StartCoroutine(ITimingUpdateAccountData());
     }
 
     /// <summary>
@@ -303,7 +311,50 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
             updates: updates,
             callback: (res) =>
             {
-                if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶預設砲台資料失敗");
+                if (!res.IsSuccess)
+                {
+                    Debug.LogError("更新Firestore帳戶預設砲台資料失敗");
+                }
+                else
+                {
+                    TempAccountData.DefaultTurret = (int)turretType;
+                    TempAccountDefaultTurretChangeDelegate?.Invoke(turretType);
+                }                
+            });
+    }
+
+    /// <summary>
+    /// 發送更新Firestore帳戶已擁有砲台資料
+    /// </summary>
+    public void SendUpdateAccountOwnTurretData(TurretEnum turretType)
+    {
+        LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
+
+        List<int> currOwnTurret = TempAccountData.GetOwnTurretList();
+        currOwnTurret.Add((int)turretType);
+        currOwnTurret.Sort();
+        string result = string.Join(",", currOwnTurret);
+
+        var updates = new Dictionary<string, object>
+        {
+            { "OwnTurret", result }
+        };
+
+        FirestoreManagement.Instance.UpdateDataToFirestore(
+            path: FirestoreCollectionNameEnum.AccountData,
+            docId: loginInfo.Account,
+            updates: updates,
+            callback: (res) =>
+            {
+                if (!res.IsSuccess)
+                {
+                    Debug.LogError("更新Firestore帳戶已擁有砲台資料失敗");
+                }
+                else
+                {
+                    TempAccountData.OwnTurret = result;
+                    TempAccountOwnTurretChangeDelegate?.Invoke();
+                }
             });
     }
 

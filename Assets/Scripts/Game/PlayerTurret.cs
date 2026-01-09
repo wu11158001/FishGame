@@ -6,11 +6,7 @@ using System.Collections.Generic;
 public class PlayerTurret : NetworkBehaviour
 {
     [Header("Turrets")]
-    [SerializeField] List<GameObject> Turrets = new();
-
-    [Header("Fire")]
-    // 射擊頻率
-    [SerializeField] float FireRate = 0.5f;     
+    [SerializeField] List<GameObject> Turrets = new();  
 
     [Header("HandleRecoil")]
     // 後座力後退距離
@@ -36,6 +32,17 @@ public class PlayerTurret : NetworkBehaviour
 
     List<Transform> CurrShotPoints = new();
     public Transform CurrBarrel;
+
+    private void OnDestroy()
+    {
+        if (TempDataManagement.Instance != null)
+            TempDataManagement.Instance.TempAccountDefaultTurretChangeDelegate -= TempAccountTurretChange;
+    }
+
+    private void Start()
+    {
+        TempDataManagement.Instance.TempAccountDefaultTurretChangeDelegate += TempAccountTurretChange;
+    }
 
     public void SetData(int turretIndex)
     {
@@ -140,11 +147,12 @@ public class PlayerTurret : NetworkBehaviour
                 // 觸發後座力
                 CurrentRecoil = RecoilDistance;
 
+                TurretData turretData = TempDataManagement.Instance.GetTurrethData((TurretEnum)TurretIndex);
+                // 重製冷卻時間
+                Delay = TickTimer.CreateFromSeconds(Runner, turretData.Rate);
+
                 for (int i = 0; i < CurrShotPoints.Count; i++)
                 {
-                    // 重製冷卻時間
-                    Delay = TickTimer.CreateFromSeconds(Runner, FireRate);
-
                     Vector3 pos = CurrShotPoints[i].position;
                     pos.y = 0;
 
@@ -183,12 +191,22 @@ public class PlayerTurret : NetworkBehaviour
     }
 
     /// <summary>
+    /// 帳戶砲台更換
+    /// </summary>
+    /// <param name="defaultTurret"></param>
+    private void TempAccountTurretChange(TurretEnum defaultTurret)
+    {
+        if(Object.HasStateAuthority)
+        {
+            TurretIndex = (int)defaultTurret;
+        }
+    }
+
+    /// <summary>
     /// 更換砲台
     /// </summary>
     private void ChangeTurret()
     {
-        Debug.Log($"更換砲台 : {TurretIndex}");
-
         // 隱藏所有砲台
         for (int i = 0; i < Turrets.Count; i++)
         {

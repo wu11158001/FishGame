@@ -23,11 +23,13 @@ public class EruptionAndRecycleEffect : MonoBehaviour
     private void OnDestroy()
     {
         StopAllCoroutines();
+        transform.DOKill();
     }
 
     private void OnDisable()
     {
         StopAllCoroutines();
+        transform.DOKill();
     }
 
     private void OnEnable()
@@ -85,6 +87,7 @@ public class EruptionAndRecycleEffect : MonoBehaviour
         Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
         Vector2 target = (Vector2)obj.transform.localPosition + dir * EruptionRadius;
 
+        obj.transform.DOKill();
         obj.transform.DOLocalMove(target, EruptionDuration)
             .SetEase(Ease.OutBack)
             .OnComplete(() => { StartCoroutine(IDoRecycle(obj)); });
@@ -99,6 +102,8 @@ public class EruptionAndRecycleEffect : MonoBehaviour
         yield return new WaitForSeconds(EruptionStayTime);
 
         Vector3 SeatPos = TempDataManagement.Instance.SeatPosition;
+
+        obj.transform.DOKill();
         obj.transform.DOMove(SeatPos, RecycleDuration)
                  .SetEase(Ease.OutCubic);
     }
