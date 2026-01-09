@@ -22,13 +22,13 @@ public class CameraResizer : MonoBehaviour
             SetCanvas(
                 canvas: canvas_Scene, 
                 scaler: ref Canvas_SceneScaler, 
-                order: 100);      
+                order: 1000);      
 
         if(canvas_Global != null) 
             SetCanvas(
                 canvas: canvas_Global, 
                 scaler: ref Canvas_GlobalScaler, 
-                order: 200);
+                order: 1200);
     }
 
     private void Update()
