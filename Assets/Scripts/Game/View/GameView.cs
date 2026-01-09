@@ -9,6 +9,7 @@ public class GameView : BasicView
 
     [Header("SeatArea")]
     [SerializeField] RectTransform SeatArea;
+    [SerializeField] Button TurretBtn;
     [SerializeField] Button ReduceCostBtn;
     [SerializeField] Button AddCostBtn;
     [SerializeField] TextMeshProUGUI CurrCostText;
@@ -16,15 +17,15 @@ public class GameView : BasicView
     [Header("AccountInfoArea")]
     [SerializeField] TextMeshProUGUI AccountCoinText;
 
-    RectTransform GetCoinTextPool;
+    readonly Vector2 LeftSeatPosision = new(-600, -500);
+    readonly Vector2 RightSeatPosision = new(600, -500);
 
-    readonly Vector2 LeftSeatPosision = new(-594, -495);
-    readonly Vector2 RightSeatPosision = new(594, -495);
-
-    private void Start()
+    protected override void Start()
     {
-        ShutdownBtn.onClick.AddListener(Shutdown);
+        base.Start();
 
+        ShutdownBtn.onClick.AddListener(Shutdown);
+        TurretBtn.onClick.AddListener(() => { _ = AddressableManagement.Instance.OpenTurretStoreView(); });
         ReduceCostBtn.onClick.AddListener(() => { TempDataManagement.Instance.ChangeCurrCost(isReduce: true); });
         AddCostBtn.onClick.AddListener(() => { TempDataManagement.Instance.ChangeCurrCost(isReduce: false); });
 

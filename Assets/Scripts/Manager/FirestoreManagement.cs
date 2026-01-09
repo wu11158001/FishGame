@@ -558,6 +558,9 @@ public class AccountData
 
     /// <summary> 金幣 </summary>
     public double Coins;
+
+    /// <summary> 預設砲台編號 </summary>
+    public int DefaultTurret;
 }
 
 /// <summary>
@@ -629,6 +632,7 @@ public struct FishData_Network : INetworkStruct
 /// <summary>
 /// 遊戲關卡資料
 /// </summary>
+[Serializable]
 public class LevelData
 {
     /// <summary> 子彈花費梯度 </summary>
@@ -642,4 +646,37 @@ public class LevelData
 
     /// <summary> 預設子彈花費 </summary>
     public double DefaultCost;
+}
+
+/// <summary>
+/// 砲台資料
+/// </summary>
+[Serializable]
+public class TurretData
+{
+    /// <summary> 識別名稱 </summary>
+    private string _turretName;
+    public string TurretName
+    {
+        get => _turretName;
+        set
+        {
+            _turretName = value;
+            if (Enum.TryParse(_turretName, out TurretEnum type))
+                TurretType = type;
+            else
+                TurretType = TurretEnum.None;
+        }
+    }
+
+    public TurretEnum TurretType;
+
+    /// <summary> 射擊頻率 </summary>
+    public float Rate;
+
+    /// <summary> 價格 </summary>
+    public double Price;
+
+    /// <summary> 砲孔數量 </summary>
+    public int HoleCount;
 }

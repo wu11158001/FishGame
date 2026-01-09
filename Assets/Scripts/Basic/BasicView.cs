@@ -1,15 +1,25 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using UnityEngine.UI;
 
 public abstract class BasicView : MonoBehaviour
 {
     [Header("Basic")]
     [SerializeField] protected CanvasGroup MainCanvasGroup;
-
-    [Space(30)]
+    [SerializeField] protected Button BgBtn;
+    [SerializeField] protected Button CloseBtn;
 
     protected Action CloseAction;
+
+    protected virtual void Start()
+    {
+        if (BgBtn != null)
+            BgBtn.onClick.AddListener(Close);
+
+        if (CloseBtn != null)
+            CloseBtn.onClick.AddListener(Close);
+    }
 
     /// <summary>
     /// 關閉介面

@@ -18,10 +18,16 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     public Vector3 SeatPosition { get; set; }
 
     /// <summary>
-    /// 紀錄魚群資料
+    /// 魚群資料
     /// </summary>
     Dictionary<NetworkPrefabEnum, FishData> FishDataDic { get; } = new();
     Action<CheckJoinRoomDataEnum> GetAllFishDataAction;
+
+    /// <summary>
+    /// 砲台資料
+    /// </summary>
+    Dictionary<TurretEnum, TurretData> TurretDataDic { get; } = new();
+    Action<CheckJoinRoomDataEnum> GetAllTurretDataAction;
 
     /// <summary>
     /// 暫存帳戶資料
@@ -31,6 +37,8 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     public delegate void TempAccountCoinChange(double changeValue);
     public event TempAccountCoinChange TempAccountCoinChangeDelegate;
     Coroutine UpdateAccountCoroutine;
+    // 前一次更新帳戶金幣金額
+    double PreUpdateCoin;
     // 定時更新帳戶時間(秒)
     const float UpdateAccountDataTime = 60f;
 
@@ -94,7 +102,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     }
 
     /// <summary>
-    /// 獲取魚群資料Callback
+    /// 獲取所有魚資料Callback
     /// </summary>
     private void GetAllFishDataCallback(FirestoreResponse response)
     {
@@ -162,7 +170,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
                 if(data != null)
                 {
                     TempAccountData = data;
-                    GetTempAccountDataAction?.Invoke(CheckJoinRoomDataEnum.Account);
+                    GetTempAccountDataAction?.Invoke(CheckJoinRoomDataEnum.AccountData);
                 }
                 else
                 {
@@ -217,18 +225,18 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     }
 
     /// <summary>
-    /// 停止計時更新Firestore帳戶資料
+    /// 停止計時更新Firestore帳戶金幣資料
     /// </summary>
     public void StopTimingUpdateAccountData()
     {
         if (UpdateAccountCoroutine != null)
             StopCoroutine(UpdateAccountCoroutine);
 
-        SendUpdateAccountData();
+        SendUpdateAccountCoinData();
     }
 
     /// <summary>
-    /// 開始計時更新Firestore帳戶資料
+    /// 開始計時更新Firestore帳戶金幣資料
     /// </summary>
     public void StartTimingUpdateAccountData()
     {
@@ -239,36 +247,124 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     }
 
     /// <summary>
-    /// 計時更新Firestore帳戶資料
+    /// 計時更新Firestore帳戶金幣資料
     /// </summary>
     private IEnumerator ITimingUpdateAccountData()
     {
         while (true)
         {
             yield return new WaitForSeconds(UpdateAccountDataTime);
-            SendUpdateAccountData();
+            SendUpdateAccountCoinData();
         }
     }
 
     /// <summary>
-    /// 發送更新Firestore帳戶資料
+    /// 發送更新Firestore帳戶金幣資料
     /// </summary>
-    public void SendUpdateAccountData()
+    public void SendUpdateAccountCoinData()
+    {
+        if (PreUpdateCoin != TempAccountData.Coins)
+        {
+            PreUpdateCoin = TempAccountData.Coins;
+
+            LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
+
+            var updates = new Dictionary<string, object>
+            {
+                { "Coins", TempAccountData.Coins }
+            };
+
+            FirestoreManagement.Instance.UpdateDataToFirestore(
+                path: FirestoreCollectionNameEnum.AccountData,
+                docId: loginInfo.Account,
+                updates: updates,
+                callback: (res) =>
+                {
+                    if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶金幣資料失敗");
+                });
+        }
+    }
+
+    /// <summary>
+    /// 發送更新Firestore帳戶預設砲台資料
+    /// </summary>
+    public void SendUpdateAccountDefaultTurretData(TurretEnum turretType)
     {
         LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
 
         var updates = new Dictionary<string, object>
         {
-            { "Coins", TempAccountData.Coins }
+            { "DefaultTurret", (int)turretType }
         };
 
         FirestoreManagement.Instance.UpdateDataToFirestore(
             path: FirestoreCollectionNameEnum.AccountData,
             docId: loginInfo.Account,
             updates: updates,
-            callback: (res) => {
-                if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶資料失敗");
+            callback: (res) =>
+            {
+                if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶預設砲台資料失敗");
             });
+    }
+
+    #endregion
+
+    #region 砲台資料
+
+    /// <summary>
+    /// 獲取所有砲台資料
+    /// </summary>
+    public void GetAllTurretData(Action<CheckJoinRoomDataEnum> callback)
+    {
+        GetAllTurretDataAction = callback;
+
+        List<TurretEnum> turretTypes = Enum.GetValues(typeof(TurretEnum))
+            .Cast<TurretEnum>()
+            .Where(e => e.ToString().StartsWith("Turret"))
+            .ToList();
+
+        FirestoreManagement.Instance.GetAllDocumentsFromCollection(
+                path: FirestoreCollectionNameEnum.TurretData,
+                callback: GetAllTurretDataCallback);
+    }
+
+    /// <summary>
+    /// 獲取砲台資料Callback
+    /// </summary>
+    public void GetAllTurretDataCallback(FirestoreResponse response)
+    {
+        if (response.IsSuccess)
+        {
+            TurretDataDic.Clear();
+            List<TurretData> turretList = JsonConvert.DeserializeObject<List<TurretData>>(response.JsonData);
+
+            foreach (var data in turretList)
+            {
+                TurretDataDic.Add(data.TurretType, data);
+            }
+
+            GetAllTurretDataAction?.Invoke(CheckJoinRoomDataEnum.TurretData);
+        }
+        else
+        {
+            Debug.LogError($"獲取砲台資料失敗");
+            AddressableManagement.Instance.ShowToast("Wiring Error");
+        }
+    }
+
+    /// <summary>
+    /// 獲取砲台資料
+    /// </summary>
+    public TurretData GetTurrethData(TurretEnum turretType)
+    {
+        // 嘗試從字典中獲取資料
+        if (TurretDataDic.TryGetValue(turretType, out TurretData data))
+        {
+            return data;
+        }
+
+        Debug.LogWarning($"找不到砲台資料: {turretType}");
+        return null;
     }
 
     #endregion

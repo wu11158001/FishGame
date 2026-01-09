@@ -9,6 +9,7 @@ using System.Linq;
 
 public class LobbyView : BasicView
 {
+    [Header("LobbyView")]
     [SerializeField] TextMeshProUGUI CoinText;
     [SerializeField] Button StartBtn;
     [SerializeField] Button LogoutBtn;
@@ -26,8 +27,10 @@ public class LobbyView : BasicView
             NetworkRunnerManagement.Instance.RoomListUpdatedEvent -= OnRoomListUpdatedUpdate;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         StartBtn.onClick.AddListener(StartJoInGame);
         LogoutBtn.onClick.AddListener(Logout);
 
@@ -119,8 +122,11 @@ public class LobbyView : BasicView
             CheckJoinRoomDic.Add(item, false);
         }
 
-        // 獲取魚群資料
+        // 獲取所有魚資料
         TempDataManagement.Instance.GetAllFishData(CheckJoinRoomData);
+
+        // 獲取所有砲台資料
+        TempDataManagement.Instance.GetAllTurretData(CheckJoinRoomData);
 
         // 獲取關卡資料
         TempDataManagement.Instance.GetCurrentLevelData(levelType: LevelEnum.ClassicLevel, callback: CheckJoinRoomData);

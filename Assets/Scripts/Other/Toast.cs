@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class Toast : BasicView
 {
+    [Header("Toast")]
     [SerializeField] RectTransform PanelRect;
     [SerializeField] LocalizeStringEvent MessageText;
 
@@ -17,8 +18,10 @@ public class Toast : BasicView
         PanelRect.DOKill();
     }
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         RunMoveEffect();
     }
 

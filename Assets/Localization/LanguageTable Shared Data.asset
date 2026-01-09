@@ -91,6 +91,10 @@ MonoBehaviour:
     m_Key: Account logged in
     m_Metadata:
       m_Items: []
+  - m_Id: 5571701215268864
+    m_Key: Insufficient Coin
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

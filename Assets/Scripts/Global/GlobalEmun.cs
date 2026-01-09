@@ -48,6 +48,9 @@ public enum ViewEnum
 
     /// <summary> 遊戲介面 </summary>
     GameView,
+
+    /// <summary> 砲台商店介面 </summary>
+    TurretStoreView,
 }
 
 /// <summary>
@@ -63,6 +66,9 @@ public enum FirestoreCollectionNameEnum
 
     /// <summary> 關卡資料 </summary>
     LevelData,
+
+    /// <summary> 砲台資料 </summary>
+    TurretData,
 }
 
 /// <summary>
@@ -186,5 +192,20 @@ public enum CheckJoinRoomDataEnum
     LevelData,
 
     /// <summary> 帳戶資料 </summary>
-    Account
+    AccountData,
+
+    /// <summary> 砲台資料 </summary>
+    TurretData,
+}
+
+/// <summary>
+/// 砲台
+/// </summary>
+public enum TurretEnum
+{
+    None,
+    Turret_0,
+    Turret_1,
+    Turret_2,
+    Turret_3,
 }

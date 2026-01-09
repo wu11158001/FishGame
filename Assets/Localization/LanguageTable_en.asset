@@ -94,6 +94,10 @@ MonoBehaviour:
     m_Localized: Account logged in!
     m_Metadata:
       m_Items: []
+  - m_Id: 5571701215268864
+    m_Localized: Insufficient coins!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

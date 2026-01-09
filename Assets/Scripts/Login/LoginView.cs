@@ -118,8 +118,10 @@ public class LoginView : BasicView
         }            
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         LoginTog.onValueChanged.AddListener((value) =>
         {
             if(value == true)
@@ -499,6 +501,7 @@ public class LoginView : BasicView
                     Account = AccountIF_Register.text,
                     Password = StringUtility.ToHash256(PasswordIF_Register.text),
                     Coins = 0,
+                    DefaultTurret = 0,
                 };
 
                 string json = JsonUtility.ToJson(data);
