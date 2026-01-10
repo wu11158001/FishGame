@@ -5,7 +5,7 @@ using UnityEngine.Localization.Components;
 using System.Collections.Generic;
 using System;
 
-public class StoreTuretUnit : MonoBehaviour
+public class GameTurretStoreUnit : MonoBehaviour
 {
     [SerializeField] Toggle MainTog;
     [SerializeField] RectTransform MainRect;

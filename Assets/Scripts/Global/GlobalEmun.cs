@@ -49,8 +49,11 @@ public enum ViewEnum
     /// <summary> 遊戲介面 </summary>
     GameView,
 
-    /// <summary> 砲台商店介面 </summary>
-    TurretStoreView,
+    /// <summary> 遊戲砲台商店介面 </summary>
+    GameTurretStoreView,
+
+    /// <summary> 遊戲金幣商店介面 </summary>
+    GameCoinStoreView,
 }
 
 /// <summary>

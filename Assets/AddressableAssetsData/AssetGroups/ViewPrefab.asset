@@ -32,7 +32,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7edc0dc8adc9b1943affa0676b12d8a0
-    m_Address: TurretStoreView
+    m_Address: GameTurretStoreView
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

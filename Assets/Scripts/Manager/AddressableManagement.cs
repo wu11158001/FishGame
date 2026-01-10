@@ -367,7 +367,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// </summary>
     public async Task OpenTurretStoreView(Action closeAction = null)
     {
-        ViewEnum view = ViewEnum.TurretStoreView;
+        ViewEnum view = ViewEnum.GameTurretStoreView;
 
         Action viewCloseAction = () =>
         {
@@ -381,7 +381,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             {
                 if (viewObj != null)
                 {
-                    viewObj.GetComponent<TurretStoreView>().SetData(closeAction: viewCloseAction);
+                    viewObj.GetComponent<GameTurretStoreView>().SetData(closeAction: viewCloseAction);
                 }
             });
     }

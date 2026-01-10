@@ -6,13 +6,13 @@ using UnityEngine.EventSystems;
 using TMPro;
 using System.Collections;
 
-public class TurretStoreView : BasicView
+public class GameTurretStoreView : BasicView
 {
     [Header("TurretStoreView")]
     [SerializeField] List<Sprite> StroeTurretSprites = new();
     [SerializeField] ScrollViewTool StoreContentScrollViewTool;
     [SerializeField] RectTransform StoreContentContentRect;
-    [SerializeField] StoreTuretUnit TempStoreTuretUnit;
+    [SerializeField] GameTurretStoreUnit GameTurretStoreUnit;
 
     [Header("Turret3DModel")]
     // 3D模型每秒旋轉角度
@@ -25,7 +25,7 @@ public class TurretStoreView : BasicView
     [SerializeField] TextMeshProUGUI TurretAbilityText;
     [SerializeField] float TurretAbilityTextEffectSpeed = 0.05f;
 
-    List<StoreTuretUnit> StoreTuretUnits = new();
+    List<GameTurretStoreUnit> GameTurretStoreUnits = new();
     bool IsModel3DAuto;
     Coroutine AbilityTextCoroutine;
     TurretEnum CurrSelectTurretType = TurretEnum.None;
@@ -62,22 +62,22 @@ public class TurretStoreView : BasicView
     /// </summary>
     private void CreateTurretUnit()
     {
-        for (int i = 0; i < StoreTuretUnits.Count; i++)
+        for (int i = 0; i < GameTurretStoreUnits.Count; i++)
         {
-            Destroy(StoreTuretUnits[i].gameObject);
+            Destroy(GameTurretStoreUnits[i].gameObject);
         }
-        StoreTuretUnits.Clear();
+        GameTurretStoreUnits.Clear();
 
-        TempStoreTuretUnit.gameObject.SetActive(false);
+        GameTurretStoreUnit.gameObject.SetActive(false);
         int index = 0;
         foreach (TurretEnum turretType in Enum.GetValues(typeof(TurretEnum)))
         {
             if (turretType == TurretEnum.None)
                 continue;
 
-            GameObject obj = Instantiate(TempStoreTuretUnit.gameObject, StoreContentContentRect);
+            GameObject obj = Instantiate(GameTurretStoreUnit.gameObject, StoreContentContentRect);
             obj.SetActive(true);
-            StoreTuretUnit storeTuretUnit = obj.GetComponent<StoreTuretUnit>();
+            GameTurretStoreUnit storeTuretUnit = obj.GetComponent<GameTurretStoreUnit>();
 
             if(storeTuretUnit != null)
             {
