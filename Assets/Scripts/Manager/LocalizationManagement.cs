@@ -49,4 +49,12 @@ public class LocalizationManagement : SingletonMonoBehaviour<LocalizationManagem
         if (localizeEvent != null)
             localizeEvent.StringReference.SetReference(TableName, newKey);
     }
+
+    /// <summary>
+    /// 獲取字串
+    /// </summary>
+    public string GetLocalizedString(string key)
+    {
+        return LocalizationSettings.StringDatabase.GetLocalizedString(TableName, key);
+    }
 }

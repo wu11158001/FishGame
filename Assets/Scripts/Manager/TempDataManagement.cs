@@ -282,7 +282,9 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
                 { "Coins", TempAccountData.Coins }
             };
 
-            FirestoreManagement.Instance.UpdateDataToFirestore(
+            if(FirestoreManagement.Instance != null)
+            {
+                FirestoreManagement.Instance.UpdateDataToFirestore(
                 path: FirestoreCollectionNameEnum.AccountData,
                 docId: loginInfo.Account,
                 updates: updates,
@@ -290,6 +292,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
                 {
                     if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶金幣資料失敗");
                 });
+            }            
         }
     }
 

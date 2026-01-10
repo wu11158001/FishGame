@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public abstract class BasicView : MonoBehaviour
 {
@@ -9,6 +10,11 @@ public abstract class BasicView : MonoBehaviour
     [SerializeField] protected CanvasGroup MainCanvasGroup;
     [SerializeField] protected Button BgBtn;
     [SerializeField] protected Button CloseBtn;
+
+    [Header("Basic PopUp")]
+    [SerializeField] protected bool IsUsePopUp;
+    [SerializeField] protected RectTransform PopUpRect;
+    [SerializeField] protected float PopUpTime = 0.5f;
 
     protected Action CloseAction;
 
@@ -19,6 +25,12 @@ public abstract class BasicView : MonoBehaviour
 
         if (CloseBtn != null)
             CloseBtn.onClick.AddListener(Close);
+    }
+
+    protected virtual void OnEnable()
+    {
+        if (IsUsePopUp)
+            PopUpEffect();
     }
 
     /// <summary>
@@ -41,5 +53,17 @@ public abstract class BasicView : MonoBehaviour
 
         if (MainCanvasGroup != null)
             MainCanvasGroup.alpha = 1;
+    }
+
+    /// <summary>
+    /// 由下彈出效果
+    /// </summary>
+    protected void PopUpEffect()
+    {
+        if(PopUpRect != null)
+        {
+            PopUpRect.anchoredPosition = new(0, -AddressableManagement.Instance.TargetResolution.y);
+            PopUpRect.DOAnchorPos(Vector2.zero, PopUpTime).SetEase(Ease.OutBack);
+        }
     }
 }

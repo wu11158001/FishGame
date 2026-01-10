@@ -5,6 +5,13 @@ using System;
 
 public class SceneManagement : SingletonMonoBehaviour<SceneManagement>
 {
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        StopAllCoroutines();
+    }
+
     /// <summary>
     /// 載入場景
     /// </summary>

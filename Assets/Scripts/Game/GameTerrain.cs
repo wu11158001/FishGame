@@ -299,7 +299,7 @@ public class GameTerrain : NetworkBehaviour
                 wayPoint.Points[0].position;
 
             // 深度            
-            int depth = UnityEngine.Random.Range(-30, -1);
+            int depth = UnityEngine.Random.Range(-30, -2);
 
             NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                        key: fishType,

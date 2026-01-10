@@ -103,6 +103,14 @@ MonoBehaviour:
     m_Key: In Use
     m_Metadata:
       m_Items: []
+  - m_Id: 6265092764798976
+    m_Key: Firing Rate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6265291532865536
+    m_Key: Hole Count
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
