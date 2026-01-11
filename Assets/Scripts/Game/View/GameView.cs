@@ -26,11 +26,11 @@ public class GameView : BasicView
 
         ShutdownBtn.onClick.AddListener(Shutdown);
         TurretBtn.onClick.AddListener(() => { _ = AddressableManagement.Instance.OpenTurretStoreView(); });
-        ReduceCostBtn.onClick.AddListener(() => { TempDataManagement.Instance.ChangeCurrCost(isReduce: true); });
-        AddCostBtn.onClick.AddListener(() => { TempDataManagement.Instance.ChangeCurrCost(isReduce: false); });
+        ReduceCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: true); });
+        AddCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: false); });
 
-        TempDataManagement.Instance.TempAccountCoinChangeDelegate += TempAccountDataChange;
-        TempDataManagement.Instance.CurrCostChangeDelegate += CurrCostChange;
+        GameTempDataManagement.Instance.TempAccountCoinChangeDelegate += TempAccountDataChange;
+        GameTempDataManagement.Instance.CurrCostChangeDelegate += CurrCostChange;
 
         // 產生爆金物件池
 
@@ -48,8 +48,8 @@ public class GameView : BasicView
             LeftSeatPosision :
             RightSeatPosision;
 
-        CurrCostText.text = StringUtility.CurrencyFormat(TempDataManagement.Instance.CurrentLevelData.DefaultCost);
-        AccountCoinText.text = StringUtility.CurrencyFormat(TempDataManagement.Instance.TempAccountData.Coins);
+        CurrCostText.text = StringUtility.CurrencyFormat(GameTempDataManagement.Instance.CurrentLevelData.DefaultCost);
+        AccountCoinText.text = StringUtility.CurrencyFormat(GameTempDataManagement.Instance.TempAccountData.Coins);
 
         StartCoroutine(IYieldShow());
     }

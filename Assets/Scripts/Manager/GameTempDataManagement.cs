@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using Newtonsoft.Json;
 
-public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
+public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagement>
 {
     /// <summary>
     /// 當前關卡資料
@@ -34,21 +34,32 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     /// </summary>
     public AccountData TempAccountData { get; private set; } = new();
     Action<CheckJoinRoomDataEnum> GetTempAccountDataAction;
-    // 金幣變更事件
+    // 暫存金幣變更事件
     public delegate void TempAccountCoinChange(double changeValue);
     public event TempAccountCoinChange TempAccountCoinChangeDelegate;
-    // 預設砲台變更事件
-    public delegate void TempAccountDefaultTurretChange(TurretEnum turretType);
-    public event TempAccountDefaultTurretChange TempAccountDefaultTurretChangeDelegate;
-    // 擁有砲台變更事件
-    public delegate void TempAccountOwnTurretChange();
-    public event TempAccountOwnTurretChange TempAccountOwnTurretChangeDelegate;
+    // 帳戶預設砲台變更事件
+    public delegate void AccountDefaultTurretChange(int defaultTurret);
+    public event AccountDefaultTurretChange AccountDefaultTurretChangeDelegate;
     // 帳戶金幣定時更新
     Coroutine UpdateAccountCoinCoroutine;
     // 前一次更新帳戶金幣金額
     double PreUpdateCoin;
     // 定時更新帳戶時間(秒)
     const float UpdateAccountDataTime = 60f;
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        if (FirestoreManagement.Instance != null)
+            FirestoreManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
+    }
+
+    private void Start()
+    {
+        if (FirestoreManagement.Instance != null)
+            FirestoreManagement.Instance.AsccountDataChangeDelegate += AccountDataChange;
+    }
 
     #region 當前關卡資料
 
@@ -153,6 +164,19 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     #region 遊戲中帳戶資料
 
     /// <summary>
+    /// 帳戶資料變更
+    /// </summary>
+    private void AccountDataChange(FirestoreResponse response)
+    {
+        if (response != null)
+        {
+            TempAccountData = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
+            TempAccountCoinChangeDelegate?.Invoke(TempAccountData.Coins);
+            AccountDefaultTurretChangeDelegate?.Invoke(TempAccountData.DefaultTurret);
+        }
+    }
+
+    /// <summary>
     /// 獲取暫存帳戶資料
     /// </summary>
     public void GetTempAccountData(Action<CheckJoinRoomDataEnum> callback)
@@ -207,7 +231,6 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
             return;
 
         TempAccountData.Coins += changeValue;
-
         TempAccountCoinChangeDelegate?.Invoke(TempAccountData.Coins);
     }
 
@@ -228,7 +251,6 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
         if (currCost >= CurrentLevelData.MaxCost) currCost = CurrentLevelData.MaxCost;
 
         CurrentLevelData.DefaultCost = currCost;
-
         CurrCostChangeDelegate?.Invoke(currCost);
     }
 
@@ -296,71 +318,6 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
         }
     }
 
-    /// <summary>
-    /// 發送更新Firestore帳戶預設砲台資料
-    /// </summary>
-    public void SendUpdateAccountDefaultTurretData(TurretEnum turretType)
-    {
-        LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
-
-        var updates = new Dictionary<string, object>
-        {
-            { "DefaultTurret", (int)turretType }
-        };
-
-        FirestoreManagement.Instance.UpdateDataToFirestore(
-            path: FirestoreCollectionNameEnum.AccountData,
-            docId: loginInfo.Account,
-            updates: updates,
-            callback: (res) =>
-            {
-                if (!res.IsSuccess)
-                {
-                    Debug.LogError("更新Firestore帳戶預設砲台資料失敗");
-                }
-                else
-                {
-                    TempAccountData.DefaultTurret = (int)turretType;
-                    TempAccountDefaultTurretChangeDelegate?.Invoke(turretType);
-                }                
-            });
-    }
-
-    /// <summary>
-    /// 發送更新Firestore帳戶已擁有砲台資料
-    /// </summary>
-    public void SendUpdateAccountOwnTurretData(TurretEnum turretType)
-    {
-        LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
-
-        List<int> currOwnTurret = TempAccountData.GetOwnTurretList();
-        currOwnTurret.Add((int)turretType);
-        currOwnTurret.Sort();
-        string result = string.Join(",", currOwnTurret);
-
-        var updates = new Dictionary<string, object>
-        {
-            { "OwnTurret", result }
-        };
-
-        FirestoreManagement.Instance.UpdateDataToFirestore(
-            path: FirestoreCollectionNameEnum.AccountData,
-            docId: loginInfo.Account,
-            updates: updates,
-            callback: (res) =>
-            {
-                if (!res.IsSuccess)
-                {
-                    Debug.LogError("更新Firestore帳戶已擁有砲台資料失敗");
-                }
-                else
-                {
-                    TempAccountData.OwnTurret = result;
-                    TempAccountOwnTurretChangeDelegate?.Invoke();
-                }
-            });
-    }
-
     #endregion
 
     #region 砲台資料
@@ -383,7 +340,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     }
 
     /// <summary>
-    /// 獲取砲台資料Callback
+    /// 獲取所有砲台資料Callback
     /// </summary>
     public void GetAllTurretDataCallback(FirestoreResponse response)
     {
@@ -401,7 +358,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
         }
         else
         {
-            Debug.LogError($"獲取砲台資料失敗");
+            Debug.LogError($"獲取所有砲台資料失敗");
             AddressableManagement.Instance.ShowToast("Wiring Error");
         }
     }

@@ -527,7 +527,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -41.445}
-  m_SizeDelta: {x: 384.09, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &4518891899203552581
 CanvasRenderer:
@@ -988,7 +988,7 @@ GameObject:
   - component: {fileID: 7418640051278728901}
   - component: {fileID: 2658938913653063681}
   m_Layer: 5
-  m_Name: GameTurretStoreUnit
+  m_Name: TurretStoreUnit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1836,7 +1836,7 @@ GameObject:
   - component: {fileID: 7077864130721039030}
   - component: {fileID: 3401507164273835228}
   m_Layer: 5
-  m_Name: GameTurretStoreView
+  m_Name: TurretStoreView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1888,7 +1888,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: cd298bbf8e894a6448d18b1b1747adb9, type: 3}
   StoreContentScrollViewTool: {fileID: 3697240126866716478}
   StoreContentContentRect: {fileID: 2679188738775444701}
-  GameTurretStoreUnit: {fileID: 3115421051086069803}
+  TurretStoreUnit: {fileID: 3115421051086069803}
   Model3DRotate: 90
   Model3DDragSpeed: 0.5
   Model3DRawImage: {fileID: 2176230823492480578}

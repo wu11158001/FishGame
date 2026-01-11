@@ -4,7 +4,7 @@ using Fusion;
 public class Bullet : NetworkBehaviour
 {
     [SerializeField] float Speed = 10;
-    [SerializeField] float RayDistance = 30f;
+    [SerializeField] float RayDistance = 40f;
 
     [Networked] Vector3 Direction { get; set; }
 
@@ -111,9 +111,9 @@ public class Bullet : NetworkBehaviour
         if (hitValue <= data.Probability)
         {
             // 獲得金幣
-            double currDefaultCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
+            double currDefaultCost = GameTempDataManagement.Instance.CurrentLevelData.DefaultCost;
             double reward = currDefaultCost * data.Magnification;
-            TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward);
+            GameTempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward);
 
             fish.GetHit(player: Runner.LocalPlayer, reward: reward);
         }

@@ -35,13 +35,13 @@ public class PlayerTurret : NetworkBehaviour
 
     private void OnDestroy()
     {
-        if (TempDataManagement.Instance != null)
-            TempDataManagement.Instance.TempAccountDefaultTurretChangeDelegate -= TempAccountTurretChange;
+        if (GameTempDataManagement.Instance != null)
+            GameTempDataManagement.Instance.AccountDefaultTurretChangeDelegate -= AccountTurretChange;
     }
 
     private void Start()
     {
-        TempDataManagement.Instance.TempAccountDefaultTurretChangeDelegate += TempAccountTurretChange;
+        GameTempDataManagement.Instance.AccountDefaultTurretChangeDelegate += AccountTurretChange;
     }
 
     public void SetData(int turretIndex)
@@ -56,7 +56,7 @@ public class PlayerTurret : NetworkBehaviour
         if(Object.HasStateAuthority)
         {
             Canvas_Global.Instance.CloseLoading();
-            TempDataManagement.Instance.StartTimingUpdateAccountData();
+            GameTempDataManagement.Instance.StartTimingUpdateAccountData();
         }
 
         ChangeTurret();
@@ -130,8 +130,8 @@ public class PlayerTurret : NetworkBehaviour
             if (input.IsFirePressed && Delay.ExpiredOrNotRunning(Runner))
             {
                 // 判斷子彈花費
-                double accountCoin = TempDataManagement.Instance.TempAccountData.Coins;
-                double currCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
+                double accountCoin = GameTempDataManagement.Instance.TempAccountData.Coins;
+                double currCost = GameTempDataManagement.Instance.CurrentLevelData.DefaultCost;
                 double totalCost = currCost * CurrShotPoints.Count;
 
                 if (accountCoin < currCost)
@@ -142,12 +142,12 @@ public class PlayerTurret : NetworkBehaviour
 
                 // 扣除金幣
                 if (Runner.IsForward)
-                    TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -currCost);
+                    GameTempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -currCost);
 
                 // 觸發後座力
                 CurrentRecoil = RecoilDistance;
 
-                TurretData turretData = TempDataManagement.Instance.GetTurrethData((TurretEnum)TurretIndex);
+                TurretData turretData = GameTempDataManagement.Instance.GetTurrethData((TurretEnum)TurretIndex);
                 // 重製冷卻時間
                 Delay = TickTimer.CreateFromSeconds(Runner, turretData.Rate);
 
@@ -193,12 +193,11 @@ public class PlayerTurret : NetworkBehaviour
     /// <summary>
     /// 帳戶砲台更換
     /// </summary>
-    /// <param name="defaultTurret"></param>
-    private void TempAccountTurretChange(TurretEnum defaultTurret)
+    private void AccountTurretChange(int defaultTurret)
     {
         if(Object.HasStateAuthority)
         {
-            TurretIndex = (int)defaultTurret;
+            TurretIndex = defaultTurret;
         }
     }
 

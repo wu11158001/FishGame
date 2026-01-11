@@ -101,7 +101,7 @@ public class EruptionAndRecycleEffect : MonoBehaviour
     {
         yield return new WaitForSeconds(EruptionStayTime);
 
-        Vector3 SeatPos = TempDataManagement.Instance.SeatPosition;
+        Vector3 SeatPos = GameTempDataManagement.Instance.SeatPosition;
 
         obj.transform.DOKill();
         obj.transform.DOMove(SeatPos, RecycleDuration)

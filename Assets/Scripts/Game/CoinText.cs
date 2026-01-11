@@ -27,7 +27,7 @@ public class CoinText : MonoBehaviour
             IsSetMirror = true;
 
             transform.localRotation =
-                TempDataManagement.Instance.IsMirror ?
+                GameTempDataManagement.Instance.IsMirror ?
                 Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 180) :
                 Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 0);
         }

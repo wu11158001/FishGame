@@ -133,7 +133,7 @@ public class GameTerrain : NetworkBehaviour
                         PlayerTurret playerTurret = obj.GetComponent<PlayerTurret>();
                         if(playerTurret != null)
                         {
-                            playerTurret.SetData(turretIndex: TempDataManagement.Instance.TempAccountData.DefaultTurret);
+                            playerTurret.SetData(turretIndex: GameTempDataManagement.Instance.TempAccountData.DefaultTurret);
                         }
                     });
 
@@ -143,8 +143,8 @@ public class GameTerrain : NetworkBehaviour
                     Transform cameraTr = Camera.main.transform;
                     cameraTr.rotation = Quaternion.Euler(90, 0, 180);
                 }
-                TempDataManagement.Instance.IsMirror = index == 1 || index == 3;
-                TempDataManagement.Instance.SeatPosition = Seats[index].transform.position;
+                GameTempDataManagement.Instance.IsMirror = index == 1 || index == 3;
+                GameTempDataManagement.Instance.SeatPosition = Seats[index].transform.position;
 
                 _ = AddressableManagement.Instance.OpenGameView(localSeat: index);
 
@@ -299,7 +299,7 @@ public class GameTerrain : NetworkBehaviour
                 wayPoint.Points[0].position;
 
             // 深度            
-            int depth = UnityEngine.Random.Range(-30, -2);
+            int depth = UnityEngine.Random.Range(-40, -5);
 
             NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                        key: fishType,

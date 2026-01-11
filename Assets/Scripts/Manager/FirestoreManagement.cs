@@ -25,6 +25,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     // 用來儲存所有的回調，Key = GUID
     private Dictionary<string, Action<FirestoreResponse>> PendingCallbacks = new();
 
+    // 帳戶資料變更監聽
     public delegate void AccountDataChange(FirestoreResponse response);
     public event AccountDataChange AsccountDataChangeDelegate;
 

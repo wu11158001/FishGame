@@ -123,16 +123,16 @@ public class LobbyView : BasicView
         }
 
         // 獲取所有魚資料
-        TempDataManagement.Instance.GetAllFishData(CheckJoinRoomData);
+        GameTempDataManagement.Instance.GetAllFishData(CheckJoinRoomData);
 
         // 獲取所有砲台資料
-        TempDataManagement.Instance.GetAllTurretData(CheckJoinRoomData);
+        GameTempDataManagement.Instance.GetAllTurretData(CheckJoinRoomData);
 
         // 獲取關卡資料
-        TempDataManagement.Instance.GetCurrentLevelData(levelType: LevelEnum.ClassicLevel, callback: CheckJoinRoomData);
+        GameTempDataManagement.Instance.GetCurrentLevelData(levelType: LevelEnum.ClassicLevel, callback: CheckJoinRoomData);
 
         // 獲取帳戶資料
-        TempDataManagement.Instance.GetTempAccountData(callback: CheckJoinRoomData);
+        GameTempDataManagement.Instance.GetTempAccountData(callback: CheckJoinRoomData);
     }
 
     /// <summary>

@@ -244,8 +244,8 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
             AddressableManagement.Instance.ClearGamePrefab();
 
         // 停止計時更新Firestore帳戶資料
-        if (TempDataManagement.Instance != null)
-            TempDataManagement.Instance.StopTimingUpdateAccountData();
+        if (GameTempDataManagement.Instance != null)
+            GameTempDataManagement.Instance.StopTimingUpdateAccountData();
 
         // 回大廳
         if(SceneManagement.Instance != null)
