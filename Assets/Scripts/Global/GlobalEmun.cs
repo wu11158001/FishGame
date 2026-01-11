@@ -72,6 +72,9 @@ public enum FirestoreCollectionNameEnum
 
     /// <summary> 砲台資料 </summary>
     TurretData,
+
+    /// <summary> 金幣商店資料 </summary>
+    CoinStoreData,
 }
 
 /// <summary>
@@ -211,4 +214,15 @@ public enum TurretEnum
     Turret_1,
     Turret_2,
     Turret_3,
+}
+
+/// <summary>
+/// 金幣商店
+/// </summary>
+public enum StoreCoinEnum
+{
+    None = -1,
+    StoreCoin_0,
+    StoreCoin_1,
+    StoreCoin_2,
 }

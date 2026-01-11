@@ -721,3 +721,33 @@ public class TurretData
     /// <summary> 砲孔數量 </summary>
     public int HoleCount;
 }
+
+/// <summary>
+/// 金幣商店資料
+/// </summary>
+[Serializable]
+public class CoinStoreData
+{
+    /// <summary> 識別名稱 </summary>
+    private string _coinName;
+    public string CoinName
+    {
+        get => _coinName;
+        set
+        {
+            _coinName = value;
+            if (Enum.TryParse(_coinName, out StoreCoinEnum type))
+                CoinType = type;
+            else
+                CoinType = StoreCoinEnum.None;
+        }
+    }
+
+    public StoreCoinEnum CoinType;
+
+    /// <summary> 價格 </summary>
+    public double Price;
+
+    /// <summary> 獲得金幣 </summary>
+    public double GetCoin;
+}

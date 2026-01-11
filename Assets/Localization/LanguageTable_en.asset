@@ -114,6 +114,10 @@ MonoBehaviour:
     m_Localized: Number of blast holes
     m_Metadata:
       m_Items: []
+  - m_Id: 6487937390415872
+    m_Localized: Coin
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

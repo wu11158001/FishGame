@@ -67,10 +67,13 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
     {
         GetCurrentLevelDataAction = callback;
 
-        FirestoreManagement.Instance.GetDataFromFirestore(
-            path: FirestoreCollectionNameEnum.LevelData,
-            docId: levelType.ToString(),
-            callback: GetCurrentLevelDataCallback);
+        if(FirestoreManagement.Instance != null)
+        {
+            FirestoreManagement.Instance.GetDataFromFirestore(
+                path: FirestoreCollectionNameEnum.LevelData,
+                docId: levelType.ToString(),
+                callback: GetCurrentLevelDataCallback);
+        }
     }
 
     /// <summary>

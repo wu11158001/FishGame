@@ -111,6 +111,10 @@ MonoBehaviour:
     m_Key: Hole Count
     m_Metadata:
       m_Items: []
+  - m_Id: 6487937390415872
+    m_Key: Coin
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
