@@ -419,7 +419,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// </summary>
     public async void ShowToast(string messageKey)
     {
-        ViewEnum view = ViewEnum.Toast;
+        ViewEnum view = ViewEnum.ToastView;
 
         Action viewCloseAction = () =>
         {
@@ -432,10 +432,38 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             {
                 if(viewObj != null)
                 {
-                    viewObj.GetComponent<Toast>().SetData(
+                    viewObj.GetComponent<ToastView>().SetData(
                         messageKey: messageKey,
                         closeAction: viewCloseAction);
                 }                
+            },
+            IsCanStack: true,
+            canvasEnum: CanvasEnum.Canvas_Global);
+    }
+
+    /// <summary>
+    /// 顯示獲得物品
+    /// </summary>
+    public async void ShowGetItemView(Sprite iconSprite, double value = 1)
+    {
+        ViewEnum view = ViewEnum.GetItemView;
+
+        Action viewCloseAction = () =>
+        {
+            RemoveGlobalView(viewEnum: view, isFirstRemove: true);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<GetItemView>().SetData(
+                        iconSprite: iconSprite,
+                        value: value,
+                        closeAction: viewCloseAction);
+                }
             },
             IsCanStack: true,
             canvasEnum: CanvasEnum.Canvas_Global);

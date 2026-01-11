@@ -35,10 +35,13 @@ public enum Language
 public enum ViewEnum
 {
     /// <summary> 等待畫面 </summary>
-    Loading,
+    LoadingView,
 
     /// <summary> 吐司訊息 </summary>
-    Toast,
+    ToastView,
+
+    /// <summary> 獲得物品 </summary>
+    GetItemView,
 
     /// <summary> 登入介面 </summary>
     LoginView,

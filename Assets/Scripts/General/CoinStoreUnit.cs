@@ -46,6 +46,8 @@ public class CoinStoreUnit : MonoBehaviour
     /// </summary>
     private void BuyCoin()
     {
+        Canvas_Global.Instance.ShowLoading();
+
         double newCoin = CoinStoreUnitData.AccountData.Coins + CoinStoreUnitData.CoinStoreData.GetCoin;
 
         var updates = new Dictionary<string, object>
@@ -61,7 +63,16 @@ public class CoinStoreUnit : MonoBehaviour
             updates: updates,
             callback: (res) =>
             {
+                Canvas_Global.Instance.CloseLoading();
+
                 if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶金幣資料失敗");
+                else
+                {
+                    // 顯示獲得物品
+                    AddressableManagement.Instance.ShowGetItemView(
+                        iconSprite: CoinStoreUnitData.CoverSprite,
+                        value: CoinStoreUnitData.CoinStoreData.GetCoin);
+                }
             });
         }
     }

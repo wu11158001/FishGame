@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-public class Loading : MonoBehaviour
+public class LoadingView : MonoBehaviour
 {
     const float CloseTime = 30f;
 

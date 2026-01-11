@@ -3,7 +3,7 @@ using UnityEngine.Localization.Components;
 using System;
 using DG.Tweening;
 
-public class Toast : BasicView
+public class ToastView : BasicView
 {
     [Header("Toast")]
     [SerializeField] RectTransform PanelRect;

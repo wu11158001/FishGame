@@ -26,6 +26,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3bc47fd82dca6da49a3e4efa9b397c1b
+    m_Address: GetItemView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4b3c3a496dbfcfa4bad4a6f5eafaab73
     m_Address: LobbyView
     m_ReadOnly: 0
@@ -37,10 +42,9 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d528c63562cee6a469c09a20204fa076
-    m_Address: Toast
+    m_Address: ToastView
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - PreLoad
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: decdbec53aa129146a6df1ebd58bc064
     m_Address: CoinStoreView

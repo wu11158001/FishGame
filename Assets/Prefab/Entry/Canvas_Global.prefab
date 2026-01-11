@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e1e87d31ebd5b24994f43b2c0784248, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Canvas_Global
-  Loading: {fileID: 6626581119844519948}
+  LoadingView: {fileID: 6626581119844519948}
 --- !u!223 &1275756479508778114
 Canvas:
   m_ObjectHideFlags: 0
@@ -162,7 +162,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 736988123970321581, guid: 4fe15f9213e33cb4d951df53bf406f9d, type: 3}
       propertyPath: m_Name
-      value: Loading
+      value: LoadingView
       objectReference: {fileID: 0}
     - target: {fileID: 736988123970321581, guid: 4fe15f9213e33cb4d951df53bf406f9d, type: 3}
       propertyPath: m_IsActive

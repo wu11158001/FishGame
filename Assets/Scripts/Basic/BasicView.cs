@@ -10,6 +10,7 @@ public abstract class BasicView : MonoBehaviour
     [Header("Basic YieldShow")]
     [SerializeField] bool IsShowYieldShow;
     [ShowIf(nameof(IsShowYieldShow))] [SerializeField] protected CanvasGroup MainCanvasGroup;
+    [ShowIf(nameof(IsShowYieldShow))] [SerializeField] protected float FadeInTime = 1;
 
     [Header("Basic CloseBtn")]
     [SerializeField] bool IsShowClose;
@@ -54,6 +55,26 @@ public abstract class BasicView : MonoBehaviour
             MainCanvasGroup.alpha = 1;
 
         PopUpEffect();
+    }
+
+    /// <summary>
+    /// 淡入顯示
+    /// </summary>
+    protected IEnumerator IFadeInShow()
+    {
+        MainCanvasGroup.alpha = 0;
+
+        float currentTime = 0f;
+        while (currentTime < FadeInTime)
+        {
+            currentTime += Time.deltaTime;
+            float progress = currentTime / FadeInTime;
+            MainCanvasGroup.alpha = Mathf.Lerp(0, 1, progress);
+
+            yield return null;
+        }
+
+        MainCanvasGroup.alpha = 1;
     }
 
     /// <summary>

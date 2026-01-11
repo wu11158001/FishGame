@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class Canvas_Global : SingletonMonoBehaviour<Canvas_Global>
 {
-    [SerializeField] GameObject Loading;
+    [SerializeField] GameObject LoadingView;
 
     /// <summary>
     /// 開啟Loading
     /// </summary>
     public void ShowLoading()
     {
-        Loading.SetActive(true);
-        Loading.transform.SetAsLastSibling();
+        LoadingView.SetActive(true);
+        LoadingView.transform.SetAsLastSibling();
     }
 
     /// <summary>
@@ -18,6 +18,6 @@ public class Canvas_Global : SingletonMonoBehaviour<Canvas_Global>
     /// </summary>
     public void CloseLoading()
     {
-        Loading.SetActive(false);
+        LoadingView.SetActive(false);
     }
 }

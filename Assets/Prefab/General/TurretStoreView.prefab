@@ -1089,7 +1089,7 @@ MonoBehaviour:
     m_CornerRadius: {x: 0, y: 0, z: 0}
     m_UniformCornerRadius: 0
   m_Rectangle:
-    m_CornerRadius: {x: 32, y: 32, z: 32, w: 32}
+    m_CornerRadius: {x: 0, y: 0, z: 0, w: 0}
     m_UniformCornerRadius: 1
   m_ChamferBox:
     m_ChamferSize: 0
@@ -1745,11 +1745,11 @@ RectTransform:
   - {fileID: 7166759153976039567}
   m_Father: {fileID: 4902079615132489920}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 60}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 200, y: 60}
   m_SizeDelta: {x: 500, y: 500}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0, y: 1}
 --- !u!1 &4341600021114636443
 GameObject:
   m_ObjectHideFlags: 0
@@ -1877,6 +1877,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TurretStoreView
   IsShowYieldShow: 1
   MainCanvasGroup: {fileID: 3144375619845458713}
+  FadeInTime: 1
   IsShowClose: 1
   BgBtn: {fileID: 8652610370560410066}
   CloseBtn: {fileID: 110983060500032590}
@@ -2098,7 +2099,7 @@ MonoBehaviour:
     m_CornerRadius: {x: 0, y: 0, z: 0}
     m_UniformCornerRadius: 0
   m_Rectangle:
-    m_CornerRadius: {x: 32, y: 32, z: 32, w: 32}
+    m_CornerRadius: {x: 0, y: 0, z: 0, w: 0}
     m_UniformCornerRadius: 1
   m_ChamferBox:
     m_ChamferSize: 0
@@ -2282,7 +2283,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6772275835806984807}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2291,7 +2292,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1000, y: 0}
+  m_AnchoredPosition: {x: 0, y: 500}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!20 &5517591693651777550
@@ -2415,18 +2416,18 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6880341828157712552}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8128690244851030108}
   m_Father: {fileID: 2633139210163147970}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 500, y: -150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 660, y: 70}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &4318184501970462032
 MonoBehaviour:
   m_ObjectHideFlags: 0
