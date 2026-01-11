@@ -172,8 +172,8 @@ public class TurretStoreView : BasicView
         }
         TurretStoreUnits.Clear();
 
-        TurretStoreUnit.gameObject.SetActive(false);
         int index = 0;
+        TurretStoreUnit.gameObject.SetActive(false);
         foreach (TurretEnum turretType in Enum.GetValues(typeof(TurretEnum)))
         {
             if (turretType == TurretEnum.None)

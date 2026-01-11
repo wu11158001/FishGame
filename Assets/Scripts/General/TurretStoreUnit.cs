@@ -28,7 +28,7 @@ public class TurretStoreUnit : MonoBehaviour
     {
         TurretStoreUnitData = data;
 
-        if (TurretStoreUnitData == null)
+        if (data == null)
         {
             Debug.LogError($"砲台商店單位獲取資料錯誤!");
             return;
@@ -47,6 +47,9 @@ public class TurretStoreUnit : MonoBehaviour
     /// </summary>
     public void CheckTurret(AccountData accountData)
     {
+        // 更新帳戶資料
+        TurretStoreUnitData.AccountData = accountData;
+
         bool isSelect = false;
 
         bool isOwn = false;
@@ -103,11 +106,8 @@ public class TurretStoreUnit : MonoBehaviour
     /// </summary>
     private void BuyBtnClick()
     {
-        Canvas_Global.Instance.ShowLoading();
-
         if (TurretStoreUnitData.TurretData == null || TurretStoreUnitData.AccountData == null)
         {
-            Canvas_Global.Instance.CloseLoading();
             Debug.LogError($"砲台商店單位獲取資料錯誤!");
             return;
         }
@@ -116,11 +116,12 @@ public class TurretStoreUnit : MonoBehaviour
         if (!IsOwn && TurretStoreUnitData.AccountData.Coins - TurretStoreUnitData.TurretData.Price < 0)
         {
             // 金幣不足!
-            Canvas_Global.Instance.CloseLoading();
             AddressableManagement.Instance.ShowToast("Insufficient Coin");
+            _ = AddressableManagement.Instance.OpenCoinStoreView();            
             return;
         }
 
+        Canvas_Global.Instance.ShowLoading();
         MainTog.isOn = true;
 
         // 扣除金幣

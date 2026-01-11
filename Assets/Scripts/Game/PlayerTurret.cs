@@ -130,14 +130,20 @@ public class PlayerTurret : NetworkBehaviour
 
             if (input.IsFirePressed && Delay.ExpiredOrNotRunning(Runner))
             {
+                TurretData turretData = GameTempDataManagement.Instance.GetTurrethData((TurretEnum)TurretIndex);
+                // 重製冷卻時間
+                Delay = TickTimer.CreateFromSeconds(Runner, turretData.Rate);
+
                 // 判斷子彈花費
                 double accountCoin = GameTempDataManagement.Instance.TempAccountData.Coins;
                 double currCost = GameTempDataManagement.Instance.CurrentLevelData.DefaultCost;
                 double totalCost = currCost * CurrShotPoints.Count;
 
-                if (accountCoin < currCost)
+                if (accountCoin < totalCost)
                 {
                     Debug.Log("金幣不足!");
+                    AddressableManagement.Instance.ShowToast("Insufficient Coin");
+                    _ = AddressableManagement.Instance.OpenCoinStoreView();
                     return;
                 }
 
@@ -147,10 +153,6 @@ public class PlayerTurret : NetworkBehaviour
 
                 // 觸發後座力
                 CurrentRecoil = RecoilDistance;
-
-                TurretData turretData = GameTempDataManagement.Instance.GetTurrethData((TurretEnum)TurretIndex);
-                // 重製冷卻時間
-                Delay = TickTimer.CreateFromSeconds(Runner, turretData.Rate);
 
                 for (int i = 0; i < CurrShotPoints.Count; i++)
                 {

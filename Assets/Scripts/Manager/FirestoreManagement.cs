@@ -30,7 +30,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     public event AccountDataChange AsccountDataChangeDelegate;
     // 帳戶金幣變更監聽
     public delegate void AccountCoinChange(AccountData accountData);
-    public event AccountCoinChange AccountCoinChangeChangeDelegate;
+    public event AccountCoinChange AccountCoinDataChangeDelegate;
     // 帳戶砲台資料變更監聽
     public delegate void AccountTurretDataChange(AccountData accountData);
     public event AccountTurretDataChange AccountTurretDataChangeDelegate;
@@ -507,7 +507,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         AsccountDataChangeDelegate?.Invoke(accountData);
 
         if (PreAccountData.Coins != accountData.Coins)
-            AccountCoinChangeChangeDelegate?.Invoke(accountData);
+            AccountCoinDataChangeDelegate?.Invoke(accountData);
 
         // 帳戶砲台資料變更
         if (PreAccountData.DefaultTurret != accountData.DefaultTurret || PreAccountData.OwnTurret != accountData.OwnTurret)

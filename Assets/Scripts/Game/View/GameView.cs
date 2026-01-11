@@ -16,6 +16,7 @@ public class GameView : BasicView
     [SerializeField] TextMeshProUGUI CurrCostText;
 
     [Header("AccountInfoArea")]
+    [SerializeField] Button CoinStoreBtn;
     [SerializeField] TextMeshProUGUI AccountCoinText;
 
     readonly Vector2 LeftSeatPosision = new(-600, -500);
@@ -38,6 +39,7 @@ public class GameView : BasicView
         TurretBtn.onClick.AddListener(() => { _ = AddressableManagement.Instance.OpenTurretStoreView(); });
         ReduceCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: true); });
         AddCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: false); });
+        CoinStoreBtn.onClick.AddListener(() => { _ = AddressableManagement.Instance.OpenCoinStoreView(); });
 
         if (GameTempDataManagement.Instance != null)
         {

@@ -49,13 +49,13 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
         base.OnDestroy();
 
         if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AccountCoinChangeChangeDelegate -= AccountCoinDataChange;
+            FirestoreManagement.Instance.AccountCoinDataChangeDelegate -= AccountCoinDataChange;
     }
 
     private void Start()
     {
         if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AccountCoinChangeChangeDelegate += AccountCoinDataChange;
+            FirestoreManagement.Instance.AccountCoinDataChangeDelegate += AccountCoinDataChange;
     }
 
     #region 當前關卡資料
@@ -296,8 +296,6 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
         {
             PreUpdateCoin = TempAccountData.Coins;
 
-            LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
-
             var updates = new Dictionary<string, object>
             {
                 { "Coins", TempAccountData.Coins }
@@ -307,7 +305,7 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
             {
                 FirestoreManagement.Instance.UpdateDataToFirestore(
                 path: FirestoreCollectionNameEnum.AccountData,
-                docId: loginInfo.Account,
+                docId: PlayerPrefsManagement.GetLoginInfo().Account,
                 updates: updates,
                 callback: (res) =>
                 {

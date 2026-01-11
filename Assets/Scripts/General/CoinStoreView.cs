@@ -6,14 +6,47 @@ using System.Collections.Generic;
 
 public class CoinStoreView : BasicView
 {
+    [SerializeField] List<Sprite> CoinSprites = new();
+    [SerializeField] CoinStoreUnit CoinStoreUnit;
+    [SerializeField] RectTransform ContentRect;
+
     Dictionary<StoreCoinEnum, CoinStoreData> CoinStoreDataDic = new();
-    CoinStoreData CoinStoreData;
+    List<CoinStoreUnit> CoinStoreUnitDatas = new();
+
+    private void OnDestroy()
+    {
+        if (FirestoreManagement.Instance != null)
+            FirestoreManagement.Instance.AccountCoinDataChangeDelegate -= AccountCoinDataChange;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        if (FirestoreManagement.Instance != null)
+            FirestoreManagement.Instance.AccountCoinDataChangeDelegate += AccountCoinDataChange;
+    }
 
     public void SetData(Action closeAction)
     {
         CloseAction = closeAction;
 
+        MainCanvasGroup.alpha = 0;
         GetCoinStoreData();
+    }
+
+    /// <summary>
+    /// 帳戶金幣變更
+    /// </summary>
+    private void AccountCoinDataChange(AccountData accountData)
+    {
+        if(CoinStoreUnitDatas != null)
+        {
+            foreach (var data in CoinStoreUnitDatas)
+            {
+                data.UpdateAccountData(accountData);
+            }
+        }
     }
 
     /// <summary>
@@ -83,6 +116,56 @@ public class CoinStoreView : BasicView
     /// </summary>
     private void CreateCoinStoreUnit()
     {
+        for (int i = 0; i < CoinStoreUnitDatas.Count; i++)
+        {
+            Destroy(CoinStoreUnitDatas[i].gameObject);
+        }
+        CoinStoreUnitDatas.Clear();
 
+        int index = 0;
+        CoinStoreUnit.gameObject.SetActive(false);
+        foreach (StoreCoinEnum coinType in Enum.GetValues(typeof(StoreCoinEnum)))
+        {
+            if (coinType == StoreCoinEnum.None)
+                continue;
+
+            GameObject obj = Instantiate(CoinStoreUnit.gameObject, ContentRect);
+            obj.SetActive(true);
+            CoinStoreUnit coinStoreUnit = obj.GetComponent<CoinStoreUnit>();
+
+            if(coinStoreUnit != null)
+            {
+                CoinStoreUnitData data = new()
+                {
+                    AccountData = GameTempDataManagement.Instance.TempAccountData,
+                    CoinStoreData = GetCoinStoreData(coinType),
+                    CoverSprite = CoinSprites[index]
+                };
+
+                coinStoreUnit.SetData(data);
+                CoinStoreUnitDatas.Add(coinStoreUnit);
+            }
+            else
+            {
+                Debug.LogError("創建金幣商品錯誤");
+            }
+
+            index++;
+        }
     }
+}
+
+/// <summary>
+/// 金幣商店資料
+/// </summary>
+public class CoinStoreUnitData
+{
+    /// <summary> 帳戶資料 </summary>
+    public AccountData AccountData;
+
+    /// <summary> 金幣商店資料 </summary>
+    public CoinStoreData CoinStoreData;
+
+    /// <summary> 金幣圖 </summary>
+    public Sprite CoverSprite;
 }
