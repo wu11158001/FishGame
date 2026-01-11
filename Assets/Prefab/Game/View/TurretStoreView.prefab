@@ -2047,7 +2047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: a92dd6398b65cea48b1ae4479817d67a, type: 2}
-  m_Color: {r: 0.3445621, g: 0.38506496, b: 0.8207547, a: 1}
+  m_Color: {r: 0.34509805, g: 0.5634166, b: 0.81960785, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

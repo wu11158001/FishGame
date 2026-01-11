@@ -35,13 +35,14 @@ public class PlayerTurret : NetworkBehaviour
 
     private void OnDestroy()
     {
-        if (GameTempDataManagement.Instance != null)
-            GameTempDataManagement.Instance.AccountDefaultTurretChangeDelegate -= AccountTurretChange;
+        if (FirestoreManagement.Instance != null)
+            FirestoreManagement.Instance.AccountTurretDataChangeDelegate -= AccountTurretDataChange;
     }
 
     private void Start()
     {
-        GameTempDataManagement.Instance.AccountDefaultTurretChangeDelegate += AccountTurretChange;
+        if (FirestoreManagement.Instance != null)
+            FirestoreManagement.Instance.AccountTurretDataChangeDelegate += AccountTurretDataChange;
     }
 
     public void SetData(int turretIndex)
@@ -193,11 +194,11 @@ public class PlayerTurret : NetworkBehaviour
     /// <summary>
     /// 帳戶砲台更換
     /// </summary>
-    private void AccountTurretChange(int defaultTurret)
+    private void AccountTurretDataChange(AccountData accountData)
     {
-        if(Object.HasStateAuthority)
+        if(Object.HasStateAuthority && accountData != null)
         {
-            TurretIndex = defaultTurret;
+            TurretIndex = accountData.DefaultTurret;
         }
     }
 

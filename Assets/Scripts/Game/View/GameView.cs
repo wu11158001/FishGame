@@ -21,6 +21,15 @@ public class GameView : BasicView
     readonly Vector2 LeftSeatPosision = new(-600, -500);
     readonly Vector2 RightSeatPosision = new(600, -500);
 
+    private void OnDestroy()
+    {
+        if(GameTempDataManagement.Instance != null)
+        {
+            GameTempDataManagement.Instance.TempAccountCoinChangeDelegate -= TempAccountDataChange;
+            GameTempDataManagement.Instance.CurrCostChangeDelegate -= CurrCostChange;
+        }
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -30,11 +39,11 @@ public class GameView : BasicView
         ReduceCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: true); });
         AddCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: false); });
 
-        GameTempDataManagement.Instance.TempAccountCoinChangeDelegate += TempAccountDataChange;
-        GameTempDataManagement.Instance.CurrCostChangeDelegate += CurrCostChange;
-
-        // 產生爆金物件池
-
+        if (GameTempDataManagement.Instance != null)
+        {
+            GameTempDataManagement.Instance.TempAccountCoinChangeDelegate += TempAccountDataChange;
+            GameTempDataManagement.Instance.CurrCostChangeDelegate += CurrCostChange;
+        }
     }
 
     public void SetData(int localSeat, Action closeAction)

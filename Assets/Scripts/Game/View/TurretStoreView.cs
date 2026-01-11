@@ -28,7 +28,6 @@ public class TurretStoreView : BasicView
     [SerializeField] TextMeshProUGUI TurretAbilityText;
     [SerializeField] float TurretAbilityTextEffectSpeed = 0.05f;
 
-    AccountData AccountData;
     Dictionary<TurretEnum, TurretData> TurretDataDic = new();
     List<TurretStoreUnit> TurretStoreUnits = new();
     bool IsModel3DAuto;
@@ -42,7 +41,7 @@ public class TurretStoreView : BasicView
         Model3DRawImage.DragHandlerDelegate -= Model3DDragHandler;
 
         if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
+            FirestoreManagement.Instance.AccountTurretDataChangeDelegate -= AccountTurretDataChange;
     }
 
     protected override void Start()
@@ -54,7 +53,7 @@ public class TurretStoreView : BasicView
         Model3DRawImage.DragHandlerDelegate += Model3DDragHandler;
 
         if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AsccountDataChangeDelegate += AccountDataChange;
+            FirestoreManagement.Instance.AccountTurretDataChangeDelegate += AccountTurretDataChange;
     }
 
     private void Update()
@@ -68,72 +67,22 @@ public class TurretStoreView : BasicView
         CloseAction = closeAction;
         MainCanvasGroup.alpha = 0;
 
-        GetTempAccountData();
+        GetAllTurretData();
     }
 
     /// <summary>
     /// 帳戶資料變更
     /// </summary>
-    private void AccountDataChange(FirestoreResponse response)
+    private void AccountTurretDataChange(AccountData accountData)
     {
-        if (response != null)
+        if (accountData != null)
         {
-            AccountData data = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
-
             foreach (var unit in TurretStoreUnits)
             {
-                unit.CheckTurret(data);
+                unit.CheckTurret(accountData);
             }
         }
     }
-
-    #region 帳戶資料
-
-    /// <summary>
-    /// 獲取暫存帳戶資料
-    /// </summary>
-    public void GetTempAccountData()
-    {
-        FirestoreManagement.Instance.GetDataFromFirestore(
-            path: FirestoreCollectionNameEnum.AccountData,
-            docId: PlayerPrefsManagement.GetLoginInfo().Account,
-            callback: GetTempAccountDataCallback);
-    }
-
-    /// <summary>
-    /// 獲取暫存帳戶資料Callback
-    /// </summary>
-    private void GetTempAccountDataCallback(FirestoreResponse response)
-    {
-        if (response.IsSuccess)
-        {
-            try
-            {
-                AccountData data = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
-                if (data != null)
-                {
-                    AccountData = data;
-                    GetAllTurretData();
-                }
-                else
-                {
-                    Debug.LogError($"獲取帳戶資料null!");
-                }
-            }
-            catch (Exception e)
-            {
-                AddressableManagement.Instance.ShowToast("Wiring Error");
-                Debug.LogError($"JSON 解析異常: {e.Message}");
-            }
-        }
-        else
-        {
-            AddressableManagement.Instance.ShowToast("Wiring Error");
-            Debug.LogError($"獲取帳戶資料錯誤!");
-        }
-    }
-
-    #endregion
 
     #region 砲台資料
 
@@ -232,7 +181,7 @@ public class TurretStoreView : BasicView
             {
                 TurretStoreUnitData data = new()
                 {
-                   AccountData = AccountData,
+                   AccountData = GameTempDataManagement.Instance.TempAccountData,
                    TurretData = GetTurrethData(turretType),
                    CoverSprite = StroeTurretSprites[index],
                    Model3D = Model3DObjects[index],
@@ -293,9 +242,9 @@ public class TurretStoreView : BasicView
             CurrSelectTurretType = turretData.TurretType;
 
             // 射擊頻率
-            string rateStr = $"{LocalizationManagement.Instance.GetLocalizedString("Firing Rate")}: {turretData.Rate}";
+            string rateStr = $"{LocalizationManagement.Instance.GetLocalizedString("Firing Rate")} : {turretData.Rate}";
             // 砲孔數量:
-            string holeCount = $"{LocalizationManagement.Instance.GetLocalizedString("Hole Count")}: {turretData.HoleCount}";
+            string holeCount = $"{LocalizationManagement.Instance.GetLocalizedString("Hole Count")} : {turretData.HoleCount}";
 
             string abilityString = $"{rateStr}\n{holeCount}";
 

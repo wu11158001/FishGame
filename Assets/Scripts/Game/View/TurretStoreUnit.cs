@@ -107,6 +107,7 @@ public class TurretStoreUnit : MonoBehaviour
 
         if (TurretStoreUnitData.TurretData == null || TurretStoreUnitData.AccountData == null)
         {
+            Canvas_Global.Instance.CloseLoading();
             Debug.LogError($"砲台商店單位獲取資料錯誤!");
             return;
         }
@@ -115,6 +116,7 @@ public class TurretStoreUnit : MonoBehaviour
         if (!IsOwn && TurretStoreUnitData.AccountData.Coins - TurretStoreUnitData.TurretData.Price < 0)
         {
             // 金幣不足!
+            Canvas_Global.Instance.CloseLoading();
             AddressableManagement.Instance.ShowToast("Insufficient Coin");
             return;
         }

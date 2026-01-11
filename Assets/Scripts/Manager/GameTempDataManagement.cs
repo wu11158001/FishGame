@@ -37,28 +37,25 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
     // 暫存金幣變更事件
     public delegate void TempAccountCoinChange(double changeValue);
     public event TempAccountCoinChange TempAccountCoinChangeDelegate;
-    // 帳戶預設砲台變更事件
-    public delegate void AccountDefaultTurretChange(int defaultTurret);
-    public event AccountDefaultTurretChange AccountDefaultTurretChangeDelegate;
     // 帳戶金幣定時更新
     Coroutine UpdateAccountCoinCoroutine;
     // 前一次更新帳戶金幣金額
     double PreUpdateCoin;
     // 定時更新帳戶時間(秒)
-    const float UpdateAccountDataTime = 60f;
+    const float UpdateAccountDataTime = 30f;
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
 
         if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
+            FirestoreManagement.Instance.AccountCoinChangeChangeDelegate -= AccountCoinDataChange;
     }
 
     private void Start()
     {
         if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AsccountDataChangeDelegate += AccountDataChange;
+            FirestoreManagement.Instance.AccountCoinChangeChangeDelegate += AccountCoinDataChange;
     }
 
     #region 當前關卡資料
@@ -164,15 +161,14 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
     #region 遊戲中帳戶資料
 
     /// <summary>
-    /// 帳戶資料變更
+    /// 帳戶金幣變更
     /// </summary>
-    private void AccountDataChange(FirestoreResponse response)
+    private void AccountCoinDataChange(AccountData accountData)
     {
-        if (response != null)
+        if (accountData != null)
         {
-            TempAccountData = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
-            TempAccountCoinChangeDelegate?.Invoke(TempAccountData.Coins);
-            AccountDefaultTurretChangeDelegate?.Invoke(TempAccountData.DefaultTurret);
+            TempAccountData = accountData;
+            TempAccountCoinChangeDelegate?.Invoke(accountData.Coins);
         }
     }
 

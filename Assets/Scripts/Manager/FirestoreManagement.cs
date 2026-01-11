@@ -26,8 +26,16 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     private Dictionary<string, Action<FirestoreResponse>> PendingCallbacks = new();
 
     // 帳戶資料變更監聽
-    public delegate void AccountDataChange(FirestoreResponse response);
+    public delegate void AccountDataChange(AccountData accountData);
     public event AccountDataChange AsccountDataChangeDelegate;
+    // 帳戶金幣變更監聽
+    public delegate void AccountCoinChange(AccountData accountData);
+    public event AccountCoinChange AccountCoinChangeChangeDelegate;
+    // 帳戶砲台資料變更監聽
+    public delegate void AccountTurretDataChange(AccountData accountData);
+    public event AccountTurretDataChange AccountTurretDataChangeDelegate;
+
+    AccountData PreAccountData = new();
 
     Coroutine HeartbeatCoroutine;
 
@@ -495,7 +503,17 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     public void OnAccountDataChanged(string jsonResponse)
     {
         var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
-        AsccountDataChangeDelegate?.Invoke(response);
+        AccountData accountData = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
+        AsccountDataChangeDelegate?.Invoke(accountData);
+
+        if (PreAccountData.Coins != accountData.Coins)
+            AccountCoinChangeChangeDelegate?.Invoke(accountData);
+
+        // 帳戶砲台資料變更
+        if (PreAccountData.DefaultTurret != accountData.DefaultTurret || PreAccountData.OwnTurret != accountData.OwnTurret)
+            AccountTurretDataChangeDelegate?.Invoke(accountData);
+
+        PreAccountData = accountData;
     }
 
     #endregion
@@ -574,7 +592,7 @@ public class AccountData
         List<int> ownList = new();
         if (string.IsNullOrEmpty(OwnTurret)) return new();
 
-        var parts = OwnTurret.Split(',');
+        var parts = OwnTurret.Trim().Split(',');
         foreach (var p in parts)
         {
             if (int.TryParse(p, out int id)) ownList.Add(id);

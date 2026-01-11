@@ -67,13 +67,11 @@ public class LobbyView : BasicView
     /// <summary>
     /// 帳戶資料變更
     /// </summary>
-    /// <param name="response"></param>
-    private void AccountDataChange(FirestoreResponse response)
+    private void AccountDataChange(AccountData accountData)
     {
-        if(response != null)
+        if(accountData != null)
         {
-            AccountData data = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
-            CoinText.text = StringUtility.CurrencyFormat(data.Coins);
+            CoinText.text = StringUtility.CurrencyFormat(accountData.Coins);
 
             Canvas_Global.Instance.CloseLoading();
         }
