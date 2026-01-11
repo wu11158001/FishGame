@@ -169,7 +169,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae31ee6cb0a233948909cd6ef58c474a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameCoinStoreView
+  IsShowYieldShow: 0
   MainCanvasGroup: {fileID: 0}
+  IsShowClose: 0
   BgBtn: {fileID: 0}
   CloseBtn: {fileID: 0}
   IsUsePopUp: 0

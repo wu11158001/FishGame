@@ -5315,9 +5315,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee8a42902e8e4484bb508353b16bc887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoginView
+  IsShowYieldShow: 1
   MainCanvasGroup: {fileID: 6290990974565850853}
+  IsShowClose: 0
   BgBtn: {fileID: 0}
   CloseBtn: {fileID: 0}
+  IsUsePopUp: 0
+  PopUpRect: {fileID: 0}
+  PopUpTime: 0.5
   AccountIF_Login: {fileID: 7696224634685652608}
   PasswordIF_Login: {fileID: 8450634466311302359}
   AccountIF_Register: {fileID: 1900591068605403324}

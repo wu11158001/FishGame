@@ -15,6 +15,7 @@ public class TurretStoreView : BasicView
     [SerializeField] ScrollViewTool StoreContentScrollViewTool;
     [SerializeField] RectTransform StoreContentContentRect;
     [SerializeField] TurretStoreUnit TurretStoreUnit;
+    [SerializeField] ToggleGroup StoreContentToggleGroup;
 
     [Header("Turret3DModel")]
     // 3D模型每秒旋轉角度
@@ -65,8 +66,7 @@ public class TurretStoreView : BasicView
     public void SetData(Action closeAction)
     {
         CloseAction = closeAction;
-
-        Canvas_Global.Instance.ShowLoading();
+        MainCanvasGroup.alpha = 0;
 
         GetTempAccountData();
     }
@@ -167,10 +167,7 @@ public class TurretStoreView : BasicView
                 TurretDataDic.Add(data.TurretType, data);
             }
 
-            Canvas_Global.Instance.CloseLoading();
-
-            CreateTurretUnit();
-            StartCoroutine(IYieldShow());
+            ReciveAllDataComplete();            
         }
         else
         {
@@ -195,6 +192,19 @@ public class TurretStoreView : BasicView
     }
 
     #endregion
+
+    /// <summary>
+    /// 接收資料完成
+    /// </summary>
+    private void ReciveAllDataComplete()
+    {
+        StoreContentToggleGroup.allowSwitchOff = true;
+
+        CreateTurretUnit();
+        StartCoroutine(IYieldShow());
+
+        StoreContentToggleGroup.allowSwitchOff = false;
+    }
 
     /// <summary>
     /// 創建砲台商品

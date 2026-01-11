@@ -5,6 +5,7 @@ using TMPro;
 
 public class GameView : BasicView
 {
+    [Header("GameView")]
     [SerializeField] Button ShutdownBtn;
 
     [Header("SeatArea")]

@@ -3,18 +3,23 @@ using System;
 using System.Collections;
 using UnityEngine.UI;
 using DG.Tweening;
+using NaughtyAttributes;
 
 public abstract class BasicView : MonoBehaviour
 {
-    [Header("Basic")]
-    [SerializeField] protected CanvasGroup MainCanvasGroup;
-    [SerializeField] protected Button BgBtn;
-    [SerializeField] protected Button CloseBtn;
+    [Header("Basic YieldShow")]
+    [SerializeField] bool IsShowYieldShow;
+    [ShowIf(nameof(IsShowYieldShow))] [SerializeField] protected CanvasGroup MainCanvasGroup;
+
+    [Header("Basic CloseBtn")]
+    [SerializeField] bool IsShowClose;
+    [ShowIf(nameof(IsShowClose))] [SerializeField] protected Button BgBtn;
+    [ShowIf(nameof(IsShowClose))] [SerializeField] protected Button CloseBtn;
 
     [Header("Basic PopUp")]
-    [SerializeField] protected bool IsUsePopUp;
-    [SerializeField] protected RectTransform PopUpRect;
-    [SerializeField] protected float PopUpTime = 0.5f;
+    [SerializeField] bool IsUsePopUp;
+    [ShowIf(nameof(IsUsePopUp))] [SerializeField] protected RectTransform PopUpRect;
+    [ShowIf(nameof(IsUsePopUp))] [SerializeField] protected float PopUpTime = 0.5f;
 
     protected Action CloseAction;
 
@@ -25,12 +30,6 @@ public abstract class BasicView : MonoBehaviour
 
         if (CloseBtn != null)
             CloseBtn.onClick.AddListener(Close);
-    }
-
-    protected virtual void OnEnable()
-    {
-        if (IsUsePopUp)
-            PopUpEffect();
     }
 
     /// <summary>
@@ -53,6 +52,8 @@ public abstract class BasicView : MonoBehaviour
 
         if (MainCanvasGroup != null)
             MainCanvasGroup.alpha = 1;
+
+        PopUpEffect();
     }
 
     /// <summary>

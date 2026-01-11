@@ -270,7 +270,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3cd8c4f3da38a644b8c129bafc7fa40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Toast
+  IsShowYieldShow: 0
   MainCanvasGroup: {fileID: 0}
+  IsShowClose: 0
+  BgBtn: {fileID: 0}
+  CloseBtn: {fileID: 0}
+  IsUsePopUp: 0
+  PopUpRect: {fileID: 0}
+  PopUpTime: 0.5
   PanelRect: {fileID: 8981201328796160031}
   MessageText: {fileID: 2720216790438704444}
 --- !u!1 &7308470225303685754

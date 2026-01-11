@@ -18,8 +18,6 @@ public class TurretStoreUnit : MonoBehaviour
     TurretStoreUnitData TurretStoreUnitData;
     bool IsOwn;
 
-    Action<TurretData, RectTransform> SelectAction;
-
     private void Start()
     {
         BuyBtn.onClick.AddListener(BuyBtnClick);
@@ -97,7 +95,7 @@ public class TurretStoreUnit : MonoBehaviour
             TurretStoreUnitData.Model3D.gameObject.SetActive(isOn);
 
         if (isOn)
-            SelectAction?.Invoke(TurretStoreUnitData.TurretData, MainRect);
+            TurretStoreUnitData.SelectCallback?.Invoke(TurretStoreUnitData.TurretData, MainRect);
     }
 
     /// <summary>

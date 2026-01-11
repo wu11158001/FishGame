@@ -698,9 +698,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b0c8cbe8ce78a4989d5b415a9d18a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameView
+  IsShowYieldShow: 1
   MainCanvasGroup: {fileID: 1105061176061108881}
+  IsShowClose: 0
   BgBtn: {fileID: 0}
   CloseBtn: {fileID: 0}
+  IsUsePopUp: 0
+  PopUpRect: {fileID: 0}
+  PopUpTime: 0.5
   ShutdownBtn: {fileID: 4785270447742721675}
   SeatArea: {fileID: 66786762910490979}
   TurretBtn: {fileID: 3195314479236524934}

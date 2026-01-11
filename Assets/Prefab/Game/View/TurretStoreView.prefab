@@ -527,7 +527,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -41.445}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 384.09, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &4518891899203552581
 CanvasRenderer:
@@ -1875,7 +1875,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b97abf0eb2dd804d9eecb4497a4a7b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurretStoreView
+  IsShowYieldShow: 1
   MainCanvasGroup: {fileID: 3144375619845458713}
+  IsShowClose: 1
   BgBtn: {fileID: 8652610370560410066}
   CloseBtn: {fileID: 110983060500032590}
   IsUsePopUp: 1
@@ -1889,6 +1891,7 @@ MonoBehaviour:
   StoreContentScrollViewTool: {fileID: 3697240126866716478}
   StoreContentContentRect: {fileID: 2679188738775444701}
   TurretStoreUnit: {fileID: 3115421051086069803}
+  StoreContentToggleGroup: {fileID: 5509720726795512432}
   Model3DRotate: 90
   Model3DDragSpeed: 0.5
   Model3DRawImage: {fileID: 2176230823492480578}
