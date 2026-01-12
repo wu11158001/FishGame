@@ -46,6 +46,8 @@ public class GameView : BasicView
             GameTempDataManagement.Instance.TempAccountCoinChangeDelegate += TempAccountDataChange;
             GameTempDataManagement.Instance.CurrCostChangeDelegate += CurrCostChange;
         }
+
+        AddressableManagement.Instance.OpenGameFloatBtn();
     }
 
     public void SetData(int localSeat, Action closeAction)

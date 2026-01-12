@@ -26,6 +26,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 15e7051cd9fa46e449540cab5bb0ebfe
+    m_Address: GameFloatBtn
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3bc47fd82dca6da49a3e4efa9b397c1b
     m_Address: GetItemView
     m_ReadOnly: 0

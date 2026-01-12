@@ -363,6 +363,30 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     }
 
     /// <summary>
+    /// 開啟遊戲浮層按鈕
+    /// </summary>
+    public async void OpenGameFloatBtn(Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.GameFloatBtn;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveSceneView(view);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<GameFloatBtn>().SetData(closeAction: viewCloseAction);
+                }
+            });
+    }
+
+    /// <summary>
     /// 開啟砲台商店介面
     /// </summary>
     public async Task OpenTurretStoreView(Action closeAction = null)

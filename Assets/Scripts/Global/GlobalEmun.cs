@@ -43,6 +43,9 @@ public enum ViewEnum
     /// <summary> 獲得物品 </summary>
     GetItemView,
 
+    /// <summary> 遊戲浮層按鈕 </summary>
+    GameFloatBtn,
+
     /// <summary> 登入介面 </summary>
     LoginView,
 

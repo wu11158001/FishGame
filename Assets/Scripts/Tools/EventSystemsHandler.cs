@@ -1,12 +1,19 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class EventSystemsHandler : MonoBehaviour, IDragHandler, IEndDragHandler
+public class EventSystemsHandler : MonoBehaviour,IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public delegate void BeginDragHandler(PointerEventData eventData);
+    public event BeginDragHandler BeginDragHandlerDelegate;
+
     public delegate void DragHandler(PointerEventData eventData, bool isDrag);
     public event DragHandler DragHandlerDelegate;
 
-    // 當滑鼠在 RawImage 上拖拽時會觸發
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        BeginDragHandlerDelegate?.Invoke(eventData);
+    }
+
     public void OnDrag(PointerEventData eventData)
     {
         DragHandlerDelegate?.Invoke(eventData, true);
