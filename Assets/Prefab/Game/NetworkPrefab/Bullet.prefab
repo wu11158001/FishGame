@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
   Speed: 10
-  RayDistance: 30
+  RayDistance: 50
 --- !u!114 &138908526410943127
 MonoBehaviour:
   m_ObjectHideFlags: 0

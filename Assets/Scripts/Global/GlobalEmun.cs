@@ -190,6 +190,21 @@ public enum LevelEnum
 }
 
 /// <summary>
+/// 遊戲階段
+/// </summary>
+public enum GamePeriod
+{
+    /// <summary> 休閒期 </summary>
+    IdlePeriod,
+
+    /// <summary> 咬分期 </summary>
+    SuckingPeriod,
+
+    /// <summary> 吐分期 </summary>
+    PayoutPeriod,
+}
+
+/// <summary>
 /// 檢查進入房間資料獲取
 /// </summary>
 public enum CheckJoinRoomDataEnum

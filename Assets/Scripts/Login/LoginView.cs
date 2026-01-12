@@ -503,6 +503,7 @@ public class LoginView : BasicView
                     Coins = 0,
                     DefaultTurret = 0,
                     OwnTurret = "0",
+                    GamePeriodIndex = 0,
                 };
 
                 string json = JsonUtility.ToJson(data);

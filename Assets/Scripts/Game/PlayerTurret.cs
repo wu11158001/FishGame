@@ -58,6 +58,7 @@ public class PlayerTurret : NetworkBehaviour
         {
             Canvas_Global.Instance.CloseLoading();
             GameTempDataManagement.Instance.StartTimingUpdateAccountData();
+            GameTempDataManagement.Instance.StartTimingUpdateLevelDataJackpot();
         }
 
         ChangeTurret();
@@ -149,7 +150,10 @@ public class PlayerTurret : NetworkBehaviour
 
                 // 扣除金幣
                 if (Runner.IsForward)
-                    GameTempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -currCost);
+                {
+                    GameTempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -totalCost);
+                    GameTempDataManagement.Instance.RecodJackpot += totalCost;
+                }                    
 
                 // 觸發後座力
                 CurrentRecoil = RecoilDistance;

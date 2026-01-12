@@ -225,6 +225,9 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         RoomListUpdatedEvent?.Invoke(runner, sessionList);
     }
 
+    /// <summary>
+    /// 斷開連線
+    /// </summary>
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
         Debug.Log($"斷開連線");
@@ -243,9 +246,20 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         if (AddressableManagement.Instance != null)
             AddressableManagement.Instance.ClearGamePrefab();
 
-        // 停止計時更新Firestore帳戶資料
+        
         if (GameTempDataManagement.Instance != null)
+        {
+            // 停止計時更新Firestore帳戶資料
             GameTempDataManagement.Instance.StopTimingUpdateAccountData();
+            // 停止計時更新Firestore關卡獎池資料
+            GameTempDataManagement.Instance.StopTimingUpdateLevelDataJackpot();
+
+            if (FirestoreManagement.Instance != null)
+            {
+                // 停止監聽關卡資料
+                FirestoreManagement.Instance.StopListenLevelData(GameTempDataManagement.Instance.CurrentLevelData.LevelType);
+            }
+        }
 
         // 回大廳
         if(SceneManagement.Instance != null)
@@ -254,7 +268,8 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
                 sceneEnum: SceneEnum.Lobby,
                 callback: async () =>
                 {
-                    await AddressableManagement.Instance.OpenLobbyView();
+                    if (AddressableManagement.Instance != null)
+                        await AddressableManagement.Instance.OpenLobbyView();
                 });
         }
     }

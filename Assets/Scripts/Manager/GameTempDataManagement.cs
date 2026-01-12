@@ -12,10 +12,16 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
     /// </summary>
     public LevelData CurrentLevelData { get; private set; } = new();
     Action<CheckJoinRoomDataEnum> GetCurrentLevelDataAction;
-    public delegate void CueeCostChange(double cost);
-    public event CueeCostChange CurrCostChangeDelegate;
+    // 當前子彈花費變更事件
+    public delegate void CurrCostChange(double cost);
+    public event CurrCostChange CurrCostChangeDelegate;
     public bool IsMirror { get; set; }
     public Vector3 SeatPosition { get; set; }
+    // 紀錄變更的獎池值
+    public double RecodJackpot { get; set; }
+    Coroutine UpdateLevelDataJackpotCoroutine;
+    // 定時更新獎池時間(秒)
+    const float UpdateLevelDataJackpotTime = 30f;
 
     /// <summary>
     /// 魚群資料
@@ -50,12 +56,19 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
 
         if (FirestoreManagement.Instance != null)
             FirestoreManagement.Instance.AccountCoinDataChangeDelegate -= AccountCoinDataChange;
+
+        SendUpdateAccountCoinData();
+
+        StopAllCoroutines();
     }
 
     private void Start()
     {
         if (FirestoreManagement.Instance != null)
+        {
             FirestoreManagement.Instance.AccountCoinDataChangeDelegate += AccountCoinDataChange;
+            FirestoreManagement.Instance.LevelDataChangeDelegate += LevelDataChange;
+        }            
     }
 
     #region 當前關卡資料
@@ -96,6 +109,82 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
             {
                 Debug.LogError($"獲取當前關卡資料錯誤: {e}");
             }
+        }
+    }
+
+    /// <summary>
+    /// 關卡資料變更
+    /// </summary>
+    private void LevelDataChange(LevelData levelData)
+    {
+        if(levelData != null)
+        {
+            CurrentLevelData = levelData;
+        }
+    }
+
+    /// <summary>
+    /// 停止計時更新Firestore關卡獎池資料
+    /// </summary>
+    public void StopTimingUpdateLevelDataJackpot()
+    {
+        if (UpdateLevelDataJackpotCoroutine != null)
+            StopCoroutine(UpdateLevelDataJackpotCoroutine);
+
+        SendUpdateLevelDataJackpot();
+    }
+
+    /// <summary>
+    /// 開始計時更新Firestore關卡獎池資料
+    /// </summary>
+    public void StartTimingUpdateLevelDataJackpot()
+    {
+        if (UpdateLevelDataJackpotCoroutine != null)
+            StopCoroutine(UpdateLevelDataJackpotCoroutine);
+
+        UpdateLevelDataJackpotCoroutine = StartCoroutine(IUpdateLevelDataJackpot());
+    }
+
+    /// <summary>
+    /// 計時更新Firestore關卡獎池資料
+    /// </summary>
+    private IEnumerator IUpdateLevelDataJackpot()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(UpdateLevelDataJackpotTime);
+            SendUpdateLevelDataJackpot();
+        }        
+    }
+
+    /// <summary>
+    /// 發送更新Firestore關卡獎池資料
+    /// </summary>
+    public void SendUpdateLevelDataJackpot()
+    {
+        if (RecodJackpot != 0)
+        {
+            double currJackpot = CurrentLevelData.Jackpot;
+            currJackpot += RecodJackpot;
+
+            var updates = new Dictionary<string, object>
+            {
+                { "Jackpot", currJackpot }
+            };
+
+            if (FirestoreManagement.Instance != null)
+            {
+                FirestoreManagement.Instance.UpdateDataToFirestore(
+                path: FirestoreCollectionNameEnum.LevelData,
+                docId: CurrentLevelData.LevelName,
+                updates: updates,
+                callback: (res) =>
+                {
+                    if (!res.IsSuccess) Debug.LogError("發送更新Firestore關卡獎池資料失敗");
+                });
+            }
+
+            RecodJackpot = 0;
         }
     }
 

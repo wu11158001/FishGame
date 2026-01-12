@@ -31,7 +31,7 @@ public class LobbyView : BasicView
     {
         base.Start();
 
-        StartBtn.onClick.AddListener(StartJoInGame);
+        StartBtn.onClick.AddListener(() => { StartJoInGame(levelType: LevelEnum.ClassicLevel); });
         LogoutBtn.onClick.AddListener(Logout);
 
         NetworkRunnerManagement.Instance.RoomListUpdatedEvent += OnRoomListUpdatedUpdate;
@@ -107,7 +107,7 @@ public class LobbyView : BasicView
     /// <summary>
     /// 開始加入遊戲
     /// </summary>
-    private void StartJoInGame()
+    private void StartJoInGame(LevelEnum levelType)
     {
         if (IsMatchmaking) return;
 
@@ -121,16 +121,19 @@ public class LobbyView : BasicView
         }
 
         // 獲取所有魚資料
-        GameTempDataManagement.Instance.GetAllFishData(CheckJoinRoomData);
+        GameTempDataManagement.Instance.GetAllFishData(callback: CheckJoinRoomData);
 
         // 獲取所有砲台資料
-        GameTempDataManagement.Instance.GetAllTurretData(CheckJoinRoomData);
+        GameTempDataManagement.Instance.GetAllTurretData(callback: CheckJoinRoomData);
 
         // 獲取關卡資料
-        GameTempDataManagement.Instance.GetCurrentLevelData(levelType: LevelEnum.ClassicLevel, callback: CheckJoinRoomData);
+        GameTempDataManagement.Instance.GetCurrentLevelData(levelType: levelType, callback: CheckJoinRoomData);
 
         // 獲取帳戶資料
         GameTempDataManagement.Instance.GetTempAccountData(callback: CheckJoinRoomData);
+
+        // 開始監聽關卡資料
+        FirestoreManagement.Instance.StartListenLevelData(levelType: levelType);
     }
 
     /// <summary>

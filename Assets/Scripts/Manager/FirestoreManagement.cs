@@ -34,6 +34,10 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     // 帳戶砲台資料變更監聽
     public delegate void AccountTurretDataChange(AccountData accountData);
     public event AccountTurretDataChange AccountTurretDataChangeDelegate;
+    // 關卡資料變更監聽
+    public delegate void LevelDataChange(LevelData levelData);
+    public event LevelDataChange LevelDataChangeDelegate;
+
 
     AccountData PreAccountData = new();
 
@@ -55,6 +59,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
 #endif
 
         StopHeartbeat();
+        StopListenAccountData();
         StopAllCoroutines();
     }
 
@@ -473,7 +478,6 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
             OnAccountDataChanged(JsonConvert.SerializeObject(response));
         });
 
-        // 將監聽器存入 C# 字典
         EditorListeners.Add(docId, registration);
 #endif
     }
@@ -516,10 +520,78 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         PreAccountData = accountData;
     }
 
+
+    /// <summary>
+    /// 開始監聽關卡資料
+    /// </summary>
+    public void StartListenLevelData(LevelEnum levelType)
+    {
+        string path = FirestoreCollectionNameEnum.LevelData.ToString();
+        string docId = levelType.ToString();
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        ListenToFirestoreData(path, docId, gameObject.name, nameof(OnAccountDataChanged));
+        Debug.Log($"[WebGL] 開始監聽: {docId}");
+#else
+        // 已經在監聽停止
+        StopListenLevelData(levelType);
+
+        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+        DocumentReference docRef = db.Collection(path).Document(docId);
+
+        ListenerRegistration registration = docRef.Listen(snapshot => {
+            if (snapshot == null) return;
+
+            bool exists = snapshot.Exists;
+            string innerJson = exists ? JsonConvert.SerializeObject(snapshot.ToDictionary()) : "";
+
+            var response = new
+            {
+                IsSuccess = exists,
+                Status = exists ? "DataChanged" : "AccountNotFound",
+                JsonData = innerJson
+            };
+
+            OnLevelDataChanged(JsonConvert.SerializeObject(response));
+        });
+
+        EditorListeners.Add(docId, registration);
+#endif
+    }
+
+    /// <summary>
+    /// 停止監聽關卡資料
+    /// </summary>
+    public void StopListenLevelData(LevelEnum levelType)
+    {
+        string docId = levelType.ToString();
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        // WebGL 端：呼叫 .jslib 刪除 JS 字典裡的監聽
+        StopListenToFirestoreData(docId);
+#else
+        if (EditorListeners.ContainsKey(docId))
+        {
+            EditorListeners[docId].Stop();
+            EditorListeners.Remove(docId);
+        }
+#endif
+    }
+
+    /// <summary>
+    /// 關卡資料變更
+    /// </summary>
+    public void OnLevelDataChanged(string jsonResponse)
+    {
+        var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
+        LevelData accountData = JsonConvert.DeserializeObject<LevelData>(response.JsonData);
+        LevelDataChangeDelegate?.Invoke(accountData);
+    }
+
     #endregion
 
     #region 視窗事件
-    
+
     /// <summary>
     /// 視窗關閉事件
     /// </summary>
@@ -584,9 +656,9 @@ public class AccountData
     /// <summary> 擁有砲台編號(","隔開) </summary>
     public string OwnTurret;
 
-
-
-    /// <summary> 獲取擁有砲台編號列表 </summary>
+    /// <summary>
+    ///  獲取擁有砲台編號列表
+    /// </summary>
     public List<int> GetOwnTurretList()
     {
         List<int> ownList = new();
@@ -601,7 +673,21 @@ public class AccountData
         return ownList;
     }
 
-
+    /// <summary> 當前階段(休閒/咬分/吐分) </summary>
+    private int _gamePeriodIndex;
+    public int GamePeriodIndex
+    {
+        get => _gamePeriodIndex;
+        set
+        {
+            _gamePeriodIndex = value;
+            if (Enum.IsDefined(typeof(GamePeriod), value))
+                GamePeriod = (GamePeriod)value;
+            else
+                GamePeriod = GamePeriod.IdlePeriod;
+        }
+    }
+    public GamePeriod GamePeriod;
 }
 
 /// <summary>
@@ -676,6 +762,53 @@ public struct FishData_Network : INetworkStruct
 [Serializable]
 public class LevelData
 {
+    /// <summary> 識別名稱 </summary>
+    private string _levelName;
+    public string LevelName
+    {
+        get => _levelName;
+        set
+        {
+            _levelName = value;
+            if (Enum.TryParse(_levelName, out LevelEnum type))
+                LevelType = type;
+            else
+                LevelType = LevelEnum.ClassicLevel;
+        }
+    }
+    public LevelEnum LevelType;
+
+    /// <summary> 當前階段(休閒/咬分/吐分) </summary>
+    private int _gamePeriodIndex;
+    public int GamePeriodIndex
+    {
+        get => _gamePeriodIndex;
+        set
+        {
+            _gamePeriodIndex = value;
+            if (Enum.IsDefined(typeof(GamePeriod), value))
+                GamePeriod = (GamePeriod)value;
+            else
+                GamePeriod = GamePeriod.IdlePeriod;
+        }
+    }
+    public GamePeriod GamePeriod;
+
+    /// <summary> 咬分期減少倍率 </summary>
+    public double SuckingPeriodLose;
+
+    /// <summary> 吐分期增加倍率 </summary>
+    public double PayoutPeriodAdd;
+
+    /// <summary> 咬分期值(休閒期判斷) </summary>
+    public double SuckingPeriodValue;
+
+    /// <summary> 吐分期值(休閒期判斷) </summary>
+    public double PayoutPeriodValue;
+
+    /// <summary> 累積獎池 </summary>
+    public double Jackpot;
+
     /// <summary> 子彈花費梯度 </summary>
     public double Gradient;
 
@@ -709,7 +842,6 @@ public class TurretData
                 TurretType = TurretEnum.None;
         }
     }
-
     public TurretEnum TurretType;
 
     /// <summary> 射擊頻率 </summary>

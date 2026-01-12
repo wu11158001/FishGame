@@ -4,7 +4,7 @@ using Fusion;
 public class Bullet : NetworkBehaviour
 {
     [SerializeField] float Speed = 10;
-    [SerializeField] float RayDistance = 40f;
+    [SerializeField] float RayDistance = 50f;
 
     [Networked] Vector3 Direction { get; set; }
 
@@ -107,14 +107,76 @@ public class Bullet : NetworkBehaviour
 
         FishData_Network data = fish.GetFishData();
 
+        // 判斷階段(休閒/咬分/吐分)
+        GamePeriod period = GamePeriod.IdlePeriod;
+        GamePeriod playerPeriod = GameTempDataManagement.Instance.TempAccountData.GamePeriod;
+        GamePeriod levelPeriod = GameTempDataManagement.Instance.CurrentLevelData.GamePeriod;
+        if(playerPeriod == GamePeriod.IdlePeriod)
+        {
+            // 玩家屬於休閒期，依照關卡設置
+            period = levelPeriod;
+        }
+        else
+        {
+            // 玩家屬於吐分/咬分期，依照玩家設置
+            period = playerPeriod;
+        }
+
+        // 如果屬於休閒期，判斷獎池
+        if(period == GamePeriod.IdlePeriod)
+        {
+            double payoutPeriodValue = GameTempDataManagement.Instance.CurrentLevelData.PayoutPeriodValue;
+            double suckingPeriodValue = GameTempDataManagement.Instance.CurrentLevelData.SuckingPeriodValue;
+            double jackpot = GameTempDataManagement.Instance.CurrentLevelData.Jackpot;
+
+            if (jackpot < suckingPeriodValue)
+                period = GamePeriod.SuckingPeriod;
+            else if(jackpot > payoutPeriodValue)
+                period = GamePeriod.PayoutPeriod;
+        }
+
+        // 各階段給予機率變化
+        double probability = data.Probability;
+        switch (period)
+        {
+            // 休閒期
+            case GamePeriod.IdlePeriod:
+                // 依照魚的機率
+                probability = data.Probability;
+                break;
+
+            // 咬分期
+            case GamePeriod.SuckingPeriod:
+                // 減少倍率
+                float lose = Mathf.Max(0, (float)GameTempDataManagement.Instance.CurrentLevelData.SuckingPeriodLose);
+                probability /= lose;
+                break;
+
+            // 吐分期
+            case GamePeriod.PayoutPeriod:
+                // 增加倍率
+                float add = Mathf.Max(0, (float)GameTempDataManagement.Instance.CurrentLevelData.PayoutPeriodAdd);
+                probability *= add;
+                break;
+        }      
+
         double hitValue = UnityEngine.Random.value;
-        if (hitValue <= data.Probability)
+        if (hitValue <= probability)
         {
             // 獲得金幣
             double currDefaultCost = GameTempDataManagement.Instance.CurrentLevelData.DefaultCost;
             double reward = currDefaultCost * data.Magnification;
-            GameTempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward);
 
+            // 判斷獎池
+            if(GameTempDataManagement.Instance.CurrentLevelData.Jackpot < reward)
+            {
+                Debug.Log($"獎池不足!");
+                return;
+            }
+
+            GameTempDataManagement.Instance.RecodJackpot -= reward;
+
+            GameTempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward);
             fish.GetHit(player: Runner.LocalPlayer, reward: reward);
         }
 
