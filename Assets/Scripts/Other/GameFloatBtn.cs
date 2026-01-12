@@ -55,6 +55,16 @@ public class GameFloatBtn : MonoBehaviour
         }
 
         MainBtn.onClick.AddListener(SwitchShowBtns);
+        HomeBtn.onClick.AddListener(() =>
+        {
+            AddressableManagement.Instance.ShowConfirmView(
+                contentKey: "Leave the game?",
+                comfirmAction: () =>
+                {
+                    Canvas_Global.Instance.ShowLoading();
+                    NetworkRunnerManagement.Instance.Shutdown();
+                });
+        });
 
         MainCanvas = GetComponentInParent<Canvas>();
         SafeAreaRect = MainCanvas.transform.Find("SafeArea").GetComponent<RectTransform>();

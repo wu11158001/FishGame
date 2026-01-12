@@ -5,9 +5,6 @@ using TMPro;
 
 public class GameView : BasicView
 {
-    [Header("GameView")]
-    [SerializeField] Button ShutdownBtn;
-
     [Header("SeatArea")]
     [SerializeField] RectTransform SeatArea;
     [SerializeField] Button TurretBtn;
@@ -35,7 +32,6 @@ public class GameView : BasicView
     {
         base.Start();
 
-        ShutdownBtn.onClick.AddListener(Shutdown);
         TurretBtn.onClick.AddListener(() => { _ = AddressableManagement.Instance.OpenTurretStoreView(); });
         ReduceCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: true); });
         AddCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: false); });
@@ -83,14 +79,5 @@ public class GameView : BasicView
     private void CurrCostChange(double cost)
     {
         CurrCostText.text = StringUtility.CurrencyFormat(cost);
-    }
-
-    /// <summary>
-    /// 斷開連接離開
-    /// </summary>
-    private void Shutdown()
-    {
-        Canvas_Global.Instance.ShowLoading();
-        NetworkRunnerManagement.Instance.Shutdown(); 
     }
 }

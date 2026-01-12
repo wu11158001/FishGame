@@ -118,6 +118,18 @@ MonoBehaviour:
     m_Localized: Coin
     m_Metadata:
       m_Items: []
+  - m_Id: 6960966226612224
+    m_Localized: Confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6961028524609536
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6966346411347968
+    m_Localized: Leave the game?
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

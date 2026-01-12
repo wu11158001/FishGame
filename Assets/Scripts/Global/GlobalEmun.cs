@@ -46,6 +46,9 @@ public enum ViewEnum
     /// <summary> 遊戲浮層按鈕 </summary>
     GameFloatBtn,
 
+    /// <summary> 確認彈窗 </summary>
+    ConfirmView,
+
     /// <summary> 登入介面 </summary>
     LoginView,
 

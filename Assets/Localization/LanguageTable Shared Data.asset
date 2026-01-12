@@ -115,6 +115,18 @@ MonoBehaviour:
     m_Key: Coin
     m_Metadata:
       m_Items: []
+  - m_Id: 6960966226612224
+    m_Key: Confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6961028524609536
+    m_Key: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6966346411347968
+    m_Key: Leave the game?
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

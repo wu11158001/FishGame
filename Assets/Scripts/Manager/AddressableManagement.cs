@@ -493,6 +493,42 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             canvasEnum: CanvasEnum.Canvas_Global);
     }
 
+    /// <summary>
+    /// 顯示確認彈窗
+    /// </summary>
+    public async void ShowConfirmView(string contentKey, Action comfirmAction, Action cancelAction = null)
+    {
+        ViewEnum view = ViewEnum.ConfirmView;
+
+        Action viewCloseAction = () =>
+        {
+            RemoveGlobalView(viewEnum: view, isFirstRemove: true);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<ConfirmView>().SetData(
+                        contentKey: contentKey,
+                        comfirmAction: () =>
+                        {
+                            comfirmAction?.Invoke();
+                            viewCloseAction?.Invoke();
+                        },
+                        cancelAction: () =>
+                        {
+                            cancelAction?.Invoke();
+                            viewCloseAction?.Invoke();
+                        });
+                }
+            },
+            IsCanStack: true,
+            canvasEnum: CanvasEnum.Canvas_Global);
+    }
+
     #endregion
 
     #region 遊戲預製物
