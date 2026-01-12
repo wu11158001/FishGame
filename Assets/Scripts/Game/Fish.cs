@@ -23,16 +23,32 @@ public class Fish : NetworkBehaviour
     LocalPool LocalPool;
     Transform CoinTextPool;
 
-    public void SetData(NetworkPrefabEnum fishType, bool isMirror, float depth, WayPoint wayPoint)
+    public void SetData(NetworkPrefabEnum fishType, bool isMirror, float depth, WayPoint wayPoint, int skipWaypoint)
     {
         FishType = fishType;
 
         // 移動路徑獲取
         var query = wayPoint.Points.Select(t => t.position);
         if (isMirror) query = query.Reverse();
-        PathPoints = query.ToArray();
+        PathPoints = query.Skip(skipWaypoint).ToArray();
 
-        // 魚資料獲取
+        // --- 新增：初始化位置與面向 ---
+        if (PathPoints != null && PathPoints.Length >= 2)
+        {
+            Vector3 startPos = PathPoints[0];
+            startPos.y = depth;
+            transform.position = startPos;
+
+            Vector3 nextPos = PathPoints[1];
+            nextPos.y = depth;
+            Vector3 initialDir = nextPos - startPos;
+            if (initialDir.sqrMagnitude > 0.0001f)
+            {
+                transform.rotation = Quaternion.LookRotation(initialDir);
+            }
+        }
+        // ----------------------------
+
         FishData fishData = GameTempDataManagement.Instance.GetFishData(FishType);
         if (fishData != null)
             FishData_Network = fishData.ToNetworkStruct();

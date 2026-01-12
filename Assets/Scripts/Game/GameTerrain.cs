@@ -14,11 +14,11 @@ public class GameTerrain : NetworkBehaviour
     [OnChangedRender(nameof(OnSpawnLocalTurret))]
     NetworkArray<int> SeatPlayerIDs { get; }
 
-    /// <summary>
-    /// 產生一般魚計時器
-    /// </summary>
-    [Networked] 
-    TickTimer SpawnTimer { get; set; }
+    /// <summary> 產生一般魚計時器 </summary>
+    [Networked] TickTimer SpawnTimer { get; set; }
+
+    /// <summary> 首次產生魚 </summary>
+    [Networked] bool IsFirstCreate { get; set; }
 
     WayPointMain WayPointMain;
     Transform FishPool;
@@ -30,11 +30,11 @@ public class GameTerrain : NetworkBehaviour
     // 本地玩家是否已生成
     bool isLocalSpawn;
     // 一般魚生成時間(秒)
-    float NormalFishCreatTime = 7;
+    float NormalFishCreatTime = 10;
     // 一般魚一次生成最小數量
     int MinCreateNormalFish = 3;
     // 一般魚一次生成最大數量
-    int MaxCreateNormalFish = 6;
+    int MaxCreateNormalFish = 8;
 
     private void OnDestroy()
     {
@@ -58,6 +58,7 @@ public class GameTerrain : NetworkBehaviour
             for(int i = 0; i < SeatPlayerIDs.Length; i++)
             {
                 SeatPlayerIDs.Set(i, -1);
+                IsFirstCreate = true;
             }
         }
 
@@ -293,10 +294,21 @@ public class GameTerrain : NetworkBehaviour
 
             // 面向左或右
             bool isMirror = UnityEngine.Random.value > 0.5f;
+
             Vector3 initPos =
                 isMirror ?
                 wayPoint.Points[wayPoint.Points.Count - 1].position :
                 wayPoint.Points[0].position;
+
+            int skipWaypoint = 0;
+
+            // 首次產生魚位置在畫面中
+            if (IsFirstCreate)
+            {
+                skipWaypoint = UnityEngine.Random.Range(2, wayPoint.Points.Count - 2);
+                initPos = wayPoint.Points[skipWaypoint].position;
+                Debug.LogError($"首次產生魚位置在畫面中:{skipWaypoint}");
+            }
 
             // 深度            
             int depth = UnityEngine.Random.Range(-40, -5);
@@ -315,11 +327,16 @@ public class GameTerrain : NetworkBehaviour
                                    fishType: fishType,
                                    isMirror: isMirror,
                                    depth: depth,
-                                   wayPoint: wayPoint);
+                                   wayPoint: wayPoint,
+                                   skipWaypoint: skipWaypoint);
                        });
 
-            yield return new WaitForSeconds(0.2f);
+            if (!IsFirstCreate)
+                yield return new WaitForSeconds(0.25f);
         }
+
+        if (IsFirstCreate)
+            IsFirstCreate = false;
     }
 
     #endregion
