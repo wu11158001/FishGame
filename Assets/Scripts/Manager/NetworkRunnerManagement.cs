@@ -55,6 +55,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         }
 
         AddressableManagement.Instance.ClearAllSceneViews();
+        Canvas_Global.Instance.ShowSceneLoadingView();
 
         var poolObj = new GameObject("Fusion Pool Object");
         poolObj.transform.SetParent(gameObject.transform);

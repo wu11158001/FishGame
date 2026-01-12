@@ -2,6 +2,7 @@ using UnityEngine;
 using Fusion;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System.Collections;
 
 public class PlayerTurret : NetworkBehaviour
 {
@@ -55,10 +56,11 @@ public class PlayerTurret : NetworkBehaviour
         BulletPool = GameObject.Find(FusionPoolNameEnum.BulletPool.ToString()).transform;
 
         if(Object.HasStateAuthority)
-        {
-            Canvas_Global.Instance.CloseLoading();
+        {            
             GameTempDataManagement.Instance.StartTimingUpdateAccountData();
             GameTempDataManagement.Instance.StartTimingUpdateLevelDataJackpot();
+
+            StartCoroutine(IYieldShow());
         }
 
         ChangeTurret();
@@ -80,6 +82,17 @@ public class PlayerTurret : NetworkBehaviour
 
         OnFire();
         OnRotationControl();
+    }
+
+    /// <summary>
+    /// 延遲顯示
+    /// </summary>
+    private IEnumerator IYieldShow()
+    {
+        yield return new WaitForSeconds(1);
+
+        Canvas_Global.Instance.CloseLoading();
+        Canvas_Global.Instance.ClosSceneLoadingView();
     }
 
     /// <summary>
