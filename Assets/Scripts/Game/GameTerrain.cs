@@ -278,6 +278,8 @@ public class GameTerrain : NetworkBehaviour
             yield break;
         }
 
+        int preWaypointIndex = -1;
+
         // 總生成數量
         int totalCount = UnityEngine.Random.Range(MinCreateNormalFish, MaxCreateNormalFish + 1);
         for (int i = 0; i < totalCount; i++)
@@ -289,6 +291,11 @@ public class GameTerrain : NetworkBehaviour
             // 隨機選擇路線
             List<WayPoint> wayPoints = WayPointMain.GetWayPoints();
             int wayPointIndex = UnityEngine.Random.Range(0, wayPoints.Count);
+            // 路線不與前一隻一樣
+            while (preWaypointIndex == wayPointIndex)
+            {
+                wayPointIndex = UnityEngine.Random.Range(0, wayPoints.Count);
+            }
 
             WayPoint wayPoint = wayPoints[wayPointIndex];
 
@@ -307,7 +314,6 @@ public class GameTerrain : NetworkBehaviour
             {
                 skipWaypoint = UnityEngine.Random.Range(2, wayPoint.Points.Count - 2);
                 initPos = wayPoint.Points[skipWaypoint].position;
-                Debug.LogError($"首次產生魚位置在畫面中:{skipWaypoint}");
             }
 
             // 深度            
