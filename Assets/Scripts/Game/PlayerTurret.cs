@@ -32,7 +32,11 @@ public class PlayerTurret : NetworkBehaviour
     Transform BulletPool;
 
     List<Transform> CurrShotPoints = new();
-    public Transform CurrBarrel;
+    Transform CurrBarrel;
+    
+    GameObject Skill_Locking;
+    Animator Skill_LockingAni;
+    Fish TargetLocking;
 
     private void OnDestroy()
     {
@@ -60,6 +64,19 @@ public class PlayerTurret : NetworkBehaviour
             GameTempDataManagement.Instance.StartTimingUpdateAccountData();
             GameTempDataManagement.Instance.StartTimingUpdateLevelDataJackpot();
 
+            // 產生鎖定技能
+            _ = AddressableManagement.Instance.CreateGamePrefab(
+                prefabType: GamePrefabEnum.Skill_Locking,
+                callback: (obj) =>
+                {
+                    Skill_Locking = obj;
+                    Skill_Locking.transform.position = new(0, -1, 0);
+                    Skill_Locking.transform.rotation = Quaternion.Euler(90, 0, 0);
+                    Skill_Locking.SetActive(false);
+
+                    Skill_LockingAni = Skill_Locking.GetComponent<Animator>();
+                });
+
             StartCoroutine(IYieldShow());
         }
 
@@ -71,7 +88,6 @@ public class PlayerTurret : NetworkBehaviour
         if (Object == null || !Object.IsValid)
             return;
 
-        OnRotation();
         HandleRecoil();
     }
 
@@ -80,8 +96,11 @@ public class PlayerTurret : NetworkBehaviour
         if (Object == null || !Object.IsValid)
             return;
 
-        OnFire();
+        SelfLocking();
+        OnSkill_Locking();
         OnRotationControl();
+        OnRotation();
+        OnFire();
     }
 
     /// <summary>
@@ -95,12 +114,148 @@ public class PlayerTurret : NetworkBehaviour
         Canvas_Global.Instance.ClosSceneLoadingView();
     }
 
+    #region 鎖定技能
+
+    /// <summary>
+    /// 鎖定技能
+    /// </summary>
+    private void OnSkill_Locking()
+    {
+        if (!Object.HasStateAuthority)
+            return;
+
+        bool isLocking = GameTempDataManagement.Instance.IsSkill_Locking;
+
+        // 檢測鎖定技能是否關閉
+        if (Skill_Locking != null && Skill_Locking.activeSelf && !isLocking)
+        {
+            TargetLocking = null;
+            Skill_Locking.SetActive(false);
+            return;
+        }            
+
+        if(isLocking)
+        {
+            bool isAuto = GameTempDataManagement.Instance.IsSkill_Auto;
+
+            // 有鎖定目標，但目標消失
+            if (TargetLocking != null && !TargetLocking.gameObject.activeInHierarchy)
+            {                
+                if (!isAuto)
+                {
+                    // 自動射擊未開啟，目標消失，關閉鎖定技能
+                    TargetLocking = null;
+                    Skill_Locking.SetActive(false);
+                    return;
+                }
+                else
+                {
+                    TakeNewLockingTarget();
+                }
+            }
+
+            // 自動射擊開啟，沒有鎖定目標，隨機獲取新目標
+            if (isAuto && TargetLocking == null)
+            {
+                TakeNewLockingTarget();
+            }
+
+            // 鎖定圖標跟隨目標
+            if (TargetLocking != null && TargetLocking.gameObject.activeInHierarchy)
+            {
+                Vector3 targetPos = TargetLocking.gameObject.transform.position;
+                Skill_Locking.transform.position = new(targetPos.x, Skill_Locking.transform.position.y, targetPos.z);
+
+                // 砲台轉向
+                Vector3 direction = TargetLocking.gameObject.transform.position - CurrBarrel.position;
+
+                if (direction != Vector3.zero)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(direction);
+                    NetworkedAngle = targetRotation.eulerAngles.y;
+                }
+            }            
+        }
+    }
+
+    /// <summary>
+    /// 獲取新鎖定目標
+    /// </summary>
+    private void TakeNewLockingTarget()
+    {
+        // 自動射擊開啟，目標消失，隨機獲取新目標
+        int fishLayer = LayerMask.NameToLayer("Fish");
+        GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+        List<Fish> fishList = new();
+
+        foreach (GameObject obj in allObjects)
+        {
+            Fish fish = obj.GetComponentInParent<Fish>();
+            bool isInScene = obj.transform.position.x >= -9 && obj.transform.position.x <= 9;
+
+            if (obj.layer == fishLayer && isInScene && fish != null)
+            {
+                fishList.Add(fish);
+            }
+        }
+        Fish[] fishs = fishList.ToArray();
+
+        if (fishs.Length > 0)
+        {
+            int randomIndex = Random.Range(0, fishs.Length);
+            TargetLocking = fishs[randomIndex];
+
+            Skill_LockingAni.SetTrigger("Restart");
+            Skill_Locking.SetActive(true);
+        }
+        else
+        {
+            TargetLocking = null;
+            Skill_Locking.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 手動鎖定
+    /// </summary>
+    private void SelfLocking()
+    {
+        if (GetInput(out NetworkInputData input))
+        {
+            if(input.IsFirePressed && GameTempDataManagement.Instance.IsSkill_Locking)
+            {
+                Vector2 mousePos = input.MousePosition;
+                Ray ray = MainCamera.ScreenPointToRay(mousePos);
+                LayerMask layerMask = LayerMask.GetMask("Fish");
+
+                if (Physics.Raycast(ray, out RaycastHit hit, 100, layerMask))
+                {
+                    Fish fish = hit.transform.GetComponentInParent<Fish>();
+
+                    if (Skill_Locking != null && fish != null)
+                    {
+                        Skill_LockingAni.SetTrigger("Restart");
+                        TargetLocking = fish;
+                        Skill_Locking.SetActive(true);
+                    }
+                }
+            }            
+        }
+    }
+
+    #endregion
+
+    #region 砲台控制
+
     /// <summary>
     /// 轉向控制
     /// </summary>
     private void OnRotationControl()
-    {      
-        if (GetInput(out NetworkInputData input))
+    {
+        // 是否有鎖定目標
+        bool isLocking = GameTempDataManagement.Instance.IsSkill_Locking && TargetLocking != null;
+
+        if (GetInput(out NetworkInputData input) && !isLocking)
         {
             if (MainCamera == null)
             {
@@ -130,10 +285,18 @@ public class PlayerTurret : NetworkBehaviour
     /// </summary>
     private void OnFire()
     {
-        if (GetInput(out NetworkInputData input))
+        bool isAuto = GameTempDataManagement.Instance.IsSkill_Auto;
+        bool isLocking = GameTempDataManagement.Instance.IsSkill_Locking;
+        bool isOpenView = GameTempDataManagement.Instance.IsOpenView;
+
+        // 自動 & 鎖定 但沒有目標
+        if (isAuto && isLocking && TargetLocking == null)
+            return;
+
+        if (GetInput(out NetworkInputData input) || isAuto)
         {
             // 點擊UI
-            if (EventSystem.current.IsPointerOverGameObject())
+            if ((!isAuto && EventSystem.current.IsPointerOverGameObject()) || isOpenView)
                 return;
 
             if (CurrShotPoints == null || CurrShotPoints.Count == 0)
@@ -142,7 +305,7 @@ public class PlayerTurret : NetworkBehaviour
             if (CurrBarrel == null)
                 return;
 
-            if (input.IsFirePressed && Delay.ExpiredOrNotRunning(Runner))
+            if ((input.IsFirePressed || isAuto) && Delay.ExpiredOrNotRunning(Runner))
             {
                 TurretData turretData = GameTempDataManagement.Instance.GetTurrethData((TurretEnum)TurretIndex);
                 // 重製冷卻時間
@@ -157,7 +320,13 @@ public class PlayerTurret : NetworkBehaviour
                 {
                     Debug.Log("金幣不足!");
                     AddressableManagement.Instance.ShowToast("Insufficient Coin");
-                    _ = AddressableManagement.Instance.OpenCoinStoreView();
+
+                    GameTempDataManagement.Instance.IsOpenView = true;
+                    _ = AddressableManagement.Instance.OpenCoinStoreView(closeAction: () =>
+                    {
+                        GameTempDataManagement.Instance.IsOpenView = false;
+                    });
+
                     return;
                 }
 
@@ -181,7 +350,15 @@ public class PlayerTurret : NetworkBehaviour
                         Pos: pos,
                         rot: CurrBarrel.localRotation,
                         parent: BulletPool,
-                        player: Object.InputAuthority);
+                        player: Object.InputAuthority,
+                        callback: (networkObj) =>
+                        {
+                            Bullet bullet = networkObj.gameObject.GetComponent<Bullet>();
+                            if (bullet != null)
+                            {
+                                bullet.SetData(TargetLocking);
+                            }
+                        });
                 }
             }
         }
@@ -253,4 +430,6 @@ public class PlayerTurret : NetworkBehaviour
             }
         }
     }
+
+    #endregion
 }

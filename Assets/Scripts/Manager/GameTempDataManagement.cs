@@ -50,6 +50,12 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
     // 定時更新帳戶時間(秒)
     const float UpdateAccountDataTime = 30f;
 
+    public bool IsOpenView { get; set; }
+    // 技能_自動
+    public bool IsSkill_Auto { get; set; }
+    // 技能_鎖定
+    public bool IsSkill_Locking { get; set; }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -69,6 +75,13 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
             FirestoreManagement.Instance.AccountCoinDataChangeDelegate += AccountCoinDataChange;
             FirestoreManagement.Instance.LevelDataChangeDelegate += LevelDataChange;
         }            
+    }
+
+    public void Initialize()
+    {
+        IsOpenView = false;
+        IsSkill_Auto = false;
+        IsSkill_Locking = false;
     }
 
     #region 當前關卡資料

@@ -154,6 +154,9 @@ public enum GamePrefabEnum
     /// <summary> 本地物件池 </summary>
     LocalPool,
 
+    /// <summary> 技能_鎖定 </summary>
+    Skill_Locking,
+
     /// <summary> 爆金文字 </summary>
     Coin,
     CoinText_0,

@@ -80,8 +80,7 @@ public class GameTerrain : NetworkBehaviour
             if (CreateFishCoroutine != null)
                 StopCoroutine(CreateFishCoroutine);
 
-            StartCoroutine(ICreatNormalFish());
-            
+            StartCoroutine(ICreatNormalFish());            
         }
     }
 

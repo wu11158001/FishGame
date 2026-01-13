@@ -24,18 +24,31 @@ public class EruptionAndRecycleEffect : MonoBehaviour
     {
         StopAllCoroutines();
         transform.DOKill();
+
+        foreach (var obj in ObjList)
+        {
+            obj.transform.DOKill();
+            obj.SetActive(false);
+        }
     }
 
     private void OnDisable()
     {
         StopAllCoroutines();
         transform.DOKill();
+
+        foreach (var obj in ObjList)
+        {
+            obj.transform.DOKill();
+            obj.SetActive(false);
+        }
     }
 
     private void OnEnable()
     {
         foreach (var obj in ObjList)
         {
+            obj.transform.DOKill();
             obj.SetActive(false);
         }
 
@@ -45,7 +58,7 @@ public class EruptionAndRecycleEffect : MonoBehaviour
     /// <summary>
     /// 噴發效果
     /// </summary>
-    private async void EruptionEffect()
+    private void EruptionEffect()
     {
         if(ObjList == null || ObjList.Count == 0)
         {
@@ -53,7 +66,7 @@ public class EruptionAndRecycleEffect : MonoBehaviour
             {
                 int index = i;
 
-                await AddressableManagement.Instance.CreateGamePrefab(
+                _ = AddressableManagement.Instance.CreateGamePrefab(
                     prefabType: EruptionType,
                     parent: transform,
                     callback: (obj) =>

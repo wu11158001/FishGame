@@ -127,6 +127,14 @@ MonoBehaviour:
     m_Key: Leave the game?
     m_Metadata:
       m_Items: []
+  - m_Id: 7015806847881216
+    m_Key: Auto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7015857645096960
+    m_Key: Locking
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -16,6 +16,10 @@ public class GameView : BasicView
     [SerializeField] Button CoinStoreBtn;
     [SerializeField] TextMeshProUGUI AccountCoinText;
 
+    [Header("BaseSkillArea")]
+    [SerializeField] Toggle LockingTog;
+    [SerializeField] Toggle AutoTog;
+
     readonly Vector2 LeftSeatPosision = new(-600, -500);
     readonly Vector2 RightSeatPosision = new(600, -500);
 
@@ -32,10 +36,28 @@ public class GameView : BasicView
     {
         base.Start();
 
-        TurretBtn.onClick.AddListener(() => { _ = AddressableManagement.Instance.OpenTurretStoreView(); });
+        TurretBtn.onClick.AddListener(() => 
+        {
+            GameTempDataManagement.Instance.IsOpenView = true;
+            _ = AddressableManagement.Instance.OpenTurretStoreView(closeAction: () =>
+            {
+                GameTempDataManagement.Instance.IsOpenView = false;
+            });
+        });
+
+        CoinStoreBtn.onClick.AddListener(() => 
+        {
+            GameTempDataManagement.Instance.IsOpenView = true;
+            _ = AddressableManagement.Instance.OpenCoinStoreView(closeAction: () =>
+            {
+                GameTempDataManagement.Instance.IsOpenView = false;
+            });
+        });
+
         ReduceCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: true); });
-        AddCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: false); });
-        CoinStoreBtn.onClick.AddListener(() => { _ = AddressableManagement.Instance.OpenCoinStoreView(); });
+        AddCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: false); });        
+        LockingTog.onValueChanged.AddListener((isOn) => { Skill_Lock(isOn); });
+        AutoTog.onValueChanged.AddListener((isOn) => { Skill_Auto(isOn); });
 
         if (GameTempDataManagement.Instance != null)
         {
@@ -79,5 +101,21 @@ public class GameView : BasicView
     private void CurrCostChange(double cost)
     {
         CurrCostText.text = StringUtility.CurrencyFormat(cost);
+    }
+
+    /// <summary>
+    /// 技能_鎖定
+    /// </summary>
+    private void Skill_Lock(bool isOn)
+    {
+        GameTempDataManagement.Instance.IsSkill_Locking = isOn;
+    }
+
+    /// <summary>
+    /// 技能_自動
+    /// </summary>
+    private void Skill_Auto(bool isOn)
+    {
+        GameTempDataManagement.Instance.IsSkill_Auto = isOn;
     }
 }

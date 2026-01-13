@@ -32,7 +32,7 @@ public class Fish : NetworkBehaviour
         if (isMirror) query = query.Reverse();
         PathPoints = query.Skip(skipWaypoint).ToArray();
 
-        // --- 新增：初始化位置與面向 ---
+        // 初始化位置與面向
         if (PathPoints != null && PathPoints.Length >= 2)
         {
             Vector3 startPos = PathPoints[0];
@@ -47,7 +47,6 @@ public class Fish : NetworkBehaviour
                 transform.rotation = Quaternion.LookRotation(initialDir);
             }
         }
-        // ----------------------------
 
         FishData fishData = GameTempDataManagement.Instance.GetFishData(FishType);
         if (fishData != null)
@@ -175,8 +174,7 @@ public class Fish : NetworkBehaviour
     public void GetHit(PlayerRef player, double reward)
     {
         // 顯示爆金文字
-        ShowCoinText(
-            reward: reward);
+        ShowCoinText(reward: reward);
 
         if (FishModel != null)
             FishModel.SetActive(false);

@@ -130,6 +130,14 @@ MonoBehaviour:
     m_Localized: Leave the game?
     m_Metadata:
       m_Items: []
+  - m_Id: 7015806847881216
+    m_Localized: Auto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7015857645096960
+    m_Localized: Locking
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

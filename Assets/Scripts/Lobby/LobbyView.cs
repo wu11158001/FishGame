@@ -120,6 +120,8 @@ public class LobbyView : BasicView
             CheckJoinRoomDic.Add(item, false);
         }
 
+        GameTempDataManagement.Instance.Initialize();
+
         // 獲取所有魚資料
         GameTempDataManagement.Instance.GetAllFishData(callback: CheckJoinRoomData);
 

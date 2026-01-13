@@ -9,10 +9,16 @@ public class Bullet : NetworkBehaviour
     [Networked] Vector3 Direction { get; set; }
 
     Transform EffectPool;
+    Fish TargetFish;
 
     readonly Vector2 MinBounds = new(-9.6f, -5.4f);
     readonly Vector2 MaxBounds = new(9.6f, 5.4f);
     
+    public void SetData(Fish targetFish)
+    {
+        TargetFish = targetFish;
+    }
+
     public override void Spawned()
     {
         EffectPool = GameObject.Find(FusionPoolNameEnum.EffectPool.ToString()).transform;
@@ -52,11 +58,15 @@ public class Bullet : NetworkBehaviour
 
         if (pos.x < MinBounds.x || pos.x > MaxBounds.x)
         {
+            // 有鎖定魚但反彈了，解除鎖定
+            TargetFish = null;
             Direction = new Vector3(-Direction.x, 0, Direction.z);
         }
 
         if (pos.z < MinBounds.y || pos.z > MaxBounds.y)
         {
+            // 有鎖定魚但反彈了，解除鎖定
+            TargetFish = null;
             Direction = new Vector3(Direction.x, 0, -Direction.z);
         }
 
@@ -76,7 +86,20 @@ public class Bullet : NetworkBehaviour
 
         if (Physics.Raycast(transform.position, Vector3.down, out hit, RayDistance, mask))
         {
-            HitTarget(hit.collider);
+            Fish hitFish = hit.collider.GetComponentInParent<Fish>();
+
+            // 判斷是否有鎖定魚
+            if (TargetFish != null)
+            {
+                if (hitFish != null && hitFish == TargetFish)
+                {
+                    HitTarget(hitFish);
+                }
+            }
+            else if (hitFish != null)
+            {
+                HitTarget(hitFish);
+            }
         }
     }
 
@@ -84,8 +107,14 @@ public class Bullet : NetworkBehaviour
     /// 擊中目標
     /// </summary>
     /// <param name="hit"></param>
-    private void HitTarget(Collider hit)
+    private void HitTarget(Fish fish)
     {
+        if (fish == null)
+        {
+            Debug.LogError("找不到擊中魚的腳本");
+            return;
+        }
+
         // 產生擊中效果
         NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                         key: NetworkPrefabEnum.HitEffect,
@@ -93,17 +122,6 @@ public class Bullet : NetworkBehaviour
                         rot: Quaternion.identity,
                         parent: EffectPool,
                         player: Object.InputAuthority);
-
-        // 判斷是否擊中
-        var fish = hit.GetComponent<Fish>();
-        if(fish == null)
-            fish = hit.GetComponentInParent<Fish>();
-
-        if(fish == null)
-        {
-            Debug.LogError("找不到擊中魚的腳本");
-            return;
-        }
 
         FishData_Network data = fish.GetFishData();
 
