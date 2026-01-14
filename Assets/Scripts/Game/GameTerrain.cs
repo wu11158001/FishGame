@@ -7,7 +7,18 @@ using System.Linq;
 
 public class GameTerrain : NetworkBehaviour
 {
+    [Header("Seat")]
     [SerializeField] List<GameObject> Seats;
+
+    [Header("Fish Value")]
+    // 初始生成數量
+    [SerializeField] int InitCreateFishCount = 8;
+    // 一般魚生成時間(秒)
+    [SerializeField] float NormalFishCreatTime = 8;
+    // 一般魚一次生成最小數量
+    [SerializeField] int MinCreateNormalFish = 3;
+    // 一般魚一次生成最大數量
+    [SerializeField]  int MaxCreateNormalFish = 8;
 
     /// <summary> 紀錄座位上玩家ID </summary>
     [Networked, Capacity(4)]
@@ -29,12 +40,6 @@ public class GameTerrain : NetworkBehaviour
 
     // 本地玩家是否已生成
     bool isLocalSpawn;
-    // 一般魚生成時間(秒)
-    float NormalFishCreatTime = 10;
-    // 一般魚一次生成最小數量
-    int MinCreateNormalFish = 3;
-    // 一般魚一次生成最大數量
-    int MaxCreateNormalFish = 8;
 
     private void OnDestroy()
     {
@@ -280,11 +285,15 @@ public class GameTerrain : NetworkBehaviour
         int preWaypointIndex = -1;
 
         // 總生成數量
-        int totalCount = UnityEngine.Random.Range(MinCreateNormalFish, MaxCreateNormalFish + 1);
+        int totalCount = 
+            IsFirstCreate ?
+            InitCreateFishCount :
+            UnityEngine.Random.Range(MinCreateNormalFish, MaxCreateNormalFish + 1);
+
         for (int i = 0; i < totalCount; i++)
         {
             // 隨機魚種類
-            int fishTypeIndex = UnityEngine.Random.Range(0, NormalFishTypes.Count);
+            int fishTypeIndex = 4;// UnityEngine.Random.Range(0, NormalFishTypes.Count);
             NetworkPrefabEnum fishType = NormalFishTypes[fishTypeIndex];
 
             // 隨機選擇路線

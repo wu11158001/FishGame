@@ -325,7 +325,6 @@ GameObject:
   - component: {fileID: 7540506100158636857}
   - component: {fileID: 6268829182737687572}
   - component: {fileID: 5790366451682702402}
-  - component: {fileID: 4892865643735376141}
   m_Layer: 10
   m_Name: NormalFish_2
   m_TagString: Untagged
@@ -423,27 +422,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &4892865643735376141
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2021117303604591348}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.09, y: 0.1, z: 0.52}
-  m_Center: {x: 0, y: 0.055, z: -0.04}
 --- !u!1 &2209131791598610202
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,6 +559,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2663110034617913069}
   - component: {fileID: 8081804421214055266}
+  - component: {fileID: 58487252442349303}
   m_Layer: 10
   m_Name: FishModel
   m_TagString: Untagged
@@ -705,6 +684,27 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.0018531773, y: 0.15100151, z: -0.013861826}
     m_Extent: {x: 0.06394678, y: 0.2787025, z: 0.07491646}
   m_DirtyAABB: 0
+--- !u!65 &58487252442349303
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2937606296494201058}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.13, y: 0.55, z: 0.18}
+  m_Center: {x: 0, y: 0.04, z: 0}
 --- !u!1 &3523128409299785044
 GameObject:
   m_ObjectHideFlags: 0

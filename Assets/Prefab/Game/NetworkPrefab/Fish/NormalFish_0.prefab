@@ -231,6 +231,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6279202348396069706}
   - component: {fileID: 2313013405593995607}
+  - component: {fileID: 6605134573031142636}
   m_Layer: 10
   m_Name: FishModel
   m_TagString: Untagged
@@ -323,6 +324,27 @@ SkinnedMeshRenderer:
     m_Center: {x: -1.6763911, y: 0.7923341, z: -0.7433188}
     m_Extent: {x: 10.990822, y: 3.944828, z: 6.280051}
   m_DirtyAABB: 0
+--- !u!65 &6605134573031142636
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6666053332829180253}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 8.23, y: 8.39, z: 21}
+  m_Center: {x: 0.16, y: -0.74, z: -4.2}
 --- !u!1 &6883889066956745354
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,7 +456,6 @@ GameObject:
   - component: {fileID: 3247019587191361611}
   - component: {fileID: 6283603754715314768}
   - component: {fileID: 9050656029021909188}
-  - component: {fileID: 8332115185731646915}
   m_Layer: 10
   m_Name: NormalFish_0
   m_TagString: Untagged
@@ -532,24 +553,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &8332115185731646915
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8684528587351328612}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 8.23, y: 8.39, z: 21}
-  m_Center: {x: 0.16, y: -0.74, z: -4.2}
