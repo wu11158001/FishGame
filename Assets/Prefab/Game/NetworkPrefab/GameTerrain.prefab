@@ -1444,7 +1444,7 @@ MonoBehaviour:
   - {fileID: 1207396067173202399}
   - {fileID: 4743146370798967890}
   - {fileID: 91539589686417959}
-  InitCreateFishCount: 5
+  InitCreateFishCount: 7
   NormalFishCreatTime: 8
   MinCreateNormalFish: 3
   MaxCreateNormalFish: 8

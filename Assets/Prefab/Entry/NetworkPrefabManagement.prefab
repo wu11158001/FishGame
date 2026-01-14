@@ -84,3 +84,6 @@ MonoBehaviour:
   - Key: 13
     PrefabRef:
       RawGuidValue: 2b6ff6635e5d34b4580b25339ef8783e
+  - Key: 14
+    PrefabRef:
+      RawGuidValue: abb9aeb9d672bb245be6d736d81a8bdc
