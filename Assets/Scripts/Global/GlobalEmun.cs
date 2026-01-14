@@ -140,6 +140,7 @@ public enum NetworkPrefabEnum
     NormalFish_3,
     NormalFish_4,
     NormalFish_5,
+    NormalFish_6,
 }
 
 /// <summary>
@@ -165,6 +166,7 @@ public enum GamePrefabEnum
     CoinText_1,
     CoinText_2,
     CoinText_3,
+    CoinText_4,
 }
 
 /// <summary>

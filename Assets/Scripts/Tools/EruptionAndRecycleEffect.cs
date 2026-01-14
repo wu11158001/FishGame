@@ -18,6 +18,7 @@ public class EruptionAndRecycleEffect : MonoBehaviour
     [Header("Recycle")]
     [SerializeField] float RecycleDuration = 1;         // 回收時間
 
+    GameObject CreateObj;
     List<GameObject> ObjList = new();
 
     private void OnDestroy()
@@ -46,6 +47,8 @@ public class EruptionAndRecycleEffect : MonoBehaviour
 
     private void OnEnable()
     {
+        StopAllCoroutines();
+
         foreach (var obj in ObjList)
         {
             obj.transform.DOKill();
@@ -58,22 +61,27 @@ public class EruptionAndRecycleEffect : MonoBehaviour
     /// <summary>
     /// 噴發效果
     /// </summary>
-    private void EruptionEffect()
+    private async void EruptionEffect()
     {
-        if(ObjList == null || ObjList.Count == 0)
+        if (CreateObj == null || ObjList == null || ObjList.Count == 0)
         {
-            for (int i = 0; i < EruptionCount; i++)
-            {
-                int index = i;
-
-                _ = AddressableManagement.Instance.CreateGamePrefab(
+            await AddressableManagement.Instance.CreateGamePrefab(
                     prefabType: EruptionType,
                     parent: transform,
                     callback: (obj) =>
                     {
-                        ObjList.Add(obj);
-                        DoEruptionEffect(obj, index);
-                    });
+                        CreateObj = obj;
+                        CreateObj.SetActive(false);
+                    }); 
+
+            for (int i = 0; i < EruptionCount; i++)
+            {
+                int index = i;
+
+                GameObject obj = Instantiate(CreateObj, transform);
+                obj.SetActive(true);
+                ObjList.Add(obj);
+                DoEruptionEffect(obj, index);
             }
         }
         else

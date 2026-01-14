@@ -293,7 +293,7 @@ public class GameTerrain : NetworkBehaviour
         for (int i = 0; i < totalCount; i++)
         {
             // 隨機魚種類
-            int fishTypeIndex = 5;// UnityEngine.Random.Range(0, NormalFishTypes.Count);
+            int fishTypeIndex = 6;// UnityEngine.Random.Range(0, NormalFishTypes.Count);
             NetworkPrefabEnum fishType = NormalFishTypes[fishTypeIndex];
 
             // 隨機選擇路線
@@ -320,7 +320,7 @@ public class GameTerrain : NetworkBehaviour
             // 首次產生魚位置在畫面中
             if (IsFirstCreate)
             {
-                skipWaypoint = UnityEngine.Random.Range(2, wayPoint.Points.Count - 2);
+                skipWaypoint = UnityEngine.Random.Range(1, wayPoint.Points.Count - 1);
                 initPos = wayPoint.Points[skipWaypoint].position;
             }
 

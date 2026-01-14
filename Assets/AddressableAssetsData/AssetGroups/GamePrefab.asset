@@ -43,6 +43,12 @@ MonoBehaviour:
   - m_GUID: bda0114ab75613a46a73b5a4d5782556
     m_Address: CoinText_3
     m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c8f540868922d224ea7165be5c089dab
+    m_Address: CoinText_4
+    m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c9829efd372c065499cfe26d5fb54e18

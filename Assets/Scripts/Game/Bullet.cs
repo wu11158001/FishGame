@@ -179,7 +179,7 @@ public class Bullet : NetworkBehaviour
         }      
 
         double hitValue = UnityEngine.Random.value;
-        Debug.LogError($"period: {period} / hitValue: {hitValue} / probability: {probability}");
+
         if (hitValue <= probability)
         {
             // 獲得金幣

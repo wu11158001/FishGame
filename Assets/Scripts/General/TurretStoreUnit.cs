@@ -156,9 +156,12 @@ public class TurretStoreUnit : MonoBehaviour
                 if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶金幣資料失敗");
                 else
                 {
-                    // 顯示獲得物品
-                    AddressableManagement.Instance.ShowGetItemView(
-                        iconSprite: TurretStoreUnitData.CoverSprite);
+                    if(!IsOwn)
+                    {
+                        // 顯示獲得物品
+                        AddressableManagement.Instance.ShowGetItemView(
+                            iconSprite: TurretStoreUnitData.CoverSprite);
+                    }
                 }
             });
         }
