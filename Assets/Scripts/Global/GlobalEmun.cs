@@ -142,6 +142,8 @@ public enum NetworkPrefabEnum
     NormalFish_5,
     NormalFish_6,
     NormalFish_7,
+    NormalFish_8,
+    NormalFish_9,
 }
 
 /// <summary>
