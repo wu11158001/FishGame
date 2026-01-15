@@ -5,7 +5,7 @@ AssetOrigin:
   productId: 200333
   packageName: Hyper Casual FX
   packageVersion: 1.0.1
-  assetPath: Assets/Lana Studio/Hyper Casual FX/Textures/confetti_large.png
+  assetPath: Assets/Textures/Effect/Confetti/confetti_large.png
   uploadId: 475766
 TextureImporter:
   internalIDToNameTable:

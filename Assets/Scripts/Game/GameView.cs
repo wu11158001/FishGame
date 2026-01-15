@@ -97,7 +97,6 @@ public class GameView : BasicView
     /// </summary>
     private void TempAccountCoinChange(double coin)
     {
-        Debug.Log($"暫存帳戶金幣資料變更: {coin}");
         AccountCoinText.text = StringUtility.CurrencyFormat(coin);
     }
 

@@ -5,7 +5,7 @@ AssetOrigin:
   productId: 200333
   packageName: Hyper Casual FX
   packageVersion: 1.0.1
-  assetPath: Assets/Lana Studio/Hyper Casual FX/Textures/Circle03.png
+  assetPath: Assets/Textures/Effect/ShineBlue/Circle03.png
   uploadId: 475766
 TextureImporter:
   internalIDToNameTable: []

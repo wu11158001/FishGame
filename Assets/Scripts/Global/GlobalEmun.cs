@@ -119,31 +119,34 @@ public enum FirestoreStatusEnum
 public enum NetworkPrefabEnum
 {
     /// <summary> 預設 </summary>
-    None,
+    None = -1,
 
     /// <summary> 遊戲地形 </summary>
-    GameTerrain,
+    GameTerrain = 0,
 
     /// <summary> 玩家砲台 </summary>
-    PlayerTurret,
+    PlayerTurret = 1,
 
     /// <summary> 子彈物件 </summary>
-    Bullet,
+    Bullet = 2,
 
     /// <summary> 擊中特效 </summary>
-    HitEffect,
+    HitEffect = 3,
+
+    /// <summary> 魚擊中特效 </summary>
+    FishHitEffect = 4,
 
     /// <summary> 一般魚魚物件 </summary>
-    NormalFish_0,
-    NormalFish_1,
-    NormalFish_2,
-    NormalFish_3,
-    NormalFish_4,
-    NormalFish_5,
-    NormalFish_6,
-    NormalFish_7,
-    NormalFish_8,
-    NormalFish_9,
+    NormalFish_0 = 100,
+    NormalFish_1 = 101,
+    NormalFish_2 = 102,
+    NormalFish_3 = 103,
+    NormalFish_4 = 104,
+    NormalFish_5 = 105,
+    NormalFish_6 = 106,
+    NormalFish_7 = 107,
+    NormalFish_8 = 108,
+    NormalFish_9 = 109,
 }
 
 /// <summary>
@@ -152,24 +155,24 @@ public enum NetworkPrefabEnum
 public enum GamePrefabEnum
 {
     /// <summary> 魚群路線主物件 </summary>
-    WayPointMain,
+    WayPointMain = 0,
 
     /// <summary> 場景特效 </summary>
-    SceneEffect,
+    SceneEffect = 1,
 
     /// <summary> 本地物件池 </summary>
-    LocalPool,
+    LocalPool = 2,
 
     /// <summary> 技能_鎖定 </summary>
-    Skill_Locking,
+    Skill_Locking = 50,
 
     /// <summary> 爆金文字 </summary>
-    Coin,
-    CoinText_0,
-    CoinText_1,
-    CoinText_2,
-    CoinText_3,
-    CoinText_4,
+    Coin = 100,
+    CoinText_0 = 101,
+    CoinText_1 = 102,
+    CoinText_2 = 103,
+    CoinText_3 = 104,
+    CoinText_4 = 105,
 }
 
 /// <summary>

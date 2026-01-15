@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: bf04f30f380d18849b60d45ecaab22f6
+guid: 1ad88c9c9b62b4e40af9d2d3db57588d
 AssetOrigin:
   serializedVersion: 1
   productId: 200333
   packageName: Hyper Casual FX
   packageVersion: 1.0.1
-  assetPath: Assets/Textures/Effect/ShineBlue/Ray01.png
+  assetPath: Assets/Lana Studio/Hyper Casual FX/Textures/Gradient01.png
   uploadId: 475766
 TextureImporter:
   internalIDToNameTable: []
@@ -76,7 +76,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 256
+    maxTextureSize: 128
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -133,7 +133,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: c30788e61446f0148bf8ac44a793d988
+    spriteID: ce90bf03e0ec9a143a7e62fec48c0f03
     internalID: 0
     vertices: []
     indices: 

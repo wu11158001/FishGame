@@ -550,7 +550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c2393655d406c4dbc022b3e5ec7b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
-  CoinTextType: 6
+  CoinTextType: 102
   FishModel: {fileID: 713827982363302774}
 --- !u!114 &3431885742495333990
 MonoBehaviour:

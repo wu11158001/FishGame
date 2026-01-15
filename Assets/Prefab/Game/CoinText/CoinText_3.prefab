@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c0dfbdab5021d241bab6e1d6d14366b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EruptionAndRecycleEffect
-  EruptionType: 4
+  EruptionType: 100
   EruptionRadius: 1
   EruptionDuration: 0.5
   EruptionCount: 5

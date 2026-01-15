@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: bf04f30f380d18849b60d45ecaab22f6
+guid: 19a47a1a975ddeb4992226a4867d9eb9
 AssetOrigin:
   serializedVersion: 1
   productId: 200333
   packageName: Hyper Casual FX
   packageVersion: 1.0.1
-  assetPath: Assets/Textures/Effect/ShineBlue/Ray01.png
+  assetPath: Assets/Lana Studio/Hyper Casual FX/Textures/Circle06.png
   uploadId: 475766
 TextureImporter:
   internalIDToNameTable: []
@@ -76,7 +76,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 256
+    maxTextureSize: 128
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -133,7 +133,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: c30788e61446f0148bf8ac44a793d988
+    spriteID: c609c51552eb8d7448fac4c6e749d3e1
     internalID: 0
     vertices: []
     indices: 

@@ -135,7 +135,12 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     {
         if(levelData != null)
         {
+            double currDefaultCost = CurrentLevelData.DefaultCost;
+
             CurrentLevelData = levelData;
+
+            // 子彈花費本地不更新
+            CurrentLevelData.DefaultCost = currDefaultCost;
         }
     }
 

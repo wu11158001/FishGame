@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: bf04f30f380d18849b60d45ecaab22f6
+guid: c1b77ffedb1987f43a8aeb4b0eecd391
 AssetOrigin:
   serializedVersion: 1
   productId: 200333
   packageName: Hyper Casual FX
   packageVersion: 1.0.1
-  assetPath: Assets/Textures/Effect/ShineBlue/Ray01.png
+  assetPath: Assets/Lana Studio/Hyper Casual FX/Textures/Flare02.png
   uploadId: 475766
 TextureImporter:
   internalIDToNameTable: []
@@ -133,7 +133,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: c30788e61446f0148bf8ac44a793d988
+    spriteID: 452cc41ce697e1944b23cf262a68a6b4
     internalID: 0
     vertices: []
     indices: 

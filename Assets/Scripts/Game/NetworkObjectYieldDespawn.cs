@@ -2,7 +2,7 @@ using UnityEngine;
 using Fusion;
 using System.Collections;
 
-public class HitEffect : NetworkBehaviour
+public class NetworkObjectYieldDespawn : NetworkBehaviour
 {
     [SerializeField] float DespawnTime = 1f;
 

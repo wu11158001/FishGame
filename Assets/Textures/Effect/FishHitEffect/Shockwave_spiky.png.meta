@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: bf04f30f380d18849b60d45ecaab22f6
+guid: ccd3c6eb8020e97489da396bf552b3ee
 AssetOrigin:
   serializedVersion: 1
   productId: 200333
   packageName: Hyper Casual FX
   packageVersion: 1.0.1
-  assetPath: Assets/Textures/Effect/ShineBlue/Ray01.png
+  assetPath: Assets/Lana Studio/Hyper Casual FX/Textures/Shockwave_spiky.png
   uploadId: 475766
 TextureImporter:
   internalIDToNameTable: []
@@ -133,7 +133,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: c30788e61446f0148bf8ac44a793d988
+    spriteID: 8462483e79268a749b6c15dcccb4766e
     internalID: 0
     vertices: []
     indices: 

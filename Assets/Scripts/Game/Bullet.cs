@@ -193,6 +193,16 @@ public class Bullet : NetworkBehaviour
                 return;
             }
 
+            Debug.Log($"{data.FishType} : {currDefaultCost} * {data.Magnification} = {reward}");
+
+            // 產生魚擊中效果
+            NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                            key: NetworkPrefabEnum.FishHitEffect,
+                            Pos: fish.transform.position,
+                            rot: Quaternion.identity,
+                            parent: EffectPool,
+                            player: Object.InputAuthority);
+
             TempDataManagement.Instance.RecodJackpot -= reward;
 
             TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward);
