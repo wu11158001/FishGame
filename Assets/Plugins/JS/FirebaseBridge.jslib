@@ -200,10 +200,14 @@ mergeInto(LibraryManager.library, {
             window.firestoreUnsubscribes = {};
         }
 
-        // 如果該文件已經有在監聽，先取消舊的
-        if (window.firestoreUnsubscribes[documentId]) {
-            window.firestoreUnsubscribes[documentId]();
+        // 強制取消「所有」現有的監聽
+        for (var key in window.firestoreUnsubscribes) {
+            if (typeof window.firestoreUnsubscribes[key] === "function") {
+                console.log("正在移除舊監聽器: " + key);
+                window.firestoreUnsubscribes[key](); 
+            }
         }
+        window.firestoreUnsubscribes = {}; // 清空物件
 
         // 開始監聽
         var unsub = window.db.collection(colPath).doc(documentId).onSnapshot(function(doc) {
@@ -216,7 +220,7 @@ mergeInto(LibraryManager.library, {
             window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));
         }, function(error) {
             console.error("監聽失敗: ", error.message);
-            var errorResp = { Guid: id, IsSuccess: false, Status: "ListenError", JsonData: "" };
+            var errorResp = { IsSuccess: false, Status: "ListenError", JsonData: "" };
             window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(errorResp));
         });
 

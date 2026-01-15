@@ -11,10 +11,10 @@ public static class PlayerPrefsManagement
     public static string RECORD_LOGIN_INFO = "RECORD_LOGIN_INFO";
 
     /// <summary>
-    /// 獲取玩家登入資料
+    /// 獲取上次玩家登入資料
     /// </summary>
     /// <returns></returns>
-    public static LoginInfo GetLoginInfo()
+    public static LoginInfo GetPreLoginInfo()
     {
         return JsonUtility.FromJson<LoginInfo>(PlayerPrefs.GetString(LOGIN_INFO));
     }

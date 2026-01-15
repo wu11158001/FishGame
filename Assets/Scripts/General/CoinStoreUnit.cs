@@ -59,7 +59,7 @@ public class CoinStoreUnit : MonoBehaviour
         {
             FirestoreManagement.Instance.UpdateDataToFirestore(
             path: FirestoreCollectionNameEnum.AccountData,
-            docId: PlayerPrefsManagement.GetLoginInfo().Account,
+            docId: FirestoreManagement.Instance.CurrLoginInfo.Account,
             updates: updates,
             callback: (res) =>
             {

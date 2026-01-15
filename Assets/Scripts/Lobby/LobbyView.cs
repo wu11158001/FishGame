@@ -120,19 +120,19 @@ public class LobbyView : BasicView
             CheckJoinRoomDic.Add(item, false);
         }
 
-        GameTempDataManagement.Instance.Initialize();
+        TempDataManagement.Instance.Initialize();
 
         // 獲取所有魚資料
-        GameTempDataManagement.Instance.GetAllFishData(callback: CheckJoinRoomData);
+        TempDataManagement.Instance.GetAllFishData(callback: CheckJoinRoomData);
 
         // 獲取所有砲台資料
-        GameTempDataManagement.Instance.GetAllTurretData(callback: CheckJoinRoomData);
+        TempDataManagement.Instance.GetAllTurretData(callback: CheckJoinRoomData);
 
         // 獲取關卡資料
-        GameTempDataManagement.Instance.GetCurrentLevelData(levelType: levelType, callback: CheckJoinRoomData);
+        TempDataManagement.Instance.GetCurrentLevelData(levelType: levelType, callback: CheckJoinRoomData);
 
         // 獲取帳戶資料
-        GameTempDataManagement.Instance.GetTempAccountData(callback: CheckJoinRoomData);
+        TempDataManagement.Instance.GetTempAccountData(callback: CheckJoinRoomData);
 
         // 開始監聽關卡資料
         FirestoreManagement.Instance.StartListenLevelData(levelType: levelType);
@@ -147,6 +147,9 @@ public class LobbyView : BasicView
         if(!CheckJoinRoomDic.ContainsKey(dataType))
         {
             Debug.LogError($"檢查加入房間資料獲取狀態錯誤: {dataType}");
+            IsMatchmaking = false;
+            Canvas_Global.Instance.CloseLoading();
+            Canvas_Global.Instance.CloseSceneLoadingView();
             return;
         }
 
@@ -165,6 +168,7 @@ public class LobbyView : BasicView
     private async void JoInLobby()
     {
         NetworkRunnerManagement.Instance.ResetRunner();
+        Canvas_Global.Instance.ShowSceneLoadingView();
 
         var runner = NetworkRunnerManagement.Instance.NetworkRunner;
 
@@ -177,6 +181,8 @@ public class LobbyView : BasicView
         {
             Debug.LogError($"無法加入大廳: {result.ShutdownReason}");
             IsMatchmaking = false;
+            Canvas_Global.Instance.CloseLoading();
+            Canvas_Global.Instance.CloseSceneLoadingView();
         }
     }
 
@@ -189,9 +195,10 @@ public class LobbyView : BasicView
 
         if (!result.Ok)
         {
-            Debug.LogError($"無法加入房間: {result.ShutdownReason}");
-            Canvas_Global.Instance.CloseLoading();
+            Debug.LogError($"無法加入房間: {result.ShutdownReason}");            
             IsMatchmaking = false;
+            Canvas_Global.Instance.CloseLoading();
+            Canvas_Global.Instance.CloseSceneLoadingView();
         }
     }
 

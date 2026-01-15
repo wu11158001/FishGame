@@ -48,7 +48,7 @@ public class Fish : NetworkBehaviour
             }
         }
 
-        FishData fishData = GameTempDataManagement.Instance.GetFishData(FishType);
+        FishData fishData = TempDataManagement.Instance.GetFishData(FishType);
         if (fishData != null)
             FishData_Network = fishData.ToNetworkStruct();
 

@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using Newtonsoft.Json;
 
-public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagement>
+public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
 {
     /// <summary>
     /// 當前關卡資料
@@ -53,6 +53,9 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
     public bool IsOpenView { get; set; }
     // 技能_自動
     public bool IsSkill_Auto { get; set; }
+    // 技能_鎖定強制關閉事件
+    public delegate void Skill_AutoClose();
+    public event Skill_AutoClose IsSkill_AutoCloseDelegate;
     // 技能_鎖定
     public bool IsSkill_Locking { get; set; }
 
@@ -286,7 +289,7 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
 
         FirestoreManagement.Instance.GetDataFromFirestore(
             path: FirestoreCollectionNameEnum.AccountData,
-            docId: PlayerPrefsManagement.GetLoginInfo().Account,
+            docId: FirestoreManagement.Instance.CurrLoginInfo.Account,
             callback: GetTempAccountDataCallback);
     }
 
@@ -407,7 +410,7 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
             {
                 FirestoreManagement.Instance.UpdateDataToFirestore(
                 path: FirestoreCollectionNameEnum.AccountData,
-                docId: PlayerPrefsManagement.GetLoginInfo().Account,
+                docId: FirestoreManagement.Instance.CurrLoginInfo.Account,
                 updates: updates,
                 callback: (res) =>
                 {
@@ -475,6 +478,19 @@ public class GameTempDataManagement : SingletonMonoBehaviour<GameTempDataManagem
 
         Debug.LogWarning($"找不到砲台資料: {turretType}");
         return null;
+    }
+
+    #endregion
+
+    #region 技能
+
+    /// <summary>
+    /// 技能_自動強制關閉事件
+    /// </summary>
+    public void IsSkill_AutoCloseEvent()
+    {
+        IsSkill_Auto = false;
+        IsSkill_AutoCloseDelegate?.Invoke();
     }
 
     #endregion

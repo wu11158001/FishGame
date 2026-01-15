@@ -25,6 +25,9 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     // 用來儲存所有的回調，Key = GUID
     private Dictionary<string, Action<FirestoreResponse>> PendingCallbacks = new();
 
+    // 當下登入帳戶訊息
+    public LoginInfo CurrLoginInfo { get; set; }
+
     // 帳戶資料變更監聽
     public delegate void AccountDataChange(AccountData accountData);
     public event AccountDataChange AsccountDataChangeDelegate;
@@ -109,8 +112,6 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         // 獲取當前 Unix 時間戳 - 心跳包時間 (秒)
         long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - HeartbeatTime;
 
-        LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
-
         var updates = new Dictionary<string, object>
             {
                 { "HeartbeatUpdateTime", currentTimestamp }
@@ -118,7 +119,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
 
         UpdateDataToFirestore(
             path: FirestoreCollectionNameEnum.AccountData,
-            docId: loginInfo.Account,
+            docId: CurrLoginInfo.Account,
             updates: updates,
             callback: (res) => {
                 if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
@@ -152,11 +153,9 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
                 { "HeartbeatUpdateTime", currentTimestamp }
             };
 
-            LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
-
             UpdateDataToFirestore(
                 path: FirestoreCollectionNameEnum.AccountData,
-                docId: loginInfo.Account,
+                docId: CurrLoginInfo.Account,
                 updates: updates,
                 callback: (res) => {
                     if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
@@ -450,7 +449,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     public void StartListenAccountData()
     {
         string path = FirestoreCollectionNameEnum.AccountData.ToString();
-        string docId = PlayerPrefsManagement.GetLoginInfo().Account;
+        string docId = CurrLoginInfo.Account;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         ListenToFirestoreData(path, docId, gameObject.name, nameof(OnAccountDataChanged));
@@ -487,7 +486,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// </summary>
     public void StopListenAccountData()
     {
-        string docId = PlayerPrefsManagement.GetLoginInfo().Account;
+        string docId = CurrLoginInfo.Account;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         // WebGL 端：呼叫 .jslib 刪除 JS 字典裡的監聽
@@ -506,6 +505,8 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// </summary>
     public void OnAccountDataChanged(string jsonResponse)
     {
+        Debug.Log($"帳戶資料變更: {jsonResponse}");
+
         var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
         AccountData accountData = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
         AsccountDataChangeDelegate?.Invoke(accountData);
@@ -530,7 +531,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         string docId = levelType.ToString();
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-        ListenToFirestoreData(path, docId, gameObject.name, nameof(OnAccountDataChanged));
+        ListenToFirestoreData(path, docId, gameObject.name, nameof(OnLevelDataChanged));
         Debug.Log($"[WebGL] 開始監聽: {docId}");
 #else
         // 已經在監聽停止
@@ -584,8 +585,8 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     public void OnLevelDataChanged(string jsonResponse)
     {
         var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
-        LevelData accountData = JsonConvert.DeserializeObject<LevelData>(response.JsonData);
-        LevelDataChangeDelegate?.Invoke(accountData);
+        LevelData levelData = JsonConvert.DeserializeObject<LevelData>(response.JsonData);
+        LevelDataChangeDelegate?.Invoke(levelData);
     }
 
     #endregion

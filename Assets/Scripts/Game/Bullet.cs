@@ -3,7 +3,7 @@ using Fusion;
 
 public class Bullet : NetworkBehaviour
 {
-    [SerializeField] float Speed = 10;
+    [SerializeField] float Speed = 15;
     [SerializeField] float RayDistance = 50f;
 
     [Networked] Vector3 Direction { get; set; }
@@ -127,8 +127,8 @@ public class Bullet : NetworkBehaviour
 
         // 判斷階段(休閒/咬分/吐分)
         GamePeriod period = GamePeriod.IdlePeriod;
-        GamePeriod playerPeriod = GameTempDataManagement.Instance.TempAccountData.GamePeriod;
-        GamePeriod levelPeriod = GameTempDataManagement.Instance.CurrentLevelData.GamePeriod;
+        GamePeriod playerPeriod = TempDataManagement.Instance.TempAccountData.GamePeriod;
+        GamePeriod levelPeriod = TempDataManagement.Instance.CurrentLevelData.GamePeriod;
         if(playerPeriod == GamePeriod.IdlePeriod)
         {
             // 玩家屬於休閒期，依照關卡設置
@@ -143,9 +143,9 @@ public class Bullet : NetworkBehaviour
         // 如果屬於休閒期，判斷獎池
         if(period == GamePeriod.IdlePeriod)
         {
-            double payoutPeriodValue = GameTempDataManagement.Instance.CurrentLevelData.PayoutPeriodValue;
-            double suckingPeriodValue = GameTempDataManagement.Instance.CurrentLevelData.SuckingPeriodValue;
-            double jackpot = GameTempDataManagement.Instance.CurrentLevelData.Jackpot;
+            double payoutPeriodValue = TempDataManagement.Instance.CurrentLevelData.PayoutPeriodValue;
+            double suckingPeriodValue = TempDataManagement.Instance.CurrentLevelData.SuckingPeriodValue;
+            double jackpot = TempDataManagement.Instance.CurrentLevelData.Jackpot;
 
             if (jackpot < suckingPeriodValue)
                 period = GamePeriod.SuckingPeriod;
@@ -166,14 +166,14 @@ public class Bullet : NetworkBehaviour
             // 咬分期
             case GamePeriod.SuckingPeriod:
                 // 減少倍率
-                float lose = Mathf.Max(0, (float)GameTempDataManagement.Instance.CurrentLevelData.SuckingPeriodLose);
+                float lose = Mathf.Max(0, (float)TempDataManagement.Instance.CurrentLevelData.SuckingPeriodLose);
                 probability /= lose;
                 break;
 
             // 吐分期
             case GamePeriod.PayoutPeriod:
                 // 增加倍率
-                float add = Mathf.Max(0, (float)GameTempDataManagement.Instance.CurrentLevelData.PayoutPeriodAdd);
+                float add = Mathf.Max(0, (float)TempDataManagement.Instance.CurrentLevelData.PayoutPeriodAdd);
                 probability *= add;
                 break;
         }      
@@ -183,19 +183,19 @@ public class Bullet : NetworkBehaviour
         if (hitValue <= probability)
         {
             // 獲得金幣
-            double currDefaultCost = GameTempDataManagement.Instance.CurrentLevelData.DefaultCost;
+            double currDefaultCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
             double reward = currDefaultCost * data.Magnification;
 
             // 判斷獎池
-            if(GameTempDataManagement.Instance.CurrentLevelData.Jackpot < reward)
+            if(TempDataManagement.Instance.CurrentLevelData.Jackpot < reward)
             {
                 Debug.Log($"獎池不足!");
                 return;
             }
 
-            GameTempDataManagement.Instance.RecodJackpot -= reward;
+            TempDataManagement.Instance.RecodJackpot -= reward;
 
-            GameTempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward);
+            TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward);
             fish.GetHit(player: Runner.LocalPlayer, reward: reward);
         }
 

@@ -98,7 +98,7 @@ public class LoginView : BasicView
         yield return IYieldShow();
 
         // 自動填寫紀錄帳號
-        LoginInfo loginInfo = PlayerPrefsManagement.GetLoginInfo();
+        LoginInfo loginInfo = PlayerPrefsManagement.GetPreLoginInfo();
         if (loginInfo != null)
         {
             AccountIF_Login.text = loginInfo.Account;
@@ -544,7 +544,7 @@ public class LoginView : BasicView
         if (response.ResponseStatus == FirestoreStatusEnum.Success)
         {
             Canvas_Global.Instance.ShowLoading();
-            SvaeLoginInfo(AccountIF_Register.text, PasswordIF_Register.text);
+            SvaeLoginInfo(account: AccountIF_Register.text, password: PasswordIF_Register.text);
             InLobby();
             Debug.Log("註冊成功");
         }
@@ -563,12 +563,15 @@ public class LoginView : BasicView
         // 紀錄登入帳號訊息
         LoginInfo loginInfo = new()
         {
-            Account = AccountIF_Login.text,
-            Password = PasswordIF_Login.text,
+            Account = account,
+            Password = password,
         };
 
         string loginInfoJson = JsonUtility.ToJson(loginInfo);
         PlayerPrefs.SetString(PlayerPrefsManagement.LOGIN_INFO, loginInfoJson);
+
+        // 紀錄當下登入帳戶訊息
+        FirestoreManagement.Instance.CurrLoginInfo = loginInfo;
 
         // 紀錄曾經登入帳號訊息
         RecordLoginInfo recordData = PlayerPrefsManagement.GetRecordLoginInfo();

@@ -138,7 +138,7 @@ public class GameTerrain : NetworkBehaviour
                         PlayerTurret playerTurret = obj.GetComponent<PlayerTurret>();
                         if(playerTurret != null)
                         {
-                            playerTurret.SetData(turretIndex: GameTempDataManagement.Instance.TempAccountData.DefaultTurret);
+                            playerTurret.SetData(turretIndex: TempDataManagement.Instance.TempAccountData.DefaultTurret);
                         }
                     });
 
@@ -148,8 +148,8 @@ public class GameTerrain : NetworkBehaviour
                     Transform cameraTr = Camera.main.transform;
                     cameraTr.rotation = Quaternion.Euler(90, 0, 180);
                 }
-                GameTempDataManagement.Instance.IsMirror = index == 1 || index == 3;
-                GameTempDataManagement.Instance.SeatPosition = Seats[index].transform.position;
+                TempDataManagement.Instance.IsMirror = index == 1 || index == 3;
+                TempDataManagement.Instance.SeatPosition = Seats[index].transform.position;
 
                 _ = AddressableManagement.Instance.OpenGameView(localSeat: index);
 
@@ -180,6 +180,21 @@ public class GameTerrain : NetworkBehaviour
                     if (!seatNO.HasStateAuthority)
                     {
                         seatNO.RequestStateAuthority();
+                    }
+                }
+            }
+
+            // 請求所有場上魚的權限
+            if (FishPool == null)
+                FishPool = GameObject.Find(FusionPoolNameEnum.FishPool.ToString()).transform;
+
+            for (int i = 0; i < FishPool.childCount; i++)
+            {
+                if(FishPool.GetChild(i).TryGetComponent<NetworkObject>(out var fish))
+                {
+                    if (!fish.HasStateAuthority)
+                    {
+                        fish.RequestStateAuthority();
                     }
                 }
             }

@@ -55,7 +55,6 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         }
 
         AddressableManagement.Instance.ClearAllSceneViews();
-        Canvas_Global.Instance.ShowSceneLoadingView();
 
         var poolObj = new GameObject("Fusion Pool Object");
         poolObj.transform.SetParent(gameObject.transform);
@@ -157,7 +156,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         Debug.Log($"玩家離開: {player.PlayerId}");
 
-        if (runner.IsSharedModeMasterClient)
+        /*if (runner.IsSharedModeMasterClient)
         {
             foreach (var no in runner.GetAllNetworkObjects())
             {
@@ -166,7 +165,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
                     runner.Despawn(no);
                 }
             }
-        }
+        }*/
 
         PlayerLeftEvent?.Invoke(runner, player);
     }
@@ -248,17 +247,17 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
             AddressableManagement.Instance.ClearGamePrefab();
 
         
-        if (GameTempDataManagement.Instance != null)
+        if (TempDataManagement.Instance != null)
         {
             // 停止計時更新Firestore帳戶資料
-            GameTempDataManagement.Instance.StopTimingUpdateAccountData();
+            TempDataManagement.Instance.StopTimingUpdateAccountData();
             // 停止計時更新Firestore關卡獎池資料
-            GameTempDataManagement.Instance.StopTimingUpdateLevelDataJackpot();
+            TempDataManagement.Instance.StopTimingUpdateLevelDataJackpot();
 
             if (FirestoreManagement.Instance != null)
             {
                 // 停止監聽關卡資料
-                FirestoreManagement.Instance.StopListenLevelData(GameTempDataManagement.Instance.CurrentLevelData.LevelType);
+                FirestoreManagement.Instance.StopListenLevelData(TempDataManagement.Instance.CurrentLevelData.LevelType);
             }
         }
 

@@ -57,7 +57,7 @@ public class GameFloatBtn : MonoBehaviour
         MainBtn.onClick.AddListener(SwitchShowBtns);
         HomeBtn.onClick.AddListener(() =>
         {
-            GameTempDataManagement.Instance.IsOpenView = true;
+            TempDataManagement.Instance.IsOpenView = true;
 
             AddressableManagement.Instance.ShowConfirmView(
                 contentKey: "Leave the game?",
@@ -68,7 +68,7 @@ public class GameFloatBtn : MonoBehaviour
                 },
                 cancelAction: () =>
                 {
-                    GameTempDataManagement.Instance.IsOpenView = false;
+                    TempDataManagement.Instance.IsOpenView = false;
                 });
         });
 

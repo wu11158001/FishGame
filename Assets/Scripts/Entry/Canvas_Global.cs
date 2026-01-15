@@ -40,7 +40,7 @@ public class Canvas_Global : SingletonMonoBehaviour<Canvas_Global>
     /// <summary>
     /// 關閉Loading
     /// </summary>
-    public void ClosSceneLoadingView()
+    public void CloseSceneLoadingView()
     {
         SceneLoadingView.SetActive(false);
     }

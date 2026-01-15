@@ -33,7 +33,9 @@ public class PlayerTurret : NetworkBehaviour
 
     List<Transform> CurrShotPoints = new();
     Transform CurrBarrel;
-    
+
+    const float LockingSidePosX = 9.5f;
+    const float LockingSidePosY = 5.5f;
     GameObject Skill_Locking;
     Animator Skill_LockingAni;
     Fish TargetLocking;
@@ -61,8 +63,8 @@ public class PlayerTurret : NetworkBehaviour
 
         if(Object.HasStateAuthority)
         {            
-            GameTempDataManagement.Instance.StartTimingUpdateAccountData();
-            GameTempDataManagement.Instance.StartTimingUpdateLevelDataJackpot();
+            TempDataManagement.Instance.StartTimingUpdateAccountData();
+            TempDataManagement.Instance.StartTimingUpdateLevelDataJackpot();
 
             // 產生鎖定技能
             _ = AddressableManagement.Instance.CreateGamePrefab(
@@ -88,6 +90,7 @@ public class PlayerTurret : NetworkBehaviour
         if (Object == null || !Object.IsValid)
             return;
 
+        OnRotation();
         HandleRecoil();
     }
 
@@ -99,7 +102,6 @@ public class PlayerTurret : NetworkBehaviour
         SelfLocking();
         OnSkill_Locking();
         OnRotationControl();
-        OnRotation();
         OnFire();
     }
 
@@ -111,7 +113,7 @@ public class PlayerTurret : NetworkBehaviour
         yield return new WaitForSeconds(1);
 
         Canvas_Global.Instance.CloseLoading();
-        Canvas_Global.Instance.ClosSceneLoadingView();
+        Canvas_Global.Instance.CloseSceneLoadingView();
     }
 
     #region 鎖定技能
@@ -124,7 +126,7 @@ public class PlayerTurret : NetworkBehaviour
         if (!Object.HasStateAuthority)
             return;
 
-        bool isLocking = GameTempDataManagement.Instance.IsSkill_Locking;
+        bool isLocking = TempDataManagement.Instance.IsSkill_Locking;
 
         // 檢測鎖定技能是否關閉
         if (Skill_Locking != null && Skill_Locking.activeSelf && !isLocking)
@@ -132,15 +134,15 @@ public class PlayerTurret : NetworkBehaviour
             TargetLocking = null;
             Skill_Locking.SetActive(false);
             return;
-        }            
+        }
 
-        if(isLocking)
+        if (isLocking)
         {
-            bool isAuto = GameTempDataManagement.Instance.IsSkill_Auto;
+            bool isAuto = TempDataManagement.Instance.IsSkill_Auto;
 
             // 有鎖定目標，但目標消失
             if (TargetLocking != null && !TargetLocking.gameObject.activeInHierarchy)
-            {                
+            {
                 if (!isAuto)
                 {
                     // 自動射擊未開啟，目標消失，關閉鎖定技能
@@ -163,6 +165,27 @@ public class PlayerTurret : NetworkBehaviour
             // 鎖定圖標跟隨目標
             if (TargetLocking != null && TargetLocking.gameObject.activeInHierarchy)
             {
+                // 檢測是否在畫面內
+                bool isInSceneX = TargetLocking.transform.position.x >= -LockingSidePosX && TargetLocking.transform.position.x <= LockingSidePosX;
+                bool isInSceneZ = TargetLocking.transform.position.z >= -LockingSidePosY && TargetLocking.transform.position.z <= LockingSidePosY;
+
+                if (!isInSceneX || !isInSceneZ)
+                {
+                    if(isAuto)
+                    {
+                        TargetLocking = null;
+                        Skill_Locking.SetActive(false);
+                        TakeNewLockingTarget();
+                    }
+                    else
+                    {
+                        TargetLocking = null;
+                        Skill_Locking.SetActive(false);
+                    }
+
+                    return;
+                }
+
                 Vector3 targetPos = TargetLocking.gameObject.transform.position;
                 Skill_Locking.transform.position = new(targetPos.x, Skill_Locking.transform.position.y, targetPos.z);
 
@@ -191,9 +214,10 @@ public class PlayerTurret : NetworkBehaviour
         foreach (GameObject obj in allObjects)
         {
             Fish fish = obj.GetComponentInParent<Fish>();
-            bool isInScene = obj.transform.position.x >= -9 && obj.transform.position.x <= 9;
+            bool isInSceneX = obj.transform.position.x >= -LockingSidePosX && obj.transform.position.x <= LockingSidePosX;
+            bool isInSceneZ = obj.transform.position.z >= -LockingSidePosY && obj.transform.position.z <= LockingSidePosY;
 
-            if (obj.layer == fishLayer && isInScene && fish != null)
+            if (obj.layer == fishLayer && isInSceneX && isInSceneZ && fish != null)
             {
                 fishList.Add(fish);
             }
@@ -222,7 +246,7 @@ public class PlayerTurret : NetworkBehaviour
     {
         if (GetInput(out NetworkInputData input))
         {
-            if(input.IsFirePressed && GameTempDataManagement.Instance.IsSkill_Locking)
+            if(input.IsFirePressed && TempDataManagement.Instance.IsSkill_Locking)
             {
                 Vector2 mousePos = input.MousePosition;
                 Ray ray = MainCamera.ScreenPointToRay(mousePos);
@@ -234,6 +258,10 @@ public class PlayerTurret : NetworkBehaviour
 
                     if (Skill_Locking != null && fish != null)
                     {
+                        // 相同目標
+                        if (TargetLocking != null && TargetLocking == fish)
+                            return;
+
                         Skill_LockingAni.SetTrigger("Restart");
                         TargetLocking = fish;
                         Skill_Locking.SetActive(true);
@@ -253,7 +281,7 @@ public class PlayerTurret : NetworkBehaviour
     private void OnRotationControl()
     {
         // 是否有鎖定目標
-        bool isLocking = GameTempDataManagement.Instance.IsSkill_Locking && TargetLocking != null;
+        bool isLocking = TempDataManagement.Instance.IsSkill_Locking && TargetLocking != null;
 
         if (GetInput(out NetworkInputData input) && !isLocking)
         {
@@ -285,9 +313,9 @@ public class PlayerTurret : NetworkBehaviour
     /// </summary>
     private void OnFire()
     {
-        bool isAuto = GameTempDataManagement.Instance.IsSkill_Auto;
-        bool isLocking = GameTempDataManagement.Instance.IsSkill_Locking;
-        bool isOpenView = GameTempDataManagement.Instance.IsOpenView;
+        bool isAuto = TempDataManagement.Instance.IsSkill_Auto;
+        bool isLocking = TempDataManagement.Instance.IsSkill_Locking;
+        bool isOpenView = TempDataManagement.Instance.IsOpenView;
 
         // 自動 & 鎖定 但沒有目標
         if (isAuto && isLocking && TargetLocking == null)
@@ -307,13 +335,13 @@ public class PlayerTurret : NetworkBehaviour
 
             if ((input.IsFirePressed || isAuto) && Delay.ExpiredOrNotRunning(Runner))
             {
-                TurretData turretData = GameTempDataManagement.Instance.GetTurrethData((TurretEnum)TurretIndex);
+                TurretData turretData = TempDataManagement.Instance.GetTurrethData((TurretEnum)TurretIndex);
                 // 重製冷卻時間
                 Delay = TickTimer.CreateFromSeconds(Runner, turretData.Rate);
 
                 // 判斷子彈花費
-                double accountCoin = GameTempDataManagement.Instance.TempAccountData.Coins;
-                double currCost = GameTempDataManagement.Instance.CurrentLevelData.DefaultCost;
+                double accountCoin = TempDataManagement.Instance.TempAccountData.Coins;
+                double currCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
                 double totalCost = currCost * CurrShotPoints.Count;
 
                 if (accountCoin < totalCost)
@@ -321,11 +349,17 @@ public class PlayerTurret : NetworkBehaviour
                     Debug.Log("金幣不足!");
                     AddressableManagement.Instance.ShowToast("Insufficient Coin");
 
-                    GameTempDataManagement.Instance.IsOpenView = true;
+                    TempDataManagement.Instance.IsOpenView = true;
                     _ = AddressableManagement.Instance.OpenCoinStoreView(closeAction: () =>
                     {
-                        GameTempDataManagement.Instance.IsOpenView = false;
+                        TempDataManagement.Instance.IsOpenView = false;
                     });
+
+                    // 自動狀態下強制關閉自動
+                    if (isAuto)
+                    {
+                        TempDataManagement.Instance.IsSkill_AutoCloseEvent();
+                    }
 
                     return;
                 }
@@ -333,8 +367,8 @@ public class PlayerTurret : NetworkBehaviour
                 // 扣除金幣
                 if (Runner.IsForward)
                 {
-                    GameTempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -totalCost);
-                    GameTempDataManagement.Instance.RecodJackpot += totalCost;
+                    TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -totalCost);
+                    TempDataManagement.Instance.RecodJackpot += totalCost;
                 }                    
 
                 // 觸發後座力

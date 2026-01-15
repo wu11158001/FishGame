@@ -137,7 +137,7 @@ public class CoinStoreView : BasicView
             {
                 CoinStoreUnitData data = new()
                 {
-                    AccountData = GameTempDataManagement.Instance.TempAccountData,
+                    AccountData = TempDataManagement.Instance.TempAccountData,
                     CoinStoreData = GetCoinStoreData(coinType),
                     CoverSprite = CoinSprites[index]
                 };

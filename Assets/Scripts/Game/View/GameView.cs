@@ -13,6 +13,7 @@ public class GameView : BasicView
     [SerializeField] TextMeshProUGUI CurrCostText;
 
     [Header("AccountInfoArea")]
+    [SerializeField] TextMeshProUGUI AccountText;
     [SerializeField] Button CoinStoreBtn;
     [SerializeField] TextMeshProUGUI AccountCoinText;
 
@@ -25,10 +26,11 @@ public class GameView : BasicView
 
     private void OnDestroy()
     {
-        if(GameTempDataManagement.Instance != null)
+        if(TempDataManagement.Instance != null)
         {
-            GameTempDataManagement.Instance.TempAccountCoinChangeDelegate -= TempAccountDataChange;
-            GameTempDataManagement.Instance.CurrCostChangeDelegate -= CurrCostChange;
+            TempDataManagement.Instance.TempAccountCoinChangeDelegate -= TempAccountCoinChange;
+            TempDataManagement.Instance.CurrCostChangeDelegate -= CurrCostChange;
+            TempDataManagement.Instance.IsSkill_AutoCloseDelegate -= Skill_AutoClose;
         }
     }
 
@@ -38,31 +40,32 @@ public class GameView : BasicView
 
         TurretBtn.onClick.AddListener(() => 
         {
-            GameTempDataManagement.Instance.IsOpenView = true;
+            TempDataManagement.Instance.IsOpenView = true;
             _ = AddressableManagement.Instance.OpenTurretStoreView(closeAction: () =>
             {
-                GameTempDataManagement.Instance.IsOpenView = false;
+                TempDataManagement.Instance.IsOpenView = false;
             });
         });
 
         CoinStoreBtn.onClick.AddListener(() => 
         {
-            GameTempDataManagement.Instance.IsOpenView = true;
+            TempDataManagement.Instance.IsOpenView = true;
             _ = AddressableManagement.Instance.OpenCoinStoreView(closeAction: () =>
             {
-                GameTempDataManagement.Instance.IsOpenView = false;
+                TempDataManagement.Instance.IsOpenView = false;
             });
         });
 
-        ReduceCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: true); });
-        AddCostBtn.onClick.AddListener(() => { GameTempDataManagement.Instance.ChangeCurrCost(isReduce: false); });        
+        ReduceCostBtn.onClick.AddListener(() => { TempDataManagement.Instance.ChangeCurrCost(isReduce: true); });
+        AddCostBtn.onClick.AddListener(() => { TempDataManagement.Instance.ChangeCurrCost(isReduce: false); });        
         LockingTog.onValueChanged.AddListener((isOn) => { Skill_Lock(isOn); });
         AutoTog.onValueChanged.AddListener((isOn) => { Skill_Auto(isOn); });
 
-        if (GameTempDataManagement.Instance != null)
+        if (TempDataManagement.Instance != null)
         {
-            GameTempDataManagement.Instance.TempAccountCoinChangeDelegate += TempAccountDataChange;
-            GameTempDataManagement.Instance.CurrCostChangeDelegate += CurrCostChange;
+            TempDataManagement.Instance.TempAccountCoinChangeDelegate += TempAccountCoinChange;
+            TempDataManagement.Instance.CurrCostChangeDelegate += CurrCostChange;
+            TempDataManagement.Instance.IsSkill_AutoCloseDelegate += Skill_AutoClose;
         }
 
         AddressableManagement.Instance.OpenGameFloatBtn();
@@ -80,17 +83,19 @@ public class GameView : BasicView
             LeftSeatPosision :
             RightSeatPosision;
 
-        CurrCostText.text = StringUtility.CurrencyFormat(GameTempDataManagement.Instance.CurrentLevelData.DefaultCost);
-        AccountCoinText.text = StringUtility.CurrencyFormat(GameTempDataManagement.Instance.TempAccountData.Coins);
+        AccountText.text = TempDataManagement.Instance.TempAccountData.Account;
+        CurrCostText.text = StringUtility.CurrencyFormat(TempDataManagement.Instance.CurrentLevelData.DefaultCost);
+        AccountCoinText.text = StringUtility.CurrencyFormat(TempDataManagement.Instance.TempAccountData.Coins);
 
         StartCoroutine(IYieldShow());
     }
 
     /// <summary>
-    /// 暫存資料變更
+    /// 暫存帳戶金幣資料變更
     /// </summary>
-    private void TempAccountDataChange(double coin)
+    private void TempAccountCoinChange(double coin)
     {
+        Debug.Log($"暫存帳戶金幣資料變更: {coin}");
         AccountCoinText.text = StringUtility.CurrencyFormat(coin);
     }
 
@@ -108,7 +113,15 @@ public class GameView : BasicView
     /// </summary>
     private void Skill_Lock(bool isOn)
     {
-        GameTempDataManagement.Instance.IsSkill_Locking = isOn;
+        TempDataManagement.Instance.IsSkill_Locking = isOn;
+    }
+
+    /// <summary>
+    /// 技能_自動強制關閉事件
+    /// </summary>
+    private void Skill_AutoClose()
+    {
+        AutoTog.isOn = false;
     }
 
     /// <summary>
@@ -116,6 +129,6 @@ public class GameView : BasicView
     /// </summary>
     private void Skill_Auto(bool isOn)
     {
-        GameTempDataManagement.Instance.IsSkill_Auto = isOn;
+        TempDataManagement.Instance.IsSkill_Auto = isOn;
     }
 }
