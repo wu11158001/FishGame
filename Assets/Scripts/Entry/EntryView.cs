@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
+using Cysharp.Threading.Tasks;
 
 public class EntryView : MonoBehaviour
 {
@@ -66,6 +67,8 @@ public class EntryView : MonoBehaviour
                 timeout += Time.deltaTime;
                 await Task.Yield();
             }
+
+            await LocalizationManagement.Instance.IInitialize().ToUniTask();
 
             // 進入登入場景
             SceneManagement.Instance.LoadScene(

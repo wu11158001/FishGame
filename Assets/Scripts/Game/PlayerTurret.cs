@@ -34,11 +34,15 @@ public class PlayerTurret : NetworkBehaviour
     List<Transform> CurrShotPoints = new();
     Transform CurrBarrel;
 
-    const float LockingSidePosX = 9.5f;
-    const float LockingSidePosY = 5.5f;
     GameObject Skill_Locking;
     Animator Skill_LockingAni;
     Fish TargetLocking;
+
+    // 本次發射不射擊
+    bool DoNotFireThisTime;
+
+    const float LockingSidePosX = 9.5f;
+    const float LockingSidePosY = 5.5f;
 
     private void OnDestroy()
     {
@@ -262,6 +266,7 @@ public class PlayerTurret : NetworkBehaviour
                         if (TargetLocking != null && TargetLocking == fish)
                             return;
 
+                        DoNotFireThisTime = true;
                         Skill_LockingAni.SetTrigger("Restart");
                         TargetLocking = fish;
                         Skill_Locking.SetActive(true);
@@ -332,6 +337,12 @@ public class PlayerTurret : NetworkBehaviour
 
             if (CurrBarrel == null)
                 return;
+
+            if(DoNotFireThisTime)
+            {
+                DoNotFireThisTime = false;
+                return;
+            }
 
             if ((input.IsFirePressed || isAuto) && Delay.ExpiredOrNotRunning(Runner))
             {

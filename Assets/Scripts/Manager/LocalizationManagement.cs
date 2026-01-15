@@ -2,12 +2,24 @@ using UnityEngine;
 using UnityEngine.Localization.Settings;
 using System.Collections;
 using UnityEngine.Localization.Components;
+using System;
 
 public class LocalizationManagement : SingletonMonoBehaviour<LocalizationManagement>
 {    
     private readonly string TableName = "LanguageTable";
 
     bool IsChanging;
+
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    public IEnumerator IInitialize()
+    {
+        if (!LocalizationSettings.InitializationOperation.IsDone)
+            yield return LocalizationSettings.InitializationOperation;
+
+        Debug.Log("多語言初始化完成");
+    }
 
     /// <summary>
     /// 更換語言

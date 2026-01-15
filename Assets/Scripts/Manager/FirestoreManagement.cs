@@ -505,8 +505,6 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// </summary>
     public void OnAccountDataChanged(string jsonResponse)
     {
-        Debug.Log($"帳戶資料變更: {jsonResponse}");
-
         var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
         AccountData accountData = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
         AsccountDataChangeDelegate?.Invoke(accountData);

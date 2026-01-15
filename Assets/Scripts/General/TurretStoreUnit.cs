@@ -106,6 +106,8 @@ public class TurretStoreUnit : MonoBehaviour
     /// </summary>
     private void BuyBtnClick()
     {
+        bool isOwn = IsOwn;
+
         if (TurretStoreUnitData.TurretData == null || TurretStoreUnitData.AccountData == null)
         {
             Debug.LogError($"砲台商店單位獲取資料錯誤!");
@@ -113,7 +115,7 @@ public class TurretStoreUnit : MonoBehaviour
         }
 
         // 判斷帳戶金錢
-        if (!IsOwn && TurretStoreUnitData.AccountData.Coins - TurretStoreUnitData.TurretData.Price < 0)
+        if (!isOwn && TurretStoreUnitData.AccountData.Coins - TurretStoreUnitData.TurretData.Price < 0)
         {
             // 金幣不足!
             AddressableManagement.Instance.ShowToast("Insufficient Coin");
@@ -130,7 +132,7 @@ public class TurretStoreUnit : MonoBehaviour
         SortedSet<int> owns = new(TurretStoreUnitData.AccountData.GetOwnTurretList());
 
         // 未購買
-        if (!IsOwn)
+        if (!isOwn)
             newCoin -= TurretStoreUnitData.TurretData.Price;
 
         owns.Add((int)TurretStoreUnitData.TurretData.TurretType);
@@ -156,7 +158,7 @@ public class TurretStoreUnit : MonoBehaviour
                 if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶金幣資料失敗");
                 else
                 {
-                    if(!IsOwn)
+                    if(!isOwn)
                     {
                         // 顯示獲得物品
                         AddressableManagement.Instance.ShowGetItemView(

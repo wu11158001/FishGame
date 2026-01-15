@@ -3,7 +3,7 @@ using Fusion;
 
 public class Bullet : NetworkBehaviour
 {
-    [SerializeField] float Speed = 15;
+    [SerializeField] float Speed = 30;
     [SerializeField] float RayDistance = 50f;
 
     [Networked] Vector3 Direction { get; set; }

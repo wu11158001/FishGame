@@ -19,7 +19,9 @@ public class GameView : BasicView
 
     [Header("BaseSkillArea")]
     [SerializeField] Toggle LockingTog;
+    [SerializeField] GameObject LockingSelectFrame;
     [SerializeField] Toggle AutoTog;
+    [SerializeField] GameObject AutoSelectFrame;
 
     readonly Vector2 LeftSeatPosision = new(-600, -500);
     readonly Vector2 RightSeatPosision = new(600, -500);
@@ -113,6 +115,7 @@ public class GameView : BasicView
     /// </summary>
     private void Skill_Lock(bool isOn)
     {
+        LockingSelectFrame.SetActive(isOn);
         TempDataManagement.Instance.IsSkill_Locking = isOn;
     }
 
@@ -129,6 +132,7 @@ public class GameView : BasicView
     /// </summary>
     private void Skill_Auto(bool isOn)
     {
+        AutoSelectFrame.SetActive(isOn);
         TempDataManagement.Instance.IsSkill_Auto = isOn;
     }
 }

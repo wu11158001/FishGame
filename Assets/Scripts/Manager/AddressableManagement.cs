@@ -289,6 +289,40 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     #region 介面(Canvas_Scene)
 
     /// <summary>
+    /// 顯示確認彈窗
+    /// </summary>
+    public async void ShowConfirmView(string contentKey, Action comfirmAction, Action cancelAction = null)
+    {
+        ViewEnum view = ViewEnum.ConfirmView;
+
+        Action viewCloseAction = () =>
+        {
+            RemoveSceneView(view);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<ConfirmView>().SetData(
+                        contentKey: contentKey,
+                        comfirmAction: () =>
+                        {
+                            comfirmAction?.Invoke();
+                            viewCloseAction?.Invoke();
+                        },
+                        cancelAction: () =>
+                        {
+                            cancelAction?.Invoke();
+                            viewCloseAction?.Invoke();
+                        });
+                }
+            });
+    }
+
+    /// <summary>
     /// 開啟登入介面
     /// </summary>
     public async Task OpenLoginView(bool isLogout = false, Action closeAction = null)
@@ -487,42 +521,6 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
                         iconSprite: iconSprite,
                         value: value,
                         closeAction: viewCloseAction);
-                }
-            },
-            IsCanStack: true,
-            canvasEnum: CanvasEnum.Canvas_Global);
-    }
-
-    /// <summary>
-    /// 顯示確認彈窗
-    /// </summary>
-    public async void ShowConfirmView(string contentKey, Action comfirmAction, Action cancelAction = null)
-    {
-        ViewEnum view = ViewEnum.ConfirmView;
-
-        Action viewCloseAction = () =>
-        {
-            RemoveGlobalView(viewEnum: view, isFirstRemove: true);
-        };
-
-        await OpenView(
-            viewType: view,
-            callback: (viewObj) =>
-            {
-                if (viewObj != null)
-                {
-                    viewObj.GetComponent<ConfirmView>().SetData(
-                        contentKey: contentKey,
-                        comfirmAction: () =>
-                        {
-                            comfirmAction?.Invoke();
-                            viewCloseAction?.Invoke();
-                        },
-                        cancelAction: () =>
-                        {
-                            cancelAction?.Invoke();
-                            viewCloseAction?.Invoke();
-                        });
                 }
             },
             IsCanStack: true,
