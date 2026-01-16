@@ -290,8 +290,8 @@ public class LoginView : BasicView
 
         TutleText.color =
             panelType == PanelType.Login ?
-            StringUtility.GetColor("00A114") :
-            StringUtility.GetColor("1586E0");
+            StringUtility.GetColor("004D0A") :
+            StringUtility.GetColor("0D65AB");
             
         LocalizationManagement.Instance.UpdateKey(
             localizeEvent: TitleLocalize,

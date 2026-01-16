@@ -616,7 +616,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: a7cf530ac1a48b442919b682e97df8ae, type: 2}
-  m_Color: {r: 0, g: 0.6320754, b: 0.07862063, a: 1}
+  m_Color: {r: 0, g: 0.3018868, b: 0.0375015, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1852,8 +1852,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u5BC6\u78BC (\u6578\u5B57 & \u82F1\u6587 4~12\u5B57\u5143) :"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa67b823fbca4cc4da606b7c1e5f2cc6, type: 2}
+  m_sharedMaterial: {fileID: 6105520199779406489, guid: aa67b823fbca4cc4da606b7c1e5f2cc6, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3901,7 +3901,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: 9481e9dceaa951f4c886a04f1d60d9d0, type: 2}
-  m_Color: {r: 0.16981131, g: 0.16740832, b: 0.16740832, a: 1}
+  m_Color: {r: 0.0627451, g: 0.6666667, b: 0.7176471, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5361,8 +5361,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 241f6ab550f1e474c9f20469c0dcda99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageGradients
-  color1: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
-  color2: {r: 0.09433961, g: 0.09433961, b: 0.09433961, a: 1}
+  color1: {r: 0.16862746, g: 0.4627451, b: 0.8, a: 1}
+  color2: {r: 0.023529412, g: 0.3254902, b: 0.6784314, a: 1}
   Angle: -90
 --- !u!222 &8864429051173710682
 CanvasRenderer:
@@ -8452,8 +8452,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4292904469
-  m_fontColor: {r: 0.08235294, g: 0.5254902, b: 0.8784314, a: 1}
+    rgba: 4278865152
+  m_fontColor: {r: 0, g: 0.3019608, b: 0.039215688, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 0
   m_fontColorGradient:
@@ -9710,7 +9710,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: a7cf530ac1a48b442919b682e97df8ae, type: 2}
-  m_Color: {r: 0.078431375, g: 0.52156866, b: 0.8784314, a: 1}
+  m_Color: {r: 0.0473923, g: 0.3921637, b: 0.6698113, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9867,7 +9867,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: f5b43c8664a006549a21e946a38f7820, type: 2}
-  m_Color: {r: 0.9339623, g: 0.9339623, b: 0.9339623, a: 1}
+  m_Color: {r: 0.5411765, g: 1, b: 0.23921569, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
