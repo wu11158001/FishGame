@@ -230,7 +230,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
                 Guid = guid,
                 IsSuccess = isSuccess,
                 Status = isSuccess ? "Success" : "Update Fail",
-                JsonData = "" // 部分更新通常不需要傳回完整 JSON
+                JsonData = ""
             };
             FirestoreCallback(JsonUtility.ToJson(response));
         });
@@ -381,7 +381,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// <summary>
     /// 所有Firetstre回傳
     /// </summary>
-    private void FirestoreCallback(string jsonResponse)
+    public void FirestoreCallback(string jsonResponse)
     {
         // 解析基礎回應結構
         var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
@@ -507,14 +507,17 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     {
         var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
         AccountData accountData = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
-        AsccountDataChangeDelegate?.Invoke(accountData);
 
+        // 帳戶金幣資料變更
         if (PreAccountData.Coins != accountData.Coins)
             AccountCoinDataChangeDelegate?.Invoke(accountData);
 
         // 帳戶砲台資料變更
         if (PreAccountData.DefaultTurret != accountData.DefaultTurret || PreAccountData.OwnTurret != accountData.OwnTurret)
             AccountTurretDataChangeDelegate?.Invoke(accountData);
+
+        // 帳戶資料變更
+        AsccountDataChangeDelegate?.Invoke(accountData);
 
         PreAccountData = accountData;
     }

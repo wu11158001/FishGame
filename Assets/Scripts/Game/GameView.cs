@@ -95,9 +95,10 @@ public class GameView : BasicView
     /// <summary>
     /// 暫存帳戶金幣資料變更
     /// </summary>
-    private void TempAccountCoinChange(double coin)
+    private void TempAccountCoinChange(double newCoin)
     {
-        AccountCoinText.text = StringUtility.CurrencyFormat(coin);
+
+        AccountCoinText.text = StringUtility.CurrencyFormat(newCoin);
     }
 
     /// <summary>

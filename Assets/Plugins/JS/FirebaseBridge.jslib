@@ -69,7 +69,7 @@ mergeInto(LibraryManager.library, {
                         Status: "Success",
                         JsonData: "", 
                     };
-
+  
                     window.unityInstance.SendMessage(unityObj, callback, JSON.stringify(response));
                 })
                 .catch(function(error) {
@@ -199,15 +199,6 @@ mergeInto(LibraryManager.library, {
         if (window.firestoreUnsubscribes === undefined) {
             window.firestoreUnsubscribes = {};
         }
-
-        // 強制取消「所有」現有的監聽
-        for (var key in window.firestoreUnsubscribes) {
-            if (typeof window.firestoreUnsubscribes[key] === "function") {
-                console.log("正在移除舊監聽器: " + key);
-                window.firestoreUnsubscribes[key](); 
-            }
-        }
-        window.firestoreUnsubscribes = {}; // 清空物件
 
         // 開始監聽
         var unsub = window.db.collection(colPath).doc(documentId).onSnapshot(function(doc) {
