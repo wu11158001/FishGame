@@ -833,7 +833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: dd61f99cca1d7c446adbd913bf4b326f, type: 2}
-  m_Color: {r: 0.06003024, g: 0.3407258, b: 0.6698113, a: 1}
+  m_Color: {r: 0.022427924, g: 0.3255746, b: 0.6792453, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1959,8 +1959,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 241f6ab550f1e474c9f20469c0dcda99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageGradients
-  color1: {r: 0.8784314, g: 0.43529412, b: 0.518349, a: 1}
-  color2: {r: 0.74509805, g: 0.6668946, b: 0.18823527, a: 1}
+  color1: {r: 0.17021184, g: 0.46146336, b: 0.8018868, a: 1}
+  color2: {r: 0.023529412, g: 0.3254902, b: 0.6784314, a: 1}
   Angle: -90
 --- !u!222 &1048434238572888544
 CanvasRenderer:

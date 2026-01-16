@@ -150,8 +150,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279269375
-  m_fontColor: {r: 1, g: 0.46680135, b: 0.062745094, a: 1}
+    rgba: 4279304186
+  m_fontColor: {r: 0.98185825, g: 1, b: 0.062745094, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -585,8 +585,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4283556863
-  m_fontColor: {r: 1, g: 0.8909086, b: 0.3160377, a: 1}
+    rgba: 4280407249
+  m_fontColor: {r: 0.81960785, g: 0.83137256, b: 0.12941177, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -747,7 +747,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: 341d886379978a2458520139794f93c3, type: 2}
-  m_Color: {r: 0.19215687, g: 0.9137255, b: 1, a: 1}
+  m_Color: {r: 0.5411765, g: 1, b: 0.23921569, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -960,7 +960,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: 1a03513ccc128034d9e73beb5115dff2, type: 2}
-  m_Color: {r: 0.19215687, g: 0.9137255, b: 1, a: 1}
+  m_Color: {r: 0.5411765, g: 1, b: 0.23921569, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1088,7 +1088,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4263335397997649481}
   - component: {fileID: 8052092818859655472}
-  - component: {fileID: 3323441978518921859}
   - component: {fileID: 1739706304053980319}
   - component: {fileID: 6740482163651434520}
   - component: {fileID: 1060732018789871290}
@@ -1135,21 +1134,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameGuideUnit
   CoverImage: {fileID: 1482887566256297405}
   MagnificationText: {fileID: 3746696048727810114}
---- !u!114 &3323441978518921859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4850366119103153856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 241f6ab550f1e474c9f20469c0dcda99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ImageGradients
-  color1: {r: 0.052198302, g: 0.43366748, b: 0.4811321, a: 1}
-  color2: {r: 0.03034888, g: 0.34069225, b: 0.5849056, a: 1}
-  Angle: -90
 --- !u!222 &1739706304053980319
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1171,7 +1155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: c12a24b48d0e5c34f855047b28c39aa1, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.0627451, g: 0.6666667, b: 0.7176471, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1344,8 +1328,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 241f6ab550f1e474c9f20469c0dcda99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageGradients
-  color1: {r: 0.050980393, g: 0.43529412, b: 0.48235294, a: 1}
-  color2: {r: 0.03137255, g: 0.34117648, b: 0.58431375, a: 1}
+  color1: {r: 0.16862746, g: 0.4627451, b: 0.8, a: 1}
+  color2: {r: 0.023529412, g: 0.3254902, b: 0.6784314, a: 1}
   Angle: -90
 --- !u!222 &1997716312536061198
 CanvasRenderer:
@@ -1875,7 +1859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: dd61f99cca1d7c446adbd913bf4b326f, type: 2}
-  m_Color: {r: 0.062745094, g: 0.2541696, b: 0.8666667, a: 1}
+  m_Color: {r: 0.023529412, g: 0.3254902, b: 0.6784314, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
