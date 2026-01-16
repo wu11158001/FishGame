@@ -3,16 +3,17 @@ using Fusion;
 
 public class Bullet : NetworkBehaviour
 {
-    [SerializeField] float Speed = 30;
-    [SerializeField] float RayDistance = 50f;
+    [SerializeField] float Speed = 20;
+    [SerializeField] float RayDistance = 100;
+    [SerializeField] float BulletRadius = 0.4f;
 
     [Networked] Vector3 Direction { get; set; }
 
     Transform EffectPool;
     Fish TargetFish;
 
-    readonly Vector2 MinBounds = new(-9.6f, -5.4f);
-    readonly Vector2 MaxBounds = new(9.6f, 5.4f);
+    readonly Vector2 MinBounds = new(-10f, -6f);
+    readonly Vector2 MaxBounds = new(10f, 6f);
     
     public void SetData(Fish targetFish)
     {
@@ -43,6 +44,19 @@ public class Bullet : NetworkBehaviour
         if (!Object.HasStateAuthority)
             return;
 
+        // 有鎖定目標
+        if (TargetFish != null && TargetFish.Object != null && TargetFish.Object.IsValid)
+        {
+            Vector3 targetPos = TargetFish.transform.position;
+            targetPos.y = transform.position.y;
+
+            Vector3 direction = (targetPos - transform.position).normalized;
+            direction.y = 0;
+
+            if (direction != Vector3.zero)
+                transform.forward = direction;
+        }
+
         transform.Translate(Vector3.forward * Speed * Runner.DeltaTime);
     }
 
@@ -54,19 +68,19 @@ public class Bullet : NetworkBehaviour
         if (!Object.HasStateAuthority)
             return;
 
+        // 有鎖定魚
+        if (TargetFish)
+            return;
+
         Vector3 pos = transform.position;
 
         if (pos.x < MinBounds.x || pos.x > MaxBounds.x)
         {
-            // 有鎖定魚但反彈了，解除鎖定
-            TargetFish = null;
             Direction = new Vector3(-Direction.x, 0, Direction.z);
         }
 
         if (pos.z < MinBounds.y || pos.z > MaxBounds.y)
         {
-            // 有鎖定魚但反彈了，解除鎖定
-            TargetFish = null;
             Direction = new Vector3(Direction.x, 0, -Direction.z);
         }
 
@@ -81,24 +95,38 @@ public class Bullet : NetworkBehaviour
         if (!Object.HasStateAuthority)
             return;
 
-        RaycastHit hit;
         LayerMask mask = LayerMask.GetMask("Fish");
 
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, RayDistance, mask))
-        {
-            Fish hitFish = hit.collider.GetComponentInParent<Fish>();
+        // 改用 SphereCastAll，它會回傳所有被這根「柱子」穿過的魚
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, BulletRadius, Vector3.down, RayDistance, mask);
 
-            // 判斷是否有鎖定魚
+        if (hits.Length > 0)
+        {
+            // 1. 先檢查有沒有撞到「鎖定目標」
             if (TargetFish != null)
             {
-                if (hitFish != null && hitFish == TargetFish)
+                foreach (var hit in hits)
+                {
+                    Fish hitFish = hit.collider.GetComponentInParent<Fish>();
+                    if (hitFish != null && hitFish == TargetFish)
+                    {
+                        HitTarget(hitFish);
+                        return; // 打中鎖定目標，直接結束
+                    }
+                }
+
+                // 如果執行到這裡，代表雖然撞到了魚，但裡面沒有我們要的 TargetFish
+                // 這時候子彈會繼續飛行，穿過這些雜魚。
+            }
+            else
+            {
+                // 2. 如果沒鎖定目標，就打中「第一條」碰到的魚（按距離排序）
+                // SphereCastAll 的回傳順序不一定是按距離，保險起見可以排序或直接取第一筆
+                Fish hitFish = hits[0].collider.GetComponentInParent<Fish>();
+                if (hitFish != null)
                 {
                     HitTarget(hitFish);
                 }
-            }
-            else if (hitFish != null)
-            {
-                HitTarget(hitFish);
             }
         }
     }
@@ -193,8 +221,6 @@ public class Bullet : NetworkBehaviour
                 return;
             }
 
-            Debug.Log($"{data.FishType} : {currDefaultCost} * {data.Magnification} = {reward}");
-
             // 產生魚擊中效果
             NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                             key: NetworkPrefabEnum.FishHitEffect,
@@ -214,9 +240,24 @@ public class Bullet : NetworkBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
+        // 設定 Gizmos 顏色
+        Gizmos.color = Color.cyan;
         Vector3 startPos = transform.position;
-        Vector3 direction = Vector3.down * RayDistance;
-        Gizmos.DrawRay(startPos, direction);
+
+        // 1. 畫出起點球體
+        Gizmos.DrawWireSphere(startPos, BulletRadius);
+
+        // 2. 計算終點（假設向下射）
+        Vector3 direction = Vector3.down;
+        Vector3 endPos = startPos + direction * RayDistance;
+
+        // 3. 畫出路徑線（畫四條線讓它看起來像圓柱體掃過）
+        Gizmos.DrawLine(startPos + Vector3.left * BulletRadius, endPos + Vector3.left * BulletRadius);
+        Gizmos.DrawLine(startPos + Vector3.right * BulletRadius, endPos + Vector3.right * BulletRadius);
+        Gizmos.DrawLine(startPos + Vector3.forward * BulletRadius, endPos + Vector3.forward * BulletRadius);
+        Gizmos.DrawLine(startPos + Vector3.back * BulletRadius, endPos + Vector3.back * BulletRadius);
+
+        // 4. 畫出終點球體
+        Gizmos.DrawWireSphere(endPos, BulletRadius);
     }
 }

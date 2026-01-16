@@ -28,6 +28,9 @@ public class PlayerTurret : NetworkBehaviour
     // 當前後座力
     [Networked] float CurrentRecoil { get; set; }
 
+    // 紀錄前次滑鼠點擊
+    NetworkButtons ButtonsPrevious { get; set; }
+
     Camera MainCamera;
     Transform BulletPool;
 
@@ -250,22 +253,25 @@ public class PlayerTurret : NetworkBehaviour
     {
         if (GetInput(out NetworkInputData input))
         {
-            if(input.IsFirePressed && TempDataManagement.Instance.IsSkill_Locking)
+            var pressed = input.Buttons.GetPressed(ButtonsPrevious);
+            ButtonsPrevious = input.Buttons;
+
+            if (pressed.IsSet(NetworkInputData.MOUSE_LEFT) && TempDataManagement.Instance.IsSkill_Locking)
             {
                 Vector2 mousePos = input.MousePosition;
                 Ray ray = MainCamera.ScreenPointToRay(mousePos);
                 LayerMask layerMask = LayerMask.GetMask("Fish");
 
+                //Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 2);
+
                 if (Physics.Raycast(ray, out RaycastHit hit, 100, layerMask))
                 {
                     Fish fish = hit.transform.GetComponentInParent<Fish>();
 
+                    //Debug.DrawLine(ray.origin, hit.point, Color.green, 2);
+
                     if (Skill_Locking != null && fish != null)
                     {
-                        // 相同目標
-                        if (TargetLocking != null && TargetLocking == fish)
-                            return;
-
                         DoNotFireThisTime = true;
                         Skill_LockingAni.SetTrigger("Restart");
                         TargetLocking = fish;
@@ -344,7 +350,9 @@ public class PlayerTurret : NetworkBehaviour
                 return;
             }
 
-            if ((input.IsFirePressed || isAuto) && Delay.ExpiredOrNotRunning(Runner))
+            bool manualFire = input.Buttons.IsSet(NetworkInputData.MOUSE_LEFT);
+
+            if ((manualFire || isAuto) && Delay.ExpiredOrNotRunning(Runner))
             {
                 TurretData turretData = TempDataManagement.Instance.GetTurrethData((TurretEnum)TurretIndex);
                 // 重製冷卻時間

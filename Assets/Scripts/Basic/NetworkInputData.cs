@@ -4,5 +4,7 @@ using UnityEngine;
 public struct NetworkInputData : INetworkInput
 {
     public Vector2 MousePosition;
-    public NetworkBool IsFirePressed;
+    public NetworkButtons Buttons;
+
+    public const int MOUSE_LEFT = 0;
 }

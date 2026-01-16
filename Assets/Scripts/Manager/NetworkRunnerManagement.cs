@@ -121,7 +121,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         inputData.MousePosition = Mouse.current.position.ReadValue();
 
         if (Mouse.current != null)
-            inputData.IsFirePressed = Mouse.current.leftButton.isPressed;
+            inputData.Buttons.Set(NetworkInputData.MOUSE_LEFT, Mouse.current.leftButton.isPressed);
 
         input.Set(inputData);
     }
