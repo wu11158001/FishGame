@@ -176,7 +176,7 @@ MonoBehaviour:
   MainBtn: {fileID: 6583803996904279396}
   MainBtnEventSystemsHandler: {fileID: 2226673930759573401}
   HomeBtn: {fileID: 3601421656347436952}
-  IllustratedGuideBtn: {fileID: 8565033053652100175}
+  GuideBtn: {fileID: 8565033053652100175}
   ToSideDuration: 0.5
   OpenDistance: 280
   OpenDuration: 0.3
@@ -366,7 +366,7 @@ GameObject:
   - component: {fileID: 2230076257387881735}
   - component: {fileID: 8565033053652100175}
   m_Layer: 5
-  m_Name: IllustratedGuideBtn
+  m_Name: GuideBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

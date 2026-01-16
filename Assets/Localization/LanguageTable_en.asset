@@ -138,6 +138,10 @@ MonoBehaviour:
     m_Localized: Locking
     m_Metadata:
       m_Items: []
+  - m_Id: 8346384708866048
+    m_Localized: Guide
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

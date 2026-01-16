@@ -16,7 +16,7 @@ public class GameFloatBtn : MonoBehaviour
 
     [Header("Btns")]
     [SerializeField] Button HomeBtn;
-    [SerializeField] Button IllustratedGuideBtn;
+    [SerializeField] Button GuideBtn;
 
     [Header("Effect")]
     // 回到兩側時間
@@ -47,7 +47,7 @@ public class GameFloatBtn : MonoBehaviour
         Btns = new()
         {
             HomeBtn.GetComponent<RectTransform>(),
-            IllustratedGuideBtn.GetComponent<RectTransform>(),
+            GuideBtn.GetComponent<RectTransform>(),
         };
         foreach (var btn in Btns)
         {
@@ -67,6 +67,17 @@ public class GameFloatBtn : MonoBehaviour
                     NetworkRunnerManagement.Instance.Shutdown();
                 },
                 cancelAction: () =>
+                {
+                    TempDataManagement.Instance.IsOpenView = false;
+                });
+        });
+
+        GuideBtn.onClick.AddListener(() =>
+        {
+            TempDataManagement.Instance.IsOpenView = true;
+
+            AddressableManagement.Instance.OpenGuideView(
+                closeAction: () =>
                 {
                     TempDataManagement.Instance.IsOpenView = false;
                 });

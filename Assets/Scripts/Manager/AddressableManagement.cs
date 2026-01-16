@@ -468,6 +468,30 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             });
     }
 
+    /// <summary>
+    /// 開啟分配表介面
+    /// </summary>
+    public async void OpenGuideView(Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.GuideView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveSceneView(view);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<GuideView>().SetData(closeAction: viewCloseAction);
+                }
+            });
+    }
+
     #endregion
 
     #region 介面(Canvas_Global)

@@ -135,6 +135,10 @@ MonoBehaviour:
     m_Key: Locking
     m_Metadata:
       m_Items: []
+  - m_Id: 8346384708866048
+    m_Key: Guide
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

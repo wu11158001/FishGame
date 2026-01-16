@@ -220,11 +220,6 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     {
         GetAllFishDataAction = callback;
 
-        List<NetworkPrefabEnum> fishTypes = Enum.GetValues(typeof(NetworkPrefabEnum))
-            .Cast<NetworkPrefabEnum>()
-            .Where(e => e.ToString().StartsWith("NormalFish"))
-            .ToList();
-
         FirestoreManagement.Instance.GetAllDocumentsFromCollection(
                 path: FirestoreCollectionNameEnum.FishData,
                 callback: GetAllFishDataCallback);
@@ -435,11 +430,6 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     public void GetAllTurretData(Action<CheckJoinRoomDataEnum> callback)
     {
         GetAllTurretDataAction = callback;
-
-        List<TurretEnum> turretTypes = Enum.GetValues(typeof(TurretEnum))
-            .Cast<TurretEnum>()
-            .Where(e => e.ToString().StartsWith("Turret"))
-            .ToList();
 
         FirestoreManagement.Instance.GetAllDocumentsFromCollection(
                 path: FirestoreCollectionNameEnum.TurretData,
