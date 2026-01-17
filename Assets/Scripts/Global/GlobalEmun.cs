@@ -30,6 +30,21 @@ public enum Language
 }
 
 /// <summary>
+/// 遊戲狀態
+/// </summary>
+public enum GameState
+{
+    /// <summary> 一般 </summary>
+    Normal,
+
+    /// <summary> 浪潮 </summary>
+    WaterWave,
+
+    /// <summary> 浪潮魚群 </summary>
+    WaterWaveFishs,
+}
+
+/// <summary>
 /// 介面
 /// </summary>
 public enum ViewEnum
@@ -117,7 +132,7 @@ public enum FirestoreStatusEnum
 }
 
 /// <summary>
-/// 網路物件(只能往下加，不然要改產生的字典)
+/// 網路物件
 /// </summary>
 public enum NetworkPrefabEnum
 {
@@ -166,6 +181,9 @@ public enum GamePrefabEnum
     /// <summary> 本地物件池 </summary>
     LocalPool = 2,
 
+    /// <summary> 浪潮效果 </summary>
+    WaterWave = 3,
+
     /// <summary> 技能_鎖定 </summary>
     Skill_Locking = 50,
 
@@ -209,6 +227,18 @@ public enum LevelEnum
 {
     /// <summary> 經典關卡 </summary>
     ClassicLevel,
+}
+
+/// <summary>
+/// 路線
+/// </summary>
+public enum WayPointEnum
+{
+    /// <summary> 一般路線 </summary>
+    NormalWay,
+
+    /// <summary> 浪潮路線 </summary>
+    WaterWaveWay,
 }
 
 /// <summary>

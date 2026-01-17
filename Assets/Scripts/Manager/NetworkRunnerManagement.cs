@@ -155,18 +155,6 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log($"玩家離開: {player.PlayerId}");
-
-        /*if (runner.IsSharedModeMasterClient)
-        {
-            foreach (var no in runner.GetAllNetworkObjects())
-            {
-                if (no.InputAuthority == player)
-                {
-                    runner.Despawn(no);
-                }
-            }
-        }*/
-
         PlayerLeftEvent?.Invoke(runner, player);
     }
 

@@ -7,6 +7,7 @@ public class Fish : NetworkBehaviour
     // 爆金物件
     [SerializeField] GamePrefabEnum CoinTextType = GamePrefabEnum.CoinText_0;
     [SerializeField] GameObject FishModel;
+    [SerializeField] Animator Animator;
 
     // 移動計時器
     [Networked] TickTimer MoveTimer { get; set; }
@@ -14,45 +15,64 @@ public class Fish : NetworkBehaviour
     [Networked] float TotalDuration { get; set; }
     // 魚資料
     [Networked] FishData_Network FishData_Network { get; set; }
-    // 深度
-    [Networked] float Depth { get; set; }
+    // 路線資料
+    [Networked] FishPathData FishPathData { get; set; }
+    // 動畫速度
+    [Networked, OnChangedRender(nameof(UpdateAnimationSpeed))]
+    float AniSpeed { get; set; }
 
-    NetworkPrefabEnum FishType;
-    Vector3[] PathPoints;
+    Vector3[] LocalPathPoints;
 
+    WayPointMain WayPointMain;
     LocalPool LocalPool;
     Transform CoinTextPool;
 
-    public void SetData(NetworkPrefabEnum fishType, bool isMirror, float depth, WayPoint wayPoint, int skipWaypoint)
+    public void SetData(NetworkPrefabEnum fishType, bool isMirror, float depth, int wayPointId, int skipWaypoint, float customDuration = 0)
     {
-        FishType = fishType;
-
-        // 移動路徑獲取
-        var query = wayPoint.Points.Select(t => t.position);
-        if (isMirror) query = query.Reverse();
-        PathPoints = query.Skip(skipWaypoint).ToArray();
-
-        // 初始化位置與面向
-        if (PathPoints != null && PathPoints.Length >= 2)
+        // 獲取魚資料
+        FishData originalData = TempDataManagement.Instance.GetFishData(fishType);
+        if (originalData != null)
         {
-            Vector3 startPos = PathPoints[0];
-            startPos.y = depth;
-            transform.position = startPos;
+            FishData fishDataInstance = originalData.Clone();
 
-            Vector3 nextPos = PathPoints[1];
-            nextPos.y = depth;
-            Vector3 initialDir = nextPos - startPos;
-            if (initialDir.sqrMagnitude > 0.0001f)
-            {
-                transform.rotation = Quaternion.LookRotation(initialDir);
-            }
+            if (customDuration > 0)
+                fishDataInstance.Duration = customDuration;
+
+            FishData_Network = fishDataInstance.ToNetworkStruct();
         }
 
-        FishData fishData = TempDataManagement.Instance.GetFishData(FishType);
-        if (fishData != null)
-            FishData_Network = fishData.ToNetworkStruct();
+        if (WayPointMain == null)
+            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}(Clone)").GetComponent<WayPointMain>();
 
-        Depth = depth;
+        WayPoint wayPoint = WayPointMain.GetWayPointById(wayPointId);
+        int totalPoints = wayPoint.Points.Count;
+
+        // 計算剩餘路徑的長度比例 (假設每個點之間距離相等，這是一個簡化的權重)
+        // 如果總共 10 個點，跳過 3 個，剩下 7 個點的區間，比例就是 (7-1)/(10-1)
+        float pathRatio = (float)(totalPoints - skipWaypoint - 1) / (totalPoints - 1);
+        pathRatio = Mathf.Clamp01(pathRatio);
+
+        // 設置路線資料
+        FishPathData = new()
+        {
+            WayPointId = wayPointId,
+            IsMirror = isMirror,
+            Depth = depth,
+            SkipWaypoint = skipWaypoint,
+            SpeedMultiplier = 1
+        };
+
+        // 調整時間：如果是中途出生，總時間應該要縮短，否則魚會在起點發呆
+        float baseDuration = FishData_Network.Duration;
+        if (customDuration > 0) baseDuration = customDuration;
+
+        // 魚跑完剩下這段路實際需要的時間
+        float actualRemainingDuration = baseDuration * pathRatio;
+
+        TotalDuration = baseDuration;
+        MoveTimer = TickTimer.CreateFromSeconds(Runner, actualRemainingDuration);
+
+        AniSpeed = 1;
     }
 
     public override void Spawned()
@@ -60,10 +80,22 @@ public class Fish : NetworkBehaviour
         if (FishModel != null)
             FishModel.SetActive(true);
 
-        if (Object.HasStateAuthority)
+        SetPathPoints();
+
+        // 初始化位置與面向
+        if (LocalPathPoints != null && LocalPathPoints.Length >= 2)
         {
-            TotalDuration = FishData_Network.Duration;
-            MoveTimer = TickTimer.CreateFromSeconds(Runner, FishData_Network.Duration);
+            Vector3 startPos = LocalPathPoints[0];
+            startPos.y = FishPathData.Depth;
+            transform.position = startPos;
+
+            Vector3 nextPos = LocalPathPoints[1];
+            nextPos.y = FishPathData.Depth;
+            Vector3 initialDir = nextPos - startPos;
+            if (initialDir.sqrMagnitude > 0.0001f)
+            {
+                transform.rotation = Quaternion.LookRotation(initialDir);
+            }
         }
     }
 
@@ -76,34 +108,53 @@ public class Fish : NetworkBehaviour
     }
 
     /// <summary>
+    /// 更新動畫速度
+    /// </summary>
+    private void UpdateAnimationSpeed()
+    {
+        if (Animator != null) Animator.speed = AniSpeed;
+    }
+
+    /// <summary>
+    /// 設置路線
+    /// </summary>
+    private void SetPathPoints()
+    {
+        if (WayPointMain == null)
+            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}(Clone)").GetComponent<WayPointMain>();
+
+        WayPoint wayPoint = WayPointMain.GetWayPointById(FishPathData.WayPointId);
+
+        // 移動路徑獲取
+        var query = wayPoint.Points.Select(t => t.position);
+        if (FishPathData.IsMirror) query = query.Reverse();
+        LocalPathPoints = query.Skip(FishPathData.SkipWaypoint).ToArray();
+    }
+
+    /// <summary>
     /// 移動
     /// </summary>
     private void Move()
     {
-        if (!Object.HasStateAuthority)
-            return;
-
-        if (PathPoints == null || PathPoints.Length < 2)
+        if (LocalPathPoints == null || LocalPathPoints.Length < 2)
             return;
 
         float elapsed = TotalDuration - (MoveTimer.RemainingTime(Runner) ?? 0);
         float t = Mathf.Clamp01(elapsed / TotalDuration);
 
-        Vector3 nextPos = GetCatmullRomPosition(t, PathPoints);
-        nextPos.y = Depth;
-        Vector3 direction = nextPos - transform.position;
+        Vector3 nextPos = GetCatmullRomPosition(t, LocalPathPoints);
+        nextPos.y = FishPathData.Depth;
 
-        if (direction.sqrMagnitude > 0.0001f)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
-        }
+        // 面向與位移
+        Vector3 moveDir = nextPos - transform.position;
+        if (moveDir.sqrMagnitude > 0.0001f)
+            transform.rotation = Quaternion.LookRotation(moveDir);
 
         transform.position = nextPos;
 
+        // 只有 Server 判定銷毀
         if (t >= 1.0f && Object.HasStateAuthority)
-        {
             Runner.Despawn(Object);
-        }
     }
 
     /// <summary>
@@ -187,4 +238,57 @@ public class Fish : NetworkBehaviour
     {
         Runner.Despawn(Object);
     }
+
+    /// <summary>
+    /// 設置剩餘路徑移動時間
+    /// </summary>
+    public void SetFishDuration(float finishTime)
+    {
+        RPC_SetFishDuration(finishTime);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SetFishDuration(float finishTime)
+    {
+        if (!Object.HasStateAuthority) 
+            return;
+
+        float remaining = MoveTimer.RemainingTime(Runner) ?? 0;
+        float elapsed = TotalDuration - remaining;
+        float currentT = Mathf.Clamp01(elapsed / TotalDuration);
+
+        AniSpeed = 3;
+
+        // 如果已經快跑完了，就不處理
+        if (currentT >= 0.99f) return;
+
+        float targetRemainingTime = finishTime;
+        float newTotalDuration = targetRemainingTime / (1f - currentT);
+
+        // 更新同步變數
+        TotalDuration = newTotalDuration;
+        // 重設 Timer
+        MoveTimer = TickTimer.CreateFromSeconds(Runner, targetRemainingTime);
+    }
+}
+
+/// <summary>
+/// 路線資料
+/// </summary>
+public struct FishPathData : INetworkStruct
+{
+    /// <summary> 路線ID </summary>
+    public int WayPointId;
+
+    /// <summary> 是否反向移動 </summary>
+    public NetworkBool IsMirror;
+
+    /// <summary> 深度 </summary>
+    public float Depth;
+
+    /// <summary> 排除的路線點數量 </summary>
+    public int SkipWaypoint;
+
+    /// <summary> 中途加速用的倍率 </summary>
+    public float SpeedMultiplier;
 }

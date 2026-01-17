@@ -738,6 +738,15 @@ public class FishData
             Magnification = this.Magnification
         };
     }
+
+    /// <summary>
+    /// 複製
+    /// </summary>
+    /// <returns></returns>
+    public FishData Clone()
+    {
+        return (FishData)this.MemberwiseClone();
+    }
 }
 
 /// <summary>
@@ -822,6 +831,9 @@ public class LevelData
 
     /// <summary> 預設子彈花費 </summary>
     public double DefaultCost;
+
+    /// <summary> 浪潮倒計時 </summary>
+    public float WaterWaveTime;
 }
 
 /// <summary>

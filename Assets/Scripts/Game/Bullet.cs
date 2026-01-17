@@ -8,32 +8,45 @@ public class Bullet : NetworkBehaviour
     [SerializeField] float BulletRadius = 0.4f;
 
     [Networked] Vector3 Direction { get; set; }
+    [Networked] NetworkId TargetFishId { get; set; }
 
     Transform EffectPool;
-    Fish TargetFish;
+    Fish LocalTargetFish;
+
 
     readonly Vector2 MinBounds = new(-10f, -6f);
     readonly Vector2 MaxBounds = new(10f, 6f);
     
     public void SetData(Fish targetFish)
     {
-        TargetFish = targetFish;
+        if (Object.HasStateAuthority)
+        {
+            TargetFishId = (targetFish != null) ? targetFish.Object.Id : default;
+        }
     }
 
     public override void Spawned()
     {
         EffectPool = GameObject.Find(FusionPoolNameEnum.EffectPool.ToString()).transform;
-        Direction = transform.forward;
+
+        if (Object.HasStateAuthority)
+        {
+            Direction = transform.forward;
+        }
     }
 
     public override void FixedUpdateNetwork()
     {
-        if (Object == null || !Object.IsValid) 
+        if (Object == null || !Object.IsValid)
             return;
 
         Move();
-        CheckBounds();
-        CheckHit();
+
+        if (Object.HasStateAuthority)
+        {
+            CheckBounds();
+            CheckHit();
+        }
     }
 
     /// <summary>
@@ -41,20 +54,35 @@ public class Bullet : NetworkBehaviour
     /// </summary>
     private void Move()
     {
-        if (!Object.HasStateAuthority)
-            return;
-
-        // 有鎖定目標
-        if (TargetFish != null && TargetFish.Object != null && TargetFish.Object.IsValid)
+        // 檢查 ID 是否有效
+        if (TargetFishId.IsValid)
         {
-            Vector3 targetPos = TargetFish.transform.position;
+            // 如果本地緩存還沒抓到，或者原本抓到的魚已經失效了，就重新找一次
+            if (LocalTargetFish == null || LocalTargetFish.Object == null || !LocalTargetFish.Object.IsValid)
+            {
+                if (Runner.TryFindObject(TargetFishId, out var netObj))
+                {
+                    LocalTargetFish = netObj.GetComponent<Fish>();
+                }
+            }
+        }
+        else
+        {
+            LocalTargetFish = null;
+        }
+
+        // 有鎖定
+        if (LocalTargetFish != null && LocalTargetFish.Object != null && LocalTargetFish.Object.IsValid)
+        {
+            Vector3 targetPos = LocalTargetFish.transform.position;
             targetPos.y = transform.position.y;
-
-            Vector3 direction = (targetPos - transform.position).normalized;
-            direction.y = 0;
-
-            if (direction != Vector3.zero)
-                transform.forward = direction;
+            Vector3 followDir = (targetPos - transform.position).normalized;
+            if (followDir != Vector3.zero) transform.forward = followDir;
+        }
+        else
+        {
+            // 沒目標，照同步的方向走
+            transform.forward = Direction;
         }
 
         transform.Translate(Vector3.forward * Speed * Runner.DeltaTime);
@@ -65,26 +93,26 @@ public class Bullet : NetworkBehaviour
     /// </summary>
     private void CheckBounds()
     {
-        if (!Object.HasStateAuthority)
-            return;
-
-        // 有鎖定魚
-        if (TargetFish)
-            return;
-
         Vector3 pos = transform.position;
+        Vector3 currentDir = Direction;
+        bool hasBounced = false;
 
-        if (pos.x < MinBounds.x || pos.x > MaxBounds.x)
+        if (pos.x <= MinBounds.x || pos.x >= MaxBounds.x)
         {
-            Direction = new Vector3(-Direction.x, 0, Direction.z);
+            currentDir.x = -currentDir.x;
+            hasBounced = true;
         }
 
-        if (pos.z < MinBounds.y || pos.z > MaxBounds.y)
+        if (pos.z <= MinBounds.y || pos.z >= MaxBounds.y)
         {
-            Direction = new Vector3(Direction.x, 0, -Direction.z);
+            currentDir.z = -currentDir.z;
+            hasBounced = true;
         }
 
-        transform.forward = Direction;
+        if (hasBounced)
+        {
+            Direction = currentDir;
+        }
     }
 
     /// <summary>
@@ -97,31 +125,24 @@ public class Bullet : NetworkBehaviour
 
         LayerMask mask = LayerMask.GetMask("Fish");
 
-        // 改用 SphereCastAll，它會回傳所有被這根「柱子」穿過的魚
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, BulletRadius, Vector3.down, RayDistance, mask);
 
         if (hits.Length > 0)
         {
-            // 1. 先檢查有沒有撞到「鎖定目標」
-            if (TargetFish != null)
+            if (LocalTargetFish != null)
             {
                 foreach (var hit in hits)
                 {
                     Fish hitFish = hit.collider.GetComponentInParent<Fish>();
-                    if (hitFish != null && hitFish == TargetFish)
+                    if (hitFish != null && hitFish == LocalTargetFish)
                     {
                         HitTarget(hitFish);
-                        return; // 打中鎖定目標，直接結束
+                        return;
                     }
                 }
-
-                // 如果執行到這裡，代表雖然撞到了魚，但裡面沒有我們要的 TargetFish
-                // 這時候子彈會繼續飛行，穿過這些雜魚。
             }
             else
             {
-                // 2. 如果沒鎖定目標，就打中「第一條」碰到的魚（按距離排序）
-                // SphereCastAll 的回傳順序不一定是按距離，保險起見可以排序或直接取第一筆
                 Fish hitFish = hits[0].collider.GetComponentInParent<Fish>();
                 if (hitFish != null)
                 {

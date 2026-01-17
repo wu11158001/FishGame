@@ -1,0 +1,67 @@
+using System;
+using System.Collections.Generic;
+
+public static class WaterWaveFishManagement
+{
+    /// <summary>
+    /// 浪潮魚群資料(關卡類型, 依次產生魚的類型)
+    /// </summary>
+    private static Dictionary<LevelEnum, WaterWaveFishData> WaterWaveFishDic = new()
+    {
+        {
+            // 經典關卡
+            LevelEnum.ClassicLevel,
+            new()
+            {
+                SpawnBetweenTime = 4f,
+                MoveDuration = 30,
+                FishsType = new()
+                {
+                    NetworkPrefabEnum.NormalFish_8,
+                    NetworkPrefabEnum.NormalFish_8,
+                    NetworkPrefabEnum.NormalFish_8,
+                    NetworkPrefabEnum.NormalFish_8,
+                    NetworkPrefabEnum.NormalFish_6,
+                    NetworkPrefabEnum.NormalFish_6,
+                    NetworkPrefabEnum.NormalFish_0,
+                    NetworkPrefabEnum.NormalFish_9,
+                    NetworkPrefabEnum.NormalFish_0,
+                    NetworkPrefabEnum.NormalFish_9,
+                    NetworkPrefabEnum.NormalFish_0,
+                    NetworkPrefabEnum.NormalFish_9,
+                }
+            }
+        },
+    };
+
+    /// <summary>
+    /// 獲取浪潮魚群資料
+    /// </summary>
+    /// <param name="levelType"></param>
+    public static WaterWaveFishData GetWaterWaveFishData(LevelEnum levelType)
+    {
+        foreach (var data in WaterWaveFishDic)
+        {
+            if (data.Key == levelType)
+                return data.Value;
+        }
+
+        return null;
+    }
+}
+
+
+/// <summary>
+/// 浪潮魚群資料
+/// </summary>
+public class WaterWaveFishData
+{
+    /// <summary> 產生魚的間隔時間 </summary>
+    public float SpawnBetweenTime;
+
+    /// <summary> 魚移動時間 </summary>
+    public float MoveDuration;
+
+    /// <summary> 依次產生魚的類型 </summary>
+    public List<NetworkPrefabEnum> FishsType;
+}

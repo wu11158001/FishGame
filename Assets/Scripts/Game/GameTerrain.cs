@@ -20,16 +20,26 @@ public class GameTerrain : NetworkBehaviour
     // 一般魚一次生成最大數量
     [SerializeField]  int MaxCreateNormalFish = 8;
 
-    /// <summary> 紀錄座位上玩家ID </summary>
-    [Networked, Capacity(4)]
-    [OnChangedRender(nameof(OnSpawnLocalTurret))]
+    [Header("Water Wave")]
+    // 浪潮效果持續時間
+    [SerializeField] float WaterWaveDuration = 4;
+
+    // 紀錄座位上玩家ID
+    [Networked, Capacity(4), OnChangedRender(nameof(OnSpawnLocalTurret))]
     NetworkArray<int> SeatPlayerIDs { get; }
 
-    /// <summary> 產生一般魚計時器 </summary>
+    // 產生一般魚計時器
     [Networked] TickTimer SpawnTimer { get; set; }
-
-    /// <summary> 首次產生魚 </summary>
+    // 首次產生魚
     [Networked] bool IsFirstCreate { get; set; }
+
+    // 遊戲狀態
+    [Networked] GameState CurrentState { get; set; }
+    // 遊戲狀態更換時間
+    [Networked] TickTimer StateChangeTimer { get; set; }
+
+    // 當前浪潮魚產生Index
+    [Networked] int CurrWaterWaveFishIndex { get; set; }
 
     WayPointMain WayPointMain;
     Transform FishPool;
@@ -37,6 +47,11 @@ public class GameTerrain : NetworkBehaviour
     // 一般魚Enum
     List<NetworkPrefabEnum> NormalFishTypes = new();
     Coroutine CreateFishCoroutine;
+
+    // 浪潮開始倒計時
+    float WaterWaveTime;
+    GameObject WaterWaveObj;
+    WaterWaveFishData WaterWaveFishData;
 
     // 本地玩家是否已生成
     bool isLocalSpawn;
@@ -46,8 +61,7 @@ public class GameTerrain : NetworkBehaviour
         if (NetworkRunnerManagement.Instance != null)
             NetworkRunnerManagement.Instance.PlayerLeftEvent -= LeftRoom;
 
-        if (CreateFishCoroutine != null)
-            StopCoroutine(CreateFishCoroutine);
+        StopAllCoroutines();
     }
 
     private void Start()
@@ -57,6 +71,17 @@ public class GameTerrain : NetworkBehaviour
 
     public override void Spawned()
     {
+        // 產生浪潮特效
+        var task4 = AddressableManagement.Instance.CreateGamePrefab(
+            prefabType: GamePrefabEnum.WaterWave, 
+            callback: (obj) => 
+            {
+                WaterWaveObj = obj;
+                obj.SetActive(false); 
+            });
+
+        WaterWaveTime = TempDataManagement.Instance.CurrentLevelData.WaterWaveTime;
+
         if (Object.HasStateAuthority)
         {
             // 初始化座位
@@ -65,6 +90,11 @@ public class GameTerrain : NetworkBehaviour
                 SeatPlayerIDs.Set(i, -1);
                 IsFirstCreate = true;
             }
+
+            // 初始狀態：普通模式
+            CurrentState = GameState.Normal;
+            // 開始計時浪潮時間
+            StateChangeTimer = TickTimer.CreateFromSeconds(Runner, WaterWaveTime);
         }
 
         StartCoroutine(IJoinSeat());
@@ -78,15 +108,23 @@ public class GameTerrain : NetworkBehaviour
         if (!Object.HasStateAuthority)
             return;
 
-        if (SpawnTimer.ExpiredOrNotRunning(Runner))
+        switch (CurrentState)
         {
-            SpawnTimer = TickTimer.CreateFromSeconds(Runner, NormalFishCreatTime);
+            // 一般狀態
+            case GameState.Normal:
+                NormalModeUpdate();
+                break;
 
-            if (CreateFishCoroutine != null)
-                StopCoroutine(CreateFishCoroutine);
+            // 浪潮狀態
+            case GameState.WaterWave:
+                WaterWaveModeUpdate();
+                break;
 
-            StartCoroutine(ICreatNormalFish());            
-        }
+            // 浪潮魚群狀態
+            case GameState.WaterWaveFishs:
+                WaterWaveFishModeUpdate();
+                break;
+        }        
     }
 
     #region 玩家
@@ -219,12 +257,10 @@ public class GameTerrain : NetworkBehaviour
 
         if (Object.HasStateAuthority)
         {
-            // 既然我是權限者了，直接改 Networked Array
             for (int i = 0; i < SeatPlayerIDs.Length; i++)
             {
                 if (SeatPlayerIDs[i] == leftPlayer.PlayerId)
                 {
-                    Debug.Log($"[新房主] 成功取得權限，清理座位 Index: {i}");
                     SeatPlayerIDs.Set(i, -1);
                     break;
                 }
@@ -270,6 +306,30 @@ public class GameTerrain : NetworkBehaviour
     #region 魚
 
     /// <summary>
+    /// 一般狀態Update
+    /// </summary>
+    private void NormalModeUpdate()
+    {
+        // 檢查是否該進入浪潮
+        if (StateChangeTimer.Expired(Runner))
+        {
+            StartWaterWave();
+            return;
+        }
+
+        // 產生一般魚
+        if (SpawnTimer.ExpiredOrNotRunning(Runner))
+        {
+            SpawnTimer = TickTimer.CreateFromSeconds(Runner, NormalFishCreatTime);
+
+            if (CreateFishCoroutine != null)
+                StopCoroutine(CreateFishCoroutine);
+
+            CreateFishCoroutine = StartCoroutine(ICreatNormalFish());
+        }
+    }
+
+    /// <summary>
     /// 產生一般魚
     /// </summary>
     private IEnumerator ICreatNormalFish()
@@ -312,7 +372,7 @@ public class GameTerrain : NetworkBehaviour
             NetworkPrefabEnum fishType = NormalFishTypes[fishTypeIndex];
 
             // 隨機選擇路線
-            List<WayPoint> wayPoints = WayPointMain.GetWayPoints();
+            List<WayPoint> wayPoints = WayPointMain.GetNormalWayPoints();
             int wayPointIndex = UnityEngine.Random.Range(0, wayPoints.Count);
             // 路線不與前一隻一樣
             while (preWaypointIndex == wayPointIndex)
@@ -325,6 +385,7 @@ public class GameTerrain : NetworkBehaviour
             // 面向左或右
             bool isMirror = UnityEngine.Random.value > 0.5f;
 
+            // 初始位置
             Vector3 initPos =
                 isMirror ?
                 wayPoint.Points[wayPoint.Points.Count - 1].position :
@@ -356,7 +417,7 @@ public class GameTerrain : NetworkBehaviour
                                    fishType: fishType,
                                    isMirror: isMirror,
                                    depth: depth,
-                                   wayPoint: wayPoint,
+                                   wayPointId: wayPoint.WayPointId,
                                    skipWaypoint: skipWaypoint);
                        });
 
@@ -366,6 +427,179 @@ public class GameTerrain : NetworkBehaviour
 
         if (IsFirstCreate)
             IsFirstCreate = false;
+    }
+
+    #endregion
+
+    #region 浪潮
+
+    /// <summary>
+    /// 浪潮開始
+    /// </summary>
+    private void StartWaterWave()
+    {
+        CurrentState = GameState.WaterWave;
+
+        // 停止目前的生魚協程
+        if (CreateFishCoroutine != null)
+            StopCoroutine(CreateFishCoroutine);
+
+        // 設定浪潮結束的倒數計時
+        StateChangeTimer = TickTimer.CreateFromSeconds(Runner, WaterWaveDuration);
+
+        WaterWaveObj.SetActive(true);
+
+        // 場上魚移動加速
+        if (FishPool == null)
+            FishPool = GameObject.Find(FusionPoolNameEnum.FishPool.ToString()).transform;
+
+        for (int i = 0; i < FishPool.childCount; i++)
+        {
+            if (FishPool.GetChild(i).TryGetComponent<Fish>(out var fish))
+            {
+                if(fish.gameObject.activeInHierarchy)
+                {
+                    fish.SetFishDuration(finishTime: WaterWaveDuration - 1f);
+                }                
+            }
+        }
+    }
+
+    /// <summary>
+    /// 浪潮狀態Update
+    /// </summary>
+    private void WaterWaveModeUpdate()
+    {
+        // 檢查是否該進入浪潮魚群
+        if (StateChangeTimer.Expired(Runner))
+        {
+            StartWaterWaveFish();
+            return;
+        }
+    }
+
+    #endregion
+
+    #region 浪潮魚群
+
+    /// <summary>
+    /// 浪潮魚群開始
+    /// </summary>
+    private void StartWaterWaveFish()
+    {
+        CurrentState = GameState.WaterWaveFishs;
+
+        // 浪潮魚群期間狀態不計時
+        StateChangeTimer = TickTimer.None;
+
+        WaterWaveObj.SetActive(false);
+        CurrWaterWaveFishIndex = 0;
+    }
+
+    /// <summary>
+    /// 浪潮魚群狀態Update
+    /// </summary>
+    private void WaterWaveFishModeUpdate()
+    {
+        // 產生浪潮魚群
+        if (SpawnTimer.ExpiredOrNotRunning(Runner))
+        {
+            if (WaterWaveFishData == null)
+                WaterWaveFishData = WaterWaveFishManagement.GetWaterWaveFishData(TempDataManagement.Instance.CurrentLevelData.LevelType);
+
+            SpawnTimer = TickTimer.CreateFromSeconds(Runner, WaterWaveFishData.SpawnBetweenTime);
+
+            CreateWaterWaveFish();
+
+            // 浪潮魚群結束
+            if (CurrWaterWaveFishIndex >= WaterWaveFishData.FishsType.Count)
+            {
+                EndWaterWave();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 浪潮魚群結束
+    /// </summary>
+    private void EndWaterWave()
+    {
+        CurrentState = GameState.Normal;
+
+        // 開始計時下次浪潮時間
+        StateChangeTimer = TickTimer.CreateFromSeconds(Runner, WaterWaveTime + WaterWaveFishData.MoveDuration);
+
+        // 延遲一小段時間重新開始產生一般魚
+        SpawnTimer = TickTimer.CreateFromSeconds(Runner, WaterWaveFishData.MoveDuration);
+    }
+
+    /// <summary>
+    /// 產生浪潮魚
+    /// </summary>
+    private void CreateWaterWaveFish()
+    {
+        if (!Object.HasStateAuthority)
+            return;
+
+        if (FishPool == null)
+            FishPool = GameObject.Find(FusionPoolNameEnum.FishPool.ToString()).transform;
+
+        if (WayPointMain == null)
+            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}(Clone)").GetComponent<WayPointMain>();
+
+        if (WaterWaveFishData == null)
+            WaterWaveFishData = WaterWaveFishManagement.GetWaterWaveFishData(TempDataManagement.Instance.CurrentLevelData.LevelType);
+
+        if (FishPool == null || WayPointMain == null || WaterWaveFishData == null)
+        {
+            Debug.LogError("產生浪潮魚錯誤!");
+            return;
+        }
+
+        // 上下路線
+        for (int i = 0; i < 2; i++)
+        {
+            int index = i;
+
+            // 魚種類
+            NetworkPrefabEnum fishType = WaterWaveFishData.FishsType[CurrWaterWaveFishIndex];
+
+            // 路線
+            WayPoint wayPoint = WayPointMain.GetWaterWaveWayPoints()[index];
+
+            // 面向左或右
+            bool isMirror = index == 0;
+
+            // 初始位置
+            Vector3 initPos =
+                isMirror ?
+                wayPoint.Points[wayPoint.Points.Count - 1].position :
+                wayPoint.Points[0].position;
+
+            // 深度            
+            int depth = UnityEngine.Random.Range(-40, -5);
+
+            NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                key: fishType,
+                Pos: initPos,
+                rot: Quaternion.identity,
+                parent: FishPool,
+                player: Runner.LocalPlayer,
+                callback: (fish) =>
+                {
+                    Fish normalFish = fish.GetComponent<Fish>();
+                    if (normalFish != null)
+                        normalFish.SetData(
+                            fishType: fishType,
+                            isMirror: isMirror,
+                            depth: depth,
+                            wayPointId: wayPoint.WayPointId,
+                            skipWaypoint: 0,
+                            customDuration: WaterWaveFishData.MoveDuration);
+           });
+        }
+
+        CurrWaterWaveFishIndex++;
     }
 
     #endregion
