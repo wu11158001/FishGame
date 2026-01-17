@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using System.Collections.Generic;
 
 public class GameView : BasicView
 {
@@ -10,7 +11,10 @@ public class GameView : BasicView
     [SerializeField] Button TurretBtn;
     [SerializeField] Button ReduceCostBtn;
     [SerializeField] Button AddCostBtn;
-    [SerializeField] TextMeshProUGUI CurrCostText;
+
+    [Header("CostArea")]
+    [SerializeField] List<TextMeshProUGUI> PlayerCostTexts = new();
+    [SerializeField] List<GameObject> PlayerCostPanels = new();
 
     [Header("AccountInfoArea")]
     [SerializeField] TextMeshProUGUI AccountText;
@@ -31,7 +35,6 @@ public class GameView : BasicView
         if(TempDataManagement.Instance != null)
         {
             TempDataManagement.Instance.TempAccountCoinChangeDelegate -= TempAccountCoinChange;
-            TempDataManagement.Instance.CurrCostChangeDelegate -= CurrCostChange;
             TempDataManagement.Instance.IsSkill_AutoCloseDelegate -= Skill_AutoClose;
         }
     }
@@ -66,7 +69,6 @@ public class GameView : BasicView
         if (TempDataManagement.Instance != null)
         {
             TempDataManagement.Instance.TempAccountCoinChangeDelegate += TempAccountCoinChange;
-            TempDataManagement.Instance.CurrCostChangeDelegate += CurrCostChange;
             TempDataManagement.Instance.IsSkill_AutoCloseDelegate += Skill_AutoClose;
         }
 
@@ -86,7 +88,6 @@ public class GameView : BasicView
             RightSeatPosision;
 
         AccountText.text = TempDataManagement.Instance.TempAccountData.Account;
-        CurrCostText.text = StringUtility.CurrencyFormat(TempDataManagement.Instance.CurrentLevelData.DefaultCost);
         AccountCoinText.text = StringUtility.CurrencyFormat(TempDataManagement.Instance.TempAccountData.Coins);
 
         StartCoroutine(IYieldShow());
@@ -102,12 +103,26 @@ public class GameView : BasicView
     }
 
     /// <summary>
-    /// 當前子彈花費變更
+    /// 玩家子彈花費變更
     /// </summary>
-    /// <param name="cost"></param>
-    private void CurrCostChange(double cost)
+    public void PlayerCostChange(int seatIndex, double cost)
     {
-        CurrCostText.text = StringUtility.CurrencyFormat(cost);
+        if(seatIndex >= PlayerCostTexts.Count || seatIndex < 0)
+        {
+            Debug.LogError($"玩家子彈花費變更錯誤: index = {seatIndex}");
+            return;
+        }
+
+        if(cost < 0)
+        {
+            PlayerCostPanels[seatIndex].SetActive(false);
+            return;
+        }
+
+        if(!PlayerCostPanels[seatIndex].activeSelf)
+            PlayerCostPanels[seatIndex].SetActive(true);
+
+        PlayerCostTexts[seatIndex].text = StringUtility.CurrencyFormat(cost);
     }
 
     /// <summary>

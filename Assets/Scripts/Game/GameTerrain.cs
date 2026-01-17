@@ -12,11 +12,11 @@ public class GameTerrain : NetworkBehaviour
 
     [Header("Fish Value")]
     // 初始生成數量
-    [SerializeField] int InitCreateFishCount = 8;
+    [SerializeField] int InitCreateFishCount = 10;
     // 一般魚生成時間(秒)
     [SerializeField] float NormalFishCreatTime = 8;
     // 一般魚一次生成最小數量
-    [SerializeField] int MinCreateNormalFish = 3;
+    [SerializeField] int MinCreateNormalFish = 5;
     // 一般魚一次生成最大數量
     [SerializeField]  int MaxCreateNormalFish = 8;
 
@@ -155,7 +155,7 @@ public class GameTerrain : NetworkBehaviour
     /// <summary>
     /// 產生本地玩家砲台
     /// </summary>
-    private void OnSpawnLocalTurret()
+    private async void OnSpawnLocalTurret()
     {
         if (isLocalSpawn) 
             return;
@@ -168,6 +168,9 @@ public class GameTerrain : NetworkBehaviour
             {
                 isLocalSpawn = true;
 
+                await AddressableManagement.Instance.OpenGameView(localSeat: index);
+
+                bool isMorror = index == 1 || index == 3;
                 var pos = Vector3.zero;
 
                 NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
@@ -181,20 +184,18 @@ public class GameTerrain : NetworkBehaviour
                         PlayerTurret playerTurret = obj.GetComponent<PlayerTurret>();
                         if(playerTurret != null)
                         {
-                            playerTurret.SetData(turretIndex: TempDataManagement.Instance.TempAccountData.DefaultTurret);
+                            playerTurret.SetData(turretIndex: TempDataManagement.Instance.TempAccountData.DefaultTurret, seatIndex: index);
                         }
                     });
 
                 // 位置在1.3攝影機顛倒
-                if(index == 1 || index == 3)
+                if(isMorror)
                 {
                     Transform cameraTr = Camera.main.transform;
                     cameraTr.rotation = Quaternion.Euler(90, 0, 180);
                 }
                 TempDataManagement.Instance.IsMirror = index == 1 || index == 3;
                 TempDataManagement.Instance.SeatPosition = Seats[index].transform.position;
-
-                _ = AddressableManagement.Instance.OpenGameView(localSeat: index);
 
                 break;
             }

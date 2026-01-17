@@ -18,15 +18,17 @@ public class PlayerTurret : NetworkBehaviour
     // 使用砲台
     [OnChangedRender(nameof(ChangeTurret))]
     [Networked] int TurretIndex { get; set; }
-
     // 同步角度變數
     [Networked] float NetworkedAngle { get; set; }
-
     //射速
     [Networked] TickTimer Delay { get; set; }
-
     // 當前後座力
     [Networked] float CurrentRecoil { get; set; }
+    // 是否顛倒
+    [Networked] int SeatIndex { get; set; }
+    // 子彈花費變更
+    [Networked, OnChangedRender(nameof(OnCostChanged))]
+    public double NetworkedCost { get; set; }
 
     // 紀錄前次滑鼠點擊
     NetworkButtons ButtonsPrevious { get; set; }
@@ -41,6 +43,8 @@ public class PlayerTurret : NetworkBehaviour
     Animator Skill_LockingAni;
     Fish TargetLocking;
 
+    GameView GameView;
+
     // 本次發射不射擊
     bool DoNotFireThisTime;
 
@@ -51,17 +55,29 @@ public class PlayerTurret : NetworkBehaviour
     {
         if (FirestoreManagement.Instance != null)
             FirestoreManagement.Instance.AccountTurretDataChangeDelegate -= AccountTurretDataChange;
+
+        if (TempDataManagement.Instance != null)
+            TempDataManagement.Instance.CurrCostChangeDelegate -= CurrCostChange;
     }
 
     private void Start()
     {
         if (FirestoreManagement.Instance != null)
             FirestoreManagement.Instance.AccountTurretDataChangeDelegate += AccountTurretDataChange;
+
+        if(TempDataManagement.Instance != null)
+            TempDataManagement.Instance.CurrCostChangeDelegate += CurrCostChange;
     }
 
-    public void SetData(int turretIndex)
+    public void SetData(int turretIndex, int seatIndex)
     {
         TurretIndex = turretIndex;
+        SeatIndex = seatIndex;
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        CurrCostChange(-1);
     }
 
     public override void Spawned()
@@ -90,6 +106,7 @@ public class PlayerTurret : NetworkBehaviour
         }
 
         ChangeTurret();
+        CurrCostChange(TempDataManagement.Instance.CurrentLevelData.DefaultCost);
     }
 
     public override void Render()
@@ -121,6 +138,23 @@ public class PlayerTurret : NetworkBehaviour
 
         Canvas_Global.Instance.CloseLoading();
         Canvas_Global.Instance.CloseSceneLoadingView();
+    }
+
+    /// <summary>
+    /// 子彈花費變更
+    /// </summary>
+    private void CurrCostChange(double cost)
+    {
+        NetworkedCost = cost;
+    }
+
+    public void OnCostChanged()
+    {
+        if(GameView == null)
+            GameView = FindFirstObjectByType<GameView>();
+
+        if (GameView != null)
+            GameView.PlayerCostChange(seatIndex: SeatIndex, cost: NetworkedCost);
     }
 
     #region 鎖定技能
@@ -465,6 +499,14 @@ public class PlayerTurret : NetworkBehaviour
 
         // 設定砲管
         CurrBarrel = activeTurret.transform.Find("Barrel");
+
+        Transform bottom = activeTurret.transform.Find("Bottom");
+
+        // 設定底座
+        bottom.rotation =
+            SeatIndex == 1 || SeatIndex == 3 ?
+            Quaternion.Euler(0, 180, 0) :
+            Quaternion.Euler(0, 0, 0);
 
         // 更新發射點
         CurrShotPoints.Clear();
