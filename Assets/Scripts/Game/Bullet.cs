@@ -13,7 +13,6 @@ public class Bullet : NetworkBehaviour
     Transform EffectPool;
     Fish LocalTargetFish;
 
-
     readonly Vector2 MinBounds = new(-10f, -6f);
     readonly Vector2 MaxBounds = new(10f, 6f);
     
@@ -28,6 +27,7 @@ public class Bullet : NetworkBehaviour
     public override void Spawned()
     {
         EffectPool = GameObject.Find(FusionPoolNameEnum.EffectPool.ToString()).transform;
+        LocalTargetFish = null;
 
         if (Object.HasStateAuthority)
         {
@@ -54,16 +54,21 @@ public class Bullet : NetworkBehaviour
     /// </summary>
     private void Move()
     {
-        // 檢查 ID 是否有效
+        // 目標獲取與合法性檢查
         if (TargetFishId.IsValid)
         {
-            // 如果本地緩存還沒抓到，或者原本抓到的魚已經失效了，就重新找一次
+            // 如果目前沒有緩存，或是緩存的物件已經被銷毀
             if (LocalTargetFish == null || LocalTargetFish.Object == null || !LocalTargetFish.Object.IsValid)
             {
                 if (Runner.TryFindObject(TargetFishId, out var netObj))
                 {
                     LocalTargetFish = netObj.GetComponent<Fish>();
                 }
+            }
+
+            if (LocalTargetFish != null && !LocalTargetFish.gameObject.activeInHierarchy)
+            {
+                LocalTargetFish = null;
             }
         }
         else
@@ -77,11 +82,12 @@ public class Bullet : NetworkBehaviour
             Vector3 targetPos = LocalTargetFish.transform.position;
             targetPos.y = transform.position.y;
             Vector3 followDir = (targetPos - transform.position).normalized;
-            if (followDir != Vector3.zero) transform.forward = followDir;
+
+            if (followDir != Vector3.zero)
+                transform.forward = followDir;
         }
         else
         {
-            // 沒目標，照同步的方向走
             transform.forward = Direction;
         }
 
@@ -123,8 +129,17 @@ public class Bullet : NetworkBehaviour
         if (!Object.HasStateAuthority)
             return;
 
-        LayerMask mask = LayerMask.GetMask("Fish");
+        // 鎖定目標不存在
+        if (LocalTargetFish != null)
+        {
+            if (LocalTargetFish.Object == null || !LocalTargetFish.Object.IsValid || !LocalTargetFish.gameObject.activeInHierarchy)
+            {
+                LocalTargetFish = null;
+                TargetFishId = default; 
+            }
+        }
 
+        LayerMask mask = LayerMask.GetMask("Fish");
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, BulletRadius, Vector3.down, RayDistance, mask);
 
         if (hits.Length > 0)

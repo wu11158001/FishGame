@@ -41,6 +41,9 @@ public class GameTerrain : NetworkBehaviour
     // 當前浪潮魚產生Index
     [Networked] int CurrWaterWaveFishIndex { get; set; }
 
+    [Networked, OnChangedRender(nameof(UpdateShowWaterWave))]
+    NetworkBool IsShowWaterWave { get; set; }
+
     WayPointMain WayPointMain;
     Transform FishPool;
 
@@ -84,8 +87,10 @@ public class GameTerrain : NetworkBehaviour
 
         if (Object.HasStateAuthority)
         {
+            IsShowWaterWave = false;
+
             // 初始化座位
-            for(int i = 0; i < SeatPlayerIDs.Length; i++)
+            for (int i = 0; i < SeatPlayerIDs.Length; i++)
             {
                 SeatPlayerIDs.Set(i, -1);
                 IsFirstCreate = true;
@@ -434,6 +439,14 @@ public class GameTerrain : NetworkBehaviour
     #region 浪潮
 
     /// <summary>
+    /// 更新顯示浪潮特效
+    /// </summary>
+    private void UpdateShowWaterWave()
+    {
+        WaterWaveObj.SetActive(IsShowWaterWave);
+    }
+
+    /// <summary>
     /// 浪潮開始
     /// </summary>
     private void StartWaterWave()
@@ -447,7 +460,7 @@ public class GameTerrain : NetworkBehaviour
         // 設定浪潮結束的倒數計時
         StateChangeTimer = TickTimer.CreateFromSeconds(Runner, WaterWaveDuration);
 
-        WaterWaveObj.SetActive(true);
+        IsShowWaterWave = true;
 
         // 場上魚移動加速
         if (FishPool == null)
@@ -492,7 +505,7 @@ public class GameTerrain : NetworkBehaviour
         // 浪潮魚群期間狀態不計時
         StateChangeTimer = TickTimer.None;
 
-        WaterWaveObj.SetActive(false);
+        IsShowWaterWave = false;
         CurrWaterWaveFishIndex = 0;
     }
 

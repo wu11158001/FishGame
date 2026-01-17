@@ -261,14 +261,10 @@ public class PlayerTurret : NetworkBehaviour
                 Vector2 mousePos = input.MousePosition;
                 Ray ray = MainCamera.ScreenPointToRay(mousePos);
                 LayerMask layerMask = LayerMask.GetMask("Fish");
-
-                //Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 2);
-
+                      
                 if (Physics.Raycast(ray, out RaycastHit hit, 100, layerMask))
                 {
                     Fish fish = hit.transform.GetComponentInParent<Fish>();
-
-                    //Debug.DrawLine(ray.origin, hit.point, Color.green, 2);
 
                     if (Skill_Locking != null && fish != null)
                     {

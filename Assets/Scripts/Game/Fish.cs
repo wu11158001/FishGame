@@ -71,8 +71,6 @@ public class Fish : NetworkBehaviour
 
         TotalDuration = baseDuration;
         MoveTimer = TickTimer.CreateFromSeconds(Runner, actualRemainingDuration);
-
-        AniSpeed = 1;
     }
 
     public override void Spawned()
@@ -96,6 +94,11 @@ public class Fish : NetworkBehaviour
             {
                 transform.rotation = Quaternion.LookRotation(initialDir);
             }
+        }
+
+        if(Object.HasStateAuthority)
+        {
+            AniSpeed = 1;
         }
     }
 
