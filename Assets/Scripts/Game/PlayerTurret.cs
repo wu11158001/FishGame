@@ -44,6 +44,7 @@ public class PlayerTurret : NetworkBehaviour
     Fish TargetLocking;
 
     GameView GameView;
+    Coroutine UpdateUICoroutine;
 
     // 本次發射不射擊
     bool DoNotFireThisTime;
@@ -53,6 +54,8 @@ public class PlayerTurret : NetworkBehaviour
 
     private void OnDestroy()
     {
+        StopAllCoroutines();
+
         if (FirestoreManagement.Instance != null)
             FirestoreManagement.Instance.AccountTurretDataChangeDelegate -= AccountTurretDataChange;
 
@@ -73,11 +76,6 @@ public class PlayerTurret : NetworkBehaviour
     {
         TurretIndex = turretIndex;
         SeatIndex = seatIndex;
-    }
-
-    public override void Despawned(NetworkRunner runner, bool hasState)
-    {
-        CurrCostChange(-1);
     }
 
     public override void Spawned()
@@ -102,11 +100,12 @@ public class PlayerTurret : NetworkBehaviour
                     Skill_LockingAni = Skill_Locking.GetComponent<Animator>();
                 });
 
+            CurrCostChange(TempDataManagement.Instance.CurrentLevelData.DefaultCost);
             StartCoroutine(IYieldShow());
         }
 
         ChangeTurret();
-        CurrCostChange(TempDataManagement.Instance.CurrentLevelData.DefaultCost);
+        OnCostChanged();
     }
 
     public override void Render()
@@ -148,13 +147,33 @@ public class PlayerTurret : NetworkBehaviour
         NetworkedCost = cost;
     }
 
+    /// <summary>
+    /// 子彈花費變更事件
+    /// </summary>
     public void OnCostChanged()
     {
-        if(GameView == null)
+        if (UpdateUICoroutine != null)
+            StopCoroutine(UpdateUICoroutine);
+
+        UpdateUICoroutine = StartCoroutine(IYieldUpdateUI());
+    }
+
+    /// <summary>
+    /// 等待獲取GameView
+    /// </summary>
+    private IEnumerator IYieldUpdateUI()
+    {
+        if (GameView == null)
             GameView = FindFirstObjectByType<GameView>();
 
-        if (GameView != null)
-            GameView.PlayerCostChange(seatIndex: SeatIndex, cost: NetworkedCost);
+        // 重試直到找到 GameView
+        while (GameView == null)
+        {
+            GameView = FindFirstObjectByType<GameView>();
+            if (GameView == null) yield return new WaitForSeconds(0.2f);
+        }
+
+        GameView.PlayerCostChange(seatIndex: SeatIndex, cost: NetworkedCost);
     }
 
     #region 鎖定技能

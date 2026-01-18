@@ -171,19 +171,9 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     /// <summary>
     /// 場景載入完成
     /// </summary>
-    public async void OnSceneLoadDone(NetworkRunner runner)
+    public void OnSceneLoadDone(NetworkRunner runner)
     {
-        Debug.Log("場景載入完成");
-
         AddressableManagement.Instance.SetCanvase();
-
-        // 產生路線主物件
-        var task1 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.WayPointMain);
-        // 產生本地物件池
-        var task2 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.LocalPool);
-        // 產生場景特效
-        var task3 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.SceneEffect);
-        await Task.WhenAll(task1, task2, task3);
 
         // 產生遊戲地形
         if (runner.IsSharedModeMasterClient)
@@ -194,7 +184,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
                 rot: Quaternion.Euler(90, 0, 0),
                 parent: null,
                 player: PlayerRef.None);
-        }        
+        }
     }
 
     /// <summary>
@@ -233,7 +223,6 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         // 清空遊戲預置物
         if (AddressableManagement.Instance != null)
             AddressableManagement.Instance.ClearGamePrefab();
-
         
         if (TempDataManagement.Instance != null)
         {

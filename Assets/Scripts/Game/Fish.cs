@@ -41,17 +41,6 @@ public class Fish : NetworkBehaviour
             FishData_Network = fishDataInstance.ToNetworkStruct();
         }
 
-        if (WayPointMain == null)
-            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}(Clone)").GetComponent<WayPointMain>();
-
-        WayPoint wayPoint = WayPointMain.GetWayPointById(wayPointId);
-        int totalPoints = wayPoint.Points.Count;
-
-        // 計算剩餘路徑的長度比例 (假設每個點之間距離相等，這是一個簡化的權重)
-        // 如果總共 10 個點，跳過 3 個，剩下 7 個點的區間，比例就是 (7-1)/(10-1)
-        float pathRatio = (float)(totalPoints - skipWaypoint - 1) / (totalPoints - 1);
-        pathRatio = Mathf.Clamp01(pathRatio);
-
         // 設置路線資料
         FishPathData = new()
         {
@@ -62,6 +51,16 @@ public class Fish : NetworkBehaviour
             SpeedMultiplier = 1
         };
 
+        if (WayPointMain == null)
+            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}").GetComponent<WayPointMain>();
+
+        WayPoint wayPoint = WayPointMain.GetWayPointById(wayPointId);
+        int totalPoints = wayPoint.Points.Count;
+
+        // 計算剩餘路徑的長度比例
+        float pathRatio = (float)(totalPoints - skipWaypoint - 1) / (totalPoints - 1);
+        pathRatio = Mathf.Clamp01(pathRatio);
+
         // 調整時間：如果是中途出生，總時間應該要縮短，否則魚會在起點發呆
         float baseDuration = FishData_Network.Duration;
         if (customDuration > 0) baseDuration = customDuration;
@@ -71,6 +70,7 @@ public class Fish : NetworkBehaviour
 
         TotalDuration = baseDuration;
         MoveTimer = TickTimer.CreateFromSeconds(Runner, actualRemainingDuration);
+        AniSpeed = 1;
     }
 
     public override void Spawned()
@@ -100,6 +100,16 @@ public class Fish : NetworkBehaviour
         {
             AniSpeed = 1;
         }
+
+        if (Animator != null) Animator.speed = AniSpeed;
+    }
+
+    public override void Render()
+    {
+        if (LocalPathPoints == null || LocalPathPoints.Length < 2)
+        {
+            SetPathPoints();
+        }
     }
 
     public override void FixedUpdateNetwork()
@@ -124,14 +134,21 @@ public class Fish : NetworkBehaviour
     private void SetPathPoints()
     {
         if (WayPointMain == null)
-            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}(Clone)").GetComponent<WayPointMain>();
+        {
+            var wayPointObj = GameObject.Find($"{GamePrefabEnum.WayPointMain}");
+            if(wayPointObj != null)
+                WayPointMain = wayPointObj.GetComponent<WayPointMain>();
+        }
 
-        WayPoint wayPoint = WayPointMain.GetWayPointById(FishPathData.WayPointId);
+        if (WayPointMain != null)
+        {
+            WayPoint wayPoint = WayPointMain.GetWayPointById(FishPathData.WayPointId);
 
-        // 移動路徑獲取
-        var query = wayPoint.Points.Select(t => t.position);
-        if (FishPathData.IsMirror) query = query.Reverse();
-        LocalPathPoints = query.Skip(FishPathData.SkipWaypoint).ToArray();
+            // 移動路徑獲取
+            var query = wayPoint.Points.Select(t => t.position);
+            if (FishPathData.IsMirror) query = query.Reverse();
+            LocalPathPoints = query.Skip(FishPathData.SkipWaypoint).ToArray();
+        }
     }
 
     /// <summary>

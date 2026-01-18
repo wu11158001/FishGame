@@ -27,6 +27,8 @@ public class GameView : BasicView
     [SerializeField] Toggle AutoTog;
     [SerializeField] GameObject AutoSelectFrame;
 
+    bool IsLocalMirror;
+
     readonly Vector2 LeftSeatPosision = new(-600, -500);
     readonly Vector2 RightSeatPosision = new(600, -500);
 
@@ -75,8 +77,9 @@ public class GameView : BasicView
         AddressableManagement.Instance.OpenGameFloatBtn();
     }
 
-    public void SetData(int localSeat, Action closeAction)
+    public void SetData(int localSeat, bool isMirror, Action closeAction)
     {
+        IsLocalMirror = isMirror;
         CloseAction = closeAction;
 
         MainCanvasGroup.alpha = 0;
@@ -107,22 +110,30 @@ public class GameView : BasicView
     /// </summary>
     public void PlayerCostChange(int seatIndex, double cost)
     {
-        if(seatIndex >= PlayerCostTexts.Count || seatIndex < 0)
+        int seat = seatIndex;
+
+        // 反向
+        if (IsLocalMirror)
         {
-            Debug.LogError($"玩家子彈花費變更錯誤: index = {seatIndex}");
+            seat = 3 - seatIndex;
+        }
+
+        if(seat >= PlayerCostTexts.Count || seat < 0)
+        {
+            Debug.LogError($"玩家子彈花費變更錯誤: index = {seat}");
             return;
         }
 
         if(cost < 0)
         {
-            PlayerCostPanels[seatIndex].SetActive(false);
+            PlayerCostPanels[seat].SetActive(false);
             return;
         }
 
-        if(!PlayerCostPanels[seatIndex].activeSelf)
-            PlayerCostPanels[seatIndex].SetActive(true);
+        if(!PlayerCostPanels[seat].activeSelf)
+            PlayerCostPanels[seat].SetActive(true);
 
-        PlayerCostTexts[seatIndex].text = StringUtility.CurrencyFormat(cost);
+        PlayerCostTexts[seat].text = StringUtility.CurrencyFormat(cost);
     }
 
     /// <summary>

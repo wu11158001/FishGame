@@ -423,6 +423,7 @@ public class LoginView : BasicView
                         if (lastHeartbeat > 0 && difference < FirestoreManagement.Instance.HeartbeatTime)
                         {
                             AddressableManagement.Instance.ShowToast("Account logged in");
+                            ShowRecord();
                             Debug.LogError($"帳號已登入!");
                         }
                         else

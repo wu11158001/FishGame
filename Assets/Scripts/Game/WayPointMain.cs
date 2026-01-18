@@ -64,6 +64,7 @@ public class WayPointMain : MonoBehaviour
 
             foreach (var wayPoint in points)
             {
+                wayPoint.SetPoint();
                 AllWayPoints.Add(wayPoint);
             }
         }

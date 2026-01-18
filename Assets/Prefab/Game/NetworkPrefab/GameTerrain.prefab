@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
   SortKey: 3665326040
   ObjectInterest: 1
-  Flags: 524289
+  Flags: 131073
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 195311264511823660}
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
   SortKey: 1705609691
   ObjectInterest: 1
-  Flags: 524289
+  Flags: 131073
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4295012548846685070}
@@ -775,7 +775,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
   SortKey: 250926548
   ObjectInterest: 1
-  Flags: 524289
+  Flags: 131073
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 7695100333139977738}
@@ -845,7 +845,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
   SortKey: 3112018371
   ObjectInterest: 1
-  Flags: 524289
+  Flags: 131073
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 490475828872368079}
@@ -1382,6 +1382,7 @@ MonoBehaviour:
   NormalFishCreatTime: 10
   MinCreateNormalFish: 3
   MaxCreateNormalFish: 8
+  WaterWaveDuration: 4
 --- !u!114 &8927304616545405679
 MonoBehaviour:
   m_ObjectHideFlags: 0

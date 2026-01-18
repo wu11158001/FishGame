@@ -12,7 +12,7 @@ public class GameTerrain : NetworkBehaviour
 
     [Header("Fish Value")]
     // 初始生成數量
-    [SerializeField] int InitCreateFishCount = 10;
+    [SerializeField] int InitCreateFishCount = 12;
     // 一般魚生成時間(秒)
     [SerializeField] float NormalFishCreatTime = 8;
     // 一般魚一次生成最小數量
@@ -56,6 +56,8 @@ public class GameTerrain : NetworkBehaviour
     GameObject WaterWaveObj;
     WaterWaveFishData WaterWaveFishData;
 
+    GameView GameView;
+
     // 本地玩家是否已生成
     bool isLocalSpawn;
 
@@ -75,7 +77,7 @@ public class GameTerrain : NetworkBehaviour
     public override void Spawned()
     {
         // 產生浪潮特效
-        var task4 = AddressableManagement.Instance.CreateGamePrefab(
+        _ = AddressableManagement.Instance.CreateGamePrefab(
             prefabType: GamePrefabEnum.WaterWave, 
             callback: (obj) => 
             {
@@ -167,10 +169,10 @@ public class GameTerrain : NetworkBehaviour
             if (SeatPlayerIDs[index] == Runner.LocalPlayer.PlayerId)
             {
                 isLocalSpawn = true;
+                bool isMirror = index == 1 || index == 3;
 
-                await AddressableManagement.Instance.OpenGameView(localSeat: index);
+                await AddressableManagement.Instance.OpenGameView(localSeat: index, isMirror: isMirror);
 
-                bool isMorror = index == 1 || index == 3;
                 var pos = Vector3.zero;
 
                 NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
@@ -189,7 +191,7 @@ public class GameTerrain : NetworkBehaviour
                     });
 
                 // 位置在1.3攝影機顛倒
-                if(isMorror)
+                if(isMirror)
                 {
                     Transform cameraTr = Camera.main.transform;
                     cameraTr.rotation = Quaternion.Euler(90, 0, 180);
@@ -207,14 +209,15 @@ public class GameTerrain : NetworkBehaviour
     /// </summary>
     private void LeftRoom(NetworkRunner runner, PlayerRef player)
     {
+        if (player == runner.LocalPlayer) 
+            return;
+
         // 原房主離開後，Photon Cloud 會瞬間指派新的 Master Client
         if (Runner.IsSharedModeMasterClient)
         {
             // 請求地形權限
-            if (!Object.HasStateAuthority)
-            {
+            if (Object != null && Object.IsValid && !Object.HasStateAuthority)
                 Object.RequestStateAuthority();
-            }
 
             // 請求座位權限
             foreach (var seatGo in Seats)
@@ -229,16 +232,13 @@ public class GameTerrain : NetworkBehaviour
             }
 
             // 請求所有場上魚的權限
-            if (FishPool == null)
-                FishPool = GameObject.Find(FusionPoolNameEnum.FishPool.ToString()).transform;
-
-            for (int i = 0; i < FishPool.childCount; i++)
+            foreach (var netObj in Runner.GetAllNetworkObjects())
             {
-                if(FishPool.GetChild(i).TryGetComponent<NetworkObject>(out var fish))
+                if (netObj != null && netObj.IsValid && !netObj.HasStateAuthority)
                 {
-                    if (!fish.HasStateAuthority)
+                    if (netObj.GetComponent<Fish>() != null)
                     {
-                        fish.RequestStateAuthority();
+                        netObj.RequestStateAuthority();
                     }
                 }
             }
@@ -250,31 +250,61 @@ public class GameTerrain : NetworkBehaviour
     /// <summary>
     /// 等待獲取權限重設離開玩家座位
     /// </summary>
-    /// <param name="leftPlayer"></param>
-    /// <returns></returns>
     private IEnumerator IYieldResetSeat(PlayerRef leftPlayer)
     {
+        // 增加一點點緩衝時間，確保 Fusion 已經處理完 Master Client 變更
+        yield return new WaitForSecondsRealtime(0.2f);
+
         float timer = 0;
-        while (!Object.HasStateAuthority && timer < 2.0f)
+        // 使用 Object.IsValid 確保物件還在，並等待權限
+        while (Object != null && Object.IsValid && !Object.HasStateAuthority && timer < 3.0f)
         {
             timer += Time.deltaTime;
             yield return null;
         }
 
-        if (Object.HasStateAuthority)
+        if (Object != null && Object.HasStateAuthority)
         {
-            for (int i = 0; i < SeatPlayerIDs.Length; i++)
-            {
-                if (SeatPlayerIDs[i] == leftPlayer.PlayerId)
-                {
-                    SeatPlayerIDs.Set(i, -1);
-                    break;
-                }
-            }
+            // 成功取得權限，執行清理
+            ClearSeatLogic(leftPlayer);
         }
         else
         {
-            Debug.LogError("取得權限超時，無法清理座位");
+            // 如果還是沒權限，可以嘗試最後一次「主動請求」
+            // 有時候自動移交還沒完成，主動 Request 可以強制觸發
+            Object.RequestStateAuthority();
+            yield return new WaitForSeconds(0.1f);
+
+            if (Object.HasStateAuthority)
+                ClearSeatLogic(leftPlayer);
+            else
+                Debug.LogError($"取得權限超時，目前 Master 是: {Runner.LocalPlayer}");
+        }
+    }
+
+    /// <summary>
+    /// 清理座位
+    /// </summary>
+    private void ClearSeatLogic(PlayerRef leftPlayer)
+    {
+        for (int i = 0; i < SeatPlayerIDs.Length; i++)
+        {
+            int index = i;
+
+            if (SeatPlayerIDs[i] == leftPlayer.PlayerId)
+            {
+                // UI清理
+                if (GameView == null)
+                    GameView = FindFirstObjectByType<GameView>();
+
+                if (GameView != null)
+                    GameView.PlayerCostChange(seatIndex: index, cost: -1);
+
+                // 清理座位
+                SeatPlayerIDs.Set(i, -1);
+                Debug.Log($"[Master] 已清理玩家 {leftPlayer.PlayerId} 的座位 {i}");
+                break;
+            }
         }
     }
 
@@ -347,7 +377,7 @@ public class GameTerrain : NetworkBehaviour
             FishPool = GameObject.Find(FusionPoolNameEnum.FishPool.ToString()).transform;
 
         if(WayPointMain == null)
-            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}(Clone)").GetComponent<WayPointMain>();
+            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}").GetComponent<WayPointMain>();
 
         if(NormalFishTypes == null || NormalFishTypes.Count == 0)
         {
@@ -444,7 +474,8 @@ public class GameTerrain : NetworkBehaviour
     /// </summary>
     private void UpdateShowWaterWave()
     {
-        WaterWaveObj.SetActive(IsShowWaterWave);
+        if (WaterWaveObj != null)
+            WaterWaveObj.SetActive(IsShowWaterWave);
     }
 
     /// <summary>
@@ -559,7 +590,7 @@ public class GameTerrain : NetworkBehaviour
             FishPool = GameObject.Find(FusionPoolNameEnum.FishPool.ToString()).transform;
 
         if (WayPointMain == null)
-            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}(Clone)").GetComponent<WayPointMain>();
+            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}").GetComponent<WayPointMain>();
 
         if (WaterWaveFishData == null)
             WaterWaveFishData = WaterWaveFishManagement.GetWaterWaveFishData(TempDataManagement.Instance.CurrentLevelData.LevelType);
