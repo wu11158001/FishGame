@@ -42,6 +42,9 @@ public enum GameState
 
     /// <summary> 浪潮魚群 </summary>
     WaterWaveFishs,
+
+    /// <summary> 特殊魚 </summary>
+    SpecialFish,
 }
 
 /// <summary>
@@ -165,6 +168,9 @@ public enum NetworkPrefabEnum
     NormalFish_7 = 107,
     NormalFish_8 = 108,
     NormalFish_9 = 109,
+
+    /// <summary> 特殊魚物件 </summary>
+    StingrayFish = 200,
 }
 
 /// <summary>

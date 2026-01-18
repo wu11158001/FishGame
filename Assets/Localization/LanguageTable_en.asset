@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: d52253281abb0a84996051df66285e73, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 8068190351354495079
   m_TableData:
   - m_Id: 9612681744384
     m_Localized: English
@@ -142,6 +143,18 @@ MonoBehaviour:
     m_Localized: Guide
     m_Metadata:
       m_Items: []
+  - m_Id: 9126740382912512
+    m_Localized: Randomly grant {0}x rewards\nUp to <size=48><color=#FAFF51> {1}X
+      </color></size>!
+    m_Metadata:
+      m_Items:
+      - rid: 8068190351354495079
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8068190351354495079
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 9126740382912512

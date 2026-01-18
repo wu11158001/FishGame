@@ -834,6 +834,9 @@ public class LevelData
 
     /// <summary> 浪潮倒計時 </summary>
     public float WaterWaveTime;
+
+    /// <summary> 特殊魚倒計時 </summary>
+    public float SpecialFishTime;
 }
 
 /// <summary>

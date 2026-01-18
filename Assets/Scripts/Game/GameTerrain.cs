@@ -19,6 +19,10 @@ public class GameTerrain : NetworkBehaviour
     [SerializeField] int MinCreateNormalFish = 5;
     // 一般魚一次生成最大數量
     [SerializeField]  int MaxCreateNormalFish = 8;
+    // 最大魚深度
+    [SerializeField] int MaxFishDepth = -40;
+    // 最小魚深度
+    [SerializeField] int MinFishDepth = -5;
 
     [Header("Water Wave")]
     // 浪潮效果持續時間
@@ -32,6 +36,9 @@ public class GameTerrain : NetworkBehaviour
     [Networked] TickTimer SpawnTimer { get; set; }
     // 首次產生魚
     [Networked] bool IsFirstCreate { get; set; }
+
+    // 產生特殊魚計時器
+    [Networked] TickTimer SpecialSpawnTimer { get; set; }
 
     // 遊戲狀態
     [Networked] GameState CurrentState { get; set; }
@@ -51,10 +58,14 @@ public class GameTerrain : NetworkBehaviour
     List<NetworkPrefabEnum> NormalFishTypes = new();
     Coroutine CreateFishCoroutine;
 
-    // 浪潮開始倒計時
+    // 浪潮
     float WaterWaveTime;
     GameObject WaterWaveObj;
     WaterWaveFishData WaterWaveFishData;
+
+    // 特殊魚
+    float SpecialSpawnTime;
+    Coroutine SpecialFishCoroutine;
 
     GameView GameView;
 
@@ -86,6 +97,7 @@ public class GameTerrain : NetworkBehaviour
             });
 
         WaterWaveTime = TempDataManagement.Instance.CurrentLevelData.WaterWaveTime;
+        SpecialSpawnTime = TempDataManagement.Instance.CurrentLevelData.SpecialFishTime;
 
         if (Object.HasStateAuthority)
         {
@@ -102,6 +114,8 @@ public class GameTerrain : NetworkBehaviour
             CurrentState = GameState.Normal;
             // 開始計時浪潮時間
             StateChangeTimer = TickTimer.CreateFromSeconds(Runner, WaterWaveTime);
+            // 開始計時特殊魚產生時間
+            SpecialSpawnTimer = TickTimer.CreateFromSeconds(Runner, SpecialSpawnTime);
         }
 
         StartCoroutine(IJoinSeat());
@@ -130,6 +144,11 @@ public class GameTerrain : NetworkBehaviour
             // 浪潮魚群狀態
             case GameState.WaterWaveFishs:
                 WaterWaveFishModeUpdate();
+                break;
+
+            // 特殊魚狀態
+            case GameState.SpecialFish:
+                SpecialFishUpdate();
                 break;
         }        
     }
@@ -339,7 +358,132 @@ public class GameTerrain : NetworkBehaviour
 
     #endregion
 
-    #region 魚
+    #region 特殊魚
+
+    /// <summary>
+    /// 特殊魚狀態Update
+    /// </summary>
+    private void SpecialFishUpdate()
+    {
+        // 檢查是否回到一般狀態
+        if (StateChangeTimer.Expired(Runner))
+        {
+            CurrentState = GameState.Normal;
+
+            // 重製浪潮倒計時
+            StateChangeTimer = TickTimer.CreateFromSeconds(Runner, WaterWaveTime);
+            return;
+        }
+
+        // 產生一般魚
+        if (SpawnTimer.ExpiredOrNotRunning(Runner))
+        {
+            SpawnTimer = TickTimer.CreateFromSeconds(Runner, NormalFishCreatTime);
+
+            if (CreateFishCoroutine != null)
+                StopCoroutine(CreateFishCoroutine);
+
+            CreateFishCoroutine = StartCoroutine(ICreatNormalFish());
+        }
+    }
+
+    /// <summary>
+    /// 開始特殊魚狀態
+    /// </summary>
+    private void StartSpecialFish()
+    {
+        CurrentState = GameState.SpecialFish;
+
+        switch (TempDataManagement.Instance.CurrentLevelData.LevelType)
+        {
+            // 經典關卡
+            case LevelEnum.ClassicLevel:
+                if (SpecialFishCoroutine != null)
+                    StopCoroutine(SpecialFishCoroutine);
+
+                SpecialFishCoroutine = StartCoroutine(ISpawnStingrayFish());
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 產生魟魚
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ISpawnStingrayFish()
+    {
+        int preWaypointIndex = -1;
+        float yieldTime = 3;
+
+        for (int i = 0; i < 2; i++)
+        {
+            // 隨機選擇路線
+            List<WayPoint> wayPoints = WayPointMain.GetNormalWayPoints();
+            int wayPointIndex = UnityEngine.Random.Range(0, wayPoints.Count);
+            // 路線不與前一隻一樣
+            while (preWaypointIndex == wayPointIndex)
+            {
+                wayPointIndex = UnityEngine.Random.Range(0, wayPoints.Count);
+            }
+            WayPoint wayPoint = wayPoints[wayPointIndex];
+
+            // 面向左或右
+            bool isMirror = i % 2 == 0;
+
+            // 初始位置
+            Vector3 initPos =
+                isMirror ?
+                wayPoint.Points[wayPoint.Points.Count - 1].position :
+                wayPoint.Points[0].position;
+
+            // 跳過路線點
+            int skipWaypoint = 0;
+
+            // 深度            
+            int depth = UnityEngine.Random.Range(MaxFishDepth, MinFishDepth);
+
+            NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                key: NetworkPrefabEnum.StingrayFish,
+                Pos: initPos,
+                rot: Quaternion.identity,
+                parent: FishPool,
+                player: Runner.LocalPlayer,
+                callback: (fish) =>
+                {
+                    Fish normalFish = fish.GetComponent<Fish>();
+                    if (normalFish != null)
+                        normalFish.SetData(
+                            fishType: NetworkPrefabEnum.StingrayFish,
+                            isMirror: isMirror,
+                            depth: depth,
+                            wayPointId: wayPoint.WayPointId,
+                            skipWaypoint: skipWaypoint);
+                });
+
+            yield return new WaitForSeconds(yieldTime);
+        }
+
+        FishData fishData = TempDataManagement.Instance.GetFishData(NetworkPrefabEnum.StingrayFish);
+        if(fishData != null)
+        {
+            ResetTimmer(fishDuration: fishData.Duration, yieldTime: yieldTime);
+        }
+    }
+
+    /// <summary>
+    /// 重新設置倒計時
+    /// </summary>
+    private void ResetTimmer(float fishDuration, float yieldTime)
+    {
+        // 重製特殊魚倒計時
+        SpecialSpawnTimer = TickTimer.CreateFromSeconds(Runner, SpecialSpawnTime + fishDuration + yieldTime);
+        // 重製狀態更換倒計時
+        StateChangeTimer = TickTimer.CreateFromSeconds(Runner, fishDuration);
+    }
+
+    #endregion
+
+    #region 一般魚
 
     /// <summary>
     /// 一般狀態Update
@@ -362,6 +506,14 @@ public class GameTerrain : NetworkBehaviour
                 StopCoroutine(CreateFishCoroutine);
 
             CreateFishCoroutine = StartCoroutine(ICreatNormalFish());
+        }
+
+        // 產生特殊魚
+        if(SpecialSpawnTimer.ExpiredOrNotRunning(Runner))
+        {
+            // 特殊魚期間狀態不計時
+            StateChangeTimer = TickTimer.None;
+            StartSpecialFish();
         }
     }
 
@@ -415,7 +567,6 @@ public class GameTerrain : NetworkBehaviour
             {
                 wayPointIndex = UnityEngine.Random.Range(0, wayPoints.Count);
             }
-
             WayPoint wayPoint = wayPoints[wayPointIndex];
 
             // 面向左或右
@@ -427,7 +578,11 @@ public class GameTerrain : NetworkBehaviour
                 wayPoint.Points[wayPoint.Points.Count - 1].position :
                 wayPoint.Points[0].position;
 
+            // 跳過路線點
             int skipWaypoint = 0;
+
+            // 深度            
+            int depth = UnityEngine.Random.Range(MaxFishDepth, MinFishDepth);
 
             // 首次產生魚位置在畫面中
             if (IsFirstCreate)
@@ -435,9 +590,6 @@ public class GameTerrain : NetworkBehaviour
                 skipWaypoint = UnityEngine.Random.Range(1, wayPoint.Points.Count - 1);
                 initPos = wayPoint.Points[skipWaypoint].position;
             }
-
-            // 深度            
-            int depth = UnityEngine.Random.Range(-40, -5);
 
             NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                        key: fishType,

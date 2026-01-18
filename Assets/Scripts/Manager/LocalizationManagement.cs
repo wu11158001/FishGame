@@ -6,7 +6,7 @@ using System;
 
 public class LocalizationManagement : SingletonMonoBehaviour<LocalizationManagement>
 {    
-    private readonly string TableName = "LanguageTable";
+    public readonly string TableName = "LanguageTable";
 
     bool IsChanging;
 

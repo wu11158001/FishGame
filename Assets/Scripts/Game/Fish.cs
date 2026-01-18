@@ -27,13 +27,13 @@ public class Fish : NetworkBehaviour
     LocalPool LocalPool;
     Transform CoinTextPool;
 
-    public void SetData(NetworkPrefabEnum fishType, bool isMirror, float depth, int wayPointId, int skipWaypoint, float customDuration = 0)
+    public void SetData(NetworkPrefabEnum fishType, bool isMirror, int depth, int wayPointId, int skipWaypoint, float customDuration = 0)
     {
         // 獲取魚資料
-        FishData originalData = TempDataManagement.Instance.GetFishData(fishType);
-        if (originalData != null)
+        FishData fishData = TempDataManagement.Instance.GetFishData(fishType);
+        if (fishData != null)
         {
-            FishData fishDataInstance = originalData.Clone();
+            FishData fishDataInstance = fishData.Clone();
 
             if (customDuration > 0)
                 fishDataInstance.Duration = customDuration;
@@ -304,7 +304,7 @@ public struct FishPathData : INetworkStruct
     public NetworkBool IsMirror;
 
     /// <summary> 深度 </summary>
-    public float Depth;
+    public int Depth;
 
     /// <summary> 排除的路線點數量 </summary>
     public int SkipWaypoint;
