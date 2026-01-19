@@ -193,13 +193,17 @@ public enum GamePrefabEnum
     /// <summary> 技能_鎖定 </summary>
     Skill_Locking = 50,
 
+    /// <summary> 噴發物件 </summary>
+    StingrayFishCoin = 90,      // 特殊魚硬幣_魟魚
+    Coin = 100,                 // 金幣物件
+
     /// <summary> 爆金文字 </summary>
-    Coin = 100,
-    CoinText_0 = 101,
-    CoinText_1 = 102,
-    CoinText_2 = 103,
-    CoinText_3 = 104,
-    CoinText_4 = 105,
+    CoinText_0 = 101,   // 顏色Alpha變化
+    CoinText_1 = 102,   // 文字大小變化
+    CoinText_2 = 103,   // 文字大小變化 + 圓形比例噴發3枚
+    CoinText_3 = 104,   // 文字大小變化 + 圓形比例噴發5枚
+    CoinText_4 = 105,   // 文字大小變化 + 圓形比例噴發7枚
+    CoinText_5 = 106,   // (所有人)隨機噴發數枚 + 特殊魚硬幣_魟魚
 }
 
 /// <summary>

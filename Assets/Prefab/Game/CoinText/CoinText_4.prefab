@@ -49,6 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CoinText
   MainText: {fileID: 5654744277815004220}
   YieldCloseTime: 2.5
+  EruptionEffects:
+  - {fileID: -7735051661552421413}
 --- !u!114 &-7735051661552421413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,10 +64,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EruptionAndRecycleEffect
   EruptionType: 100
+  IsRandomPos: 0
   EruptionRadius: 1
   EruptionDuration: 0.5
   EruptionCount: 7
   EruptionStayTime: 1
+  EruptionYieldTime: 0
   RecycleDuration: 1
 --- !u!95 &4081696429564430293
 Animator:

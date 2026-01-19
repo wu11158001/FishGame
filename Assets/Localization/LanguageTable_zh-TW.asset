@@ -144,8 +144,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9126740382912512
-    m_Localized: "\u96A8\u6A5F\u7D66\u4E88{0}\u500D\u734E\u52F5\\n\u6700\u9AD8<size=48><color=#FAFF51>
-      {1}X </color></size>!"
+    m_Localized: "\u96A8\u6A5F\u7D66\u4E88{0}-{1}\u500D\u734E\u52F5\\n\u6700\u9AD8<size=48><color=#FAFF51>
+      {2}X </color></size>!"
     m_Metadata:
       m_Items:
       - rid: 8068190351354495078

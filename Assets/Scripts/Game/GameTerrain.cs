@@ -8,7 +8,7 @@ using System.Linq;
 public class GameTerrain : NetworkBehaviour
 {
     [Header("Seat")]
-    [SerializeField] List<GameObject> Seats;
+    [SerializeField] public List<Transform> Seats;
 
     [Header("Fish Value")]
     // 初始生成數量
@@ -184,6 +184,7 @@ public class GameTerrain : NetworkBehaviour
         for (int i = 0; i < SeatPlayerIDs.Length; i++)
         {
             int index = i;
+            TempDataManagement.Instance.SeatPositions.Add(Seats[index].position);
 
             if (SeatPlayerIDs[index] == Runner.LocalPlayer.PlayerId)
             {
@@ -196,9 +197,9 @@ public class GameTerrain : NetworkBehaviour
 
                 NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                     key: NetworkPrefabEnum.PlayerTurret,
-                    Pos: Seats[index].transform.position,
+                    Pos: Seats[index].position,
                     rot: Quaternion.identity,
-                    parent: Seats[index].transform,
+                    parent: Seats[index],
                     player: Runner.LocalPlayer,
                     callback: (obj) =>
                     {
@@ -216,8 +217,7 @@ public class GameTerrain : NetworkBehaviour
                     cameraTr.rotation = Quaternion.Euler(90, 0, 180);
                 }
                 TempDataManagement.Instance.IsMirror = index == 1 || index == 3;
-                TempDataManagement.Instance.SeatPosition = Seats[index].transform.position;
-
+                TempDataManagement.Instance.LocalSeatIndex = index;
                 break;
             }
         }

@@ -2,24 +2,33 @@ using DG.Tweening;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using NaughtyAttributes;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// 噴發與回收效果
 /// </summary>
 public class EruptionAndRecycleEffect : MonoBehaviour
 {
+    [Header("SpawnPrefabType")]
+    [SerializeField] GamePrefabEnum EruptionType = GamePrefabEnum.CoinText_0;
+
+    [Header("Random")]
+    [SerializeField] bool IsRandomPos = false;                      // 是否隨機位置
+
     [Header("Eruption")]
-    [SerializeField] GamePrefabEnum EruptionType;
-    [SerializeField] float EruptionRadius = 1;          // 噴發半徑
-    [SerializeField] float EruptionDuration = 0.5f;     // 噴發時間
-    [SerializeField] int EruptionCount = 3;             // 噴發數量
-    [SerializeField] float EruptionStayTime = 1;        // 噴發停留時間
+    [SerializeField] float EruptionRadius = 1;                      // 噴發半徑
+    [SerializeField] float EruptionDuration = 0.5f;                 // 噴發時間(秒)
+    [SerializeField] int EruptionCount = 3;                         // 噴發數量
+    [SerializeField] float EruptionStayTime = 1;                    // 噴發停留時間(秒)
+    [SerializeField] float EruptionYieldTime = 0;                   // 每次噴發延遲時間(秒)
 
     [Header("Recycle")]
-    [SerializeField] float RecycleDuration = 1;         // 回收時間
+    [SerializeField] float RecycleDuration = 1;                     // 回收時間(秒)
 
     GameObject CreateObj;
     List<GameObject> ObjList = new();
+    Vector3 TargetRecycle;
 
     private void OnDestroy()
     {
@@ -45,8 +54,10 @@ public class EruptionAndRecycleEffect : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    public void SetData(Vector3 targetRecycle)
     {
+        TargetRecycle = targetRecycle;
+
         StopAllCoroutines();
 
         foreach (var obj in ObjList)
@@ -82,6 +93,9 @@ public class EruptionAndRecycleEffect : MonoBehaviour
                 obj.SetActive(true);
                 ObjList.Add(obj);
                 DoEruptionEffect(obj, index);
+
+                if (EruptionYieldTime > 0)
+                    await UniTask.Delay((int)(EruptionYieldTime * 1000));
             }
         }
         else
@@ -92,6 +106,9 @@ public class EruptionAndRecycleEffect : MonoBehaviour
 
                 ObjList[i].SetActive(true);
                 DoEruptionEffect(ObjList[i], index);
+
+                if (EruptionYieldTime > 0)
+                    await UniTask.Delay((int)(EruptionYieldTime * 1000));
             }
         }        
     }
@@ -102,16 +119,33 @@ public class EruptionAndRecycleEffect : MonoBehaviour
     /// <param name="obj"></param>
     private void DoEruptionEffect(GameObject obj, int index)
     {
-        obj.transform.position = transform.position;
+        if(IsRandomPos)
+        {
+            // 隨機噴發
+            obj.transform.localPosition = Vector3.zero;
+            Vector2 dir = Random.insideUnitCircle.normalized;
+            float radius = Random.Range(EruptionRadius * 0.3f, EruptionRadius);
+            Vector2 target = dir * radius;
 
-        float angle = 360f / EruptionCount * index * Mathf.Deg2Rad;
-        Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-        Vector2 target = (Vector2)obj.transform.localPosition + dir * EruptionRadius;
+            obj.transform.DOKill();
+            obj.transform.DOLocalMove(target, EruptionDuration)
+                .SetEase(Ease.OutBack)
+                .OnComplete(() => { StartCoroutine(IDoRecycle(obj)); });
+        }
+        else
+        {
+            // 圓形比例噴發
+            obj.transform.position = transform.position;
 
-        obj.transform.DOKill();
-        obj.transform.DOLocalMove(target, EruptionDuration)
-            .SetEase(Ease.OutBack)
-            .OnComplete(() => { StartCoroutine(IDoRecycle(obj)); });
+            float angle = 360f / EruptionCount * index * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            Vector2 target = (Vector2)obj.transform.localPosition + dir * EruptionRadius;
+
+            obj.transform.DOKill();
+            obj.transform.DOLocalMove(target, EruptionDuration)
+                .SetEase(Ease.OutBack)
+                .OnComplete(() => { StartCoroutine(IDoRecycle(obj)); });
+        }
     }
 
     /// <summary>
@@ -122,10 +156,8 @@ public class EruptionAndRecycleEffect : MonoBehaviour
     {
         yield return new WaitForSeconds(EruptionStayTime);
 
-        Vector3 SeatPos = TempDataManagement.Instance.SeatPosition;
-
         obj.transform.DOKill();
-        obj.transform.DOMove(SeatPos, RecycleDuration)
+        obj.transform.DOMove(TargetRecycle, RecycleDuration)
                  .SetEase(Ease.OutCubic);
     }
 }

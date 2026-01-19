@@ -1,11 +1,13 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CoinText : MonoBehaviour
 {
     [SerializeField] TextMeshPro MainText;
     [SerializeField] float YieldCloseTime;
+    [SerializeField] List<EruptionAndRecycleEffect> EruptionEffects = new();
 
     Coroutine CloseCoroutine;
     bool IsSetMirror;
@@ -18,9 +20,10 @@ public class CoinText : MonoBehaviour
         CloseCoroutine = StartCoroutine(IYieldClose());
     }
 
-    public void SetData(double value)
+    public void SetData(string str, int recycleSeatIndex)
     {
-        MainText.text = StringUtility.CurrencyFormat(value);
+        if (MainText != null)
+            MainText.text = str;
 
         if(!IsSetMirror)
         {
@@ -30,6 +33,13 @@ public class CoinText : MonoBehaviour
                 TempDataManagement.Instance.IsMirror ?
                 Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 180) :
                 Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 0);
+        }
+
+        // 有噴發效果給予回收目標位置
+        Vector3 seatPos = TempDataManagement.Instance.SeatPositions[recycleSeatIndex];
+        foreach (var effect in EruptionEffects)
+        {
+            effect.SetData(targetRecycle: seatPos);
         }
     }
 

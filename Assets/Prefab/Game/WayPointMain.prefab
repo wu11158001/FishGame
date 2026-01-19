@@ -706,7 +706,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WayPoint
   WayPointType: 1
   WayPointId: 101
-  IsSelectShow: 0
+  IsSelectShow: 1
   LineColor: {r: 0.07450981, g: 0.49019608, b: 0.25446314, a: 1}
 --- !u!1 &1794489565996356041
 GameObject:
@@ -3447,7 +3447,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WayPoint
   WayPointType: 1
   WayPointId: 100
-  IsSelectShow: 0
+  IsSelectShow: 1
   LineColor: {r: 0.07450981, g: 0.49019608, b: 0.25446314, a: 1}
 --- !u!1 &6479980883455178819
 GameObject:

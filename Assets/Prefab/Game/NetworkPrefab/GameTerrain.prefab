@@ -1374,10 +1374,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameTerrain
   Seats:
-  - {fileID: 4136501032311471753}
-  - {fileID: 1207396067173202399}
-  - {fileID: 4743146370798967890}
-  - {fileID: 91539589686417959}
+  - {fileID: 120966461559651038}
+  - {fileID: 6972828699044630168}
+  - {fileID: 2386968121885100608}
+  - {fileID: 1434808478902774355}
   InitCreateFishCount: 12
   NormalFishCreatTime: 10
   MinCreateNormalFish: 5

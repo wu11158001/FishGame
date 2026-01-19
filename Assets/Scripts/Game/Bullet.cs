@@ -250,6 +250,16 @@ public class Bullet : NetworkBehaviour
             double currDefaultCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
             double reward = currDefaultCost * data.Magnification;
 
+            int specailMagnification = 0;
+            switch (data.FishType)
+            {
+                // 特殊魚_魟魚
+                case NetworkPrefabEnum.StingrayFish:
+                    specailMagnification = UnityEngine.Random.Range((int)data.MinMagnification, (int)data.MaxMagnification + 1);
+                    reward = currDefaultCost * specailMagnification;
+                    break;
+            }
+
             // 判斷獎池
             if(TempDataManagement.Instance.CurrentLevelData.Jackpot < reward)
             {
@@ -265,10 +275,29 @@ public class Bullet : NetworkBehaviour
                             parent: EffectPool,
                             player: Object.InputAuthority);
 
+            // 更新獎池與玩家金幣
             TempDataManagement.Instance.RecodJackpot -= reward;
-
             TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward);
-            fish.GetHit(player: Runner.LocalPlayer, reward: reward);
+
+            // 魚被擊中
+            string eruptionCoinString = StringUtility.CurrencyFormat(reward);
+            int seatIndex = TempDataManagement.Instance.LocalSeatIndex;
+            bool isLocalShow = true;
+
+            switch (data.FishType)
+            {
+                // 特殊魚_魟魚
+                case NetworkPrefabEnum.StingrayFish:
+                    eruptionCoinString = $"{StringUtility.CurrencyFormat(specailMagnification)}X";
+                    isLocalShow = false;
+                    break;
+            }
+
+            fish.GetHit(
+                player: Runner.LocalPlayer, 
+                eruptionCoinString: eruptionCoinString,
+                seatIndex: seatIndex,
+                isLocalShow: isLocalShow);
         }
 
         Runner.Despawn(Object);

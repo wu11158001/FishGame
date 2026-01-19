@@ -722,8 +722,14 @@ public class FishData
     /// <summary> 擊中機率(0~1) </summary>
     public double Probability;
 
-    /// <summary> 獎勵金幣倍數 </summary>
+    /// <summary> 捕獲當下獎勵金幣倍數 </summary>
     public double Magnification;
+
+    /// <summary> 最小獎勵金幣倍數 </summary>
+    public double MinMagnification;
+
+    /// <summary> 最大獎勵金幣倍數 </summary>
+    public double MaxMagnification;
 
     /// <summary>
     /// 轉換成NetworkStruct
@@ -735,7 +741,9 @@ public class FishData
             FishType = this.FishType,
             Duration = this.Duration,
             Probability = this.Probability,
-            Magnification = this.Magnification
+            Magnification = this.Magnification,
+            MinMagnification = this.MinMagnification,
+            MaxMagnification = this.MaxMagnification,
         };
     }
 
@@ -765,6 +773,12 @@ public struct FishData_Network : INetworkStruct
 
     /// <summary> 獎勵金幣倍數 </summary>
     public double Magnification;
+
+    /// <summary> 最小獎勵金幣倍數 </summary>
+    public double MinMagnification;
+
+    /// <summary> 最大獎勵金幣倍數 </summary>
+    public double MaxMagnification;
 }
 
 /// <summary>

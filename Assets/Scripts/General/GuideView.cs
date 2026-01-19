@@ -196,8 +196,8 @@ public class GuideView : BasicView
             case LevelEnum.ClassicLevel:
                 SpecialMessageLocalized.SetReference(tableName, "Stingray Fish Message");
 
-                // 隨機給予{arg:0}倍獎勵\n最高<size=48><color=#FAFF51> {arg:1}X </color></size>!
-                SpecialMessageLocalized.Arguments = new object[] { 300, 500 };
+                // 隨機給予{0}-{1}倍獎勵\n最高<size=48><color=#FAFF51> {2}X </color></size>!
+                SpecialMessageLocalized.Arguments = new object[] { 15, 30, 30 };
 
                 sprite = FishCovers.FirstOrDefault(x => x.Key == NetworkPrefabEnum.StingrayFish).Value;
                 break;

@@ -156,23 +156,32 @@ public class Fish : NetworkBehaviour
     /// </summary>
     private void Move()
     {
-        if (LocalPathPoints == null || LocalPathPoints.Length < 2)
-            return;
+        if (LocalPathPoints == null || LocalPathPoints.Length < 2) return;
 
         float elapsed = TotalDuration - (MoveTimer.RemainingTime(Runner) ?? 0);
         float t = Mathf.Clamp01(elapsed / TotalDuration);
 
+        // 1. 計算當前應有的位置
         Vector3 nextPos = GetCatmullRomPosition(t, LocalPathPoints);
         nextPos.y = FishPathData.Depth;
 
-        // 面向與位移
-        Vector3 moveDir = nextPos - transform.position;
-        if (moveDir.sqrMagnitude > 0.0001f)
-            transform.rotation = Quaternion.LookRotation(moveDir);
+        // 2. 計算方向：預測未來的 t (例如當前 t + 0.01)
+        float lookAheadT = Mathf.Clamp01(t + 0.01f);
+        Vector3 lookTarget = GetCatmullRomPosition(lookAheadT, LocalPathPoints);
 
+        Vector3 moveDir = lookTarget - nextPos; // 這是曲線的切線方向
+        moveDir.y = 0; // 強制水平向，解決 X Z 旋轉問題
+
+        if (moveDir.sqrMagnitude > 0.0001f)
+        {
+            // 使用 SmoothDamp 或 Slerp 可以讓轉向更平滑，不會瞬間「跳」過去
+            Quaternion targetRotation = Quaternion.LookRotation(moveDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Runner.DeltaTime * 10f);
+        }
+
+        // 最後更新位置
         transform.position = nextPos;
 
-        // 只有 Server 判定銷毀
         if (t >= 1.0f && Object.HasStateAuthority)
             Runner.Despawn(Object);
     }
@@ -215,7 +224,7 @@ public class Fish : NetworkBehaviour
     /// <summary>
     /// 顯示爆金文字
     /// </summary>
-    private void ShowCoinText(double reward)
+    private void ShowCoinText(string str, int seatIndex)
     {
         if (LocalPool == null)
             LocalPool = GameObject.FindFirstObjectByType<LocalPool>();
@@ -235,27 +244,37 @@ public class Fish : NetworkBehaviour
             pos: createPos,
             callback: (coinText) =>
             {
-                coinText.SetData(value: reward);
+                coinText.SetData(str: str, recycleSeatIndex: seatIndex);
             });
     }
 
     /// <summary>
     /// 魚被擊中
     /// </summary>
-    public void GetHit(PlayerRef player, double reward)
+    public void GetHit(PlayerRef player, string eruptionCoinString, int seatIndex, bool isLocalShow)
     {
-        // 顯示爆金文字
-        ShowCoinText(reward: reward);
+        if(isLocalShow)
+        {
+            // 顯示爆金文字
+            ShowCoinText(str: eruptionCoinString, seatIndex: seatIndex);
+        }
 
         if (FishModel != null)
             FishModel.SetActive(false);
 
-        RPC_GetHit(player);
+        RPC_GetHit(player, eruptionCoinString, seatIndex, isLocalShow);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_GetHit(PlayerRef player)
+    public void RPC_GetHit(PlayerRef player, string eruptionCoinString, int seatIndex, bool isLocalShow)
     {
+        // 全域產生效果
+        if(!isLocalShow)
+        {
+            // 顯示爆金文字
+            ShowCoinText(str: eruptionCoinString, seatIndex: seatIndex);
+        }
+
         Runner.Despawn(Object);
     }
 

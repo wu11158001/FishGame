@@ -11,12 +11,14 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     /// 當前關卡資料
     /// </summary>
     public LevelData CurrentLevelData { get; private set; } = new();
+    public bool IsMirror { get; set; }
+    public int LocalSeatIndex { get; set; }
+    public List<Vector3> SeatPositions { get; set; } = new();
+    // 進入關卡資料獲取檢測
     Action<CheckJoinRoomDataEnum> GetCurrentLevelDataAction;
     // 當前子彈花費變更事件
     public delegate void CurrCostChange(double cost);
     public event CurrCostChange CurrCostChangeDelegate;
-    public bool IsMirror { get; set; }
-    public Vector3 SeatPosition { get; set; }
     // 紀錄變更的獎池值
     public double RecodJackpot { get; set; }
     Coroutine UpdateLevelDataJackpotCoroutine;
