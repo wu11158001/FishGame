@@ -495,6 +495,35 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             });
     }
 
+    /// <summary>
+    /// 開啟特殊魚捕獲介面
+    /// </summary>
+    public async void OpenSpecialFishCatchView(int seatIndex, Sprite sprite, string rewardStr, Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.SpecialFishCatchView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveSceneView(view, true);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<SpecialFishCatchView>().SetData(
+                        seatIndex: seatIndex,
+                        sprite: sprite,
+                        rewardStr: rewardStr,
+                        closeAction: viewCloseAction);
+                }
+            },
+            IsCanStack: true);
+    }
+
     #endregion
 
     #region 介面(Canvas_Global)

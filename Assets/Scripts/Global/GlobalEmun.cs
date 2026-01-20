@@ -84,6 +84,9 @@ public enum ViewEnum
 
     /// <summary> 分配表介面 </summary>
     GuideView,
+
+    /// <summary> 特殊魚獲取介面 </summary>
+    SpecialFishCatchView
 }
 
 /// <summary>

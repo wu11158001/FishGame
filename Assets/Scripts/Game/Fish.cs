@@ -249,30 +249,48 @@ public class Fish : NetworkBehaviour
     }
 
     /// <summary>
-    /// 魚被擊中
+    /// 擊中效果
     /// </summary>
-    public void GetHit(PlayerRef player, string eruptionCoinString, int seatIndex, bool isLocalShow)
+    private void HitEffect(NetworkPrefabEnum fishType, string eruptionCoinString, string rewardStr, int seatIndex)
     {
-        if(isLocalShow)
+        // 顯示爆金文字
+        ShowCoinText(str: eruptionCoinString, seatIndex: seatIndex);
+
+        switch (fishType)
         {
-            // 顯示爆金文字
-            ShowCoinText(str: eruptionCoinString, seatIndex: seatIndex);
+            // 特殊魚_魟魚
+            case NetworkPrefabEnum.StingrayFish:
+                AddressableManagement.Instance.OpenSpecialFishCatchView(
+                    seatIndex: seatIndex,
+                    sprite: TextureManagement.Instance.GetFishTexture(fishType),
+                    rewardStr: rewardStr);
+                break;
         }
 
         if (FishModel != null)
             FishModel.SetActive(false);
+    }
 
-        RPC_GetHit(player, eruptionCoinString, seatIndex, isLocalShow);
+    /// <summary>
+    /// 魚被擊中
+    /// </summary>
+    public void GetHit(PlayerRef player, NetworkPrefabEnum fishType, string eruptionCoinString, string rewardStr, int seatIndex, bool isLocalShow)
+    {
+        if(isLocalShow)
+        {
+            HitEffect(fishType, eruptionCoinString, rewardStr, seatIndex);
+        }
+
+        RPC_GetHit(player, fishType, eruptionCoinString, rewardStr, seatIndex, isLocalShow);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_GetHit(PlayerRef player, string eruptionCoinString, int seatIndex, bool isLocalShow)
+    public void RPC_GetHit(PlayerRef player, NetworkPrefabEnum fishType, string eruptionCoinString, string rewardStr, int seatIndex, bool isLocalShow)
     {
         // 全域產生效果
         if(!isLocalShow)
         {
-            // 顯示爆金文字
-            ShowCoinText(str: eruptionCoinString, seatIndex: seatIndex);
+            HitEffect(fishType, eruptionCoinString, rewardStr, seatIndex);
         }
 
         Runner.Despawn(Object);

@@ -51,6 +51,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 742f0d951cc2cf644957a4e62912be8f
+    m_Address: SpecialFishCatchView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 74a52281f94946848b0d469950e8c0c9
     m_Address: TurretStoreView
     m_ReadOnly: 0

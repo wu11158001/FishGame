@@ -12,10 +12,16 @@ public class Bullet : NetworkBehaviour
 
     Transform EffectPool;
     Fish LocalTargetFish;
+    GameView GameView;
 
     readonly Vector2 MinBounds = new(-10f, -6f);
     readonly Vector2 MaxBounds = new(10f, 6f);
-    
+
+    private void Start()
+    {
+        GameView = FindFirstObjectByType<GameView>();
+    }
+
     public void SetData(Fish targetFish)
     {
         if (Object.HasStateAuthority)
@@ -295,8 +301,10 @@ public class Bullet : NetworkBehaviour
 
             fish.GetHit(
                 player: Runner.LocalPlayer, 
+                fishType: data.FishType,
                 eruptionCoinString: eruptionCoinString,
-                seatIndex: seatIndex,
+                rewardStr: StringUtility.CurrencyFormat(reward),
+                seatIndex: TempDataManagement.Instance.IsMirror ? 3 - seatIndex : seatIndex,
                 isLocalShow: isLocalShow);
         }
 
