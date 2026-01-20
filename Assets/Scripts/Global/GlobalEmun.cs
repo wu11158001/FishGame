@@ -174,6 +174,7 @@ public enum NetworkPrefabEnum
 
     /// <summary> 特殊魚物件 </summary>
     StingrayFish = 200,
+    SharkFish = 201,
 }
 
 /// <summary>
@@ -198,6 +199,7 @@ public enum GamePrefabEnum
 
     /// <summary> 噴發物件 </summary>
     StingrayFishCoin = 90,      // 特殊魚硬幣_魟魚
+    SharkFishCoin = 91,         // 特殊魚硬幣_鯊魚
     Coin = 100,                 // 金幣物件
 
     /// <summary> 爆金文字 </summary>
@@ -207,6 +209,7 @@ public enum GamePrefabEnum
     CoinText_3 = 104,   // 文字大小變化 + 圓形比例噴發5枚
     CoinText_4 = 105,   // 文字大小變化 + 圓形比例噴發7枚
     CoinText_5 = 106,   // (所有人)隨機噴發數枚 + 特殊魚硬幣_魟魚
+    CoinText_6 = 107,   // (所有人)特殊魚硬幣_鯊魚
 }
 
 /// <summary>
@@ -240,6 +243,9 @@ public enum LevelEnum
 {
     /// <summary> 經典關卡 </summary>
     ClassicLevel,
+
+    /// <summary> 鯊魚關卡 </summary>
+    SharkLevel,
 }
 
 /// <summary>

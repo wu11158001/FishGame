@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 882352482294288098}
   - component: {fileID: 4950749353661966472}
   - component: {fileID: 7796871417564855428}
+  - component: {fileID: 4920359887447700571}
   m_Layer: 5
   m_Name: NormalContent
   m_TagString: Untagged
@@ -76,6 +77,26 @@ MonoBehaviour:
   m_Spacing: {x: 50, y: 50}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &4920359887447700571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231053607345684761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
+  m_IgnoreLayout: 0
+  m_MinWidth: 720
+  m_MinHeight: 430
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &1128831575434056227
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,9 +327,9 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 0
   m_Spacing: 50
-  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 0
+  m_ChildControlWidth: 1
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -323,6 +344,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3678177586602866890}
   - component: {fileID: 5822526141564964006}
+  - component: {fileID: 6393715707187272946}
   m_Layer: 0
   m_Name: SpecialContent
   m_TagString: Untagged
@@ -349,7 +371,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 720, y: 430}
+  m_SizeDelta: {x: 0, y: 430}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5822526141564964006
 MonoBehaviour:
@@ -377,6 +399,26 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &6393715707187272946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1843580984119711596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
+  m_IgnoreLayout: 0
+  m_MinWidth: 720
+  m_MinHeight: 430
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &2198300561817299532
 GameObject:
   m_ObjectHideFlags: 0
@@ -2797,33 +2839,11 @@ MonoBehaviour:
   IsUsePopUp: 1
   PopUpRect: {fileID: 7436419700348690812}
   PopUpTime: 0.5
-  FishCovers:
-  - Key: 100
-    Value: {fileID: 21300000, guid: d2dbd6d7312ec7740b05c66ebb96a4bb, type: 3}
-  - Key: 101
-    Value: {fileID: 21300000, guid: 9bab3bbcd6c0bcf4aa3dfe9571c68c3c, type: 3}
-  - Key: 102
-    Value: {fileID: 21300000, guid: 73564a724357527449e243e43de8e795, type: 3}
-  - Key: 103
-    Value: {fileID: 21300000, guid: 7ef069c1492bb8943a0a15dfab02075c, type: 3}
-  - Key: 104
-    Value: {fileID: 21300000, guid: d44b1b3475c6b2e4eb36b84064c82ffc, type: 3}
-  - Key: 105
-    Value: {fileID: 21300000, guid: a46e323673d6f0b4a8159046e2ea5d3a, type: 3}
-  - Key: 106
-    Value: {fileID: 21300000, guid: 7ff812fe7ba28a240960a1b849ed3485, type: 3}
-  - Key: 107
-    Value: {fileID: 21300000, guid: fe11d76827656dd4fbe3768330e2abad, type: 3}
-  - Key: 108
-    Value: {fileID: 21300000, guid: 5cc4e9532ab3a1d45adfe4ddd1e4b7b7, type: 3}
-  - Key: 109
-    Value: {fileID: 21300000, guid: 29851b1085968344196c508d862637b0, type: 3}
-  - Key: 200
-    Value: {fileID: -858068209387110090, guid: 9e74ff50b04212946a66a90433e49fa4, type: 3}
   LeftBtn: {fileID: 891259258791207773}
   RightBtn: {fileID: 7202689957160360925}
   MoveLayout: {fileID: 1503563587006111393}
   MoveRect: {fileID: 4736492235069110090}
+  MoveScrollRect: {fileID: 7548927255083633188}
   GuideUnit: {fileID: 8052092818859655472}
   NormalContentRect: {fileID: 882352482294288098}
   SpecialOddsText: {fileID: 1450261453242975978}

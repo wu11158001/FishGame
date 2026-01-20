@@ -10,21 +10,12 @@ using UnityEngine.Localization;
 
 public class GuideView : BasicView
 {
-    [Serializable]
-    public struct NetworkPrefabEntry
-    {
-        public NetworkPrefabEnum Key;
-        public Sprite Value;
-    }
-
-    [Header("GameGuideView")]
-    [SerializeField] List<NetworkPrefabEntry> FishCovers = new();
-
     [Header("Switch")]
     [SerializeField] Button LeftBtn;
     [SerializeField] Button RightBtn;
     [SerializeField] HorizontalLayoutGroup MoveLayout;
     [SerializeField] RectTransform MoveRect;
+    [SerializeField] ScrollRect MoveScrollRect;
 
     [Header("NormalUnit")]
     [SerializeField] GuideUnit GuideUnit;
@@ -59,6 +50,8 @@ public class GuideView : BasicView
         MoveRect.anchoredPosition = Vector2.zero;
         LeftBtn.gameObject.SetActive(false);
 
+        MoveScrollRect.enabled = true;
+
         LeftBtn.GetComponent<RectTransform>().DOAnchorPosX(35, 1f)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo);
@@ -92,7 +85,11 @@ public class GuideView : BasicView
             0;
 
         MoveRect.DOKill();
-        MoveRect.DOAnchorPos(new Vector2(targetPos, MoveRect.anchoredPosition.y), 0.5f).SetEase(Ease.OutQuad);
+        MoveRect.DOAnchorPos(new Vector2(targetPos, 0), 0.5f).SetEase(Ease.OutQuad)
+            .OnComplete(() => 
+            {
+                MoveScrollRect.enabled = !isToRight;
+            });
     }
 
     /// <summary>
@@ -170,7 +167,7 @@ public class GuideView : BasicView
 
             if (gameGuideUnit != null)
             {
-                Sprite sprite = FishCovers.FirstOrDefault(x => x.Key == fish.Key).Value;
+                Sprite sprite = TextureManagement.Instance.GetFishTexture(fish.Key);
                 double magnification = fish.Value.Magnification;
 
                 gameGuideUnit.SetData(sprite: sprite, magnification: magnification);
@@ -181,6 +178,8 @@ public class GuideView : BasicView
                 Debug.LogError("創建金幣商品錯誤");
             }
         }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(MoveRect);
     }
 
     /// <summary>
@@ -205,7 +204,20 @@ public class GuideView : BasicView
                     SpecialMessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
                 }
 
-                sprite = FishCovers.FirstOrDefault(x => x.Key == NetworkPrefabEnum.StingrayFish).Value;
+                sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.StingrayFish);
+                break;
+
+            // 鯊魚關卡
+            case LevelEnum.SharkLevel:
+                SpecialMessageLocalized.SetReference(tableName, "Shark Fish Message");
+
+                if (fishData != null)
+                {
+                    // 可獲得一次轉輪遊戲，結束獲得對應的倍率\n最高<size=48><color=#FAFF51> {0}X </color></size>!
+                    SpecialMessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
+                }
+
+                sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.SharkFish);
                 break;
         }
 

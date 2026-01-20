@@ -45,5 +45,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextureManagement
   FishTextureEntryList:
+  - FishType: 100
+    Sp: {fileID: 21300000, guid: d2dbd6d7312ec7740b05c66ebb96a4bb, type: 3}
+  - FishType: 101
+    Sp: {fileID: 21300000, guid: 9bab3bbcd6c0bcf4aa3dfe9571c68c3c, type: 3}
+  - FishType: 102
+    Sp: {fileID: 21300000, guid: 73564a724357527449e243e43de8e795, type: 3}
+  - FishType: 103
+    Sp: {fileID: 21300000, guid: 7ef069c1492bb8943a0a15dfab02075c, type: 3}
+  - FishType: 104
+    Sp: {fileID: 21300000, guid: d44b1b3475c6b2e4eb36b84064c82ffc, type: 3}
+  - FishType: 105
+    Sp: {fileID: 21300000, guid: a46e323673d6f0b4a8159046e2ea5d3a, type: 3}
+  - FishType: 106
+    Sp: {fileID: 21300000, guid: 7ff812fe7ba28a240960a1b849ed3485, type: 3}
+  - FishType: 107
+    Sp: {fileID: 21300000, guid: fe11d76827656dd4fbe3768330e2abad, type: 3}
+  - FishType: 108
+    Sp: {fileID: 21300000, guid: 5cc4e9532ab3a1d45adfe4ddd1e4b7b7, type: 3}
+  - FishType: 109
+    Sp: {fileID: 21300000, guid: 29851b1085968344196c508d862637b0, type: 3}
   - FishType: 200
     Sp: {fileID: -858068209387110090, guid: 9e74ff50b04212946a66a90433e49fa4, type: 3}
+  - FishType: 201
+    Sp: {fileID: -2633863979938418355, guid: cb4c9483fd8efdd42bf80dee4b2125dd, type: 3}

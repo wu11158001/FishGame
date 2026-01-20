@@ -289,6 +289,7 @@ public class Bullet : NetworkBehaviour
             string eruptionCoinString = StringUtility.CurrencyFormat(reward);
             int seatIndex = TempDataManagement.Instance.LocalSeatIndex;
             bool isLocalShow = true;
+            string rewardStr = "";
 
             switch (data.FishType)
             {
@@ -296,6 +297,14 @@ public class Bullet : NetworkBehaviour
                 case NetworkPrefabEnum.StingrayFish:
                     eruptionCoinString = $"{StringUtility.CurrencyFormat(specailMagnification)}X";
                     isLocalShow = false;
+                    rewardStr = StringUtility.CurrencyFormat(reward);
+                    break;
+
+                // 特殊魚_鯊魚
+                case NetworkPrefabEnum.SharkFish:
+                    eruptionCoinString = "Spin !";
+                    isLocalShow = false;
+                    rewardStr = "Spin !";
                     break;
             }
 
@@ -303,7 +312,7 @@ public class Bullet : NetworkBehaviour
                 player: Runner.LocalPlayer, 
                 fishType: data.FishType,
                 eruptionCoinString: eruptionCoinString,
-                rewardStr: StringUtility.CurrencyFormat(reward),
+                rewardStr: rewardStr,
                 seatIndex: seatIndex,
                 isLocalShow: isLocalShow);
         }

@@ -407,6 +407,11 @@ public class GameTerrain : NetworkBehaviour
 
                 SpecialFishCoroutine = StartCoroutine(ISpawnStingrayFish());
                 break;
+
+            // 鯊魚關卡
+            case LevelEnum.SharkLevel:
+                SpawnSharkFish();
+                break;
         }
     }
 
@@ -446,8 +451,11 @@ public class GameTerrain : NetworkBehaviour
             // 深度            
             int depth = UnityEngine.Random.Range(MaxFishDepth, MinFishDepth);
 
+            // 魚類型
+            NetworkPrefabEnum fishType = NetworkPrefabEnum.StingrayFish;
+
             NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
-                key: NetworkPrefabEnum.StingrayFish,
+                key: fishType,
                 Pos: initPos,
                 rot: Quaternion.identity,
                 parent: FishPool,
@@ -457,7 +465,7 @@ public class GameTerrain : NetworkBehaviour
                     Fish normalFish = fish.GetComponent<Fish>();
                     if (normalFish != null)
                         normalFish.SetData(
-                            fishType: NetworkPrefabEnum.StingrayFish,
+                            fishType: fishType,
                             isMirror: isMirror,
                             depth: depth,
                             wayPointId: wayPoint.WayPointId,
@@ -475,9 +483,62 @@ public class GameTerrain : NetworkBehaviour
     }
 
     /// <summary>
+    /// 產生鯊魚
+    /// </summary>
+    private void SpawnSharkFish()
+    {
+        // 隨機選擇路線
+        List<WayPoint> wayPoints = WayPointMain.GetNormalWayPoints();
+        int wayPointIndex = UnityEngine.Random.Range(0, wayPoints.Count);
+        WayPoint wayPoint = wayPoints[wayPointIndex];
+
+        // 面向左或右
+        bool isMirror = UnityEngine.Random.value > 0.5f;
+
+        // 初始位置
+        Vector3 initPos =
+            isMirror ?
+            wayPoint.Points[wayPoint.Points.Count - 1].position :
+            wayPoint.Points[0].position;
+
+        // 跳過路線點
+        int skipWaypoint = 0;
+
+        // 深度            
+        int depth = UnityEngine.Random.Range(MaxFishDepth, MinFishDepth);
+
+        // 魚類型
+        NetworkPrefabEnum fishType = NetworkPrefabEnum.SharkFish;
+
+        NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+            key: fishType,
+            Pos: initPos,
+            rot: Quaternion.identity,
+            parent: FishPool,
+            player: Runner.LocalPlayer,
+            callback: (fish) =>
+            {
+                Fish normalFish = fish.GetComponent<Fish>();
+                if (normalFish != null)
+                    normalFish.SetData(
+                        fishType: fishType,
+                        isMirror: isMirror,
+                        depth: depth,
+                        wayPointId: wayPoint.WayPointId,
+                        skipWaypoint: skipWaypoint);
+            });
+
+        FishData fishData = TempDataManagement.Instance.GetFishData(NetworkPrefabEnum.SharkFish);
+        if (fishData != null)
+        {
+            ResetTimmer(fishDuration: fishData.Duration);
+        }
+    }
+
+    /// <summary>
     /// 重新設置倒計時
     /// </summary>
-    private void ResetTimmer(float fishDuration, float yieldTime)
+    private void ResetTimmer(float fishDuration, float yieldTime = 0)
     {
         // 重製特殊魚倒計時
         SpecialSpawnTimer = TickTimer.CreateFromSeconds(Runner, SpecialSpawnTime + fishDuration + yieldTime);

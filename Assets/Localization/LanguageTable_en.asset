@@ -149,6 +149,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 8068190351354495079
+  - m_Id: 9728630103674880
+    m_Localized: You get one spin of the roulette wheel, and at the end you get the
+      corresponding multiplier\nmaximum <size=48><color=#FAFF51>{0}X</color></size>!
+    m_Metadata:
+      m_Items:
+      - rid: 8068190351354495079
   references:
     version: 2
     RefIds:
@@ -158,3 +164,4 @@ MonoBehaviour:
         m_Entries: 
         m_SharedEntries:
         - id: 9126740382912512
+        - id: 9728630103674880

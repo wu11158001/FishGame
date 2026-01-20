@@ -262,15 +262,14 @@ public class Fish : NetworkBehaviour
         // 顯示爆金文字
         ShowCoinText(str: eruptionCoinString, seatIndex: seatIndex);
 
-        switch (fishType)
+        // 特殊魚，顯示捕獲介面
+        if (fishType == NetworkPrefabEnum.StingrayFish ||
+            fishType == NetworkPrefabEnum.SharkFish)
         {
-            // 特殊魚_魟魚
-            case NetworkPrefabEnum.StingrayFish:
-                AddressableManagement.Instance.OpenSpecialFishCatchView(
+            AddressableManagement.Instance.OpenSpecialFishCatchView(
                     seatIndex: seatIndex,
                     sprite: TextureManagement.Instance.GetFishTexture(fishType),
                     rewardStr: rewardStr);
-                break;
         }
     }
 

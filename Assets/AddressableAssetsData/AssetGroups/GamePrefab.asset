@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 26a0eba5ea867fd4c9ffeb5fb75676a4
+    m_Address: CoinText_6
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3b9e0e1caa0d24742b951bcb595d35c1
     m_Address: StingrayFishCoin
     m_ReadOnly: 0
@@ -45,6 +50,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c4cf0daca2bf54745af60ba8422469f6
+    m_Address: SharkFishCoin
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c8f540868922d224ea7165be5c089dab
     m_Address: CoinText_4
