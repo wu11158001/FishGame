@@ -1,6 +1,7 @@
 using UnityEngine;
 using Fusion;
 using System.Linq;
+using System.Collections;
 
 public class Fish : NetworkBehaviour
 {
@@ -26,6 +27,11 @@ public class Fish : NetworkBehaviour
     WayPointMain WayPointMain;
     LocalPool LocalPool;
     Transform CoinTextPool;
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
 
     public void SetData(NetworkPrefabEnum fishType, bool isMirror, int depth, int wayPointId, int skipWaypoint, float customDuration = 0)
     {
@@ -266,9 +272,20 @@ public class Fish : NetworkBehaviour
                     rewardStr: rewardStr);
                 break;
         }
+    }
 
-        if (FishModel != null)
-            FishModel.SetActive(false);
+    /// <summary>
+    /// 延遲移除物件，等待RPC傳遞
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator IYieldDespawn()
+    {
+        yield return new WaitForSeconds(1);
+
+        if (Object.HasStateAuthority)
+        {
+            Runner.Despawn(Object);
+        }
     }
 
     /// <summary>
@@ -281,10 +298,13 @@ public class Fish : NetworkBehaviour
             HitEffect(fishType, eruptionCoinString, rewardStr, seatIndex);
         }
 
+        if (FishModel != null)
+            FishModel.SetActive(false);
+
         RPC_GetHit(player, fishType, eruptionCoinString, rewardStr, seatIndex, isLocalShow);
     }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_GetHit(PlayerRef player, NetworkPrefabEnum fishType, string eruptionCoinString, string rewardStr, int seatIndex, bool isLocalShow)
     {
         // 全域產生效果
@@ -293,7 +313,10 @@ public class Fish : NetworkBehaviour
             HitEffect(fishType, eruptionCoinString, rewardStr, seatIndex);
         }
 
-        Runner.Despawn(Object);
+        if (FishModel != null)
+            FishModel.SetActive(false);
+
+        StartCoroutine(IYieldDespawn());
     }
 
     /// <summary>

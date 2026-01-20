@@ -304,7 +304,7 @@ public class Bullet : NetworkBehaviour
                 fishType: data.FishType,
                 eruptionCoinString: eruptionCoinString,
                 rewardStr: StringUtility.CurrencyFormat(reward),
-                seatIndex: TempDataManagement.Instance.IsMirror ? 3 - seatIndex : seatIndex,
+                seatIndex: seatIndex,
                 isLocalShow: isLocalShow);
         }
 

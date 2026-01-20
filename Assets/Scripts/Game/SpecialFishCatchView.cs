@@ -34,7 +34,10 @@ public class SpecialFishCatchView : MonoBehaviour
         CloseAction = closeAction;
 
         if (seatIndex >= 0 && seatIndex < SeatPositions.Length)
-            UnitRect.anchoredPosition = SeatPositions[seatIndex];
+        {
+            int index = TempDataManagement.Instance.IsMirror ? 3 - seatIndex : seatIndex;
+            UnitRect.anchoredPosition = SeatPositions[index];
+        }
 
         if (sprite != null)
             FishCover.sprite = sprite;

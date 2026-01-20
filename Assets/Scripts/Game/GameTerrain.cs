@@ -83,6 +83,12 @@ public class GameTerrain : NetworkBehaviour
     private void Start()
     {
         NetworkRunnerManagement.Instance.PlayerLeftEvent += LeftRoom;
+
+        // 初始化座位座標
+        foreach (var seat in Seats)
+        {
+            TempDataManagement.Instance.SeatPositions.Add(seat.position);
+        }
     }
 
     public override void Spawned()
@@ -184,8 +190,6 @@ public class GameTerrain : NetworkBehaviour
         for (int i = 0; i < SeatPlayerIDs.Length; i++)
         {
             int index = i;
-            TempDataManagement.Instance.SeatPositions.Add(Seats[index].position);
-
             if (SeatPlayerIDs[index] == Runner.LocalPlayer.PlayerId)
             {
                 isLocalSpawn = true;

@@ -31,6 +31,7 @@ public class GuideView : BasicView
     [SerializeField] RectTransform NormalContentRect;
 
     [Header("SpecialContent")]
+    [SerializeField] TextMeshProUGUI SpecialOddsText;
     [SerializeField] LocalizedString SpecialMessageLocalized;
     [SerializeField] TextMeshProUGUI SpecialMessageText;
     [SerializeField] Image SpecialCoverImage;
@@ -190,18 +191,26 @@ public class GuideView : BasicView
         string tableName = LocalizationManagement.Instance.TableName;
         Sprite sprite = null;
 
+        FishData fishData = TempDataManagement.Instance.GetFishData(NetworkPrefabEnum.StingrayFish);
+
         switch (TempDataManagement.Instance.CurrentLevelData.LevelType)
         {
             // 經典關卡
             case LevelEnum.ClassicLevel:
                 SpecialMessageLocalized.SetReference(tableName, "Stingray Fish Message");
 
-                // 隨機給予{0}-{1}倍獎勵\n最高<size=48><color=#FAFF51> {2}X </color></size>!
-                SpecialMessageLocalized.Arguments = new object[] { 15, 30, 30 };
+                if(fishData != null)
+                {
+                    // 隨機給予{0}-{1}倍獎勵\n最高<size=48><color=#FAFF51> {2}X </color></size>!
+                    SpecialMessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
+                }
 
                 sprite = FishCovers.FirstOrDefault(x => x.Key == NetworkPrefabEnum.StingrayFish).Value;
                 break;
         }
+
+        if (fishData != null)
+            SpecialOddsText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
 
         SpecialMessageText.text = SpecialMessageLocalized.GetLocalizedString();
         SpecialCoverImage.sprite = sprite;
