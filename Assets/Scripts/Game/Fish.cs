@@ -294,7 +294,9 @@ public class Fish : NetworkBehaviour
                         prefabType: GamePrefabEnum.SpinWheel,
                         callback: (obj) =>
                         {
-                            obj.transform.position = transform.position;
+                            Vector3 pos = transform.position;
+                            pos.y = 0;
+                            obj.transform.position = pos;
 
                             SpinWheel spinWheel = obj.GetComponent<SpinWheel>();
                             if (spinWheel != null)

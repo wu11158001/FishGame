@@ -32,6 +32,31 @@ public static class WaterWaveFishManagement
                 }
             }
         },
+
+        {
+            // 鯊魚關卡
+            LevelEnum.SharkLevel,
+            new()
+            {
+                SpawnBetweenTime = 4f,
+                MoveDuration = 30,
+                FishsType = new()
+                {
+                    NetworkPrefabEnum.NormalFish_7,
+                    NetworkPrefabEnum.NormalFish_5,
+                    NetworkPrefabEnum.NormalFish_7,
+                    NetworkPrefabEnum.NormalFish_5,
+                    NetworkPrefabEnum.NormalFish_7,
+                    NetworkPrefabEnum.NormalFish_5,
+                    NetworkPrefabEnum.NormalFish_1,
+                    NetworkPrefabEnum.NormalFish_1,
+                    NetworkPrefabEnum.NormalFish_1,
+                    NetworkPrefabEnum.NormalFish_1,
+                    NetworkPrefabEnum.NormalFish_2,
+                    NetworkPrefabEnum.NormalFish_2,
+                }
+            }
+        },
     };
 
     /// <summary>

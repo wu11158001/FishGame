@@ -42,10 +42,10 @@ public class SpinWheel : MonoBehaviour
     /// </summary>
     private readonly Vector3[] TargetPositions = new Vector3[]
     {
-        new(-6, 0, -1.5f),
-        new(-6, 0, 1.5f),
-        new(6, 0, -1.5f),
-        new(6, 0, 1.5f)
+        new(-6, 0, -1.6f),
+        new(-6, 0, 1.6f),
+        new(6, 0, -1.6f),
+        new(6, 0, 1.6f)
     };
 
     private void OnDestroy()
