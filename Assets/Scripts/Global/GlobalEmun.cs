@@ -175,6 +175,7 @@ public enum NetworkPrefabEnum
     /// <summary> 特殊魚物件 </summary>
     StingrayFish = 200,
     SharkFish = 201,
+    DragonFish = 202,
 }
 
 /// <summary>
@@ -247,6 +248,9 @@ public enum LevelEnum
 
     /// <summary> 鯊魚關卡 </summary>
     SharkLevel,
+
+    /// <summary> 金龍關卡 </summary>
+    DragonLevel,
 }
 
 /// <summary>
@@ -259,6 +263,9 @@ public enum WayPointEnum
 
     /// <summary> 浪潮路線 </summary>
     WaterWaveWay,
+
+    /// <summary> 特殊路線_金龍 </summary>
+    DragonWaveWay,
 }
 
 /// <summary>

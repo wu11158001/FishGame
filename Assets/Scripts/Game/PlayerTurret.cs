@@ -201,7 +201,7 @@ public class PlayerTurret : NetworkBehaviour
             bool isAuto = TempDataManagement.Instance.IsSkill_Auto;
 
             // 有鎖定目標，但目標消失
-            if (TargetLocking != null && TargetLocking.IsDie)
+            if (TargetLocking != null && (!TargetLocking.gameObject.activeInHierarchy || !TargetLocking .Object.IsValid || TargetLocking.IsDie))
             {
                 if (!isAuto)
                 {
@@ -223,7 +223,7 @@ public class PlayerTurret : NetworkBehaviour
             }
 
             // 鎖定圖標跟隨目標
-            if (TargetLocking != null && !TargetLocking.IsDie)
+            if (TargetLocking != null && TargetLocking.Object.IsValid && TargetLocking.gameObject.activeInHierarchy && !TargetLocking.IsDie)
             {
                 // 檢測是否在畫面內
                 bool isInSceneX = TargetLocking.transform.position.x >= -LockingSidePosX && TargetLocking.transform.position.x <= LockingSidePosX;

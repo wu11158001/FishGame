@@ -192,7 +192,11 @@ public class Fish : NetworkBehaviour
         transform.position = nextPos;
 
         if (t >= 1.0f && Object.HasStateAuthority)
+        {
+            IsDie = true;
             Runner.Despawn(Object);
+        }
+            
     }
 
     /// <summary>

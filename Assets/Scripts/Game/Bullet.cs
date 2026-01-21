@@ -73,7 +73,7 @@ public class Bullet : NetworkBehaviour
                 }
             }
 
-            if (LocalTargetFish != null && LocalTargetFish.IsDie)
+            if (CheckLocalTarget())
             {
                 LocalTargetFish = null;
             }
@@ -139,7 +139,7 @@ public class Bullet : NetworkBehaviour
         // 鎖定目標不存在
         if (LocalTargetFish != null)
         {
-            if (LocalTargetFish.Object == null || !LocalTargetFish.Object.IsValid || LocalTargetFish.IsDie)
+            if (CheckLocalTarget())
             {
                 LocalTargetFish = null;
                 TargetFishId = default; 
@@ -172,6 +172,14 @@ public class Bullet : NetworkBehaviour
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 檢測鎖定目標(True = 沒有目標)
+    /// </summary>
+    private bool CheckLocalTarget()
+    {
+        return LocalTargetFish == null || LocalTargetFish.Object == null || !LocalTargetFish.Object.IsValid || !LocalTargetFish.gameObject.activeInHierarchy || LocalTargetFish.IsDie;
     }
 
     /// <summary>

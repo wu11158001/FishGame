@@ -31,7 +31,7 @@ public class LobbyView : BasicView
     {
         base.Start();
 
-        StartBtn.onClick.AddListener(() => { StartJoInGame(levelType: LevelEnum.SharkLevel); });
+        StartBtn.onClick.AddListener(() => { StartJoInGame(levelType: LevelEnum.DragonLevel); });
         LogoutBtn.onClick.AddListener(Logout);
 
         NetworkRunnerManagement.Instance.RoomListUpdatedEvent += OnRoomListUpdatedUpdate;
