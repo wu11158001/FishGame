@@ -123,8 +123,7 @@ public class SpinWheel : MonoBehaviour
         yield return new WaitForSeconds(EruptionStayTime);
 
         // 目標位置
-        int index = TempDataManagement.Instance.IsMirror ? 3 - SpinWhellData.SeatIndex : SpinWhellData.SeatIndex;
-        Vector3 targetRecycle = TargetPositions[index];
+        Vector3 targetRecycle = TargetPositions[SpinWhellData.SeatIndex];
 
         transform.DOKill();
         transform.DOMove(targetRecycle, RecycleDuration).SetEase(Ease.OutCubic)

@@ -295,8 +295,13 @@ public class Fish : NetworkBehaviour
                         callback: (obj) =>
                         {
                             Vector3 pos = transform.position;
-                            pos.y = 0;
+                            pos.y = 2;
                             obj.transform.position = pos;
+
+                            obj.transform.rotation = 
+                                TempDataManagement.Instance.IsMirror?
+                                Quaternion.Euler(90, 180, 0) :
+                                Quaternion.Euler(90, 0, 0);
 
                             SpinWheel spinWheel = obj.GetComponent<SpinWheel>();
                             if (spinWheel != null)

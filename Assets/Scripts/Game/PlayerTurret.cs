@@ -24,7 +24,7 @@ public class PlayerTurret : NetworkBehaviour
     [Networked] TickTimer Delay { get; set; }
     // 當前後座力
     [Networked] float CurrentRecoil { get; set; }
-    // 是否顛倒
+    // 座位
     [Networked] int SeatIndex { get; set; }
     // 子彈花費變更
     [Networked, OnChangedRender(nameof(OnCostChanged))]
