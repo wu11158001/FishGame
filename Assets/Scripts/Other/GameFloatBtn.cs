@@ -9,6 +9,7 @@ using System.Collections;
 public class GameFloatBtn : MonoBehaviour
 {
     [Header("Main")]
+    [SerializeField] CanvasGroup MainCanvasGroup;
     [SerializeField] RectTransform MainRect;
     [SerializeField] Image MaskImage;
     [SerializeField] Button MainBtn;
@@ -57,7 +58,7 @@ public class GameFloatBtn : MonoBehaviour
         MainBtn.onClick.AddListener(SwitchShowBtns);
         HomeBtn.onClick.AddListener(() =>
         {
-            TempDataManagement.Instance.IsOpenView = true;
+            TempDataManagement.Instance.IsStopShot = true;
 
             AddressableManagement.Instance.ShowConfirmView(
                 contentKey: "Leave the game?",
@@ -68,18 +69,18 @@ public class GameFloatBtn : MonoBehaviour
                 },
                 cancelAction: () =>
                 {
-                    TempDataManagement.Instance.IsOpenView = false;
+                    TempDataManagement.Instance.IsStopShot = false;
                 });
         });
 
         GuideBtn.onClick.AddListener(() =>
         {
-            TempDataManagement.Instance.IsOpenView = true;
+            TempDataManagement.Instance.IsStopShot = true;
 
             AddressableManagement.Instance.OpenGuideView(
                 closeAction: () =>
                 {
-                    TempDataManagement.Instance.IsOpenView = false;
+                    TempDataManagement.Instance.IsStopShot = false;
                 });
         });
 
@@ -96,6 +97,15 @@ public class GameFloatBtn : MonoBehaviour
     public void SetData(Action closeAction)
     {
         CloseAction = closeAction;
+        SetEnable(true);
+    }
+
+    /// <summary>
+    /// 設置物件顯示
+    /// </summary>
+    public void SetEnable(bool isShow)
+    {
+        MainCanvasGroup.alpha = isShow ? 1 : 0;
     }
 
     /// <summary>

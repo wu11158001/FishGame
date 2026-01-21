@@ -51,8 +51,10 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     double PreUpdateCoin;
     // 定時更新帳戶時間(秒)
     const float UpdateAccountDataTime = 30f;
+    // 控制金幣的顯示更新(有些)
 
-    public bool IsOpenView { get; set; }
+    // 是否不可射擊
+    public bool IsStopShot { get; set; }
     // 技能_自動
     public bool IsSkill_Auto { get; set; }
     // 技能_鎖定強制關閉事件
@@ -84,7 +86,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
 
     public void Initialize()
     {
-        IsOpenView = false;
+        IsStopShot = false;
         IsSkill_Auto = false;
         IsSkill_Locking = false;
     }
@@ -331,12 +333,22 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     /// <summary>
     /// 變更暫存帳戶金幣
     /// </summary>
-    public void ChangeTempAccountCoin(double changeValue)
+    public void ChangeTempAccountCoin(double changeValue, bool isInvokeChange)
     {
         if (TempAccountData == null)
             return;
 
         TempAccountData.Coins += changeValue;
+
+        if (isInvokeChange)
+            InvokeTempAccountCoinChangeDelegate();
+    }
+
+    /// <summary>
+    /// 執行變更暫存帳戶金幣事件
+    /// </summary>
+    public void InvokeTempAccountCoinChangeDelegate()
+    {
         TempAccountCoinChangeDelegate?.Invoke(TempAccountData.Coins);
     }
 

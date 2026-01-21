@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5192616523414345120}
   - component: {fileID: 9179295655951725300}
+  - component: {fileID: 4571857276014448951}
   m_Layer: 0
   m_Name: SpinWheel
   m_TagString: Untagged
@@ -68,6 +69,27 @@ MonoBehaviour:
   ShowTime: 3
   RewardEffect: {fileID: 8020975226171087705}
   RewardText: {fileID: 7492171424832495720}
+  EruptionAndRecycleEffect: {fileID: 4571857276014448951}
+--- !u!114 &4571857276014448951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478409159677980102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c0dfbdab5021d241bab6e1d6d14366b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EruptionAndRecycleEffect
+  EruptionType: 100
+  IsRandomPos: 1
+  EruptionRadius: 3.5
+  EruptionDuration: 0.5
+  EruptionCount: 30
+  EruptionStayTime: 2
+  EruptionYieldTime: 0
+  RecycleDuration: 0.5
 --- !u!1 &1440438803509764840
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,7 +173,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 401
+  m_SortingOrder: 1011
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &5310034024178797968
@@ -332,7 +354,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 401
+  m_SortingOrder: 1011
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &6564055278047886926
@@ -513,7 +535,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 401
+  m_SortingOrder: 1011
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &6226499832856365359
@@ -694,7 +716,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 403
+  m_SortingOrder: 1012
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &7492171424832495720
@@ -871,7 +893,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 402
+  m_SortingOrder: 1011
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 42b2eb4168b738344aaafa0f7f3f49fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -966,7 +988,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 401
+  m_SortingOrder: 1011
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &5752237919852045281
@@ -1147,7 +1169,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 401
+  m_SortingOrder: 1011
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &4484246187457437347
@@ -1328,7 +1350,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 401
+  m_SortingOrder: 1011
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &3633762803946522962
@@ -1509,7 +1531,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 401
+  m_SortingOrder: 1011
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &5472090830330833639
@@ -1690,7 +1712,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 401
+  m_SortingOrder: 1011
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &584025111723711605
@@ -1875,7 +1897,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 400
+  m_SortingOrder: 1010
   m_MaskInteraction: 0
   m_Sprite: {fileID: -4753228752086379373, guid: 8695e7dc550ecda4f86f17caa59cc455, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1897,19 +1919,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2524459669965159214, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
       propertyPath: m_SortingOrder
-      value: 405
+      value: 1012
       objectReference: {fileID: 0}
     - target: {fileID: 4938095755617958528, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.2
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 4938095755617958528, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.2
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 4938095755617958528, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.2
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 4938095755617958528, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1961,15 +1983,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4938095755617958531, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
       propertyPath: m_SortingOrder
-      value: 405
+      value: 1012
       objectReference: {fileID: 0}
     - target: {fileID: 4938095756042210524, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
       propertyPath: m_SortingOrder
-      value: 405
+      value: 1012
       objectReference: {fileID: 0}
     - target: {fileID: 5169766777476003677, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
       propertyPath: m_SortingOrder
-      value: 405
+      value: 1012
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

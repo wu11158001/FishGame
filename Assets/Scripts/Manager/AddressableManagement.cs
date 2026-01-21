@@ -402,7 +402,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 開啟遊戲浮層按鈕
     /// </summary>
-    public async void OpenGameFloatBtn(Action closeAction = null)
+    public async void OpenGameFloatBtn(Action closeAction = null, Action<GameFloatBtn> callback = null)
     {
         ViewEnum view = ViewEnum.GameFloatBtn;
 
@@ -418,7 +418,12 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             {
                 if (viewObj != null)
                 {
-                    viewObj.GetComponent<GameFloatBtn>().SetData(closeAction: viewCloseAction);
+                    GameFloatBtn gameFloatBtn = viewObj.GetComponent<GameFloatBtn>();
+                    if(gameFloatBtn != null)
+                    {
+                        gameFloatBtn.SetData(closeAction: viewCloseAction);
+                        callback?.Invoke(gameFloatBtn);
+                    }
                 }
             });
     }

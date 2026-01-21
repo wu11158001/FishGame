@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 6727057084692948150}
   - component: {fileID: 2708286180266729321}
   - component: {fileID: 219754586708360879}
+  - component: {fileID: 37082432697601855}
   m_Layer: 5
   m_Name: GameFloatBtn
   m_TagString: Untagged
@@ -171,6 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcbd42fdb8aa4ad4d8b75e86960f203d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FloatBtn
+  MainCanvasGroup: {fileID: 37082432697601855}
   MainRect: {fileID: 4823763121603081217}
   MaskImage: {fileID: 219754586708360879}
   MainBtn: {fileID: 6583803996904279396}
@@ -219,6 +221,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &37082432697601855
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4062745609738389109}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4880682746880305860
 GameObject:
   m_ObjectHideFlags: 0

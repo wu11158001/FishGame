@@ -375,7 +375,7 @@ public class PlayerTurret : NetworkBehaviour
     {
         bool isAuto = TempDataManagement.Instance.IsSkill_Auto;
         bool isLocking = TempDataManagement.Instance.IsSkill_Locking;
-        bool isOpenView = TempDataManagement.Instance.IsOpenView;
+        bool isOpenView = TempDataManagement.Instance.IsStopShot;
 
         // 自動 & 鎖定 但沒有目標
         if (isAuto && isLocking && TargetLocking == null)
@@ -417,10 +417,10 @@ public class PlayerTurret : NetworkBehaviour
                     Debug.Log("金幣不足!");
                     AddressableManagement.Instance.ShowToast("Insufficient Coin");
 
-                    TempDataManagement.Instance.IsOpenView = true;
+                    TempDataManagement.Instance.IsStopShot = true;
                     _ = AddressableManagement.Instance.OpenCoinStoreView(closeAction: () =>
                     {
-                        TempDataManagement.Instance.IsOpenView = false;
+                        TempDataManagement.Instance.IsStopShot = false;
                     });
 
                     // 自動狀態下強制關閉自動
@@ -435,7 +435,7 @@ public class PlayerTurret : NetworkBehaviour
                 // 扣除金幣
                 if (Runner.IsForward)
                 {
-                    TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -totalCost);
+                    TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -totalCost, isInvokeChange: true);
                     TempDataManagement.Instance.RecodJackpot += totalCost;
                 }                    
 

@@ -29,6 +29,9 @@ public class SpinWheel : MonoBehaviour
     [SerializeField] GameObject RewardEffect;
     [SerializeField] TextMeshPro RewardText;
 
+    [Header("EruptionAndRecycleEffect")]
+    [SerializeField] EruptionAndRecycleEffect EruptionAndRecycleEffect;
+
     SpinWhellData SpinWhellData;
 
     // 幾等分
@@ -37,7 +40,7 @@ public class SpinWheel : MonoBehaviour
     /// <summary>
     /// 座位座標
     /// </summary>
-    private readonly Vector3[] SeatPositions = new Vector3[]
+    private readonly Vector3[] TargetPositions = new Vector3[]
     {
         new(-6, 0, -1.5f),
         new(-6, 0, 1.5f),
@@ -119,8 +122,9 @@ public class SpinWheel : MonoBehaviour
     {
         yield return new WaitForSeconds(EruptionStayTime);
 
+        // 目標位置
         int index = TempDataManagement.Instance.IsMirror ? 3 - SpinWhellData.SeatIndex : SpinWhellData.SeatIndex;
-        Vector3 targetRecycle = SeatPositions[index];
+        Vector3 targetRecycle = TargetPositions[index];
 
         transform.DOKill();
         transform.DOMove(targetRecycle, RecycleDuration).SetEase(Ease.OutCubic)
@@ -167,14 +171,27 @@ public class SpinWheel : MonoBehaviour
         RewardText.transform.localScale = Vector3.zero;
         RewardText.transform.DOScale(1, 0.5f).SetEase(Ease.OutElastic);
 
-        yield return new WaitForSeconds(ShowTime);
+        // 金幣噴發效果
+        Vector3 seatPos = TempDataManagement.Instance.SeatPositions[SpinWhellData.SeatIndex];
+        EruptionAndRecycleEffect.SetData(targetRecycle: seatPos);
 
+        yield return new WaitForSeconds(ShowTime);
+        
         // 縮小效果
         transform.DOKill();
         transform.localScale = Vector3.one;
         transform.DOScale(0f, EruptionDuration).SetEase(Ease.OutBack)
             .OnComplete(() =>
             {
+                // 關閉停止射擊
+                TempDataManagement.Instance.IsStopShot = false;
+                // 更新金幣
+                TempDataManagement.Instance.InvokeTempAccountCoinChangeDelegate();
+                // 關閉遮罩
+                GameView gameView = FindFirstObjectByType<GameView>();
+                if (gameView != null)
+                    gameView.MaskEnable(false);
+
                 Destroy(gameObject);
             });
     }

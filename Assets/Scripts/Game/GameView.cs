@@ -27,6 +27,10 @@ public class GameView : BasicView
     [SerializeField] Toggle AutoTog;
     [SerializeField] GameObject AutoSelectFrame;
 
+    [Header("Mask")]
+    [SerializeField] GameObject MaskObj;
+
+    GameFloatBtn GameFloatBtn;
     bool IsLocalMirror;
 
     readonly Vector2 LeftSeatPosision = new(-600, -500);
@@ -47,19 +51,19 @@ public class GameView : BasicView
 
         TurretBtn.onClick.AddListener(() => 
         {
-            TempDataManagement.Instance.IsOpenView = true;
+            TempDataManagement.Instance.IsStopShot = true;
             _ = AddressableManagement.Instance.OpenTurretStoreView(closeAction: () =>
             {
-                TempDataManagement.Instance.IsOpenView = false;
+                TempDataManagement.Instance.IsStopShot = false;
             });
         });
 
         CoinStoreBtn.onClick.AddListener(() => 
         {
-            TempDataManagement.Instance.IsOpenView = true;
+            TempDataManagement.Instance.IsStopShot = true;
             _ = AddressableManagement.Instance.OpenCoinStoreView(closeAction: () =>
             {
-                TempDataManagement.Instance.IsOpenView = false;
+                TempDataManagement.Instance.IsStopShot = false;
             });
         });
 
@@ -74,7 +78,11 @@ public class GameView : BasicView
             TempDataManagement.Instance.IsSkill_AutoCloseDelegate += Skill_AutoClose;
         }
 
-        AddressableManagement.Instance.OpenGameFloatBtn();
+        AddressableManagement.Instance.OpenGameFloatBtn(
+            callback: (gameFloatBtn) =>
+            {
+                GameFloatBtn = gameFloatBtn;
+            });
     }
 
     public void SetData(int localSeat, bool isMirror, Action closeAction)
@@ -83,6 +91,7 @@ public class GameView : BasicView
         CloseAction = closeAction;
 
         MainCanvasGroup.alpha = 0;
+        MaskEnable(false);
 
         // 座位區域
         SeatArea.anchoredPosition =
@@ -97,11 +106,19 @@ public class GameView : BasicView
     }
 
     /// <summary>
+    /// 遮罩顯示控制
+    /// </summary>
+    public void MaskEnable(bool isShow)
+    {
+        MaskObj.SetActive(isShow);
+        GameFloatBtn?.SetEnable(!isShow);
+    }
+
+    /// <summary>
     /// 暫存帳戶金幣資料變更
     /// </summary>
     private void TempAccountCoinChange(double newCoin)
     {
-
         AccountCoinText.text = StringUtility.CurrencyFormat(newCoin);
     }
 

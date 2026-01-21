@@ -183,6 +183,7 @@ public class Bullet : NetworkBehaviour
         if (fish == null)
         {
             Debug.LogError("找不到擊中魚的腳本");
+            Runner.Despawn(Object);
             return;
         }
 
@@ -259,6 +260,14 @@ public class Bullet : NetworkBehaviour
 
             // 特殊使用_轉盤Index
             int spinIndex = -1;
+            // 是否及時更新金幣
+            bool isUpdateCoin = true;
+            // 爆金文字
+            string eruptionCoinString = StringUtility.CurrencyFormat(reward);
+            // 座位
+            int seatIndex = TempDataManagement.Instance.LocalSeatIndex;
+            // 是否只有本地顯示
+            bool isLocalShow = true;
 
             int specailMagnification = 0;
             switch (fishData.FishType)
@@ -267,6 +276,9 @@ public class Bullet : NetworkBehaviour
                 case NetworkPrefabEnum.StingrayFish:
                     specailMagnification = UnityEngine.Random.Range((int)fishData.MinMagnification, (int)fishData.MaxMagnification + 1);
                     reward = currDefaultCost * specailMagnification;
+
+                    eruptionCoinString = $"{StringUtility.CurrencyFormat(specailMagnification)}X";
+                    isLocalShow = false;
                     break;
 
                 // 特殊魚_鯊魚
@@ -282,17 +294,12 @@ public class Bullet : NetworkBehaviour
                         values[i] = (int)(fishData.MinMagnification + step * i);
                         if (values[i] >= fishData.MaxMagnification) values[i] = (int)fishData.MaxMagnification;
                     }
-
                     spinIndex = UnityEngine.Random.Range(0, values.Length);
                     reward = currDefaultCost * values[spinIndex];
-                    break;
-            }
 
-            // 判斷獎池
-            if(TempDataManagement.Instance.CurrentLevelData.Jackpot < reward)
-            {
-                Debug.LogError($"獎池不足!");
-                return;
+                    eruptionCoinString = "Big Win !";
+                    isLocalShow = false;
+                    break;
             }
 
             // 產生魚擊中效果
@@ -303,30 +310,36 @@ public class Bullet : NetworkBehaviour
                             parent: EffectPool,
                             player: Object.InputAuthority);
 
-            // 更新獎池與玩家金幣
-            TempDataManagement.Instance.RecodJackpot -= reward;
-            TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward);
-
-            // 魚被擊中
-            string eruptionCoinString = StringUtility.CurrencyFormat(reward);
-            int seatIndex = TempDataManagement.Instance.LocalSeatIndex;
-            bool isLocalShow = true;
-
-            switch (fishData.FishType)
+            // 判斷獎池
+            if (TempDataManagement.Instance.CurrentLevelData.Jackpot < reward)
             {
-                // 特殊魚_魟魚
-                case NetworkPrefabEnum.StingrayFish:
-                    eruptionCoinString = $"{StringUtility.CurrencyFormat(specailMagnification)}X";
-                    isLocalShow = false;
-                    break;
+                Debug.LogError($"獎池不足!");
+                Runner.Despawn(Object);
+                return;
+            }
 
+            // 當前不可射擊
+            if (TempDataManagement.Instance.IsStopShot)
+            {
+                Debug.LogError($"當前不可射擊不判斷獎勵!");
+                Runner.Despawn(Object);
+                return;
+            }
+
+            switch(fishData.FishType)
+            {
                 // 特殊魚_鯊魚
                 case NetworkPrefabEnum.SharkFish:
-                    eruptionCoinString = "Big Win !";
-                    isLocalShow = false;                   
+                    // 不及時更新金幣
+                    isUpdateCoin = false;
+                    // 不可射擊
+                    TempDataManagement.Instance.IsStopShot = true;
+                    // 開啟遮罩
+                    GameView.MaskEnable(true);
                     break;
             }
 
+            // 魚被擊中
             FishHitData fishHitData = new()
             {
                 Player = Runner.LocalPlayer,
@@ -338,6 +351,10 @@ public class Bullet : NetworkBehaviour
                 SpinWheelIndex = spinIndex,
             };
             fish.GetHit(fishHitData);
+
+            // 更新獎池與玩家金幣
+            TempDataManagement.Instance.RecodJackpot -= reward;
+            TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward, isInvokeChange: isUpdateCoin);
         }
 
         Runner.Despawn(Object);
