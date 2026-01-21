@@ -10,6 +10,8 @@ public class Fish : NetworkBehaviour
     [SerializeField] GameObject FishModel;
     [SerializeField] Animator Animator;
 
+    // 判斷是否已不存在場上
+    [Networked] public NetworkBool IsDie { get; set; }
     // 移動計時器
     [Networked] TickTimer MoveTimer { get; set; }
     // 總移動時間
@@ -105,6 +107,7 @@ public class Fish : NetworkBehaviour
         if(Object.HasStateAuthority)
         {
             AniSpeed = 1;
+            IsDie = false;
         }
 
         if (Animator != null) Animator.speed = AniSpeed;
@@ -257,20 +260,57 @@ public class Fish : NetworkBehaviour
     /// <summary>
     /// 擊中效果
     /// </summary>
-    private void HitEffect(NetworkPrefabEnum fishType, string eruptionCoinString, string rewardStr, int seatIndex)
+    private void HitEffect(FishHitData fishHitData)
     {
         // 顯示爆金文字
-        ShowCoinText(str: eruptionCoinString, seatIndex: seatIndex);
+        ShowCoinText(str: fishHitData.EruptionCoinString.ToString(), seatIndex: fishHitData.SeatIndex);
 
         // 特殊魚，顯示捕獲介面
-        if (fishType == NetworkPrefabEnum.StingrayFish ||
-            fishType == NetworkPrefabEnum.SharkFish)
+        if (fishHitData.FishType == NetworkPrefabEnum.StingrayFish ||
+            fishHitData.FishType == NetworkPrefabEnum.SharkFish)
         {
+            string rewardStr = StringUtility.CurrencyFormat(fishHitData.Reward);
+
+            switch (fishHitData.FishType)
+            {
+                case NetworkPrefabEnum.SharkFish:
+                    rewardStr = "Spin !";
+                    break;
+            }
+
             AddressableManagement.Instance.OpenSpecialFishCatchView(
-                    seatIndex: seatIndex,
-                    sprite: TextureManagement.Instance.GetFishTexture(fishType),
+                    seatIndex: fishHitData.SeatIndex,
+                    sprite: TextureManagement.Instance.GetFishTexture(fishHitData.FishType),
                     rewardStr: rewardStr);
         }
+    }
+
+    /// <summary>
+    /// 顯示輪盤
+    /// </summary>
+    private void ShowSpinWheel(FishHitData fishHitData)
+    {
+        _ = AddressableManagement.Instance.CreateGamePrefab(
+                        prefabType: GamePrefabEnum.SpinWheel,
+                        callback: (obj) =>
+                        {
+                            obj.transform.position = transform.position;
+
+                            SpinWheel spinWheel = obj.GetComponent<SpinWheel>();
+                            if (spinWheel != null)
+                            {
+                                SpinWhellData whellData = new()
+                                {
+                                    RewardStr = StringUtility.CurrencyFormat(fishHitData.Reward),
+                                    MinValu = FishData_Network.MinMagnification,
+                                    MaxValu = FishData_Network.MaxMagnification,
+                                    TargetIndex = fishHitData.SpinWheelIndex,
+                                    SeatIndex = fishHitData.SeatIndex,
+                                };
+
+                                spinWheel.SetData(whellData);
+                            }
+                        });
     }
 
     /// <summary>
@@ -290,30 +330,48 @@ public class Fish : NetworkBehaviour
     /// <summary>
     /// 魚被擊中
     /// </summary>
-    public void GetHit(PlayerRef player, NetworkPrefabEnum fishType, string eruptionCoinString, string rewardStr, int seatIndex, bool isLocalShow)
+    public void GetHit(FishHitData fishHitData)
     {
-        if(isLocalShow)
+        if(fishHitData.IsLocalShow)
         {
-            HitEffect(fishType, eruptionCoinString, rewardStr, seatIndex);
+            // 擊中效果
+            HitEffect(fishHitData);
+
+            if(fishHitData.SpinWheelIndex >= 0)
+            {
+                // 輪盤
+                ShowSpinWheel(fishHitData);
+            }
         }
 
         if (FishModel != null)
             FishModel.SetActive(false);
 
-        RPC_GetHit(player, fishType, eruptionCoinString, rewardStr, seatIndex, isLocalShow);
+        RPC_GetHit(fishHitData);
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RPC_GetHit(PlayerRef player, NetworkPrefabEnum fishType, string eruptionCoinString, string rewardStr, int seatIndex, bool isLocalShow)
+    public void RPC_GetHit(FishHitData fishHitData)
     {
         // 全域產生效果
-        if(!isLocalShow)
+        if(!fishHitData.IsLocalShow)
         {
-            HitEffect(fishType, eruptionCoinString, rewardStr, seatIndex);
+            HitEffect(fishHitData);
+
+            if (fishHitData.SpinWheelIndex >= 0)
+            {
+                // 輪盤
+                ShowSpinWheel(fishHitData);
+            }
         }
 
         if (FishModel != null)
             FishModel.SetActive(false);
+
+        if(Object.HasStateAuthority)
+        {
+            IsDie = true;
+        }
 
         StartCoroutine(IYieldDespawn());
     }
@@ -370,4 +428,31 @@ public struct FishPathData : INetworkStruct
 
     /// <summary> 中途加速用的倍率 </summary>
     public float SpeedMultiplier;
+}
+
+/// <summary>
+/// 魚被捕獲資料
+/// </summary>
+public struct FishHitData : INetworkStruct
+{
+    /// <summary> 玩家 </summary>
+    public PlayerRef Player;
+
+    /// <summary> 魚類型 </summary>
+    public NetworkPrefabEnum FishType;
+
+    /// <summary> 爆金文字 </summary>
+    public NetworkString<_32> EruptionCoinString;
+
+    /// <summary> 最終獎勵 </summary>
+    public double Reward;
+
+    /// <summary> 移動座位 </summary>
+    public int SeatIndex;
+
+    /// <summary> 是否只在本地顯示 </summary>
+    public NetworkBool IsLocalShow;
+
+    /// <summary> 輪盤目標Index(-1 = 不顯示) </summary>
+    public int SpinWheelIndex;
 }

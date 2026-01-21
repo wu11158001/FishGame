@@ -116,7 +116,6 @@ public class EruptionAndRecycleEffect : MonoBehaviour
     /// <summary>
     /// 執行噴發效果
     /// </summary>
-    /// <param name="obj"></param>
     private void DoEruptionEffect(GameObject obj, int index)
     {
         if(IsRandomPos)
@@ -151,7 +150,6 @@ public class EruptionAndRecycleEffect : MonoBehaviour
     /// <summary>
     /// 執行回收效果
     /// </summary>
-    /// <param name="obj"></param>
     private IEnumerator IDoRecycle(GameObject obj)
     {
         yield return new WaitForSeconds(EruptionStayTime);

@@ -200,6 +200,7 @@ public enum GamePrefabEnum
     /// <summary> 噴發物件 </summary>
     StingrayFishCoin = 90,      // 特殊魚硬幣_魟魚
     SharkFishCoin = 91,         // 特殊魚硬幣_鯊魚
+    SpinWheel = 99,             // 輪盤
     Coin = 100,                 // 金幣物件
 
     /// <summary> 爆金文字 </summary>

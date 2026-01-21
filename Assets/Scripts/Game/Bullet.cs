@@ -1,5 +1,6 @@
 using UnityEngine;
 using Fusion;
+using System;
 
 public class Bullet : NetworkBehaviour
 {
@@ -72,7 +73,7 @@ public class Bullet : NetworkBehaviour
                 }
             }
 
-            if (LocalTargetFish != null && !LocalTargetFish.gameObject.activeInHierarchy)
+            if (LocalTargetFish != null && LocalTargetFish.IsDie)
             {
                 LocalTargetFish = null;
             }
@@ -138,7 +139,7 @@ public class Bullet : NetworkBehaviour
         // 鎖定目標不存在
         if (LocalTargetFish != null)
         {
-            if (LocalTargetFish.Object == null || !LocalTargetFish.Object.IsValid || !LocalTargetFish.gameObject.activeInHierarchy)
+            if (LocalTargetFish.Object == null || !LocalTargetFish.Object.IsValid || LocalTargetFish.IsDie)
             {
                 LocalTargetFish = null;
                 TargetFishId = default; 
@@ -193,7 +194,7 @@ public class Bullet : NetworkBehaviour
                         parent: EffectPool,
                         player: Object.InputAuthority);
 
-        FishData_Network data = fish.GetFishData();
+        FishData_Network fishData = fish.GetFishData();
 
         // 判斷階段(休閒/咬分/吐分)
         GamePeriod period = GamePeriod.IdlePeriod;
@@ -224,13 +225,13 @@ public class Bullet : NetworkBehaviour
         }
 
         // 各階段給予機率變化
-        double probability = data.Probability;
+        double probability = fishData.Probability;
         switch (period)
         {
             // 休閒期
             case GamePeriod.IdlePeriod:
                 // 依照魚的機率
-                probability = data.Probability;
+                probability = fishData.Probability;
                 break;
 
             // 咬分期
@@ -254,22 +255,43 @@ public class Bullet : NetworkBehaviour
         {
             // 獲得金幣
             double currDefaultCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
-            double reward = currDefaultCost * data.Magnification;
+            double reward = currDefaultCost * fishData.Magnification;
+
+            // 特殊使用_轉盤Index
+            int spinIndex = -1;
 
             int specailMagnification = 0;
-            switch (data.FishType)
+            switch (fishData.FishType)
             {
                 // 特殊魚_魟魚
                 case NetworkPrefabEnum.StingrayFish:
-                    specailMagnification = UnityEngine.Random.Range((int)data.MinMagnification, (int)data.MaxMagnification + 1);
+                    specailMagnification = UnityEngine.Random.Range((int)fishData.MinMagnification, (int)fishData.MaxMagnification + 1);
                     reward = currDefaultCost * specailMagnification;
+                    break;
+
+                // 特殊魚_鯊魚
+                case NetworkPrefabEnum.SharkFish:
+                    int segmentCount = 8;
+                    // 原始 step
+                    double rawStep = (fishData.MaxMagnification - fishData.MinMagnification) / (double)(segmentCount - 1);
+                    // 四捨五入到最近的「漂亮數字」(例如 5 或 10)
+                    int step = (int)(Math.Round(rawStep / 5.0) * 5);
+                    int[] values = new int[segmentCount];
+                    for (int i = 0; i < segmentCount; i++)
+                    {
+                        values[i] = (int)(fishData.MinMagnification + step * i);
+                        if (values[i] >= fishData.MaxMagnification) values[i] = (int)fishData.MaxMagnification;
+                    }
+
+                    spinIndex = UnityEngine.Random.Range(0, values.Length);
+                    reward = currDefaultCost * values[spinIndex];
                     break;
             }
 
             // 判斷獎池
             if(TempDataManagement.Instance.CurrentLevelData.Jackpot < reward)
             {
-                Debug.Log($"獎池不足!");
+                Debug.LogError($"獎池不足!");
                 return;
             }
 
@@ -289,32 +311,33 @@ public class Bullet : NetworkBehaviour
             string eruptionCoinString = StringUtility.CurrencyFormat(reward);
             int seatIndex = TempDataManagement.Instance.LocalSeatIndex;
             bool isLocalShow = true;
-            string rewardStr = "";
 
-            switch (data.FishType)
+            switch (fishData.FishType)
             {
                 // 特殊魚_魟魚
                 case NetworkPrefabEnum.StingrayFish:
                     eruptionCoinString = $"{StringUtility.CurrencyFormat(specailMagnification)}X";
                     isLocalShow = false;
-                    rewardStr = StringUtility.CurrencyFormat(reward);
                     break;
 
                 // 特殊魚_鯊魚
                 case NetworkPrefabEnum.SharkFish:
-                    eruptionCoinString = "Spin !";
-                    isLocalShow = false;
-                    rewardStr = "Spin !";
+                    eruptionCoinString = "Big Win !";
+                    isLocalShow = false;                   
                     break;
             }
 
-            fish.GetHit(
-                player: Runner.LocalPlayer, 
-                fishType: data.FishType,
-                eruptionCoinString: eruptionCoinString,
-                rewardStr: rewardStr,
-                seatIndex: seatIndex,
-                isLocalShow: isLocalShow);
+            FishHitData fishHitData = new()
+            {
+                Player = Runner.LocalPlayer,
+                FishType = fishData.FishType,
+                EruptionCoinString = eruptionCoinString,
+                Reward = reward,
+                SeatIndex = seatIndex,
+                IsLocalShow = isLocalShow,
+                SpinWheelIndex = spinIndex,
+            };
+            fish.GetHit(fishHitData);
         }
 
         Runner.Despawn(Object);
