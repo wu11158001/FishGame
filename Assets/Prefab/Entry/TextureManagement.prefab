@@ -69,3 +69,5 @@ MonoBehaviour:
     Sp: {fileID: -858068209387110090, guid: 9e74ff50b04212946a66a90433e49fa4, type: 3}
   - FishType: 201
     Sp: {fileID: -2633863979938418355, guid: cb4c9483fd8efdd42bf80dee4b2125dd, type: 3}
+  - FishType: 202
+    Sp: {fileID: -4805769625168836833, guid: b3f42de574b6f164591fb5ce865c124d, type: 3}

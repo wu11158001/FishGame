@@ -313,6 +313,10 @@ public class Bullet : NetworkBehaviour
                     eruptionCoinString = "Big Win !";
                     isLocalShow = false;
                     break;
+
+                // 特殊魚_金龍
+                case NetworkPrefabEnum.DragonFish:
+                    break;
             }
 
             // 產生魚擊中效果

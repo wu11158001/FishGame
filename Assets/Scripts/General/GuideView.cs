@@ -189,8 +189,7 @@ public class GuideView : BasicView
     {
         string tableName = LocalizationManagement.Instance.TableName;
         Sprite sprite = null;
-
-        FishData fishData = TempDataManagement.Instance.GetFishData(NetworkPrefabEnum.StingrayFish);
+        FishData fishData = null;
 
         switch (TempDataManagement.Instance.CurrentLevelData.LevelType)
         {
@@ -198,10 +197,13 @@ public class GuideView : BasicView
             case LevelEnum.ClassicLevel:
                 SpecialMessageLocalized.SetReference(tableName, "Stingray Fish Message");
 
-                if(fishData != null)
+                fishData = TempDataManagement.Instance.GetFishData(NetworkPrefabEnum.StingrayFish);
+                if (fishData != null)
                 {
                     // 隨機給予{0}-{1}倍獎勵\n最高<size=48><color=#FAFF51> {2}X </color></size>!
                     SpecialMessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
+
+                    SpecialOddsText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
                 }
 
                 sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.StingrayFish);
@@ -211,18 +213,35 @@ public class GuideView : BasicView
             case LevelEnum.SharkLevel:
                 SpecialMessageLocalized.SetReference(tableName, "Shark Fish Message");
 
+                fishData = TempDataManagement.Instance.GetFishData(NetworkPrefabEnum.SharkFish);
                 if (fishData != null)
                 {
                     // 可獲得一次轉輪遊戲，結束獲得對應的倍率\n最高<size=48><color=#FAFF51> {0}X </color></size>!
                     SpecialMessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
+
+                    SpecialOddsText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
                 }
 
                 sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.SharkFish);
                 break;
-        }
 
-        if (fishData != null)
-            SpecialOddsText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
+            // 金龍關卡
+            case LevelEnum.DragonLevel:
+                SpecialMessageLocalized.SetReference(tableName, "Dragon Fish Message");
+
+                fishData = TempDataManagement.Instance.GetFishData(NetworkPrefabEnum.DragonFish);
+                if (fishData != null)
+                {
+                    // 固定獲得{0}倍獎勵，並直接捕獲全屏魚群\n<size=48><color=#FAFF51> 無限得分 </color></size>!
+                    SpecialMessageLocalized.Arguments = new object[] { fishData.Magnification };
+
+                    // 無限分數!
+                    SpecialOddsText.text = LocalizationManagement.Instance.GetLocalizedString("INFINITE SCORE");
+                }
+
+                sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.DragonFish);
+                break;
+        }
 
         SpecialMessageText.text = SpecialMessageLocalized.GetLocalizedString();
         SpecialCoverImage.sprite = sprite;

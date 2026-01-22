@@ -47,8 +47,8 @@ public class GameFloatBtn : MonoBehaviour
     {
         Btns = new()
         {
-            HomeBtn.GetComponent<RectTransform>(),
             GuideBtn.GetComponent<RectTransform>(),
+            HomeBtn.GetComponent<RectTransform>(),
         };
         foreach (var btn in Btns)
         {

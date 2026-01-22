@@ -2,10 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-using Newtonsoft.Json;
 using Fusion;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 public class LobbyView : BasicView
 {
@@ -15,7 +16,7 @@ public class LobbyView : BasicView
     [SerializeField] Button LogoutBtn;
 
     Dictionary<CheckJoinRoomDataEnum, bool> CheckJoinRoomDic = new();
-
+    CancellationTokenSource matchmakingCTS;
     bool IsMatchmaking;
 
     private void OnDestroy()
@@ -62,6 +63,16 @@ public class LobbyView : BasicView
         CloseAction?.Invoke();
     }
 
+    /// <summary>
+    /// 加入房間錯誤關閉
+    /// </summary>
+    private void JoinErrorCancel()
+    {
+        IsMatchmaking = false;
+        Canvas_Global.Instance.CloseLoading();
+        Canvas_Global.Instance.CloseSceneLoadingView();
+    }
+
     #region 資料變更監聽
 
     /// <summary>
@@ -74,29 +85,6 @@ public class LobbyView : BasicView
             CoinText.text = StringUtility.CurrencyFormat(accountData.Coins);
 
             Canvas_Global.Instance.CloseLoading();
-        }
-    }
-
-    /// <summary>
-    /// 房間列表更新
-    /// </summary>
-    private void OnRoomListUpdatedUpdate(NetworkRunner runner, List<SessionInfo> sessionList)
-    {
-        if (!IsMatchmaking)
-            return;
-
-        // 尋找第一個還沒滿的房間
-        SessionInfo availableSession = sessionList.FirstOrDefault(s => s.IsOpen && s.PlayerCount < s.MaxPlayers);
-
-        if (availableSession != null)
-        {
-            Debug.Log($"找到可用房間: {availableSession.Name}，準備加入...");
-            JoinRoom(availableSession.Name);
-        }
-        else
-        {
-            Debug.Log("目前沒有空房，準備創建新房間...");
-            JoinRoom(Guid.NewGuid().ToString());
         }
     }
 
@@ -147,9 +135,7 @@ public class LobbyView : BasicView
         if(!CheckJoinRoomDic.ContainsKey(dataType))
         {
             Debug.LogError($"檢查加入房間資料獲取狀態錯誤: {dataType}");
-            IsMatchmaking = false;
-            Canvas_Global.Instance.CloseLoading();
-            Canvas_Global.Instance.CloseSceneLoadingView();
+            JoinErrorCancel();
             return;
         }
 
@@ -171,18 +157,39 @@ public class LobbyView : BasicView
         Canvas_Global.Instance.ShowSceneLoadingView();
 
         var runner = NetworkRunnerManagement.Instance.NetworkRunner;
-
         runner.ProvideInput = true;
 
-        // 加入大廳
         var result = await runner.JoinSessionLobby(SessionLobby.Shared);
 
-        if (!result.Ok)
+        if (result.Ok)
         {
-            Debug.LogError($"無法加入大廳: {result.ShutdownReason}");
-            IsMatchmaking = false;
-            Canvas_Global.Instance.CloseLoading();
-            Canvas_Global.Instance.CloseSceneLoadingView();
+            Debug.Log("成功加入大廳，開始等待列表同步...");
+
+            // 重置取消令牌
+            matchmakingCTS?.Cancel();
+            matchmakingCTS = new CancellationTokenSource();
+
+            try
+            {
+                // 等待 2 秒給予列表同步時間
+                await Task.Delay(2000, matchmakingCTS.Token);
+
+                // 如果 2 秒後 IsMatchmaking 還是 true，代表 OnRoomListUpdated 沒找到房
+                if (IsMatchmaking)
+                {
+                    Debug.Log("等待超時，未發現現有房間，準備自行創建...");
+                    JoinRoom(Guid.NewGuid().ToString());
+                }
+            }
+            catch (TaskCanceledException )
+            {
+                Debug.Log("等待期間已經JoinRoom!");
+            }
+        }
+        else
+        {
+            Debug.LogError("加入大廳失敗!");
+            JoinErrorCancel();
         }
     }
 
@@ -191,14 +198,49 @@ public class LobbyView : BasicView
     /// </summary>
     private async void JoinRoom(string sessionName)
     {
+        // 先停止配對計時，避免重複進入此 function
+        matchmakingCTS?.Cancel();
+
+        // 如果已經不在配對狀態，就跳出（防止複數次觸發）
+        if (!IsMatchmaking) return;
+        IsMatchmaking = false;
+
+        Debug.Log($"準備進入房間: {sessionName}");
+
+        // 關閉在大廳中的 Runner
+        if (NetworkRunnerManagement.Instance.NetworkRunner.IsCloudReady ||
+            NetworkRunnerManagement.Instance.NetworkRunner.IsRunning)
+        {
+            await NetworkRunnerManagement.Instance.NetworkRunner.Shutdown();
+        }
+
+        // 透過 Management 重新取得/重置一個新的 Runner
+        NetworkRunnerManagement.Instance.ResetRunner();
+
+        // 執行 StartGame
         var result = await NetworkRunnerManagement.Instance.StartGame(sessionName);
 
         if (!result.Ok)
         {
-            Debug.LogError($"無法加入房間: {result.ShutdownReason}");            
-            IsMatchmaking = false;
-            Canvas_Global.Instance.CloseLoading();
-            Canvas_Global.Instance.CloseSceneLoadingView();
+            Debug.LogError($"無法加入房間: {result.ShutdownReason}");
+            JoinErrorCancel();
+        }
+    }
+
+    /// <summary>
+    /// 房間列表更新
+    /// </summary>
+    private void OnRoomListUpdatedUpdate(NetworkRunner runner, List<SessionInfo> sessionList)
+    {
+        if (!IsMatchmaking) return;
+
+        // 尋找第一個還沒滿且開啟中的房間
+        SessionInfo availableSession = sessionList.FirstOrDefault(s => s.IsOpen && s.PlayerCount < s.MaxPlayers);
+
+        if (availableSession != null)
+        {
+            Debug.Log($"[列表更新] 找到可用房間: {availableSession.Name}");
+            JoinRoom(availableSession.Name);
         }
     }
 

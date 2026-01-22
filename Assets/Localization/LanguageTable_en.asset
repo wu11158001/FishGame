@@ -155,6 +155,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 8068190351354495079
+  - m_Id: 10366013622915072
+    m_Localized: Fixed {0}x rewards and instant capture of all fish on screen! <size=48><color=#FAFF51>
+      INFINITE SCORE! </color></size>
+    m_Metadata:
+      m_Items:
+      - rid: 8068190351354495079
+  - m_Id: 10367884332830720
+    m_Localized: INFINITE SCORE
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
@@ -165,3 +175,4 @@ MonoBehaviour:
         m_SharedEntries:
         - id: 9126740382912512
         - id: 9728630103674880
+        - id: 10366013622915072
