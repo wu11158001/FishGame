@@ -13,6 +13,7 @@ public class Bullet : NetworkBehaviour
 
     Transform EffectPool;
     Fish LocalTargetFish;
+    Transform TargetLockingObj;
     GameView GameView;
 
     readonly Vector2 MinBounds = new(-10f, -6f);
@@ -23,11 +24,12 @@ public class Bullet : NetworkBehaviour
         GameView = FindFirstObjectByType<GameView>();
     }
 
-    public void SetData(Fish targetFish)
+    public void SetData(Fish targetLockingFish, Transform targetLockingObj)
     {
         if (Object.HasStateAuthority)
         {
-            TargetFishId = (targetFish != null) ? targetFish.Object.Id : default;
+            TargetFishId = (targetLockingFish != null) ? targetLockingFish.Object.Id : default;
+            TargetLockingObj = targetLockingObj;
         }
     }
 
@@ -84,9 +86,9 @@ public class Bullet : NetworkBehaviour
         }
 
         // 有鎖定
-        if (LocalTargetFish != null && LocalTargetFish.Object != null && LocalTargetFish.Object.IsValid)
+        if (LocalTargetFish != null && LocalTargetFish.Object != null && LocalTargetFish.Object.IsValid && TargetLockingObj != null)
         {
-            Vector3 targetPos = LocalTargetFish.transform.position;
+            Vector3 targetPos = TargetLockingObj.position;
             targetPos.y = transform.position.y;
             Vector3 followDir = (targetPos - transform.position).normalized;
 
@@ -141,6 +143,7 @@ public class Bullet : NetworkBehaviour
         {
             if (CheckLocalTarget())
             {
+                TargetLockingObj = null;
                 LocalTargetFish = null;
                 TargetFishId = default; 
             }
@@ -179,7 +182,9 @@ public class Bullet : NetworkBehaviour
     /// </summary>
     private bool CheckLocalTarget()
     {
-        return LocalTargetFish == null || LocalTargetFish.Object == null || !LocalTargetFish.Object.IsValid || !LocalTargetFish.gameObject.activeInHierarchy || LocalTargetFish.IsDie;
+        return 
+            LocalTargetFish == null || LocalTargetFish.Object == null || !LocalTargetFish.Object.IsValid || 
+            !LocalTargetFish.gameObject.activeInHierarchy || LocalTargetFish.IsDie || TargetLockingObj == null;
     }
 
     /// <summary>

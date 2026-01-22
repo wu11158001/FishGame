@@ -41,7 +41,8 @@ public class PlayerTurret : NetworkBehaviour
 
     GameObject Skill_Locking;
     Animator Skill_LockingAni;
-    Fish TargetLocking;
+    Fish TargetLockingFish;
+    Transform TargetLockingObj;
 
     GameView GameView;
     Coroutine UpdateUICoroutine;
@@ -191,8 +192,9 @@ public class PlayerTurret : NetworkBehaviour
         // 檢測鎖定技能是否關閉
         if (Skill_Locking != null && Skill_Locking.activeSelf && !isLocking)
         {
-            TargetLocking = null;
+            TargetLockingFish = null;
             Skill_Locking.SetActive(false);
+            TargetLockingObj = null;
             return;
         }
 
@@ -201,13 +203,14 @@ public class PlayerTurret : NetworkBehaviour
             bool isAuto = TempDataManagement.Instance.IsSkill_Auto;
 
             // 有鎖定目標，但目標消失
-            if (TargetLocking != null && (!TargetLocking.gameObject.activeInHierarchy || !TargetLocking .Object.IsValid || TargetLocking.IsDie))
+            if (TargetLockingFish != null && (!TargetLockingFish.gameObject.activeInHierarchy || !TargetLockingFish .Object.IsValid || TargetLockingFish.IsDie))
             {
                 if (!isAuto)
                 {
                     // 自動射擊未開啟，目標消失，關閉鎖定技能
-                    TargetLocking = null;
+                    TargetLockingFish = null;
                     Skill_Locking.SetActive(false);
+                    TargetLockingObj = null;
                     return;
                 }
                 else
@@ -217,40 +220,42 @@ public class PlayerTurret : NetworkBehaviour
             }
 
             // 自動射擊開啟，沒有鎖定目標，隨機獲取新目標
-            if (isAuto && TargetLocking == null)
+            if (isAuto && TargetLockingFish == null)
             {
                 TakeNewLockingTarget();
             }
 
             // 鎖定圖標跟隨目標
-            if (TargetLocking != null && TargetLocking.Object.IsValid && TargetLocking.gameObject.activeInHierarchy && !TargetLocking.IsDie)
+            if (TargetLockingFish != null && TargetLockingFish.Object.IsValid && TargetLockingFish.gameObject.activeInHierarchy && !TargetLockingFish.IsDie && TargetLockingObj != null)
             {
                 // 檢測是否在畫面內
-                bool isInSceneX = TargetLocking.transform.position.x >= -LockingSidePosX && TargetLocking.transform.position.x <= LockingSidePosX;
-                bool isInSceneZ = TargetLocking.transform.position.z >= -LockingSidePosY && TargetLocking.transform.position.z <= LockingSidePosY;
+                bool isInSceneX = TargetLockingObj.position.x >= -LockingSidePosX && TargetLockingObj.position.x <= LockingSidePosX;
+                bool isInSceneZ = TargetLockingObj.position.z >= -LockingSidePosY && TargetLockingObj.position.z <= LockingSidePosY;
 
                 if (!isInSceneX || !isInSceneZ)
                 {
                     if(isAuto)
                     {
-                        TargetLocking = null;
+                        TargetLockingFish = null;
+                        TargetLockingObj = null;
                         Skill_Locking.SetActive(false);
                         TakeNewLockingTarget();
                     }
                     else
                     {
-                        TargetLocking = null;
+                        TargetLockingFish = null;
+                        TargetLockingObj = null;
                         Skill_Locking.SetActive(false);
                     }
 
                     return;
                 }
 
-                Vector3 targetPos = TargetLocking.gameObject.transform.position;
+                Vector3 targetPos = TargetLockingObj.transform.position;
                 Skill_Locking.transform.position = new(targetPos.x, Skill_Locking.transform.position.y, targetPos.z);
 
                 // 砲台轉向
-                Vector3 direction = TargetLocking.gameObject.transform.position - CurrBarrel.position;
+                Vector3 direction = TargetLockingObj.position - CurrBarrel.position;
 
                 if (direction != Vector3.zero)
                 {
@@ -270,16 +275,26 @@ public class PlayerTurret : NetworkBehaviour
         int fishLayer = LayerMask.NameToLayer("Fish");
         GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
         List<Fish> fishList = new();
-
+        List<Transform> targetObjList = new();
         foreach (GameObject obj in allObjects)
         {
             Fish fish = obj.GetComponentInParent<Fish>();
-            bool isInSceneX = obj.transform.position.x >= -LockingSidePosX && obj.transform.position.x <= LockingSidePosX;
-            bool isInSceneZ = obj.transform.position.z >= -LockingSidePosY && obj.transform.position.z <= LockingSidePosY;
+            if (fish == null)
+                continue;
 
-            if (obj.layer == fishLayer && isInSceneX && isInSceneZ && fish != null)
+            BoxCollider[] colliders = fish.GetComponentsInChildren<BoxCollider>();
+
+            foreach (var box in colliders)
             {
-                fishList.Add(fish);
+                bool isInSceneX = box.gameObject.transform.position.x >= -LockingSidePosX && box.gameObject.transform.position.x <= LockingSidePosX;
+                bool isInSceneZ = box.gameObject.transform.position.z >= -LockingSidePosY && box.gameObject.transform.position.z <= LockingSidePosY;
+
+                if (obj.layer == fishLayer && isInSceneX && isInSceneZ && fish != null)
+                {
+                    fishList.Add(fish);
+                    targetObjList.Add(box.gameObject.transform);
+                    break;
+                }
             }
         }
         Fish[] fishs = fishList.ToArray();
@@ -287,14 +302,16 @@ public class PlayerTurret : NetworkBehaviour
         if (fishs.Length > 0)
         {
             int randomIndex = Random.Range(0, fishs.Length);
-            TargetLocking = fishs[randomIndex];
+            TargetLockingFish = fishs[randomIndex];
+            TargetLockingObj = targetObjList[randomIndex];
 
             Skill_LockingAni.SetTrigger("Restart");
             Skill_Locking.SetActive(true);
         }
         else
         {
-            TargetLocking = null;
+            TargetLockingFish = null;
+            TargetLockingObj = null;
             Skill_Locking.SetActive(false);
         }
     }
@@ -323,7 +340,8 @@ public class PlayerTurret : NetworkBehaviour
                     {
                         DoNotFireThisTime = true;
                         Skill_LockingAni.SetTrigger("Restart");
-                        TargetLocking = fish;
+                        TargetLockingFish = fish;
+                        TargetLockingObj = hit.transform;
                         Skill_Locking.SetActive(true);
                     }
                 }
@@ -341,7 +359,7 @@ public class PlayerTurret : NetworkBehaviour
     private void OnRotationControl()
     {
         // 是否有鎖定目標
-        bool isLocking = TempDataManagement.Instance.IsSkill_Locking && TargetLocking != null;
+        bool isLocking = TempDataManagement.Instance.IsSkill_Locking && TargetLockingFish != null;
 
         if (GetInput(out NetworkInputData input) && !isLocking)
         {
@@ -378,7 +396,7 @@ public class PlayerTurret : NetworkBehaviour
         bool isOpenView = TempDataManagement.Instance.IsStopShot;
 
         // 自動 & 鎖定 但沒有目標
-        if (isAuto && isLocking && TargetLocking == null)
+        if (isAuto && isLocking && TargetLockingFish == null)
             return;
 
         if (GetInput(out NetworkInputData input) || isAuto)
@@ -458,7 +476,7 @@ public class PlayerTurret : NetworkBehaviour
                             Bullet bullet = networkObj.gameObject.GetComponent<Bullet>();
                             if (bullet != null)
                             {
-                                bullet.SetData(TargetLocking);
+                                bullet.SetData(targetLockingFish: TargetLockingFish, targetLockingObj: TargetLockingObj);
                             }
                         });
                 }
