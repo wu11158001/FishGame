@@ -111,6 +111,12 @@ public class Fish : NetworkBehaviour
         }
 
         if (Animator != null) Animator.speed = AniSpeed;
+
+        // 金龍
+        if(FishData_Network.FishType == NetworkPrefabEnum.DragonFish && !Object.HasStateAuthority)
+        {
+            GetAnimProgress();
+        }
     }
 
     public override void Render()
@@ -128,6 +134,16 @@ public class Fish : NetworkBehaviour
 
         Move();
     }
+
+    /// <summary>
+    /// 獲取魚資料
+    /// </summary>
+    public FishData_Network GetFishData()
+    {
+        return FishData_Network;
+    }
+
+    #region 控制
 
     /// <summary>
     /// 更新動畫速度
@@ -227,12 +243,40 @@ public class Fish : NetworkBehaviour
     }
 
     /// <summary>
-    /// 獲取魚資料
+    /// 設置剩餘路徑移動時間
     /// </summary>
-    public FishData_Network GetFishData()
+    public void SetFishDuration(float finishTime)
     {
-        return FishData_Network;
+        RPC_SetFishDuration(finishTime);
     }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SetFishDuration(float finishTime)
+    {
+        if (!Object.HasStateAuthority)
+            return;
+
+        float remaining = MoveTimer.RemainingTime(Runner) ?? 0;
+        float elapsed = TotalDuration - remaining;
+        float currentT = Mathf.Clamp01(elapsed / TotalDuration);
+
+        AniSpeed = 3;
+
+        // 如果已經快跑完了，就不處理
+        if (currentT >= 0.99f) return;
+
+        float targetRemainingTime = finishTime;
+        float newTotalDuration = targetRemainingTime / (1f - currentT);
+
+        // 更新同步變數
+        TotalDuration = newTotalDuration;
+        // 重設 Timer
+        MoveTimer = TickTimer.CreateFromSeconds(Runner, targetRemainingTime);
+    }
+
+    #endregion
+
+    #region 擊中判斷與效果
 
     /// <summary>
     /// 顯示爆金文字
@@ -387,37 +431,44 @@ public class Fish : NetworkBehaviour
         StartCoroutine(IYieldDespawn());
     }
 
+    #endregion
+
+    #region 特殊判斷
+
     /// <summary>
-    /// 設置剩餘路徑移動時間
+    /// 獲取動畫進度
     /// </summary>
-    public void SetFishDuration(float finishTime)
+    private void GetAnimProgress()
     {
-        RPC_SetFishDuration(finishTime);
+        Debug.Log("獲取動畫進度");
+        RPC_GetAnimProgress();
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_SetFishDuration(float finishTime)
+    public void RPC_GetAnimProgress()
     {
-        if (!Object.HasStateAuthority) 
-            return;
+        AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0); 
+        float progress = stateInfo.normalizedTime;
+        string stateName = stateInfo.IsName("LtoR") ? "LtoR" : "RtoL";
 
-        float remaining = MoveTimer.RemainingTime(Runner) ?? 0;
-        float elapsed = TotalDuration - remaining;
-        float currentT = Mathf.Clamp01(elapsed / TotalDuration);
+        Debug.Log($"動畫進度: {stateName} = {progress}");
 
-        AniSpeed = 3;
-
-        // 如果已經快跑完了，就不處理
-        if (currentT >= 0.99f) return;
-
-        float targetRemainingTime = finishTime;
-        float newTotalDuration = targetRemainingTime / (1f - currentT);
-
-        // 更新同步變數
-        TotalDuration = newTotalDuration;
-        // 重設 Timer
-        MoveTimer = TickTimer.CreateFromSeconds(Runner, targetRemainingTime);
+        RPC_SendAnimProgress(stateName, progress);
     }
+
+    /// <summary>
+    /// 發送給所有人金龍動畫進度
+    /// </summary>
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_SendAnimProgress(string stateName, float progress)
+    {
+        if(!Object.HasStateAuthority)
+        {
+            Animator.Play(stateName, 0, progress % 1f);
+        }
+    }
+
+    #endregion
 }
 
 /// <summary>
