@@ -316,6 +316,8 @@ public class Bullet : NetworkBehaviour
 
                 // 特殊魚_金龍
                 case NetworkPrefabEnum.DragonFish:
+                    eruptionCoinString = $"{StringUtility.CurrencyFormat(fishData.Magnification)}X";
+                    isLocalShow = false;
                     break;
             }
 
