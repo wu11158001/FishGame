@@ -1,0 +1,507 @@
+fileFormatVersion: 2
+guid: b4e6a462d4a5b904999f63e478b0894d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 275987146940213640
+    second: xvlie_ci_0
+  - first:
+      213: -1499310992880229798
+    second: xvlie_ci_1
+  - first:
+      213: 1921458212468047449
+    second: xvlie_ci_2
+  - first:
+      213: -3500839089295224791
+    second: xvlie_ci_3
+  - first:
+      213: -4897220261558287069
+    second: xvlie_ci_4
+  - first:
+      213: 7050157787921542861
+    second: xvlie_ci_5
+  - first:
+      213: 1462685604076796134
+    second: xvlie_ci_6
+  - first:
+      213: 5445858633114674689
+    second: xvlie_ci_7
+  - first:
+      213: -4730717813206189940
+    second: xvlie_ci_8
+  - first:
+      213: 8083029827587381302
+    second: xvlie_ci_9
+  - first:
+      213: 5426593920143661012
+    second: xvlie_ci_10
+  - first:
+      213: 5386499840811770767
+    second: xvlie_ci_11
+  - first:
+      213: -5010544906274024002
+    second: xvlie_ci_12
+  - first:
+      213: 3248750129636839470
+    second: xvlie_ci_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: xvlie_ci_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 255
+        width: 119
+        height: 238
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 889e1ff09d084d300800000000000000
+      internalID: 275987146940213640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 257
+        width: 122
+        height: 244
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a52298d7890613be0800000000000000
+      internalID: -1499310992880229798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_2
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 311
+        width: 30
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95e3aec50146aaa10800000000000000
+      internalID: 1921458212468047449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_3
+      rect:
+        serializedVersion: 2
+        x: 277
+        y: 317
+        width: 105
+        height: 195
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92091c285658a6fc0800000000000000
+      internalID: -3500839089295224791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_4
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 355
+        width: 29
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32509f26e14990cb0800000000000000
+      internalID: -4897220261558287069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_5
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 388
+        width: 40
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dce648f972137d160800000000000000
+      internalID: 7050157787921542861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_6
+      rect:
+        serializedVersion: 2
+        x: 467
+        y: 340
+        width: 29
+        height: 171
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e83319aec08c4410800000000000000
+      internalID: 1462685604076796134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_7
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 0
+        width: 121
+        height: 257
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1066bcbc293939b40800000000000000
+      internalID: 5445858633114674689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_8
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 126
+        height: 257
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c887b3b963d195eb0800000000000000
+      internalID: -4730717813206189940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_9
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 6
+        width: 61
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6389b3e6dc0bc2070800000000000000
+      internalID: 8083029827587381302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_10
+      rect:
+        serializedVersion: 2
+        x: 310
+        y: 18
+        width: 72
+        height: 239
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d715764b622f4b40800000000000000
+      internalID: 5426593920143661012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_11
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 41
+        width: 46
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f83a84af011b0ca40800000000000000
+      internalID: 5386499840811770767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_12
+      rect:
+        serializedVersion: 2
+        x: 437
+        y: 86
+        width: 66
+        height: 171
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb5d46a64f7f67ab0800000000000000
+      internalID: -5010544906274024002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_ci_13
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 76
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e201201c701e51d20800000000000000
+      internalID: 3248750129636839470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      xvlie_ci_0: 275987146940213640
+      xvlie_ci_1: -1499310992880229798
+      xvlie_ci_10: 5426593920143661012
+      xvlie_ci_11: 5386499840811770767
+      xvlie_ci_12: -5010544906274024002
+      xvlie_ci_13: 3248750129636839470
+      xvlie_ci_2: 1921458212468047449
+      xvlie_ci_3: -3500839089295224791
+      xvlie_ci_4: -4897220261558287069
+      xvlie_ci_5: 7050157787921542861
+      xvlie_ci_6: 1462685604076796134
+      xvlie_ci_7: 5445858633114674689
+      xvlie_ci_8: -4730717813206189940
+      xvlie_ci_9: 8083029827587381302
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,1183 @@
+fileFormatVersion: 2
+guid: ea7fb6af50c7fac41b420a3defbfe062
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2623328814216494679
+    second: xvlie_shuiweng01_0
+  - first:
+      213: -8248477396849839416
+    second: xvlie_shuiweng01_1
+  - first:
+      213: 6592098563097198402
+    second: xvlie_shuiweng01_2
+  - first:
+      213: -3142552027576261749
+    second: xvlie_shuiweng01_3
+  - first:
+      213: -2393769865590923137
+    second: xvlie_shuiweng01_4
+  - first:
+      213: -1539067163305290348
+    second: xvlie_shuiweng01_5
+  - first:
+      213: -502673912440652816
+    second: xvlie_shuiweng01_6
+  - first:
+      213: -8569086262459507295
+    second: xvlie_shuiweng01_7
+  - first:
+      213: 6542880696613747142
+    second: xvlie_shuiweng01_8
+  - first:
+      213: 164887475021601376
+    second: xvlie_shuiweng01_9
+  - first:
+      213: -8183031901408577470
+    second: xvlie_shuiweng01_10
+  - first:
+      213: -4294124277802180151
+    second: xvlie_shuiweng01_11
+  - first:
+      213: -5520859750157031676
+    second: xvlie_shuiweng01_12
+  - first:
+      213: -8250717580880562870
+    second: xvlie_shuiweng01_13
+  - first:
+      213: -3208039212446881057
+    second: xvlie_shuiweng01_14
+  - first:
+      213: -4043426930615042016
+    second: xvlie_shuiweng01_15
+  - first:
+      213: 4408268020493971335
+    second: xvlie_shuiweng01_16
+  - first:
+      213: 3944120757340464399
+    second: xvlie_shuiweng01_17
+  - first:
+      213: 1572187701764693971
+    second: xvlie_shuiweng01_18
+  - first:
+      213: 3091848853962526502
+    second: xvlie_shuiweng01_19
+  - first:
+      213: -6942605409873075104
+    second: xvlie_shuiweng01_20
+  - first:
+      213: 2979452792579213364
+    second: xvlie_shuiweng01_21
+  - first:
+      213: -540878780119088398
+    second: xvlie_shuiweng01_22
+  - first:
+      213: -569654822546594547
+    second: xvlie_shuiweng01_23
+  - first:
+      213: 5935420275727801238
+    second: xvlie_shuiweng01_24
+  - first:
+      213: -5820148827622678603
+    second: xvlie_shuiweng01_25
+  - first:
+      213: -6820973487018711190
+    second: xvlie_shuiweng01_26
+  - first:
+      213: -996807721306495794
+    second: xvlie_shuiweng01_27
+  - first:
+      213: 6659294703440439812
+    second: xvlie_shuiweng01_28
+  - first:
+      213: -8546397202439012111
+    second: xvlie_shuiweng01_29
+  - first:
+      213: -2397114242920215448
+    second: xvlie_shuiweng01_30
+  - first:
+      213: -1083959692571364141
+    second: xvlie_shuiweng01_31
+  - first:
+      213: -3886609002521694274
+    second: xvlie_shuiweng01_32
+  - first:
+      213: -6943472455816687701
+    second: xvlie_shuiweng01_33
+  - first:
+      213: -6482573157586193543
+    second: xvlie_shuiweng01_34
+  - first:
+      213: -2951619194047020765
+    second: xvlie_shuiweng01_35
+  - first:
+      213: -5739703102469305051
+    second: xvlie_shuiweng01_36
+  - first:
+      213: -1736369312571493023
+    second: xvlie_shuiweng01_37
+  - first:
+      213: -4929408232106563597
+    second: xvlie_shuiweng01_38
+  - first:
+      213: 1427254352415690068
+    second: xvlie_shuiweng01_39
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_0
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 130
+        width: 38
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a1449ba750189bd0800000000000000
+      internalID: -2623328814216494679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_1
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 131
+        width: 39
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c23de68285878d80800000000000000
+      internalID: -8248477396849839416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_2
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 131
+        width: 45
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24f75c977b6db7b50800000000000000
+      internalID: 6592098563097198402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_3
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 169
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b832224b4996364d0800000000000000
+      internalID: -3142552027576261749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_4
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 130
+        width: 45
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f702b6f6dfe97ced0800000000000000
+      internalID: -2393769865590923137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_5
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 167
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49558bdb19224aae0800000000000000
+      internalID: -1539067163305290348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_6
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 130
+        width: 51
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fb7e1b6db42609f0800000000000000
+      internalID: -502673912440652816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_7
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 127
+        width: 51
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1addb6cf17d741980800000000000000
+      internalID: -8569086262459507295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_8
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 172
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c93c61f35bfcca50800000000000000
+      internalID: 6542880696613747142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_9
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 127
+        width: 53
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06ad290f84cc94200800000000000000
+      internalID: 164887475021601376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_10
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 127
+        width: 56
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2483ada57d7007e80800000000000000
+      internalID: -8183031901408577470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_11
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 18
+        width: 60
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c1683878b43864c0800000000000000
+      internalID: -4294124277802180151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_12
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 100
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4076329de47f163b0800000000000000
+      internalID: -5520859750157031676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_13
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 12
+        width: 65
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a453b8903109f7d80800000000000000
+      internalID: -8250717580880562870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_14
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 20
+        width: 60
+        height: 109
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fda649c4551ca73d0800000000000000
+      internalID: -3208039212446881057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_15
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 92
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 020417d21acd2e7c0800000000000000
+      internalID: -4043426930615042016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_16
+      rect:
+        serializedVersion: 2
+        x: 342
+        y: 51
+        width: 45
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78fe14c98605d2d30800000000000000
+      internalID: 4408268020493971335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_17
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 101
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f05e5849ee45cb630800000000000000
+      internalID: 3944120757340464399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_18
+      rect:
+        serializedVersion: 2
+        x: 413
+        y: 23
+        width: 36
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3df1ceb826881d510800000000000000
+      internalID: 1572187701764693971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_19
+      rect:
+        serializedVersion: 2
+        x: 466
+        y: 75
+        width: 42
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62f82afb62478ea20800000000000000
+      internalID: 3091848853962526502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_20
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 8
+        width: 58
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0646fc8c929e6af90800000000000000
+      internalID: -6942605409873075104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_21
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 17
+        width: 62
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 438cabe6784295920800000000000000
+      internalID: 2979452792579213364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_22
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 82
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f2847c7d996e78f0800000000000000
+      internalID: -540878780119088398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_23
+      rect:
+        serializedVersion: 2
+        x: 334
+        y: 41
+        width: 25
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d05a58105fd2818f0800000000000000
+      internalID: -569654822546594547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_24
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 57
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69b18672b49de5250800000000000000
+      internalID: 5935420275727801238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_25
+      rect:
+        serializedVersion: 2
+        x: 453
+        y: 64
+        width: 36
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bfd4ad4a7daa3fa0800000000000000
+      internalID: -5820148827622678603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_26
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 80
+        width: 6
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6764eba0c80751a0800000000000000
+      internalID: -6820973487018711190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_27
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 65
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec4e826a8a0aa22f0800000000000000
+      internalID: -996807721306495794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_28
+      rect:
+        serializedVersion: 2
+        x: 321
+        y: 45
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40a253510419a6c50800000000000000
+      internalID: 6659294703440439812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_29
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 65
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f00b3f6609156980800000000000000
+      internalID: -8546397202439012111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_30
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 45
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86c06b8eb4dbbbed0800000000000000
+      internalID: -2397114242920215448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_31
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 47
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d43175176005f0f0800000000000000
+      internalID: -1083959692571364141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_32
+      rect:
+        serializedVersion: 2
+        x: 451
+        y: 56
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebfebdf44bdff0ac0800000000000000
+      internalID: -3886609002521694274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_33
+      rect:
+        serializedVersion: 2
+        x: 476
+        y: 34
+        width: 33
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: baf465be694d3af90800000000000000
+      internalID: -6943472455816687701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_34
+      rect:
+        serializedVersion: 2
+        x: 372
+        y: 42
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 973b79f2f064906a0800000000000000
+      internalID: -6482573157586193543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_35
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 22
+        width: 9
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3214a9a3bfdb907d0800000000000000
+      internalID: -2951619194047020765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_36
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 1
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52d0c15407a7850b0800000000000000
+      internalID: -5739703102469305051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_37
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 1
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16579455f4d27e7e0800000000000000
+      internalID: -1736369312571493023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_38
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 6
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f7e66c7459379bb0800000000000000
+      internalID: -4929408232106563597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_shuiweng01_39
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 3
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45d0ed78540aec310800000000000000
+      internalID: 1427254352415690068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      xvlie_shuiweng01_0: -2623328814216494679
+      xvlie_shuiweng01_1: -8248477396849839416
+      xvlie_shuiweng01_10: -8183031901408577470
+      xvlie_shuiweng01_11: -4294124277802180151
+      xvlie_shuiweng01_12: -5520859750157031676
+      xvlie_shuiweng01_13: -8250717580880562870
+      xvlie_shuiweng01_14: -3208039212446881057
+      xvlie_shuiweng01_15: -4043426930615042016
+      xvlie_shuiweng01_16: 4408268020493971335
+      xvlie_shuiweng01_17: 3944120757340464399
+      xvlie_shuiweng01_18: 1572187701764693971
+      xvlie_shuiweng01_19: 3091848853962526502
+      xvlie_shuiweng01_2: 6592098563097198402
+      xvlie_shuiweng01_20: -6942605409873075104
+      xvlie_shuiweng01_21: 2979452792579213364
+      xvlie_shuiweng01_22: -540878780119088398
+      xvlie_shuiweng01_23: -569654822546594547
+      xvlie_shuiweng01_24: 5935420275727801238
+      xvlie_shuiweng01_25: -5820148827622678603
+      xvlie_shuiweng01_26: -6820973487018711190
+      xvlie_shuiweng01_27: -996807721306495794
+      xvlie_shuiweng01_28: 6659294703440439812
+      xvlie_shuiweng01_29: -8546397202439012111
+      xvlie_shuiweng01_3: -3142552027576261749
+      xvlie_shuiweng01_30: -2397114242920215448
+      xvlie_shuiweng01_31: -1083959692571364141
+      xvlie_shuiweng01_32: -3886609002521694274
+      xvlie_shuiweng01_33: -6943472455816687701
+      xvlie_shuiweng01_34: -6482573157586193543
+      xvlie_shuiweng01_35: -2951619194047020765
+      xvlie_shuiweng01_36: -5739703102469305051
+      xvlie_shuiweng01_37: -1736369312571493023
+      xvlie_shuiweng01_38: -4929408232106563597
+      xvlie_shuiweng01_39: 1427254352415690068
+      xvlie_shuiweng01_4: -2393769865590923137
+      xvlie_shuiweng01_5: -1539067163305290348
+      xvlie_shuiweng01_6: -502673912440652816
+      xvlie_shuiweng01_7: -8569086262459507295
+      xvlie_shuiweng01_8: 6542880696613747142
+      xvlie_shuiweng01_9: 164887475021601376
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

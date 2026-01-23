@@ -201,6 +201,9 @@ public enum GamePrefabEnum
     /// <summary> 金龍全屏捕獲特效 </summary>
     DragonFullHitEffect = 70,
 
+    /// <summary> 金龍全屏捕獲倍率效果物件 </summary>
+    DragonFullOdds,
+
     /// <summary> 噴發物件 </summary>
     StingrayFishCoin = 90,      // 特殊魚硬幣_魟魚
     SharkFishCoin = 91,         // 特殊魚硬幣_鯊魚

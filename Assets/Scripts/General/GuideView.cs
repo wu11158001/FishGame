@@ -232,11 +232,13 @@ public class GuideView : BasicView
                 fishData = TempDataManagement.Instance.GetFishData(NetworkPrefabEnum.DragonFish);
                 if (fishData != null)
                 {
-                    // 固定獲得{0}倍獎勵，並直接捕獲全屏魚群\n<size=48><color=#FAFF51> 無限得分 </color></size>!
-                    SpecialMessageLocalized.Arguments = new object[] { fishData.Magnification };
+                    // 最高倍率 = 金龍倍率 * 最高倍率 + 魚群(最大預設30之3倍率)
+                    int maxOdds = (int)((fishData.Magnification * fishData.MaxMagnification) + (30 * 3));
 
-                    // 無限分數!
-                    SpecialOddsText.text = LocalizationManagement.Instance.GetLocalizedString("INFINITE SCORE");
+                    // 固定獲得{0}倍獎勵，並捕獲全屏魚群，獎勵再翻倍，最高翻倍X{0}\n最高<size=48><color=#FAFF51> {1}X </color></size>!
+                    SpecialMessageLocalized.Arguments = new object[] { fishData.MaxMagnification, maxOdds };
+                                        
+                    SpecialOddsText.text = $"{fishData.Magnification}X - {maxOdds}X";
                 }
 
                 sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.DragonFish);

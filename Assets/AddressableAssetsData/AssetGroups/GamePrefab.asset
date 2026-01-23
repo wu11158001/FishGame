@@ -45,6 +45,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8b91217e405c12e4880c40c075e11e24
+    m_Address: DragonFullOdds
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a1792a708c27790479e201a46fcca974
     m_Address: DragonFishCoin
     m_ReadOnly: 0

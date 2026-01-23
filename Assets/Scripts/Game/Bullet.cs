@@ -367,23 +367,22 @@ public class Bullet : NetworkBehaviour
                 case NetworkPrefabEnum.DragonFish:
                     // 不可射擊
                     TempDataManagement.Instance.IsStopShot = true;
-                    // 開啟遮罩
-                    GameView.MaskEnable(true);
 
                     // 金龍全屏捕獲魚
                     if (SpecialEffectController == null)
-                    {
                         SpecialEffectController = UnityEngine.Object.FindFirstObjectByType<SpecialEffectController>();
-                        if (SpecialEffectController != null)
+
+                    if (SpecialEffectController != null)
+                    {
+                        WaterFullHitData waterFullHitData = new()
                         {
-                            WaterFullHitData waterFullHitData = new()
-                            {
-                                PlayerRef = Runner.LocalPlayer,
-                                DefaultCost = currDefaultCost,
-                                SeatIndex = seatIndex,
-                            };
-                            SpecialEffectController.DragonFullHit(data: waterFullHitData);
-                        }
+                            PlayerRef = Runner.LocalPlayer,
+                            DefaultCost = currDefaultCost,
+                            SeatIndex = seatIndex,
+                            Odds = UnityEngine.Random.Range(1, 4),
+                            DragonReward = reward,
+                        };
+                        SpecialEffectController.DragonFullHit(data: waterFullHitData);
                     }
                     break;
             }

@@ -1,0 +1,611 @@
+fileFormatVersion: 2
+guid: 20f3f43d554157247a13ac7e1c7c1a33
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7579139704639188060
+    second: shandian06_0
+  - first:
+      213: 7243530790212838206
+    second: shandian06_1
+  - first:
+      213: 2040254103193392053
+    second: shandian06_2
+  - first:
+      213: -8929935142836398640
+    second: shandian06_3
+  - first:
+      213: 2050916542313280923
+    second: shandian06_4
+  - first:
+      213: -1914056108021356371
+    second: shandian06_5
+  - first:
+      213: -4422446890298520961
+    second: shandian06_6
+  - first:
+      213: 5248851201102340470
+    second: shandian06_7
+  - first:
+      213: -5257969083865837040
+    second: shandian06_8
+  - first:
+      213: -1418501335415335081
+    second: shandian06_9
+  - first:
+      213: 7378429947591615390
+    second: shandian06_10
+  - first:
+      213: 8546474555973432184
+    second: shandian06_11
+  - first:
+      213: -6027276551151302007
+    second: shandian06_12
+  - first:
+      213: 8577136328753819278
+    second: shandian06_13
+  - first:
+      213: 1768097262158284370
+    second: shandian06_14
+  - first:
+      213: 2507859628835032822
+    second: shandian06_15
+  - first:
+      213: 386478072338356226
+    second: shandian06_16
+  - first:
+      213: 2985882009717304256
+    second: shandian06_17
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: shandian06_0
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 455
+        width: 66
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5ce316c7638e2960800000000000000
+      internalID: 7579139704639188060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_1
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 411
+        width: 68
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e33ad3630e0368460800000000000000
+      internalID: 7243530790212838206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_2
+      rect:
+        serializedVersion: 2
+        x: 409
+        y: 254
+        width: 83
+        height: 249
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b310601c40705c10800000000000000
+      internalID: 2040254103193392053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_3
+      rect:
+        serializedVersion: 2
+        x: 544
+        y: 262
+        width: 82
+        height: 228
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d595f7ec4f721480800000000000000
+      internalID: -8929935142836398640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_4
+      rect:
+        serializedVersion: 2
+        x: 656
+        y: 255
+        width: 97
+        height: 231
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b953e80aab1567c10800000000000000
+      internalID: 2050916542313280923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_5
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 255
+        width: 108
+        height: 223
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da868316c18ef65e0800000000000000
+      internalID: -1914056108021356371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_6
+      rect:
+        serializedVersion: 2
+        x: 910
+        y: 255
+        width: 91
+        height: 233
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7ac9b10cff40a2c0800000000000000
+      internalID: -4422446890298520961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_7
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 1
+        width: 114
+        height: 227
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67166989b5aa7d840800000000000000
+      internalID: 5248851201102340470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_8
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 6
+        width: 58
+        height: 227
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 012d034e9f0f707b0800000000000000
+      internalID: -5257969083865837040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_9
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 4
+        width: 66
+        height: 225
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 757d62d0d88705ce0800000000000000
+      internalID: -1418501335415335081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_10
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 153
+        width: 47
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e936d4ad1f2756660800000000000000
+      internalID: 7378429947591615390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_11
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 179
+        width: 32
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 873f5b6d35d2b9670800000000000000
+      internalID: 8546474555973432184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_12
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 196
+        width: 16
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98ac59d19efca5ca0800000000000000
+      internalID: -6027276551151302007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_13
+      rect:
+        serializedVersion: 2
+        x: 820
+        y: 157
+        width: 17
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8e28712c0c180770800000000000000
+      internalID: 8577136328753819278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_14
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 1
+        width: 72
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2560947971b898810800000000000000
+      internalID: 1768097262158284370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_15
+      rect:
+        serializedVersion: 2
+        x: 803
+        y: 3
+        width: 62
+        height: 141
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fe41439b05bdc220800000000000000
+      internalID: 2507859628835032822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_16
+      rect:
+        serializedVersion: 2
+        x: 971
+        y: 84
+        width: 22
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 208943752cb0d5500800000000000000
+      internalID: 386478072338356226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shandian06_17
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 3
+        width: 60
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cbed623edbff6920800000000000000
+      internalID: 2985882009717304256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      shandian06_0: 7579139704639188060
+      shandian06_1: 7243530790212838206
+      shandian06_10: 7378429947591615390
+      shandian06_11: 8546474555973432184
+      shandian06_12: -6027276551151302007
+      shandian06_13: 8577136328753819278
+      shandian06_14: 1768097262158284370
+      shandian06_15: 2507859628835032822
+      shandian06_16: 386478072338356226
+      shandian06_17: 2985882009717304256
+      shandian06_2: 2040254103193392053
+      shandian06_3: -8929935142836398640
+      shandian06_4: 2050916542313280923
+      shandian06_5: -1914056108021356371
+      shandian06_6: -4422446890298520961
+      shandian06_7: 5248851201102340470
+      shandian06_8: -5257969083865837040
+      shandian06_9: -1418501335415335081
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

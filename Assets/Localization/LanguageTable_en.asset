@@ -156,8 +156,8 @@ MonoBehaviour:
       m_Items:
       - rid: 8068190351354495079
   - m_Id: 10366013622915072
-    m_Localized: Fixed {0}x rewards and instant capture of all fish on screen! <size=48><color=#FAFF51>
-      INFINITE SCORE! </color></size>
+    m_Localized: Get a fixed {0}x reward and capture all fish on screen to double
+      it! Max multiplier up to {0}x! MAX <size=48><color=#FAFF51> {1}X </color></size>!
     m_Metadata:
       m_Items:
       - rid: 8068190351354495079

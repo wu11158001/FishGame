@@ -1,0 +1,767 @@
+fileFormatVersion: 2
+guid: 8ff35f57f08c75e489cbb44d7b2ed5e8
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4319716468464038101
+    second: xvlie_bingjing_0
+  - first:
+      213: -4182494737707668269
+    second: xvlie_bingjing_1
+  - first:
+      213: -2721282921340319580
+    second: xvlie_bingjing_2
+  - first:
+      213: 7205152002309140495
+    second: xvlie_bingjing_3
+  - first:
+      213: -2161113949630855588
+    second: xvlie_bingjing_4
+  - first:
+      213: 7946328178491901116
+    second: xvlie_bingjing_5
+  - first:
+      213: 8595923331494713666
+    second: xvlie_bingjing_6
+  - first:
+      213: 6335534444331146547
+    second: xvlie_bingjing_7
+  - first:
+      213: -5733951209035852537
+    second: xvlie_bingjing_8
+  - first:
+      213: 2122465983228176284
+    second: xvlie_bingjing_9
+  - first:
+      213: 5106767830292531360
+    second: xvlie_bingjing_10
+  - first:
+      213: 4959538227677493293
+    second: xvlie_bingjing_11
+  - first:
+      213: -5151091688271910362
+    second: xvlie_bingjing_12
+  - first:
+      213: 541081655400040707
+    second: xvlie_bingjing_13
+  - first:
+      213: -5249367036340622594
+    second: xvlie_bingjing_14
+  - first:
+      213: -1812164101947259057
+    second: xvlie_bingjing_15
+  - first:
+      213: -1750562377488874453
+    second: xvlie_bingjing_16
+  - first:
+      213: 7913511711427910223
+    second: xvlie_bingjing_17
+  - first:
+      213: -92874145416058696
+    second: xvlie_bingjing_18
+  - first:
+      213: 7670160680458713544
+    second: xvlie_bingjing_19
+  - first:
+      213: 8715988333234752273
+    second: xvlie_bingjing_20
+  - first:
+      213: -7419134926615266997
+    second: xvlie_bingjing_21
+  - first:
+      213: -94739914761663048
+    second: xvlie_bingjing_22
+  - first:
+      213: -6272589498815223857
+    second: xvlie_bingjing_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: xvlie_bingjing_0
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 384
+        width: 39
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2fcbce32c84d04c0800000000000000
+      internalID: -4319716468464038101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_1
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 384
+        width: 37
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dc6ef3223bc4f5c0800000000000000
+      internalID: -4182494737707668269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_2
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 258
+        width: 38
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a84c2cd99f0c3ad0800000000000000
+      internalID: -2721282921340319580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_3
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 384
+        width: 38
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f00b4525297ddf360800000000000000
+      internalID: 7205152002309140495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_4
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 385
+        width: 37
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c568c19105e2202e0800000000000000
+      internalID: -2161113949630855588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_5
+      rect:
+        serializedVersion: 2
+        x: 365
+        y: 385
+        width: 38
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb4cfab7067074e60800000000000000
+      internalID: 7946328178491901116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_6
+      rect:
+        serializedVersion: 2
+        x: 452
+        y: 385
+        width: 35
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2491c321abada4770800000000000000
+      internalID: 8595923331494713666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_7
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 258
+        width: 35
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33d1c9092075ce750800000000000000
+      internalID: 6335534444331146547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_8
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 259
+        width: 38
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7051ff151c9ec60b0800000000000000
+      internalID: -5733951209035852537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_9
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 256
+        width: 37
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c976a220193847d10800000000000000
+      internalID: 2122465983228176284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_10
+      rect:
+        serializedVersion: 2
+        x: 365
+        y: 256
+        width: 39
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a88afae842eed640800000000000000
+      internalID: 5106767830292531360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_11
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 256
+        width: 39
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d28ffa6cdb1d3d440800000000000000
+      internalID: 4959538227677493293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_12
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 128
+        width: 39
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62ae513b665a388b0800000000000000
+      internalID: -5151091688271910362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_13
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 129
+        width: 37
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 309899816ee428700800000000000000
+      internalID: 541081655400040707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_14
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 129
+        width: 38
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efaa5472e708627b0800000000000000
+      internalID: -5249367036340622594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_15
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 128
+        width: 38
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4708bcb956e9d6e0800000000000000
+      internalID: -1812164101947259057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_16
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 128
+        width: 37
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b24cc94eac0c4b7e0800000000000000
+      internalID: -1750562377488874453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_17
+      rect:
+        serializedVersion: 2
+        x: 452
+        y: 131
+        width: 35
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4add8559f072dd60800000000000000
+      internalID: 7913511711427910223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_18
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 1
+        width: 35
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b868a1f47b06bef0800000000000000
+      internalID: -92874145416058696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_19
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 1
+        width: 38
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c9f8e82082e17a60800000000000000
+      internalID: 7670160680458713544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_20
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 1
+        width: 38
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11b08e4b53965f870800000000000000
+      internalID: 8715988333234752273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_21
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 0
+        width: 36
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b49376ea710f90990800000000000000
+      internalID: -7419134926615266997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_22
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 0
+        width: 40
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bd849aac8a6faef0800000000000000
+      internalID: -94739914761663048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xvlie_bingjing_23
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 0
+        width: 40
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc7e54d951943f8a0800000000000000
+      internalID: -6272589498815223857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      xvlie_bingjing_0: -4319716468464038101
+      xvlie_bingjing_1: -4182494737707668269
+      xvlie_bingjing_10: 5106767830292531360
+      xvlie_bingjing_11: 4959538227677493293
+      xvlie_bingjing_12: -5151091688271910362
+      xvlie_bingjing_13: 541081655400040707
+      xvlie_bingjing_14: -5249367036340622594
+      xvlie_bingjing_15: -1812164101947259057
+      xvlie_bingjing_16: -1750562377488874453
+      xvlie_bingjing_17: 7913511711427910223
+      xvlie_bingjing_18: -92874145416058696
+      xvlie_bingjing_19: 7670160680458713544
+      xvlie_bingjing_2: -2721282921340319580
+      xvlie_bingjing_20: 8715988333234752273
+      xvlie_bingjing_21: -7419134926615266997
+      xvlie_bingjing_22: -94739914761663048
+      xvlie_bingjing_23: -6272589498815223857
+      xvlie_bingjing_3: 7205152002309140495
+      xvlie_bingjing_4: -2161113949630855588
+      xvlie_bingjing_5: 7946328178491901116
+      xvlie_bingjing_6: 8595923331494713666
+      xvlie_bingjing_7: 6335534444331146547
+      xvlie_bingjing_8: -5733951209035852537
+      xvlie_bingjing_9: 2122465983228176284
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
