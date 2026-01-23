@@ -12,7 +12,6 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
 
     //避免重複加載資源
     HashSet<ViewEnum> LoadViewAsyncSet = new();
-    HashSet<GamePrefabEnum> LoadGamePrefabAsyncSet = new();
 
     // 紀錄場景已開啟介面
     private Dictionary<ViewEnum, List<PrefabInstance>> SceneViewDic = new();
@@ -606,7 +605,6 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             }
         }
         GamePrefabDic.Clear();
-        LoadGamePrefabAsyncSet.Clear();
     }
 
     /// <summary>
@@ -614,12 +612,6 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// </summary>
     public async Task CreateGamePrefab(GamePrefabEnum prefabType, Transform parent = null, Action<GameObject> callback = null)
     {
-        // 避免重複加載資源
-        if (LoadGamePrefabAsyncSet.Contains(prefabType))
-            return;
-
-        LoadGamePrefabAsyncSet.Add(prefabType);
-
         try
         {
             AsyncOperationHandle<GameObject> loadHandle = Addressables.LoadAssetAsync<GameObject>(prefabType.ToString());
@@ -643,10 +635,6 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         catch (Exception e)
         {
             Debug.LogError($"創建遊戲預製物{prefabType}錯誤: {e}");
-        }
-        finally
-        {
-            LoadGamePrefabAsyncSet.Remove(prefabType);
         }
     }
 

@@ -5,46 +5,44 @@ using System;
 public class LocalPool : MonoBehaviour
 {
     Dictionary<GamePrefabEnum, List<GameObject>> LocalPoolDic = new();
+    // 追蹤哪些 Prefab 正在載入中，避免重複觸發邏輯衝突
+    HashSet<GamePrefabEnum> loadingKeys = new();
 
     /// <summary>
     /// 獲取物件
     /// </summary>
     public void AcquirePrefabInstance<T>(GamePrefabEnum prefabType, Vector3 pos, Transform parent, Action<T> callback)
     {
-        if(LocalPoolDic.ContainsKey(prefabType))
+        // 尋找現有的閒置物件
+        if (LocalPoolDic.TryGetValue(prefabType, out var list))
         {
-            GameObject takeObj = null;
-            foreach (var obj in LocalPoolDic[prefabType])
+            GameObject takeObj = list.Find(obj => obj != null && !obj.activeSelf);
+            if (takeObj != null)
             {
-                if(!obj.activeSelf)
-                {
-                    takeObj = obj;
-                    break;
-                }
+                ApplyObject(takeObj, pos, parent, callback);
+                return;
             }
+        }
 
-            if(takeObj != null)
-            {
-                if (takeObj.TryGetComponent<T>(out T t))
-                {
-                    takeObj.transform.position = pos;
-                    takeObj.transform.SetParent(parent);
-                    takeObj.SetActive(true);
-                    callback?.Invoke(t);
-                }
-                else
-                {
-                    Debug.LogError($"獲取本地物件池錯誤: {prefabType}");
-                }
-            }
-            else
-            {
-                CreateNew(prefabType, pos, parent, callback);
-            }
+        // 如果沒有閒置物件，直接創建新的
+        CreateNew(prefabType, pos, parent, callback);
+    }
+
+    /// <summary>
+    /// 物件設置
+    /// </summary>
+    private void ApplyObject<T>(GameObject obj, Vector3 pos, Transform parent, Action<T> callback)
+    {
+        if (obj.TryGetComponent<T>(out T t))
+        {
+            obj.transform.SetParent(parent);
+            obj.transform.position = pos;
+            obj.SetActive(true);
+            callback?.Invoke(t);
         }
         else
         {
-            CreateNew(prefabType, pos, parent, callback);
+            Debug.LogError($"組件類型不符: {typeof(T)}");
         }
     }
 
@@ -53,25 +51,22 @@ public class LocalPool : MonoBehaviour
     /// </summary>
     private async void CreateNew<T>(GamePrefabEnum prefabType, Vector3 pos, Transform parent, Action<T> callback)
     {
+        // 確保 Dictionary 裡有該 List，避免非同步競爭
+        if (!LocalPoolDic.ContainsKey(prefabType))
+        {
+            LocalPoolDic[prefabType] = new List<GameObject>();
+        }
+
         await AddressableManagement.Instance.CreateGamePrefab(
-                prefabType: prefabType,
-                parent: parent,
-                callback: (obj) =>
+            prefabType: prefabType,
+            parent: parent,
+            callback: (obj) =>
+            {
+                if (obj != null)
                 {
-                    if (obj.TryGetComponent<T>(out T t))
-                    {
-                        obj.transform.position = pos;
-
-                        if (!LocalPoolDic.ContainsKey(prefabType))
-                            LocalPoolDic[prefabType] = new List<GameObject>();
-
-                        LocalPoolDic[prefabType].Add(obj);
-                        callback?.Invoke(t);
-                    }
-                    else
-                    {
-                        Debug.LogError($"獲取本地物件池錯誤: {prefabType}");
-                    }
-                });
+                    LocalPoolDic[prefabType].Add(obj);
+                    ApplyObject(obj, pos, parent, callback);
+                }
+            });
     }
 }

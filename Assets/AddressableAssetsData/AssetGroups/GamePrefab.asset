@@ -55,6 +55,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bac9612cdf5394943884fcdf127178b7
+    m_Address: DragonFullHitEffect
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bb2265c52c119b9459bf12b2244c402e
     m_Address: SpinWheel
     m_ReadOnly: 0

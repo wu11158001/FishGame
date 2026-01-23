@@ -13,5 +13,5 @@ AssetOrigin:
   productId: 270114
   packageName: Stylized Water Effect Pack
   packageVersion: 1.0
-  assetPath: Assets/NamuFX/_SharedAssets/Shader/MasterShader/SH_Master_improved.shadergraph
+  assetPath: Assets/Shaders/WaterEffect/MasterShader/SH_Master_improved.shadergraph
   uploadId: 640167

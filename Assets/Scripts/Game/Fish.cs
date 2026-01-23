@@ -115,7 +115,7 @@ public class Fish : NetworkBehaviour
         // 金龍
         if(FishData_Network.FishType == NetworkPrefabEnum.DragonFish && !Object.HasStateAuthority)
         {
-            GetAnimProgress();
+            GetDragonAnimProgress();
         }
     }
 
@@ -314,12 +314,13 @@ public class Fish : NetworkBehaviour
         ShowCoinText(str: fishHitData.EruptionCoinString.ToString(), seatIndex: fishHitData.SeatIndex);
 
         // 特殊魚，顯示捕獲介面
-        if (fishHitData.FishType == NetworkPrefabEnum.StingrayFish ||
-            fishHitData.FishType == NetworkPrefabEnum.SharkFish)
+        if (FishData_Network.FishType == NetworkPrefabEnum.StingrayFish ||
+            FishData_Network.FishType == NetworkPrefabEnum.SharkFish ||
+            FishData_Network.FishType == NetworkPrefabEnum.DragonFish)
         {
             string rewardStr = StringUtility.CurrencyFormat(fishHitData.Reward);
 
-            switch (fishHitData.FishType)
+            switch (FishData_Network.FishType)
             {
                 case NetworkPrefabEnum.SharkFish:
                     rewardStr = "Spin !";
@@ -328,7 +329,7 @@ public class Fish : NetworkBehaviour
 
             AddressableManagement.Instance.OpenSpecialFishCatchView(
                     seatIndex: fishHitData.SeatIndex,
-                    sprite: TextureManagement.Instance.GetFishTexture(fishHitData.FishType),
+                    sprite: TextureManagement.Instance.GetFishTexture(FishData_Network.FishType),
                     rewardStr: rewardStr);
         }
     }
@@ -366,20 +367,6 @@ public class Fish : NetworkBehaviour
                                 spinWheel.SetData(whellData);
                             }
                         });
-    }
-
-    /// <summary>
-    /// 延遲移除物件，等待RPC傳遞
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator IYieldDespawn()
-    {
-        yield return new WaitForSeconds(1);
-
-        if (Object.HasStateAuthority)
-        {
-            Runner.Despawn(Object);
-        }
     }
 
     /// <summary>
@@ -431,21 +418,35 @@ public class Fish : NetworkBehaviour
         StartCoroutine(IYieldDespawn());
     }
 
+    /// <summary>
+    /// 延遲移除物件，等待RPC傳遞
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator IYieldDespawn()
+    {
+        yield return new WaitForSeconds(2);
+
+        if (Object.HasStateAuthority)
+        {
+            Runner.Despawn(Object);
+        }
+    }
+
     #endregion
 
     #region 特殊判斷
 
     /// <summary>
-    /// 獲取動畫進度
+    /// 獲取金龍動畫進度
     /// </summary>
-    private void GetAnimProgress()
+    private void GetDragonAnimProgress()
     {
         Debug.Log("獲取動畫進度");
-        RPC_GetAnimProgress();
+        RPC_GetDragonAnimProgress();
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_GetAnimProgress()
+    public void RPC_GetDragonAnimProgress()
     {
         AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0); 
         float progress = stateInfo.normalizedTime;
@@ -453,14 +454,14 @@ public class Fish : NetworkBehaviour
 
         Debug.Log($"動畫進度: {stateName} = {progress}");
 
-        RPC_SendAnimProgress(stateName, progress);
+        RPC_SendDragonAnimProgress(stateName, progress);
     }
 
     /// <summary>
     /// 發送給所有人金龍動畫進度
     /// </summary>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_SendAnimProgress(string stateName, float progress)
+    private void RPC_SendDragonAnimProgress(string stateName, float progress)
     {
         if(!Object.HasStateAuthority)
         {
@@ -499,9 +500,6 @@ public struct FishHitData : INetworkStruct
 {
     /// <summary> 玩家 </summary>
     public PlayerRef Player;
-
-    /// <summary> 魚類型 </summary>
-    public NetworkPrefabEnum FishType;
 
     /// <summary> 爆金文字 </summary>
     public NetworkString<_32> EruptionCoinString;

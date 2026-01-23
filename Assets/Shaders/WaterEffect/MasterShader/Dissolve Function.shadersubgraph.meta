@@ -13,5 +13,5 @@ AssetOrigin:
   productId: 270114
   packageName: Stylized Water Effect Pack
   packageVersion: 1.0
-  assetPath: Assets/NamuFX/_SharedAssets/Shader/MasterShader/Dissolve Function.shadersubgraph
+  assetPath: Assets/Shaders/WaterEffect/MasterShader/Dissolve Function.shadersubgraph
   uploadId: 640167

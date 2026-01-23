@@ -770,7 +770,7 @@ public class GameTerrain : NetworkBehaviour
         {
             if (FishPool.GetChild(i).TryGetComponent<Fish>(out var fish))
             {
-                if(fish.gameObject.activeInHierarchy)
+                if(fish.gameObject.activeInHierarchy && fish.Object.IsValid)
                 {
                     fish.SetFishDuration(finishTime: WaterWaveDuration - 1f);
                 }                

@@ -198,6 +198,9 @@ public enum GamePrefabEnum
     /// <summary> 技能_鎖定 </summary>
     Skill_Locking = 50,
 
+    /// <summary> 金龍全屏捕獲特效 </summary>
+    DragonFullHitEffect = 70,
+
     /// <summary> 噴發物件 </summary>
     StingrayFishCoin = 90,      // 特殊魚硬幣_魟魚
     SharkFishCoin = 91,         // 特殊魚硬幣_鯊魚

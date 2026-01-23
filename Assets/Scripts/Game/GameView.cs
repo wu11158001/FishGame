@@ -112,6 +112,7 @@ public class GameView : BasicView
     {
         MaskObj.SetActive(isShow);
         GameFloatBtn?.SetEnable(!isShow);
+        CoinStoreBtn.interactable = !isShow;
     }
 
     /// <summary>

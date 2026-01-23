@@ -1,6 +1,7 @@
 using UnityEngine;
 using Fusion;
 using System;
+using System.Collections;
 
 public class Bullet : NetworkBehaviour
 {
@@ -15,6 +16,7 @@ public class Bullet : NetworkBehaviour
     Fish LocalTargetFish;
     Transform TargetLockingObj;
     GameView GameView;
+    SpecialEffectController SpecialEffectController;
 
     readonly Vector2 MinBounds = new(-10f, -6f);
     readonly Vector2 MaxBounds = new(10f, 6f);
@@ -200,7 +202,7 @@ public class Bullet : NetworkBehaviour
             return;
         }
 
-        // 產生擊中效果
+        // 產生子彈擊中效果
         NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                         key: NetworkPrefabEnum.HitEffect,
                         Pos: transform.position,
@@ -321,14 +323,6 @@ public class Bullet : NetworkBehaviour
                     break;
             }
 
-            // 產生魚擊中效果
-            NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
-                            key: NetworkPrefabEnum.FishHitEffect,
-                            Pos: fish.transform.position,
-                            rot: Quaternion.identity,
-                            parent: EffectPool,
-                            player: Object.InputAuthority);
-
             // 判斷獎池
             if (TempDataManagement.Instance.CurrentLevelData.Jackpot < reward)
             {
@@ -345,7 +339,19 @@ public class Bullet : NetworkBehaviour
                 return;
             }
 
-            switch(fishData.FishType)
+            // 產生魚擊中效果
+            BoxCollider[] colliders = fish.GetComponentsInChildren<BoxCollider>();
+            foreach (var collider in colliders)
+            {
+                NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                            key: NetworkPrefabEnum.FishHitEffect,
+                            Pos: collider.transform.position,
+                            rot: Quaternion.identity,
+                            parent: EffectPool,
+                            player: Object.InputAuthority);
+            }
+
+            switch (fishData.FishType)
             {
                 // 特殊魚_鯊魚
                 case NetworkPrefabEnum.SharkFish:
@@ -356,13 +362,36 @@ public class Bullet : NetworkBehaviour
                     // 開啟遮罩
                     GameView.MaskEnable(true);
                     break;
+
+                // 特殊魚_金龍
+                case NetworkPrefabEnum.DragonFish:
+                    // 不可射擊
+                    TempDataManagement.Instance.IsStopShot = true;
+                    // 開啟遮罩
+                    GameView.MaskEnable(true);
+
+                    // 金龍全屏捕獲魚
+                    if (SpecialEffectController == null)
+                    {
+                        SpecialEffectController = UnityEngine.Object.FindFirstObjectByType<SpecialEffectController>();
+                        if (SpecialEffectController != null)
+                        {
+                            WaterFullHitData waterFullHitData = new()
+                            {
+                                PlayerRef = Runner.LocalPlayer,
+                                DefaultCost = currDefaultCost,
+                                SeatIndex = seatIndex,
+                            };
+                            SpecialEffectController.DragonFullHit(data: waterFullHitData);
+                        }
+                    }
+                    break;
             }
 
             // 魚被擊中
             FishHitData fishHitData = new()
             {
                 Player = Runner.LocalPlayer,
-                FishType = fishData.FishType,
                 EruptionCoinString = eruptionCoinString,
                 Reward = reward,
                 SeatIndex = seatIndex,

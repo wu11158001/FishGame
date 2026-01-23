@@ -210,9 +210,6 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         Debug.Log($"斷開連線");
 
-        if (Canvas_Global.Instance != null)
-            Canvas_Global.Instance.ShowLoading();
-
         // 移除物件池
         if(FusionPool != null)
         {

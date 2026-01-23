@@ -17,8 +17,12 @@ public class SceneManagement : SingletonMonoBehaviour<SceneManagement>
     /// </summary>
     public void LoadScene(SceneEnum sceneEnum, Action callback = null)
     {
-        if (!Application.isPlaying)
+        // 當前場景與轉換場景一樣
+        if (SceneManager.GetActiveScene().name == sceneEnum.ToString())
             return;
+
+        if (Canvas_Global.Instance != null)
+            Canvas_Global.Instance.ShowLoading();
 
         StartCoroutine(ILoadScene(sceneEnum, callback));
     }

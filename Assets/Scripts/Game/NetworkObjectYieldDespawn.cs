@@ -8,10 +8,7 @@ public class NetworkObjectYieldDespawn : NetworkBehaviour
 
     public override void Spawned()
     {
-        if(Object.HasStateAuthority)
-        {
-            StartCoroutine(IYieldDespawn());
-        }
+        StartCoroutine(IYieldDespawn());        
     }
 
     /// <summary>
@@ -22,6 +19,9 @@ public class NetworkObjectYieldDespawn : NetworkBehaviour
     {
         yield return new WaitForSeconds(DespawnTime);
 
-        Runner.Despawn(Object);
+        if (Object.HasStateAuthority)
+        {
+            Runner.Despawn(Object);
+        }        
     }
 }
