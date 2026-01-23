@@ -17,6 +17,7 @@ public class Bullet : NetworkBehaviour
     Transform TargetLockingObj;
     GameView GameView;
     SpecialEffectController SpecialEffectController;
+    CameraShake CameraShake;
 
     readonly Vector2 MinBounds = new(-10f, -6f);
     readonly Vector2 MaxBounds = new(10f, 6f);
@@ -353,6 +354,15 @@ public class Bullet : NetworkBehaviour
 
             switch (fishData.FishType)
             {
+                // 特殊魚_魟魚
+                case NetworkPrefabEnum.StingrayFish:
+                    // 攝影機震動
+                    if (CameraShake == null)
+                        CameraShake = FindFirstObjectByType<CameraShake>();
+                    if (CameraShake != null)
+                        CameraShake.DoShake();
+                    break;
+
                 // 特殊魚_鯊魚
                 case NetworkPrefabEnum.SharkFish:
                     // 不及時更新金幣
@@ -361,6 +371,12 @@ public class Bullet : NetworkBehaviour
                     TempDataManagement.Instance.IsStopShot = true;
                     // 開啟遮罩
                     GameView.MaskEnable(true);
+
+                    // 攝影機震動
+                    if (CameraShake == null)
+                        CameraShake = FindFirstObjectByType<CameraShake>();
+                    if (CameraShake != null)
+                        CameraShake.DoShake();
                     break;
 
                 // 特殊魚_金龍
@@ -371,7 +387,6 @@ public class Bullet : NetworkBehaviour
                     // 金龍全屏捕獲魚
                     if (SpecialEffectController == null)
                         SpecialEffectController = UnityEngine.Object.FindFirstObjectByType<SpecialEffectController>();
-
                     if (SpecialEffectController != null)
                     {
                         WaterFullHitData waterFullHitData = new()
@@ -384,6 +399,12 @@ public class Bullet : NetworkBehaviour
                         };
                         SpecialEffectController.DragonFullHit(data: waterFullHitData);
                     }
+
+                    // 攝影機震動
+                    if (CameraShake == null)
+                        CameraShake = FindFirstObjectByType<CameraShake>();
+                    if (CameraShake != null)
+                        CameraShake.DoShake();
                     break;
             }
 

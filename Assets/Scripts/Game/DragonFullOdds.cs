@@ -24,6 +24,8 @@ public class DragonFullOdds : MonoBehaviour
     double TotalReward = 0;
     Vector3 TargetRecycle;
 
+    CameraShake CameraShake;
+
     Action FinishCallback;
 
     private void OnDestroy()
@@ -139,5 +141,11 @@ public class DragonFullOdds : MonoBehaviour
         OddsText.rectTransform.DOKill();
         OddsText.rectTransform.localScale = Vector3.one;
         OddsText.rectTransform.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), 0.5f, 10, 1f);
+
+        // 攝影機震動
+        if (CameraShake == null)
+            CameraShake = FindFirstObjectByType<CameraShake>();
+        if (CameraShake != null)
+            CameraShake.DoShake();
     }
 }
