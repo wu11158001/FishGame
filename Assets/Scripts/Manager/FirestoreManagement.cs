@@ -110,9 +110,9 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
             StopCoroutine(HeartbeatCoroutine);
 
         var updates = new Dictionary<string, object>
-            {
-                { "HeartbeatUpdateTime", 0 }
-            };
+        {
+            { "HeartbeatUpdateTime", 0 }
+        };
 
         UpdateDataToFirestore(
             path: FirestoreCollectionNameEnum.AccountData,
@@ -613,6 +613,11 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     #endregion
 }
 
+#region Firestore
+
+/// <summary>
+/// Firestore 回傳狀態
+/// </summary>
 [Serializable]
 public class FirestoreResponse
 {
@@ -640,13 +645,23 @@ public class FirestoreResponse
     public string JsonData;
 }
 
+#endregion
+
+#region 帳戶
+
 /// <summary>
 /// 帳戶資料
 /// </summary>
 [Serializable]
 public class AccountData
 {
-    /// <summary> 心跳包最後更新時間 </summary>
+    /// <summary> 註冊時間(時間戳) </summary>
+    public long RegisterTime;
+
+    /// <summary> 最後登入時間(時間戳) </summary>
+    public long LastLoginTime;
+
+    /// <summary> 心跳包最後更新時間(時間戳) </summary>
     public long HeartbeatUpdateTime;
 
     /// <summary> 帳號 </summary>
@@ -697,6 +712,10 @@ public class AccountData
     }
     public GamePeriod GamePeriod;
 }
+
+#endregion
+
+#region 遊戲
 
 /// <summary>
 /// 魚群資料
@@ -859,6 +878,10 @@ public class LevelData
     public float SpecialFishTime;
 }
 
+#endregion
+
+#region 商店
+
 /// <summary>
 /// 砲台資料
 /// </summary>
@@ -920,3 +943,22 @@ public class CoinStoreData
     /// <summary> 獲得金幣 </summary>
     public double GetCoin;
 }
+
+#endregion
+
+#region 活動
+
+/// <summary>
+/// 登入與註冊獎勵
+/// </summary>
+[Serializable]
+public class LoginAndRegisterData
+{
+    /// <summary> 每日登入獎勵 </summary>
+    public double LoginReward;
+
+    /// <summary> 註冊獎勵 </summary>
+    public double RegisterReward;
+}
+
+#endregion

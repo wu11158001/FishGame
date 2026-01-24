@@ -10,7 +10,10 @@ public abstract class BasicView : MonoBehaviour
     [Header("Basic YieldShow")]
     [SerializeField] bool IsShowYieldShow;
     [ShowIf(nameof(IsShowYieldShow))] [SerializeField] protected CanvasGroup MainCanvasGroup;
-    [ShowIf(nameof(IsShowYieldShow))] [SerializeField] protected float FadeInTime = 1;
+
+    [Header("Basic FadeIn")]
+    [SerializeField] bool IsFadeIn;
+    [ShowIf(nameof(IsFadeIn))] [SerializeField] protected float FadeInTime = 1;
 
     [Header("Basic CloseBtn")]
     [SerializeField] bool IsShowClose;

@@ -1,3 +1,5 @@
+#region 通用
+
 /// <summary>
 /// 場景
 /// </summary>
@@ -27,24 +29,6 @@ public enum Language
 
     /// <summary> 英文 </summary>
     en,
-}
-
-/// <summary>
-/// 遊戲狀態
-/// </summary>
-public enum GameState
-{
-    /// <summary> 一般 </summary>
-    Normal,
-
-    /// <summary> 浪潮 </summary>
-    WaterWave,
-
-    /// <summary> 浪潮魚群 </summary>
-    WaterWaveFishs,
-
-    /// <summary> 特殊魚 </summary>
-    SpecialFish,
 }
 
 /// <summary>
@@ -86,8 +70,18 @@ public enum ViewEnum
     GuideView,
 
     /// <summary> 特殊魚獲取介面 </summary>
-    SpecialFishCatchView
+    SpecialFishCatchView,
+
+    /// <summary> 登入獎勵介面 </summary>
+    LoginRewardView,
+
+    /// <summary> 註冊獎勵介面 </summary>
+    RegisterRewardView,
 }
+
+#endregion
+
+#region Firestore
 
 /// <summary>
 /// Firestore 集合名稱
@@ -108,6 +102,18 @@ public enum FirestoreCollectionNameEnum
 
     /// <summary> 金幣商店資料 </summary>
     CoinStoreData,
+
+    /// <summary> 活動資料 </summary>
+    ActivityData,
+}
+
+/// <summary>
+/// Firestore 活動資料文件名稱
+/// </summary>
+public enum FirestoreActivityDataFileNameEnum
+{
+    /// <summary> 活動_登入與註冊獎勵 </summary>
+    LoginAndRegister,
 }
 
 /// <summary>
@@ -135,6 +141,28 @@ public enum FirestoreStatusEnum
 
     /// <summary> 監聽資料變更 </summary>
     DataChanged
+}
+
+#endregion
+
+#region 遊戲
+
+/// <summary>
+/// 遊戲狀態
+/// </summary>
+public enum GameState
+{
+    /// <summary> 一般 </summary>
+    Normal,
+
+    /// <summary> 浪潮 </summary>
+    WaterWave,
+
+    /// <summary> 浪潮魚群 </summary>
+    WaterWaveFishs,
+
+    /// <summary> 特殊魚 </summary>
+    SpecialFish,
 }
 
 /// <summary>
@@ -309,6 +337,21 @@ public enum CheckJoinRoomDataEnum
     TurretData,
 }
 
+#endregion
+
+#region 商店
+
+/// <summary>
+/// 金幣商店
+/// </summary>
+public enum StoreCoinEnum
+{
+    None = -1,
+    StoreCoin_0,
+    StoreCoin_1,
+    StoreCoin_2,
+}
+
 /// <summary>
 /// 砲台
 /// </summary>
@@ -321,13 +364,4 @@ public enum TurretEnum
     Turret_3,
 }
 
-/// <summary>
-/// 金幣商店
-/// </summary>
-public enum StoreCoinEnum
-{
-    None = -1,
-    StoreCoin_0,
-    StoreCoin_1,
-    StoreCoin_2,
-}
+#endregion

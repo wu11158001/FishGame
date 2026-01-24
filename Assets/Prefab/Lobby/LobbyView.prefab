@@ -526,6 +526,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6645967368217503206}
   - component: {fileID: 7173416626506663056}
+  - component: {fileID: -3988503023591024982}
   - component: {fileID: 6715337969855491096}
   - component: {fileID: 2621985044971943519}
   - component: {fileID: 5464565605303070928}
@@ -572,6 +573,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LobbyView
   IsShowYieldShow: 0
   MainCanvasGroup: {fileID: 6715337969855491096}
+  IsFadeIn: 0
   FadeInTime: 1
   IsShowClose: 0
   BgBtn: {fileID: 0}
@@ -582,6 +584,18 @@ MonoBehaviour:
   CoinText: {fileID: 4597670074497809413}
   StartBtn: {fileID: 2945640181680111989}
   LogoutBtn: {fileID: 3260619290830277850}
+--- !u!114 &-3988503023591024982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6869951281208949090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7009a4b03370fbd45bbf2c263cf154fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LobbyPopupController
 --- !u!225 &6715337969855491096
 CanvasGroup:
   m_ObjectHideFlags: 0
