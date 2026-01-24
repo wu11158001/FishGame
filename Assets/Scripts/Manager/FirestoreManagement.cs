@@ -47,7 +47,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     Coroutine HeartbeatCoroutine;
 
     // 心跳包發送間格時間(秒)
-    public int HeartbeatTime { get; private set; } = 30;
+    public int HeartbeatTime { get; private set; } = 300;
 
     protected override void OnDestroy()
     {
@@ -69,7 +69,8 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     private void Start()
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
-        RegisterOnCloseEvent(gameObject.name, nameof(OnBrowserClose));
+        // 綁定滑鼠鼠移出Canvas事件
+        BindMouseEvents(gameObject.name, nameof(OnMouseLeaveCanvas), nameof(OnMouseEnterCanvas));
 #endif
     }
 
@@ -592,16 +593,26 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
 
     #endregion
 
-    #region 視窗事件
+    #region Web事件
 
     /// <summary>
-    /// 視窗關閉事件
+    /// 綁定滑鼠鼠移出Canvas事件
     /// </summary>
     [DllImport("__Internal")]
-    private static extern void RegisterOnCloseEvent(string callbackObj, string callbackMethod);
-    public void OnBrowserClose()
+    private static extern void BindMouseEvents(string callbackObj, string leaveCallbackMethod, string enterCallbackMethod);
+    public void OnMouseLeaveCanvas()
     {
+        Debug.Log("滑鼠離開了遊戲區域！");
         StopHeartbeat();
+
+        if (TempDataManagement.Instance != null)
+            TempDataManagement.Instance.SendUpdateAccountCoinData();
+    }
+
+    public void OnMouseEnterCanvas()
+    {
+        Debug.Log("滑鼠回來了！");
+        StartHeartbeat();
     }
 
     #endregion

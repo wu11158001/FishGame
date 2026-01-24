@@ -21,9 +21,6 @@ public class SceneManagement : SingletonMonoBehaviour<SceneManagement>
         if (SceneManager.GetActiveScene().name == sceneEnum.ToString())
             return;
 
-        if (Canvas_Global.Instance != null)
-            Canvas_Global.Instance.ShowLoading();
-
         StartCoroutine(ILoadScene(sceneEnum, callback));
     }
 

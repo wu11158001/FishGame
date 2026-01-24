@@ -8,8 +8,8 @@ public static class WaterWaveFishManagement
     /// </summary>
     private static Dictionary<LevelEnum, WaterWaveFishData> WaterWaveFishDic = new()
     {
+        // 經典關卡
         {
-            // 經典關卡
             LevelEnum.ClassicLevel,
             new()
             {
@@ -33,8 +33,8 @@ public static class WaterWaveFishManagement
             }
         },
 
+        // 鯊魚關卡
         {
-            // 鯊魚關卡
             LevelEnum.SharkLevel,
             new()
             {
@@ -54,6 +54,31 @@ public static class WaterWaveFishManagement
                     NetworkPrefabEnum.NormalFish_1,
                     NetworkPrefabEnum.NormalFish_2,
                     NetworkPrefabEnum.NormalFish_2,
+                }
+            }
+        },
+
+        // 金龍關卡
+        {
+            LevelEnum.DragonLevel,
+            new()
+            {
+                SpawnBetweenTime = 4.5f,
+                MoveDuration = 33,
+                FishsType = new()
+                {
+                    NetworkPrefabEnum.NormalFish_3,
+                    NetworkPrefabEnum.NormalFish_4,
+                    NetworkPrefabEnum.NormalFish_3,
+                    NetworkPrefabEnum.NormalFish_4,
+                    NetworkPrefabEnum.NormalFish_1,
+                    NetworkPrefabEnum.NormalFish_0,
+                    NetworkPrefabEnum.NormalFish_1,
+                    NetworkPrefabEnum.NormalFish_0,
+                    NetworkPrefabEnum.NormalFish_9,
+                    NetworkPrefabEnum.NormalFish_9,
+                    NetworkPrefabEnum.NormalFish_9,
+                    NetworkPrefabEnum.NormalFish_9,
                 }
             }
         },

@@ -97,6 +97,8 @@ public class LoginView : BasicView
 
         yield return IYieldShow();
 
+        Canvas_Global.Instance.CloseLoading();
+
         // 自動填寫紀錄帳號
         LoginInfo loginInfo = PlayerPrefsManagement.GetPreLoginInfo();
         if (loginInfo != null)
@@ -110,6 +112,7 @@ public class LoginView : BasicView
         // 判斷是否主動登出
         if (!IsLogout)
         {
+            // 自動登入
             SendLogin();
         }
         else
@@ -287,11 +290,6 @@ public class LoginView : BasicView
             panelType == PanelType.Login ?
             "Log In" :
             "Register";
-
-        TutleText.color =
-            panelType == PanelType.Login ?
-            StringUtility.GetColor("004D0A") :
-            StringUtility.GetColor("0D65AB");
             
         LocalizationManagement.Instance.UpdateKey(
             localizeEvent: TitleLocalize,

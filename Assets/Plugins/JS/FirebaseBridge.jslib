@@ -240,4 +240,21 @@ mergeInto(LibraryManager.library, {
             SendMessage(unityObj, callback);
         };
     },
+
+    // 滑鼠鼠移出Canvas
+    // callbackObj: Unity 回傳物件
+    // callbackMethod: Unity 回傳方法
+    BindMouseEvents: function (callbackObj, leaveCallbackMethod, enterCallbackMethod) {
+            var unityObj = UTF8ToString(callbackObj);
+            var leaveCallback = UTF8ToString(leaveCallbackMethod);
+            var enterCallback = UTF8ToString(enterCallbackMethod);
+
+        var canvas = document.querySelector("#unity-canvas");
+        canvas.addEventListener('mouseleave', function() {
+            SendMessage(unityObj, leaveCallback);
+        });
+        canvas.addEventListener('mouseenter', function() {
+            SendMessage(unityObj, enterCallback);
+        });
+    },
 });

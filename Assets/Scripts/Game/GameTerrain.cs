@@ -319,7 +319,6 @@ public class GameTerrain : NetworkBehaviour
                 // UI清理
                 if (GameView == null)
                     GameView = FindFirstObjectByType<GameView>();
-
                 if (GameView != null)
                     GameView.PlayerCostChange(seatIndex: index, cost: -1);
 
@@ -763,17 +762,15 @@ public class GameTerrain : NetworkBehaviour
         IsShowWaterWave = true;
 
         // 場上魚移動加速
-        if (FishPool == null)
-            FishPool = GameObject.Find(FusionPoolNameEnum.FishPool.ToString()).transform;
-
-        for (int i = 0; i < FishPool.childCount; i++)
+        foreach (var netObj in Runner.GetAllNetworkObjects())
         {
-            if (FishPool.GetChild(i).TryGetComponent<Fish>(out var fish))
+            if (netObj != null && netObj.IsValid && netObj.HasStateAuthority && netObj.gameObject.activeInHierarchy)
             {
-                if(fish.gameObject.activeInHierarchy && fish.Object.IsValid)
+                Fish fish = netObj.GetComponent<Fish>();
+                if (fish != null)
                 {
                     fish.SetFishDuration(finishTime: WaterWaveDuration - 1f);
-                }                
+                }
             }
         }
     }
@@ -913,6 +910,41 @@ public class GameTerrain : NetworkBehaviour
         }
 
         CurrWaterWaveFishIndex++;
+    }
+
+    #endregion
+
+    #region 特殊效果
+
+    /// <summary>
+    /// 冰凍效果
+    /// </summary>
+    public void DoFreeze()
+    {        
+        RPC_DoFreeze();
+
+        // 場上魚移停止移動
+        foreach (var netObj in Runner.GetAllNetworkObjects())
+        {
+            if (netObj != null && netObj.IsValid && netObj.HasStateAuthority && netObj.gameObject.activeInHierarchy)
+            {
+                Fish fish = netObj.GetComponent<Fish>();
+                if (fish != null)
+                {
+                    fish.AddFreezeTime(LocalData.FreezeTime);
+                }
+            }
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_DoFreeze()
+    {
+        // 所有玩家顯示冰凍效果
+        if (GameView == null)
+            GameView = FindFirstObjectByType<GameView>();
+        if (GameView != null)
+            GameView.ShowFreezeEffect();
     }
 
     #endregion

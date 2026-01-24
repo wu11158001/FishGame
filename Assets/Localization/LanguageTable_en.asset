@@ -162,7 +162,7 @@ MonoBehaviour:
       m_Items:
       - rid: 8068190351354495079
   - m_Id: 10367884332830720
-    m_Localized: INFINITE SCORE
+    m_Localized: Freezing item in use!
     m_Metadata:
       m_Items: []
   references:

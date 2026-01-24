@@ -75,6 +75,11 @@ public class SpecialEffectController : NetworkBehaviour
             prefabType: GamePrefabEnum.DragonFullOdds,
             callback: (obj) =>
             {
+                obj.transform.rotation =
+                    TempDataManagement.Instance.IsMirror ?
+                    Quaternion.Euler(0, 180, 0) :
+                    Quaternion.Euler(0, 0, 0);
+
                 // 完成事件
                 Action finishCallback = () =>
                 {

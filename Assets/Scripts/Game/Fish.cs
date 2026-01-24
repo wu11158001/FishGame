@@ -16,6 +16,8 @@ public class Fish : NetworkBehaviour
     [Networked] TickTimer MoveTimer { get; set; }
     // 總移動時間
     [Networked] float TotalDuration { get; set; }
+    // 冰凍時間
+    [Networked] TickTimer FreezeTimer { get; set; }
     // 魚資料
     [Networked] FishData_Network FishData_Network { get; set; }
     // 路線資料
@@ -132,48 +134,38 @@ public class Fish : NetworkBehaviour
         if (Object == null || !Object.IsValid)
             return;
 
-        Move();
-    }
+        if (IsFreezeTimer())
+            return;
 
-    /// <summary>
-    /// 獲取魚資料
-    /// </summary>
-    public FishData_Network GetFishData()
-    {
-        return FishData_Network;
+        Move();
     }
 
     #region 控制
 
     /// <summary>
-    /// 更新動畫速度
+    /// 是否在冰凍時間
     /// </summary>
-    private void UpdateAnimationSpeed()
+    private bool IsFreezeTimer()
     {
-        if (Animator != null) Animator.speed = AniSpeed;
-    }
-
-    /// <summary>
-    /// 設置路線
-    /// </summary>
-    private void SetPathPoints()
-    {
-        if (WayPointMain == null)
+        // 如果正在冰凍中
+        if (Object.HasStateAuthority && FreezeTimer.IsRunning && !FreezeTimer.Expired(Runner))
         {
-            var wayPointObj = GameObject.Find($"{GamePrefabEnum.WayPointMain}");
-            if(wayPointObj != null)
-                WayPointMain = wayPointObj.GetComponent<WayPointMain>();
+            // 每一個 Tick 都把 MoveTimer 往後推一點，使其保持在原來的剩餘時間
+            // 這樣 Move 邏輯恢復時，t 就會停在原地
+            MoveTimer = TickTimer.CreateFromSeconds(Runner, (MoveTimer.RemainingTime(Runner) ?? 0) + Runner.DeltaTime);
         }
 
-        if (WayPointMain != null)
+        if(FreezeTimer.IsRunning && !FreezeTimer.Expired(Runner))
         {
-            WayPoint wayPoint = WayPointMain.GetWayPointById(FishPathData.WayPointId);
-
-            // 移動路徑獲取
-            var query = wayPoint.Points.Select(t => t.position);
-            if (FishPathData.IsMirror) query = query.Reverse();
-            LocalPathPoints = query.Skip(FishPathData.SkipWaypoint).ToArray();
+            // 停止動畫
+            if (AniSpeed != 0) AniSpeed = 0;
+            return true;
         }
+
+        // 恢復動畫速度
+        if (AniSpeed == 0) AniSpeed = 1;
+
+        return false;
     }
 
     /// <summary>
@@ -211,8 +203,7 @@ public class Fish : NetworkBehaviour
         {
             IsDie = true;
             Runner.Despawn(Object);
-        }
-            
+        }            
     }
 
     /// <summary>
@@ -256,6 +247,7 @@ public class Fish : NetworkBehaviour
         if (!Object.HasStateAuthority)
             return;
 
+        FreezeTimer = default;
         float remaining = MoveTimer.RemainingTime(Runner) ?? 0;
         float elapsed = TotalDuration - remaining;
         float currentT = Mathf.Clamp01(elapsed / TotalDuration);
@@ -272,6 +264,53 @@ public class Fish : NetworkBehaviour
         TotalDuration = newTotalDuration;
         // 重設 Timer
         MoveTimer = TickTimer.CreateFromSeconds(Runner, targetRemainingTime);
+    }
+
+    /// <summary>
+    /// 更新動畫速度
+    /// </summary>
+    private void UpdateAnimationSpeed()
+    {
+        if (Animator != null) Animator.speed = AniSpeed;
+    }
+
+    /// <summary>
+    /// 增加冰凍的時間
+    /// </summary>
+    public void AddFreezeTime(float freezeSseconds)
+    {
+        RPC_AddFreezeTime(freezeSseconds);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_AddFreezeTime(float freezeSseconds)
+    {
+        float currentRemaining = FreezeTimer.RemainingTime(Runner) ?? 0f;
+        // 重新創建一個計時器：剩餘時間 + 新增時間
+        FreezeTimer = TickTimer.CreateFromSeconds(Runner, currentRemaining + freezeSseconds);
+    }
+
+    /// <summary>
+    /// 設置路線
+    /// </summary>
+    private void SetPathPoints()
+    {
+        if (WayPointMain == null)
+        {
+            var wayPointObj = GameObject.Find($"{GamePrefabEnum.WayPointMain}");
+            if (wayPointObj != null)
+                WayPointMain = wayPointObj.GetComponent<WayPointMain>();
+        }
+
+        if (WayPointMain != null)
+        {
+            WayPoint wayPoint = WayPointMain.GetWayPointById(FishPathData.WayPointId);
+
+            // 移動路徑獲取
+            var query = wayPoint.Points.Select(t => t.position);
+            if (FishPathData.IsMirror) query = query.Reverse();
+            LocalPathPoints = query.Skip(FishPathData.SkipWaypoint).ToArray();
+        }
     }
 
     #endregion
@@ -470,6 +509,14 @@ public class Fish : NetworkBehaviour
     }
 
     #endregion
+
+    /// <summary>
+    /// 獲取魚資料
+    /// </summary>
+    public FishData_Network GetFishData()
+    {
+        return FishData_Network;
+    }
 }
 
 /// <summary>

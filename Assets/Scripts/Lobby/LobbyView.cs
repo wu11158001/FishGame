@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections;
 
 public class LobbyView : BasicView
 {
@@ -18,14 +19,11 @@ public class LobbyView : BasicView
     Dictionary<CheckJoinRoomDataEnum, bool> CheckJoinRoomDic = new();
     CancellationTokenSource matchmakingCTS;
     bool IsMatchmaking;
+    Coroutine MatchmakingCoroutine;
 
     private void OnDestroy()
     {
-        if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
-
-        if(NetworkRunnerManagement.Instance != null)
-            NetworkRunnerManagement.Instance.RoomListUpdatedEvent -= OnRoomListUpdatedUpdate;
+        RemoveEvent();
     }
 
     protected override void Start()
@@ -41,6 +39,18 @@ public class LobbyView : BasicView
         FirestoreManagement.Instance.StartListenAccountData();
     }
 
+    /// <summary>
+    /// 移除監聽事件
+    /// </summary>
+    private void RemoveEvent()
+    {
+        if (FirestoreManagement.Instance != null)
+            FirestoreManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
+
+        if (NetworkRunnerManagement.Instance != null)
+            NetworkRunnerManagement.Instance.RoomListUpdatedEvent -= OnRoomListUpdatedUpdate;
+    }
+
     public void SetData(Action closeAction)
     {
         CloseAction = closeAction;
@@ -51,6 +61,9 @@ public class LobbyView : BasicView
     /// </summary>
     private void Logout()
     {
+        Canvas_Global.Instance.ShowLoading();
+
+        RemoveEvent();
         FirestoreManagement.Instance.StopHeartbeat();
 
         SceneManagement.Instance.LoadScene(
@@ -163,28 +176,11 @@ public class LobbyView : BasicView
 
         if (result.Ok)
         {
-            Debug.Log("成功加入大廳，開始等待列表同步...");
+            Debug.Log("成功加入大廳，啟動 Coroutine 等待列表同步...");
 
-            // 重置取消令牌
-            matchmakingCTS?.Cancel();
-            matchmakingCTS = new CancellationTokenSource();
-
-            try
-            {
-                // 等待 2 秒給予列表同步時間
-                await Task.Delay(2000, matchmakingCTS.Token);
-
-                // 如果 2 秒後 IsMatchmaking 還是 true，代表 OnRoomListUpdated 沒找到房
-                if (IsMatchmaking)
-                {
-                    Debug.Log("等待超時，未發現現有房間，準備自行創建...");
-                    JoinRoom(Guid.NewGuid().ToString());
-                }
-            }
-            catch (TaskCanceledException )
-            {
-                Debug.Log("等待期間已經JoinRoom!");
-            }
+            // 停止舊的 Coroutine (如果有) 並開啟新的
+            if (MatchmakingCoroutine != null) StopCoroutine(MatchmakingCoroutine);
+            MatchmakingCoroutine = StartCoroutine(WaitAndCheckRoomList());
         }
         else
         {
@@ -194,14 +190,34 @@ public class LobbyView : BasicView
     }
 
     /// <summary>
+    /// 等待檢查房間列表
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator WaitAndCheckRoomList()
+    {
+        yield return new WaitForSeconds(2f);
+
+        // 等待超時
+        if (IsMatchmaking)
+        {
+            Debug.Log("等待超時，未發現現有房間，準備自行創建...");
+            JoinRoom(Guid.NewGuid().ToString());
+        }
+    }
+
+    /// <summary>
     /// 加入房間
     /// </summary>
     private async void JoinRoom(string sessionName)
     {
-        // 先停止配對計時，避免重複進入此 function
-        matchmakingCTS?.Cancel();
+        // 防止 到期後觸發重複創建房間
+        if (MatchmakingCoroutine != null)
+        {
+            StopCoroutine(MatchmakingCoroutine);
+            MatchmakingCoroutine = null;
+        }
 
-        // 如果已經不在配對狀態，就跳出（防止複數次觸發）
+        // 如果已經不在配對狀態，跳出（防止複數次觸發）
         if (!IsMatchmaking) return;
         IsMatchmaking = false;
 

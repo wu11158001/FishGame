@@ -23,7 +23,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     public double RecodJackpot { get; set; }
     Coroutine UpdateLevelDataJackpotCoroutine;
     // 定時更新獎池時間(秒)
-    const float UpdateLevelDataJackpotTime = 30f;
+    const float UpdateLevelDataJackpotTime = 180;
 
     /// <summary>
     /// 魚群資料
@@ -411,7 +411,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     /// </summary>
     public void SendUpdateAccountCoinData()
     {
-        if (PreUpdateCoin != TempAccountData.Coins)
+        if (TempAccountData != null && !string.IsNullOrEmpty(TempAccountData.Account) && PreUpdateCoin != TempAccountData.Coins)
         {
             PreUpdateCoin = TempAccountData.Coins;
 
