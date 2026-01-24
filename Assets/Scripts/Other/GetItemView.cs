@@ -9,12 +9,7 @@ public class GetItemView : BasicView
     [Header("Main")]
     [SerializeField] Image ItemImage;
     [SerializeField] TextMeshProUGUI ValueText;
-    [SerializeField] float ShowTime = 3;
-
-    private void OnDestroy()
-    {
-        StopAllCoroutines();
-    }
+    [SerializeField] float ShowTime = 3;    
 
     protected override void Start()
     {
@@ -41,6 +36,6 @@ public class GetItemView : BasicView
         yield return IFadeInShow();
         yield return new WaitForSeconds(ShowTime);
 
-        CloseAction?.Invoke();
+        Close();
     }
 }

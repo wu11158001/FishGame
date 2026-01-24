@@ -40,9 +40,9 @@ public class TurretStoreView : BasicView
     Coroutine AbilityTextCoroutine;
     TurretEnum CurrSelectTurretType = TurretEnum.None;
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
-        StopAllCoroutines();
+        base.OnDestroy();
 
         Model3DEvenySystemHandler.DragHandlerDelegate -= Model3DDragHandler;
 

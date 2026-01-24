@@ -13,8 +13,10 @@ public class CoinStoreView : BasicView
     Dictionary<StoreCoinEnum, CoinStoreData> CoinStoreDataDic = new();
     List<CoinStoreUnit> CoinStoreUnitDatas = new();
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         if (FirestoreManagement.Instance != null)
             FirestoreManagement.Instance.AccountCoinDataChangeDelegate -= AccountCoinDataChange;
     }

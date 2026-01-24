@@ -2833,6 +2833,7 @@ MonoBehaviour:
   IsShowYieldShow: 1
   MainCanvasGroup: {fileID: 7943822261544527136}
   FadeInTime: 1
+  IsFadeOutClose: 1
   IsShowClose: 1
   BgBtn: {fileID: 3279086789621223690}
   CloseBtn: {fileID: 349684288181432569}

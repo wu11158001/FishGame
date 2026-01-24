@@ -16,8 +16,7 @@ public class Fish : NetworkBehaviour
     [Networked] TickTimer MoveTimer { get; set; }
     // 總移動時間
     [Networked] float TotalDuration { get; set; }
-    // 冰凍時間
-    [Networked] TickTimer FreezeTimer { get; set; }
+
     // 魚資料
     [Networked] FishData_Network FishData_Network { get; set; }
     // 路線資料
@@ -31,6 +30,7 @@ public class Fish : NetworkBehaviour
     WayPointMain WayPointMain;
     LocalPool LocalPool;
     Transform CoinTextPool;
+    GameTerrain GameTerrain;
 
     private void OnDestroy()
     {
@@ -153,7 +153,13 @@ public class Fish : NetworkBehaviour
     /// </summary>
     private bool IsFreezeTimer()
     {
-        bool isFreezing = FreezeTimer.IsRunning && !FreezeTimer.Expired(Runner);
+        if (GameTerrain == null)
+            GameTerrain = FindFirstObjectByType<GameTerrain>();
+
+        if (GameTerrain == null)
+            return false;
+
+        bool isFreezing = GameTerrain.FreezeTimer.IsRunning && !GameTerrain.FreezeTimer.Expired(Runner);
 
         if (Object.HasStateAuthority)
         {
@@ -252,7 +258,6 @@ public class Fish : NetworkBehaviour
         if (!Object.HasStateAuthority)
             return;
 
-        FreezeTimer = default;
         float remaining = MoveTimer.RemainingTime(Runner) ?? 0;
         float elapsed = TotalDuration - remaining;
         float currentT = Mathf.Clamp01(elapsed / TotalDuration);
@@ -277,22 +282,6 @@ public class Fish : NetworkBehaviour
     private void UpdateAnimationSpeed()
     {
         if (Animator != null) Animator.speed = AniSpeed;
-    }
-
-    /// <summary>
-    /// 增加冰凍的時間
-    /// </summary>
-    public void AddFreezeTime(float freezeSseconds)
-    {
-        RPC_AddFreezeTime(freezeSseconds);
-    }
-
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_AddFreezeTime(float freezeSseconds)
-    {
-        float currentRemaining = FreezeTimer.RemainingTime(Runner) ?? 0f;
-        // 重新創建一個計時器：剩餘時間 + 新增時間
-        FreezeTimer = TickTimer.CreateFromSeconds(Runner, currentRemaining + freezeSseconds);
     }
 
     /// <summary>

@@ -14,11 +14,11 @@ public class GameTerrain : NetworkBehaviour
     // 初始生成數量
     [SerializeField] int InitCreateFishCount = 12;
     // 一般魚生成時間(秒)
-    [SerializeField] float NormalFishCreatTime = 8;
+    [SerializeField] float NormalFishCreatTime = 2;
     // 一般魚一次生成最小數量
-    [SerializeField] int MinCreateNormalFish = 5;
+    [SerializeField] int MinCreateNormalFish = 1;
     // 一般魚一次生成最大數量
-    [SerializeField]  int MaxCreateNormalFish = 8;
+    [SerializeField]  int MaxCreateNormalFish = 2;
     // 最大魚深度
     [SerializeField] int MaxFishDepth = -40;
     // 最小魚深度
@@ -43,10 +43,13 @@ public class GameTerrain : NetworkBehaviour
     // 遊戲狀態
     [Networked] GameState CurrentState { get; set; }
     // 遊戲狀態更換時間
-    [Networked] TickTimer StateChangeTimer { get; set; }
+    [Networked] public TickTimer StateChangeTimer { get; set; }
 
     // 當前浪潮魚產生Index
     [Networked] int CurrWaterWaveFishIndex { get; set; }
+
+    // 冰凍時間
+    [Networked] public TickTimer FreezeTimer { get; set; }
 
     [Networked, OnChangedRender(nameof(UpdateShowWaterWave))]
     NetworkBool IsShowWaterWave { get; set; }
@@ -135,6 +138,9 @@ public class GameTerrain : NetworkBehaviour
         if (!Object.HasStateAuthority)
             return;
 
+        if (IsFreezeTimer())
+            return;
+
         switch (CurrentState)
         {
             // 一般狀態
@@ -157,6 +163,37 @@ public class GameTerrain : NetworkBehaviour
                 SpecialFishUpdate();
                 break;
         }        
+    }
+
+    /// <summary>
+    /// 是否處於冰凍時間
+    /// </summary>
+    private bool IsFreezeTimer()
+    {
+        // 如果冰凍正在計時
+        if (FreezeTimer.IsRunning && !FreezeTimer.Expired(Runner))
+        {
+            // 延後一般魚產生時間
+            if (SpawnTimer.IsRunning)
+            {
+                // 將目標 Tick 往後推 1 個 Tick
+                SpawnTimer = TickTimer.CreateFromSeconds(Runner, (SpawnTimer.RemainingTime(Runner) ?? 0) + Runner.DeltaTime);
+            }
+
+            // 延後特殊魚產生時間
+            if (SpecialSpawnTimer.IsRunning)
+            {
+                SpecialSpawnTimer = TickTimer.CreateFromSeconds(Runner, (SpecialSpawnTimer.RemainingTime(Runner) ?? 0) + Runner.DeltaTime);
+            }
+
+            // 延後遊戲狀態切換時間
+            if (StateChangeTimer.IsRunning)
+            {
+                StateChangeTimer = TickTimer.CreateFromSeconds(Runner, (StateChangeTimer.RemainingTime(Runner) ?? 0) + Runner.DeltaTime);
+            }
+        }
+
+        return FreezeTimer.IsRunning && !FreezeTimer.Expired(Runner);
     }
 
     #region 玩家
@@ -372,7 +409,6 @@ public class GameTerrain : NetworkBehaviour
         if (StateChangeTimer.Expired(Runner))
         {
             CurrentState = GameState.Normal;
-
             // 重製浪潮倒計時
             StateChangeTimer = TickTimer.CreateFromSeconds(Runner, WaterWaveTime);
             return;
@@ -761,6 +797,9 @@ public class GameTerrain : NetworkBehaviour
 
         IsShowWaterWave = true;
 
+        // 重製冰凍時間
+        FreezeTimer = default;
+
         // 場上魚移動加速
         foreach (var netObj in Runner.GetAllNetworkObjects())
         {
@@ -916,35 +955,31 @@ public class GameTerrain : NetworkBehaviour
 
     #region 特殊效果
 
-    /// <summary>
-    /// 冰凍效果
-    /// </summary>
-    public void DoFreeze()
-    {        
-        RPC_DoFreeze();
 
-        // 場上魚移停止移動
-        foreach (var netObj in Runner.GetAllNetworkObjects())
-        {
-            if (netObj != null && netObj.IsValid && netObj.gameObject.activeInHierarchy)
-            {
-                Fish fish = netObj.GetComponent<Fish>();
-                if (fish != null)
-                {
-                    fish.AddFreezeTime(LocalData.FreezeTime);
-                }
-            }
-        }
+    /// <summary>
+    /// 增加冰凍的時間
+    /// </summary>
+    public void AddFreezeTime()
+    {
+        RPC_AddFreezeTime();
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RPC_DoFreeze()
+    public void RPC_AddFreezeTime()
     {
         // 所有玩家顯示冰凍效果
         if (GameView == null)
             GameView = FindFirstObjectByType<GameView>();
         if (GameView != null)
             GameView.ShowFreezeEffect();
+
+        // 增加冰凍時間
+        if (Object.HasStateAuthority)
+        {
+            float currentRemaining = FreezeTimer.RemainingTime(Runner) ?? 0f;
+            // 剩餘時間 + 新增時間
+            FreezeTimer = TickTimer.CreateFromSeconds(Runner, currentRemaining + LocalData.FreezeTime);
+        }        
     }
 
     #endregion

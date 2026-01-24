@@ -1379,9 +1379,9 @@ MonoBehaviour:
   - {fileID: 2386968121885100608}
   - {fileID: 1434808478902774355}
   InitCreateFishCount: 12
-  NormalFishCreatTime: 8
-  MinCreateNormalFish: 5
-  MaxCreateNormalFish: 8
+  NormalFishCreatTime: 2
+  MinCreateNormalFish: 1
+  MaxCreateNormalFish: 2
   MaxFishDepth: -40
   MinFishDepth: -5
   WaterWaveDuration: 4

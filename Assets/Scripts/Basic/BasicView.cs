@@ -24,10 +24,16 @@ public abstract class BasicView : MonoBehaviour
 
     protected Action CloseAction;
 
+    protected virtual void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
     protected virtual void Start()
     {
         if (BgBtn != null)
             BgBtn.onClick.AddListener(Close);
+
 
         if (CloseBtn != null)
             CloseBtn.onClick.AddListener(Close);
@@ -37,7 +43,7 @@ public abstract class BasicView : MonoBehaviour
     /// 關閉介面
     /// </summary>
     protected virtual void Close()
-    {
+    {       
         CloseAction?.Invoke();
     }
 
@@ -62,6 +68,9 @@ public abstract class BasicView : MonoBehaviour
     /// </summary>
     protected IEnumerator IFadeInShow()
     {
+        if (MainCanvasGroup == null)
+            yield break;
+
         MainCanvasGroup.alpha = 0;
 
         float currentTime = 0f;

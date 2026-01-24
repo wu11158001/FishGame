@@ -44,9 +44,9 @@ public class GameView : BasicView
     readonly Vector2 LeftSeatPosision = new(-600, -500);
     readonly Vector2 RightSeatPosision = new(600, -500);
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
-        StopAllCoroutines();
+        base.OnDestroy();
 
         if(TempDataManagement.Instance != null)
         {
@@ -156,7 +156,7 @@ public class GameView : BasicView
         if (GameTerrain == null)
             GameTerrain = FindFirstObjectByType<GameTerrain>();
         if (GameTerrain != null)
-            GameTerrain.DoFreeze();
+            GameTerrain.AddFreezeTime();
     }
 
     /// <summary>

@@ -13,8 +13,10 @@ public class ToastView : BasicView
     Vector2 StopPos = new(0, -120);
     float StopTime = 3f;
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         PanelRect.DOKill();
     }
 

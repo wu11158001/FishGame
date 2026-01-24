@@ -21,8 +21,10 @@ public class LobbyView : BasicView
     bool IsMatchmaking;
     Coroutine MatchmakingCoroutine;
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         RemoveEvent();
     }
 

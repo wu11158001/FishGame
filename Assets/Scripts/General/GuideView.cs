@@ -30,8 +30,10 @@ public class GuideView : BasicView
     Dictionary<NetworkPrefabEnum, FishData> FishDataDic = new();
     List<GuideUnit> GuideUnitDatas = new();
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         MoveRect.DOKill();
         LeftBtn.GetComponent<RectTransform>().DOKill();
         RightBtn.GetComponent<RectTransform>().DOKill();
