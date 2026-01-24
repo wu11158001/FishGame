@@ -926,7 +926,7 @@ public class GameTerrain : NetworkBehaviour
         // 場上魚移停止移動
         foreach (var netObj in Runner.GetAllNetworkObjects())
         {
-            if (netObj != null && netObj.IsValid && netObj.HasStateAuthority && netObj.gameObject.activeInHierarchy)
+            if (netObj != null && netObj.IsValid && netObj.gameObject.activeInHierarchy)
             {
                 Fish fish = netObj.GetComponent<Fish>();
                 if (fish != null)

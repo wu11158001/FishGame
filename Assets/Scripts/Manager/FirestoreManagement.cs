@@ -47,7 +47,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     Coroutine HeartbeatCoroutine;
 
     // 心跳包發送間格時間(秒)
-    public int HeartbeatTime { get; private set; } = 300;
+    public int HeartbeatTime { get; private set; } = 20;
 
     protected override void OnDestroy()
     {
@@ -61,7 +61,6 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         EditorListeners.Clear();
 #endif
 
-        StopHeartbeat();
         StopListenAccountData();
         StopAllCoroutines();
     }
@@ -110,12 +109,9 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         if (HeartbeatCoroutine != null)
             StopCoroutine(HeartbeatCoroutine);
 
-        // 獲取當前 Unix 時間戳 - 心跳包時間 (秒)
-        long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - HeartbeatTime;
-
         var updates = new Dictionary<string, object>
             {
-                { "HeartbeatUpdateTime", currentTimestamp }
+                { "HeartbeatUpdateTime", 0 }
             };
 
         UpdateDataToFirestore(
@@ -602,17 +598,16 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     private static extern void BindMouseEvents(string callbackObj, string leaveCallbackMethod, string enterCallbackMethod);
     public void OnMouseLeaveCanvas()
     {
-        Debug.Log("滑鼠離開了遊戲區域！");
-        StopHeartbeat();
-
         if (TempDataManagement.Instance != null)
+        {
             TempDataManagement.Instance.SendUpdateAccountCoinData();
+            TempDataManagement.Instance.SendUpdateLevelDataJackpot();
+        }  
     }
 
     public void OnMouseEnterCanvas()
     {
-        Debug.Log("滑鼠回來了！");
-        StartHeartbeat();
+
     }
 
     #endregion

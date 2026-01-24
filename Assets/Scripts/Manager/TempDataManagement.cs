@@ -23,7 +23,7 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     public double RecodJackpot { get; set; }
     Coroutine UpdateLevelDataJackpotCoroutine;
     // 定時更新獎池時間(秒)
-    const float UpdateLevelDataJackpotTime = 180;
+    const float UpdateLevelDataJackpotTime = 60;
 
     /// <summary>
     /// 魚群資料

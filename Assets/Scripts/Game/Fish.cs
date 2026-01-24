@@ -127,6 +127,12 @@ public class Fish : NetworkBehaviour
         {
             SetPathPoints();
         }
+
+        // 同步動畫速度
+        if (Animator != null && Animator.speed != AniSpeed)
+        {
+            Animator.speed = AniSpeed;
+        }
     }
 
     public override void FixedUpdateNetwork()
@@ -147,25 +153,24 @@ public class Fish : NetworkBehaviour
     /// </summary>
     private bool IsFreezeTimer()
     {
-        // 如果正在冰凍中
-        if (Object.HasStateAuthority && FreezeTimer.IsRunning && !FreezeTimer.Expired(Runner))
+        bool isFreezing = FreezeTimer.IsRunning && !FreezeTimer.Expired(Runner);
+
+        if (Object.HasStateAuthority)
         {
-            // 每一個 Tick 都把 MoveTimer 往後推一點，使其保持在原來的剩餘時間
-            // 這樣 Move 邏輯恢復時，t 就會停在原地
-            MoveTimer = TickTimer.CreateFromSeconds(Runner, (MoveTimer.RemainingTime(Runner) ?? 0) + Runner.DeltaTime);
+            if (isFreezing)
+            {
+                // 將移動時間往後推，冰凍結束才不會順移
+                MoveTimer = TickTimer.CreateFromSeconds(Runner, (MoveTimer.RemainingTime(Runner) ?? 0) + Runner.DeltaTime);
+                // 冰凍期間停止動畫
+                if (AniSpeed != 0) AniSpeed = 0;
+            }
+            else
+            {
+                if (AniSpeed == 0) AniSpeed = 1;
+            }
         }
 
-        if(FreezeTimer.IsRunning && !FreezeTimer.Expired(Runner))
-        {
-            // 停止動畫
-            if (AniSpeed != 0) AniSpeed = 0;
-            return true;
-        }
-
-        // 恢復動畫速度
-        if (AniSpeed == 0) AniSpeed = 1;
-
-        return false;
+        return isFreezing;
     }
 
     /// <summary>

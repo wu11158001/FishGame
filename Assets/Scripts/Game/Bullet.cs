@@ -327,7 +327,7 @@ public class Bullet : NetworkBehaviour
             // 判斷獎池
             if (TempDataManagement.Instance.CurrentLevelData.Jackpot < reward)
             {
-                Debug.LogError($"獎池不足!");
+                Debug.LogError($"獎池不足! Jackpot:{TempDataManagement.Instance.CurrentLevelData.Jackpot} 獎勵: {reward}");
                 Runner.Despawn(Object);
                 return;
             }
