@@ -42,7 +42,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     public event LevelDataChange LevelDataChangeDelegate;
 
 
-    AccountData PreAccountData = new();
+    public AccountData CurrAccountData { get; private set; } = new();
 
     Coroutine HeartbeatCoroutine;
 
@@ -506,17 +506,17 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         AccountData accountData = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
 
         // 帳戶金幣資料變更
-        if (PreAccountData.Coins != accountData.Coins)
+        if (CurrAccountData.Coins != accountData.Coins)
             AccountCoinDataChangeDelegate?.Invoke(accountData);
 
         // 帳戶砲台資料變更
-        if (PreAccountData.DefaultTurret != accountData.DefaultTurret || PreAccountData.OwnTurret != accountData.OwnTurret)
+        if (CurrAccountData.DefaultTurret != accountData.DefaultTurret || CurrAccountData.OwnTurret != accountData.OwnTurret)
             AccountTurretDataChangeDelegate?.Invoke(accountData);
 
         // 帳戶資料變更
         AsccountDataChangeDelegate?.Invoke(accountData);
 
-        PreAccountData = accountData;
+        CurrAccountData = accountData;
     }
 
 
@@ -656,10 +656,10 @@ public class FirestoreResponse
 public class AccountData
 {
     /// <summary> 註冊時間(時間戳) </summary>
-    public long RegisterTime;
+    public string RegisterTime;
 
     /// <summary> 最後登入時間(時間戳) </summary>
-    public long LastLoginTime;
+    public string LastLoginTime;
 
     /// <summary> 心跳包最後更新時間(時間戳) </summary>
     public long HeartbeatUpdateTime;

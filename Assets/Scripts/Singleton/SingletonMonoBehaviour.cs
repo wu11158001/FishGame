@@ -12,7 +12,6 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
         {
             if (_isShuttingDown)
             {
-                Debug.LogWarning($"[Singleton] Instance '{typeof(T)}' already destroyed. Returning null.");
                 return null;
             }
 
@@ -29,7 +28,6 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
                         DontDestroyOnLoad(singletonGO);
                     }
                 }
-
                 return _instance;
             }
         }
@@ -37,15 +35,25 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
 
     protected virtual void Awake()
     {
+        if (_instance != null && _instance != this)
+        {
+            Debug.Log($"[Singleton] 偵測到重複的 {typeof(T)} 在 {gameObject.name}，已自動刪除。");
+            Destroy(gameObject);
+            return;
+        }
+
         if (_instance == null)
         {
             _instance = this as T;
-            DontDestroyOnLoad(gameObject);
         }
-        else if (_instance != this)
+
+        if (transform.parent != null)
         {
-            Destroy(gameObject);
+            transform.SetParent(null);
         }
+        DontDestroyOnLoad(gameObject);
+
+        _isShuttingDown = false;
     }
 
     protected virtual void OnApplicationQuit()
@@ -57,6 +65,7 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
     {
         if (_instance == this)
         {
+            _instance = null;
             _isShuttingDown = true;
         }
     }

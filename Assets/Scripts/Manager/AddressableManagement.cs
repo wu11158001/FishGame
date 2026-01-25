@@ -528,6 +528,54 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             IsCanStack: true);
     }
 
+    /// <summary>
+    /// 開啟註冊獎勵介面
+    /// </summary>
+    public async void OpenRegisterRewardView(Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.RegisterRewardView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveSceneView(view);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<RegisterRewardView>().SetData(closeAction: viewCloseAction);
+                }
+            });
+    }
+
+    /// <summary>
+    /// 開啟登入獎勵介面
+    /// </summary>
+    public async void OpenLoginRewardView(Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.LoginRewardView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveSceneView(view);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<LoginRewardView>().SetData(closeAction: viewCloseAction);
+                }
+            });
+    }
+
     #endregion
 
     #region 介面(Canvas_Global)

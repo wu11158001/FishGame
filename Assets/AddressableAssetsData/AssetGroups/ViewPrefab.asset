@@ -51,6 +51,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 70385326e753601488c8ca352609df71
+    m_Address: LoginRewardView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 742f0d951cc2cf644957a4e62912be8f
     m_Address: SpecialFishCatchView
     m_ReadOnly: 0
@@ -58,6 +63,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 74a52281f94946848b0d469950e8c0c9
     m_Address: TurretStoreView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bea0f48f69ac97840a62bd3523aed499
+    m_Address: RegisterRewardView
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

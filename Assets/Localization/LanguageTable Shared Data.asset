@@ -163,6 +163,10 @@ MonoBehaviour:
     m_Key: Receive
     m_Metadata:
       m_Items: []
+  - m_Id: 11337770106294272
+    m_Key: Register Reward
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

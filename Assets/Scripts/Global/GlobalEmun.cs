@@ -365,3 +365,19 @@ public enum TurretEnum
 }
 
 #endregion
+
+#region 大廳彈窗流程
+
+/// <summary>
+/// 大廳彈窗流程
+/// </summary>
+public enum LobbyPopupEnum
+{
+    /// <summary> 註冊獎勵 </summary>
+    RegisterReward,
+
+    /// <summary> 登入獎勵 </summary>
+    LoginReward,
+}
+
+#endregion

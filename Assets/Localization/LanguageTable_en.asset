@@ -173,6 +173,10 @@ MonoBehaviour:
     m_Localized: Receive
     m_Metadata:
       m_Items: []
+  - m_Id: 11337770106294272
+    m_Localized: Register Reward!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

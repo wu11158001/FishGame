@@ -1,23 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System;
 using Fusion;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Collections;
 
 public class LobbyView : BasicView
 {
     [Header("LobbyView")]
-    [SerializeField] TextMeshProUGUI CoinText;
     [SerializeField] Button StartBtn;
     [SerializeField] Button LogoutBtn;
 
     Dictionary<CheckJoinRoomDataEnum, bool> CheckJoinRoomDic = new();
-    CancellationTokenSource matchmakingCTS;
     bool IsMatchmaking;
     Coroutine MatchmakingCoroutine;
 
@@ -36,9 +31,6 @@ public class LobbyView : BasicView
         LogoutBtn.onClick.AddListener(Logout);
 
         NetworkRunnerManagement.Instance.RoomListUpdatedEvent += OnRoomListUpdatedUpdate;
-
-        FirestoreManagement.Instance.AsccountDataChangeDelegate += AccountDataChange;
-        FirestoreManagement.Instance.StartListenAccountData();
     }
 
     /// <summary>
@@ -46,9 +38,6 @@ public class LobbyView : BasicView
     /// </summary>
     private void RemoveEvent()
     {
-        if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
-
         if (NetworkRunnerManagement.Instance != null)
             NetworkRunnerManagement.Instance.RoomListUpdatedEvent -= OnRoomListUpdatedUpdate;
     }
@@ -87,23 +76,6 @@ public class LobbyView : BasicView
         Canvas_Global.Instance.CloseLoading();
         Canvas_Global.Instance.CloseSceneLoadingView();
     }
-
-    #region 資料變更監聽
-
-    /// <summary>
-    /// 帳戶資料變更
-    /// </summary>
-    private void AccountDataChange(AccountData accountData)
-    {
-        if(accountData != null)
-        {
-            CoinText.text = StringUtility.CurrencyFormat(accountData.Coins);
-
-            Canvas_Global.Instance.CloseLoading();
-        }
-    }
-
-    #endregion
 
     #region 加入遊戲
 
