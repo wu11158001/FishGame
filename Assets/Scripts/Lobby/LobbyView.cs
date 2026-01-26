@@ -1,49 +1,32 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using DG.Tweening;
 
 public class LobbyView : BasicView
 {
     [Header("LobbyView")]
-    [SerializeField] Button StartBtn;
-    [SerializeField] Button LogoutBtn;
+    [SerializeField] RectTransform LevelBtnRect;
+    [SerializeField] Button LevelBtn;
 
     protected override void Start()
     {
         base.Start();
 
-        StartBtn.onClick.AddListener(JoinGame);
-        LogoutBtn.onClick.AddListener(Logout);
+        // 關卡按鈕上下移動
+        LevelBtnRect.DOLocalMoveY(LevelBtnRect.anchoredPosition.y + 10, 1.5f)
+            .SetEase(Ease.InOutSine) 
+            .SetLoops(-1, LoopType.Yoyo);
+
+        LevelBtn.onClick.AddListener(() =>
+        {
+            AddressableManagement.Instance.OpenLevelView();
+        });
     }
 
     public void SetData(Action closeAction)
     {
         CloseAction = closeAction;
-    }
-
-    /// <summary>
-    /// 加入遊戲
-    /// </summary>
-    private void JoinGame()
-    {
-        Canvas_Global.Instance.ShowSceneLoadingView();
-
-        // 進入遊戲場景
-        SceneManagement.Instance.LoadScene(
-            sceneEnum: SceneEnum.Game,
-            callback: async () =>
-            {
-                await AddressableManagement.Instance.CreateGamePrefab(
-                    prefabType: GamePrefabEnum.GameEntry,
-                    callback: (obj) =>
-                    {
-                        GameEntry gameEntry = obj.GetComponent<GameEntry>();
-                        if(gameEntry != null)
-                        {
-                            gameEntry.SetData(levelType: LevelEnum.DragonLevel);
-                        }
-                    });
-            });
     }
 
     /// <summary>

@@ -573,6 +573,30 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             });
     }
 
+    /// <summary>
+    /// 開啟關卡選擇介面
+    /// </summary>
+    public async void OpenLevelView(Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.LevelView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveSceneView(view);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<LevelView>().SetData(closeAction: viewCloseAction);
+                }
+            });
+    }
+
     #endregion
 
     #region 介面(Canvas_Global)

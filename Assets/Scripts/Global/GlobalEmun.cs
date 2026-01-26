@@ -77,6 +77,9 @@ public enum ViewEnum
 
     /// <summary> 註冊獎勵介面 </summary>
     RegisterRewardView,
+
+    /// <summary> 關卡選擇介面 </summary>
+    LevelView,
 }
 
 #endregion

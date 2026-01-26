@@ -36,6 +36,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3531b51e631f03248bf50c2ddd5390e1
+    m_Address: LevelView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3bc47fd82dca6da49a3e4efa9b397c1b
     m_Address: GetItemView
     m_ReadOnly: 0

@@ -1,14 +1,10 @@
 fileFormatVersion: 2
-guid: 841f6f827474f524b896ec43d51491eb
-AssetOrigin:
-  serializedVersion: 1
-  productId: 324145
-  packageName: Tomatocol Character Variety Pack Vol.1 DEMO - Human-Type - 20 Illustrations
-  packageVersion: 1.0
-  assetPath: Assets/TomatocolCharacterVarietyPackVol1DEMO/Assets/img066.png
-  uploadId: 766652
+guid: 8e0ebae59224edd459aa866aec03f9ab
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 2631065926260867546
+    second: DragonIcon_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,13 +42,13 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 0
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -101,7 +97,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: WebGL
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -114,7 +110,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: Android
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -128,12 +124,34 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: DragonIcon_0
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 7
+        width: 480
+        height: 441
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad1c96b158c638420800000000000000
+      internalID: 2631065926260867546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -142,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      DragonIcon_0: 2631065926260867546
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

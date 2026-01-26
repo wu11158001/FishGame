@@ -177,6 +177,26 @@ MonoBehaviour:
     m_Localized: Register Reward!
     m_Metadata:
       m_Items: []
+  - m_Id: 11871889403875328
+    m_Localized: Fishing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11893598592897024
+    m_Localized: Phantom Tides
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11893646533791744
+    m_Localized: Shark Abyss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11893718839398400
+    m_Localized: Golden Dragon Realm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11912020043173888
+    m_Localized: Return
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
