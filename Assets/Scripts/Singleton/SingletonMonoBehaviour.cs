@@ -53,6 +53,11 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
             transform.SetParent(null);
         }
 
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+            UnityEditor.SceneVisibilityManager.instance.Show(gameObject, false);
+#endif
+
         DontDestroyOnLoad(gameObject);
 
         _isShuttingDown = false;
