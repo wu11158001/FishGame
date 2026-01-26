@@ -7,7 +7,7 @@ using System.Collections;
 
 public class GameEntry : MonoBehaviour
 {
-    // 是否正在配對
+    // 是否正在配對(防止重複觸發)
     bool IsMatchmaking;
 
     Dictionary<CheckJoinRoomDataEnum, bool> CheckJoinRoomDic = new();
@@ -98,13 +98,13 @@ public class GameEntry : MonoBehaviour
                 });
         }
     }
+
     /// <summary>
     /// 檢查加入房間資料獲取狀態
     /// </summary>
-    /// <param name="dataType"></param>
-    private void CheckJoinRoomData(CheckJoinRoomDataEnum dataType)
+    private void CheckJoinRoomData(CheckJoinRoomDataEnum dataType, bool isSuccess)
     {
-        if (!CheckJoinRoomDic.ContainsKey(dataType))
+        if (!CheckJoinRoomDic.ContainsKey(dataType) || !isSuccess)
         {
             Debug.LogError($"檢查加入房間資料獲取狀態錯誤: {dataType}");
             JoinRoomError();
@@ -205,17 +205,6 @@ public class GameEntry : MonoBehaviour
         IsMatchmaking = false;
 
         Debug.Log($"準備進入房間: {sessionName}");
-
-        /*// 關閉在大廳中的 Runner
-        if (NetworkRunnerManagement.Instance.NetworkRunner.IsCloudReady ||
-            NetworkRunnerManagement.Instance.NetworkRunner.IsRunning)
-        {
-            NetworkRunnerManagement.Instance.IsSafeShutdown = true;
-            await NetworkRunnerManagement.Instance.NetworkRunner.Shutdown();
-        }
-
-        // 重置一個新的 Runner
-        NetworkRunnerManagement.Instance.ResetRunner();*/
 
         // 執行 StartGame
         var result = await NetworkRunnerManagement.Instance.StartGame(sessionName);

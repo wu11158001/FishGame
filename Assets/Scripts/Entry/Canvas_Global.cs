@@ -5,6 +5,12 @@ public class Canvas_Global : SingletonMonoBehaviour<Canvas_Global>
     [SerializeField] GameObject LoadingView;
     [SerializeField] GameObject SceneLoadingView;
 
+    private void Start()
+    {
+        LoadingView.SetActive(false);
+        SceneLoadingView.SetActive(false);
+    }
+
     #region Loading
 
     /// <summary>

@@ -422,7 +422,7 @@ public class LoginView : BasicView
                         {
                             AddressableManagement.Instance.ShowToast("Account logged in");
                             ShowRecord();
-                            Debug.LogError($"帳號已登入! 差距:{FirestoreDataManagement.Instance.HeartbeatTime - difference}秒");
+                            Debug.LogError($"帳號已登入! 剩餘:{FirestoreDataManagement.Instance.HeartbeatTime - difference}秒 可登入");
                         }
                         else
                         {

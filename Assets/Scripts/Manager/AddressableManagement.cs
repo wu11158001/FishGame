@@ -7,9 +7,6 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class AddressableManagement : SingletonMonoBehaviour<AddressableManagement>
 {
-    //原始解析度比例
-    public Vector2 TargetResolution { get; private set; } = new(1920, 1080);
-
     //避免重複加載資源
     HashSet<ViewEnum> LoadViewAsyncSet = new();
 
@@ -74,7 +71,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         {
             safeArea.anchorMin = new Vector2(0.5f, 0.5f);
             safeArea.anchorMax = new Vector2(0.5f, 0.5f);
-            safeArea.sizeDelta = TargetResolution;
+            safeArea.sizeDelta = LocalData.TargetResolution;
         }
     }
 

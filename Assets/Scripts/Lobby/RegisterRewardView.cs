@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
-using Newtonsoft.Json;
 
 public class RegisterRewardView : BasicView
 {
@@ -13,8 +12,6 @@ public class RegisterRewardView : BasicView
     [SerializeField] Sprite CoinSprite;
     [SerializeField] TextMeshProUGUI RewardValueText;
     [SerializeField] RectTransform CoinIcon;
-
-    double Reward;
 
     protected override void OnDestroy()
     {
@@ -40,38 +37,10 @@ public class RegisterRewardView : BasicView
         CloseAction = closeAction;
         MainCanvasGroup.alpha = 0;
 
-        // 獲取註冊獎勵資料
-        if (FirestoreManagement.Instance != null)
+        if (FirestoreDataManagement.Instance != null)
         {
-            FirestoreManagement.Instance.GetDataFromFirestore(
-                path: FirestoreCollectionNameEnum.ActivityData,
-                docId: FirestoreActivityDataFileNameEnum.LoginAndRegister.ToString(),
-                callback: GetLoginRewardCallback);
-        }
-    }
-
-    /// <summary>
-    /// 獲取註冊獎勵資料Callback
-    /// </summary>
-    private void GetLoginRewardCallback(FirestoreResponse response)
-    {
-        if (response.IsSuccess)
-        {
-            try
-            {
-                LoginAndRegisterData data = JsonConvert.DeserializeObject<LoginAndRegisterData>(response.JsonData);
-                if (data != null)
-                {
-                    Reward = data.RegisterReward;
-                    RewardValueText.text = $"X{StringUtility.CurrencyFormat(data.RegisterReward)}";
-                    StartCoroutine(IYieldShow());
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"獲取獲取註冊獎勵資料錯誤: {e}");
-                Close();
-            }
+            RewardValueText.text = $"X{StringUtility.CurrencyFormat(FirestoreDataManagement.Instance.LoginAndRegisterData.RegisterReward)}";
+            StartCoroutine(IYieldShow());
         }
     }
 
@@ -91,7 +60,7 @@ public class RegisterRewardView : BasicView
         // 顯示獲得獎勵
         AddressableManagement.Instance.ShowGetItemView(
             iconSprite: CoinSprite,
-            value: Reward);
+            value: FirestoreDataManagement.Instance.LoginAndRegisterData.RegisterReward);
 
         // 更新註冊時間 & 帳戶金幣
         DateTime taiwanTime = DateTime.UtcNow.AddHours(8);
@@ -100,7 +69,7 @@ public class RegisterRewardView : BasicView
 
         var updates = new Dictionary<string, object>
         {
-            { "Coins", currAccountCoin + Reward},
+            { "Coins", currAccountCoin + FirestoreDataManagement.Instance.LoginAndRegisterData.RegisterReward},
             { "RegisterTime", currentTimestamp }
         };
 

@@ -47,7 +47,7 @@ public class EntryView : MonoBehaviour
             TargetProgress = progress;
         };
 
-        // 完成Action
+        // 完成載入預載資源Action
         Action finishAction = async () =>
         {
             TargetProgress = 1;

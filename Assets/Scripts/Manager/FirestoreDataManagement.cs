@@ -12,6 +12,16 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
     private Dictionary<string, ListenerRegistration> EditorListeners = new();
 #endif
 
+    // 心跳包Coroutine
+    Coroutine HeartbeatCoroutine;
+    // 心跳包發送間格時間(秒)
+    public int HeartbeatTime { get; private set; } = 20;
+
+    // 當前登入帳戶資料
+    public AccountData CurrAccountData { get; private set; } = new();
+    // 當下登入帳戶訊息
+    public LoginInfo CurrLoginInfo { get; set; }
+
     // 帳戶資料變更監聽
     public delegate void AccountDataChange(AccountData accountData);
     public event AccountDataChange AsccountDataChangeDelegate;
@@ -21,19 +31,18 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
     // 帳戶砲台資料變更監聽
     public delegate void AccountTurretDataChange(AccountData accountData);
     public event AccountTurretDataChange AccountTurretDataChangeDelegate;
+
     // 關卡資料變更監聽
     public delegate void LevelDataChange(LevelData levelData);
     public event LevelDataChange LevelDataChangeDelegate;
 
-    // 當前登入帳戶資料
-    public AccountData CurrAccountData { get; private set; } = new();
-    // 當下登入帳戶訊息
-    public LoginInfo CurrLoginInfo { get; set; }
+    // 登入與註冊獎勵資料
+    public LoginAndRegisterData LoginAndRegisterData { get; private set; } = new();
+    Action<CheckFixedDataEnum, bool> GetLoginAndRegisterDataAction;
 
-    // 心跳包Coroutine
-    Coroutine HeartbeatCoroutine;
-    // 心跳包發送間格時間(秒)
-    public int HeartbeatTime { get; private set; } = 20;
+    // 砲台資料
+    Dictionary<TurretEnum, TurretData> TurretDataDic { get; } = new();
+    Action<CheckFixedDataEnum, bool> GetAllTurretDataAction;
 
     // 遊戲暫存資料
     public GameTempData GameTempData { get; set; }
@@ -160,6 +169,9 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
     /// </summary>
     public void StopListenAccountData()
     {
+        if (CurrLoginInfo == null || string.IsNullOrEmpty(CurrLoginInfo.Account))
+            return;
+
         string docId = CurrLoginInfo.Account;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -298,6 +310,99 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
         var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
         LevelData levelData = JsonConvert.DeserializeObject<LevelData>(response.JsonData);
         LevelDataChangeDelegate?.Invoke(levelData);
+    }
+
+    #endregion
+
+    #region 登入註冊獎勵資料
+
+    /// <summary>
+    /// 獲取登入與獎勵資料
+    /// </summary>
+    public void GetLoginAndRegisterData(Action<CheckFixedDataEnum, bool> callback)
+    {
+        GetLoginAndRegisterDataAction = callback;
+
+        FirestoreManagement.Instance.GetDataFromFirestore(
+            path: FirestoreCollectionNameEnum.ActivityData,
+            docId: FirestoreActivityDataFileNameEnum.LoginAndRegister.ToString(),
+            callback: GetLoginRewardCallback);
+    }
+
+    /// <summary>
+    /// 獲取登入獎勵資料Callback
+    /// </summary>
+    private void GetLoginRewardCallback(FirestoreResponse response)
+    {
+        if (response.IsSuccess)
+        {
+            try
+            {
+                LoginAndRegisterData = JsonConvert.DeserializeObject<LoginAndRegisterData>(response.JsonData);
+                GetLoginAndRegisterDataAction?.Invoke(CheckFixedDataEnum.LoginAndRegisterData, true);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"獲取獲取登入獎勵資料錯誤: {e}");
+                GetLoginAndRegisterDataAction?.Invoke(CheckFixedDataEnum.LoginAndRegisterData, false);
+            }
+        }
+    }
+
+    #endregion
+
+    #region 砲台資料
+
+    /// <summary>
+    /// 獲取所有砲台資料
+    /// </summary>
+    public void GetAllTurretData(Action<CheckFixedDataEnum, bool> callback)
+    {
+        GetAllTurretDataAction = callback;
+
+        FirestoreManagement.Instance.GetAllDocumentsFromCollection(
+                path: FirestoreCollectionNameEnum.TurretData,
+                callback: GetAllTurretDataCallback);
+    }
+
+    /// <summary>
+    /// 獲取所有砲台資料Callback
+    /// </summary>
+    public void GetAllTurretDataCallback(FirestoreResponse response)
+    {
+        if (response.IsSuccess)
+        {
+            TurretDataDic.Clear();
+            List<TurretData> turretList = JsonConvert.DeserializeObject<List<TurretData>>(response.JsonData);
+
+            foreach (var data in turretList)
+            {
+                TurretDataDic.Add(data.TurretType, data);
+            }
+
+            GetAllTurretDataAction?.Invoke(CheckFixedDataEnum.TurretData, true);
+        }
+        else
+        {
+            Debug.LogError($"獲取所有砲台資料失敗");
+            AddressableManagement.Instance.ShowToast("Wiring Error");
+            GetAllTurretDataAction?.Invoke(CheckFixedDataEnum.TurretData, false);
+        }
+    }
+
+    /// <summary>
+    /// 獲取砲台資料
+    /// </summary>
+    public TurretData GetTurrethData(TurretEnum turretType)
+    {
+        // 嘗試從字典中獲取資料
+        if (TurretDataDic.TryGetValue(turretType, out TurretData data))
+        {
+            return data;
+        }
+
+        Debug.LogWarning($"找不到砲台資料: {turretType}");
+        return null;
     }
 
     #endregion

@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System;
-using System.Linq;
 using Newtonsoft.Json;
 
 public class GameTempData : MonoBehaviour
@@ -15,7 +14,7 @@ public class GameTempData : MonoBehaviour
     public int LocalSeatIndex { get; set; }
     public List<Vector3> SeatPositions { get; set; } = new();
     // 進入關卡資料獲取檢測
-    Action<CheckJoinRoomDataEnum> GetCurrentLevelDataAction;
+    Action<CheckJoinRoomDataEnum, bool> GetCurrentLevelDataAction;
     // 當前子彈花費變更事件
     public delegate void CurrCostChange(double cost);
     public event CurrCostChange CurrCostChangeDelegate;
@@ -29,19 +28,19 @@ public class GameTempData : MonoBehaviour
     /// 魚群資料
     /// </summary>
     Dictionary<NetworkPrefabEnum, FishData> FishDataDic { get; } = new();
-    Action<CheckJoinRoomDataEnum> GetAllFishDataAction;
+    Action<CheckJoinRoomDataEnum, bool> GetAllFishDataAction;
 
     /// <summary>
     /// 砲台資料
     /// </summary>
     Dictionary<TurretEnum, TurretData> TurretDataDic { get; } = new();
-    Action<CheckJoinRoomDataEnum> GetAllTurretDataAction;
+    Action<CheckJoinRoomDataEnum, bool> GetAllTurretDataAction;
 
     /// <summary>
     /// 暫存帳戶資料
     /// </summary>
     public AccountData TempAccountData { get; private set; } = new();
-    Action<CheckJoinRoomDataEnum> GetTempAccountDataAction;
+    Action<CheckJoinRoomDataEnum, bool> GetTempAccountDataAction;
     // 暫存金幣變更事件
     public delegate void TempAccountCoinChange(double changeValue);
     public event TempAccountCoinChange TempAccountCoinChangeDelegate;
@@ -93,7 +92,7 @@ public class GameTempData : MonoBehaviour
     /// <summary>
     /// 獲取當前關卡資料
     /// </summary>
-    public void GetCurrentLevelData(LevelEnum levelType, Action<CheckJoinRoomDataEnum> callback)
+    public void GetCurrentLevelData(LevelEnum levelType, Action<CheckJoinRoomDataEnum, bool> callback)
     {
         GetCurrentLevelDataAction = callback;
 
@@ -119,12 +118,14 @@ public class GameTempData : MonoBehaviour
                 if (data != null)
                 {
                     CurrentLevelData = data;
-                    GetCurrentLevelDataAction?.Invoke(CheckJoinRoomDataEnum.LevelData);
+                    GetCurrentLevelDataAction?.Invoke(CheckJoinRoomDataEnum.LevelData, true);
                 }
             }
             catch (Exception e)
             {
                 Debug.LogError($"獲取當前關卡資料錯誤: {e}");
+                AddressableManagement.Instance.ShowToast("Wiring Error");
+                GetCurrentLevelDataAction?.Invoke(CheckJoinRoomDataEnum.LevelData, false);
             }
         }
     }
@@ -217,7 +218,7 @@ public class GameTempData : MonoBehaviour
     /// <summary>
     /// 獲取魚群資料
     /// </summary>
-    public void GetAllFishData(Action<CheckJoinRoomDataEnum> callback)
+    public void GetAllFishData(Action<CheckJoinRoomDataEnum, bool> callback)
     {
         GetAllFishDataAction = callback;
 
@@ -241,12 +242,13 @@ public class GameTempData : MonoBehaviour
                 FishDataDic.Add(data.FishType, data);
             }
 
-            GetAllFishDataAction?.Invoke(CheckJoinRoomDataEnum.FishData);
+            GetAllFishDataAction?.Invoke(CheckJoinRoomDataEnum.FishData, true);
         }
         else
         {
             Debug.LogError($"獲取魚群資料失敗");
             AddressableManagement.Instance.ShowToast("Wiring Error");
+            GetAllFishDataAction?.Invoke(CheckJoinRoomDataEnum.FishData, false);
         }        
     }
 
@@ -284,7 +286,7 @@ public class GameTempData : MonoBehaviour
     /// <summary>
     /// 獲取暫存帳戶資料
     /// </summary>
-    public void GetTempAccountData(Action<CheckJoinRoomDataEnum> callback)
+    public void GetTempAccountData(Action<CheckJoinRoomDataEnum, bool> callback)
     {
         GetTempAccountDataAction = callback;
 
@@ -313,23 +315,27 @@ public class GameTempData : MonoBehaviour
                 if(data != null)
                 {
                     TempAccountData = data;
-                    GetTempAccountDataAction?.Invoke(CheckJoinRoomDataEnum.AccountData);
+                    GetTempAccountDataAction?.Invoke(CheckJoinRoomDataEnum.AccountData, true);
                 }
                 else
                 {
                     Debug.LogError($"獲取帳戶資料null!");
+                    AddressableManagement.Instance.ShowToast("Wiring Error");
+                    GetTempAccountDataAction?.Invoke(CheckJoinRoomDataEnum.AccountData, false);
                 }
             }
             catch (Exception e)
             {
-                AddressableManagement.Instance.ShowToast("Wiring Error");
                 Debug.LogError($"JSON 解析異常: {e.Message}");
+                AddressableManagement.Instance.ShowToast("Wiring Error");
+                GetTempAccountDataAction?.Invoke(CheckJoinRoomDataEnum.AccountData, false);
             }
         }
         else
         {
-            AddressableManagement.Instance.ShowToast("Wiring Error");
             Debug.LogError($"獲取帳戶資料錯誤!");
+            AddressableManagement.Instance.ShowToast("Wiring Error");
+            GetTempAccountDataAction?.Invoke(CheckJoinRoomDataEnum.AccountData, false);
         }
     }
 
@@ -447,7 +453,7 @@ public class GameTempData : MonoBehaviour
     /// <summary>
     /// 獲取所有砲台資料
     /// </summary>
-    public void GetAllTurretData(Action<CheckJoinRoomDataEnum> callback)
+    public void GetAllTurretData(Action<CheckJoinRoomDataEnum, bool> callback)
     {
         GetAllTurretDataAction = callback;
 
@@ -471,12 +477,13 @@ public class GameTempData : MonoBehaviour
                 TurretDataDic.Add(data.TurretType, data);
             }
 
-            GetAllTurretDataAction?.Invoke(CheckJoinRoomDataEnum.TurretData);
+            GetAllTurretDataAction?.Invoke(CheckJoinRoomDataEnum.TurretData, true);
         }
         else
         {
             Debug.LogError($"獲取所有砲台資料失敗");
             AddressableManagement.Instance.ShowToast("Wiring Error");
+            GetAllTurretDataAction?.Invoke(CheckJoinRoomDataEnum.TurretData, true);
         }
     }
 

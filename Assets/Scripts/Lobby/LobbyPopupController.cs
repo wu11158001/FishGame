@@ -1,12 +1,17 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class LobbyPopupController : MonoBehaviour
 {
+    Queue<LobbyPopupEnum> PopupQueue = new();
+
     AccountData AccountData;
 
-    Queue<LobbyPopupEnum> PopupQueue = new();
+    // 檢測固定資料獲取狀態
+    bool IsCheckData = false;
+    Dictionary<CheckFixedDataEnum, bool> CheckFixedDataDic = new();
 
     private void OnDestroy()
     {
@@ -18,7 +23,7 @@ public class LobbyPopupController : MonoBehaviour
     {
         if (FirestoreDataManagement.Instance != null)
         {
-            //FirestoreDataManagement.Instance.GameTempData = null;
+            FirestoreDataManagement.Instance.GameTempData = null;
             FirestoreDataManagement.Instance.AsccountDataChangeDelegate += AccountDataChange;
             FirestoreDataManagement.Instance.StartListenAccountData();
         }            
@@ -31,16 +36,56 @@ public class LobbyPopupController : MonoBehaviour
     {
         if (accountData != null)
         {
-            Debug.Log("進入大廳，開始彈窗流程");
+            AccountData = accountData;
+
+            if(!IsCheckData)
+            {
+                IsCheckData = true;
+                Debug.Log("進入大廳，開始獲取Firestore固定資料");
+
+                CheckFixedDataDic.Clear();
+                foreach (CheckFixedDataEnum item in Enum.GetValues(typeof(CheckFixedDataEnum)))
+                {
+                    CheckFixedDataDic.Add(item, false);
+                }
+
+                if (FirestoreDataManagement.Instance != null)
+                {
+                    // 登入與註冊獎勵資料
+                    FirestoreDataManagement.Instance.GetLoginAndRegisterData(callback: CheckFixedData);
+
+                    // 砲台資料
+                    FirestoreDataManagement.Instance.GetAllTurretData(callback: CheckFixedData);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 檢查固定資料獲取狀態
+    /// </summary>
+    private void CheckFixedData(CheckFixedDataEnum dataType, bool isSuccess)
+    {
+        if (!CheckFixedDataDic.ContainsKey(dataType) || !isSuccess)
+        {
+            Debug.LogError($"檢查固定資料獲取狀態錯誤: {dataType}");
+            return;
+        }
+
+        CheckFixedDataDic[dataType] = isSuccess;
+
+        if (CheckFixedDataDic.All(x => x.Value == true))
+        {
+            Debug.Log("固定資料獲取完成，開始彈窗流程");
             Canvas_Global.Instance.CloseLoading();
             Canvas_Global.Instance.CloseSceneLoadingView();
-            AccountData = accountData;
+            
             PopupQueue.Clear();
             foreach (LobbyPopupEnum popup in Enum.GetValues(typeof(LobbyPopupEnum)))
             {
                 PopupQueue.Enqueue(popup);
             }
-                
+
             PopupProcess();
         }
     }

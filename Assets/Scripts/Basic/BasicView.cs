@@ -96,7 +96,7 @@ public abstract class BasicView : MonoBehaviour
     {
         if(PopUpRect != null)
         {
-            PopUpRect.anchoredPosition = new(0, -AddressableManagement.Instance.TargetResolution.y);
+            PopUpRect.anchoredPosition = new(0, -LocalData.TargetResolution.y);
             PopUpRect.DOAnchorPos(Vector2.zero, PopUpTime).SetEase(Ease.OutBack);
         }
     }

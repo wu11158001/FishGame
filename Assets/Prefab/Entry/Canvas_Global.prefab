@@ -166,6 +166,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneLoadingView
       objectReference: {fileID: 0}
+    - target: {fileID: 1824603021425584621, guid: 6fb81995df722e94b8a56efb2742afd5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7995077078251547369, guid: 6fb81995df722e94b8a56efb2742afd5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

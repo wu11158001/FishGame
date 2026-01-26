@@ -33,7 +33,7 @@ public class CameraResizer : MonoBehaviour
 
     private void Update()
     {
-        float targetAspect = AddressableManagement.Instance.TargetResolution.x / AddressableManagement.Instance.TargetResolution.y;
+        float targetAspect = LocalData.TargetResolution.x / LocalData.TargetResolution.y;
         float windowAspect = (float)Screen.width / (float)Screen.height;
 
 
@@ -73,6 +73,6 @@ public class CameraResizer : MonoBehaviour
         if (scaler == null) scaler = canvas.gameObject.GetComponent<CanvasScaler>();
 
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = AddressableManagement.Instance.TargetResolution;
+        scaler.referenceResolution = LocalData.TargetResolution;
     }
 }

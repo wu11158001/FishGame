@@ -148,6 +148,24 @@ public enum FirestoreStatusEnum
 #region 遊戲
 
 /// <summary>
+/// 檢查進入房間資料獲取
+/// </summary>
+public enum CheckJoinRoomDataEnum
+{
+    /// <summary> 魚群資料 </summary>
+    FishData,
+
+    /// <summary> 關卡資料 </summary>
+    LevelData,
+
+    /// <summary> 帳戶資料 </summary>
+    AccountData,
+
+    /// <summary> 砲台資料 </summary>
+    TurretData,
+}
+
+/// <summary>
 /// 遊戲狀態
 /// </summary>
 public enum GameState
@@ -325,27 +343,21 @@ public enum GamePeriod
     PayoutPeriod,
 }
 
+#endregion
+
+#region 商店
+
 /// <summary>
-/// 檢查進入房間資料獲取
+/// 檢查固定資料獲取
 /// </summary>
-public enum CheckJoinRoomDataEnum
+public enum CheckFixedDataEnum
 {
-    /// <summary> 魚群資料 </summary>
-    FishData,
-
-    /// <summary> 關卡資料 </summary>
-    LevelData,
-
-    /// <summary> 帳戶資料 </summary>
-    AccountData,
+    /// <summary> 登入與註冊資料 </summary>
+    LoginAndRegisterData,
 
     /// <summary> 砲台資料 </summary>
     TurretData,
 }
-
-#endregion
-
-#region 商店
 
 /// <summary>
 /// 金幣商店
