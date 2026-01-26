@@ -80,6 +80,12 @@ public class LoginRewardView : BasicView
     /// </summary>
     private void ReciveReward()
     {
+        if (FirestoreManagement.Instance == null || FirestoreDataManagement.Instance == null)
+        {
+            Debug.LogError("接收登入獎勵錯誤!");
+            return;
+        }
+
         Canvas_Global.Instance.ShowLoading();
 
         // 顯示獲得獎勵
@@ -90,18 +96,17 @@ public class LoginRewardView : BasicView
         // 更新最後登入時間 & 帳戶金幣
         DateTime taiwanTime = DateTime.UtcNow.AddHours(8);
         string currentTimestamp = taiwanTime.ToString("yyyy-MM-dd HH:mm:ss");
-        double currAccountCoin = FirestoreManagement.Instance.CurrAccountData.Coins;
+        double currAccountCoin = FirestoreDataManagement.Instance.CurrAccountData.Coins;
+
         var updates = new Dictionary<string, object>
         {
             { "Coins", currAccountCoin + Reward},
             { "LastLoginTime", currentTimestamp },
         };
 
-        if (FirestoreManagement.Instance != null)
-        {
-            FirestoreManagement.Instance.UpdateDataToFirestore(
+        FirestoreManagement.Instance.UpdateDataToFirestore(
             path: FirestoreCollectionNameEnum.AccountData,
-            docId: FirestoreManagement.Instance.CurrLoginInfo.Account,
+            docId: FirestoreDataManagement.Instance.CurrLoginInfo.Account,
             updates: updates,
             callback: (res) =>
             {
@@ -110,6 +115,5 @@ public class LoginRewardView : BasicView
                 if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶最後登入時間失敗");
                 Close();
             });
-        }
     }
 }

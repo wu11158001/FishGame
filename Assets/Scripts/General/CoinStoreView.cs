@@ -17,16 +17,16 @@ public class CoinStoreView : BasicView
     {
         base.OnDestroy();
 
-        if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AccountCoinDataChangeDelegate -= AccountCoinDataChange;
+        if (FirestoreDataManagement.Instance != null)
+            FirestoreDataManagement.Instance.AccountCoinDataChangeDelegate -= AccountCoinDataChange;
     }
 
     protected override void Start()
     {
         base.Start();
 
-        if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AccountCoinDataChangeDelegate += AccountCoinDataChange;
+        if (FirestoreDataManagement.Instance != null)
+            FirestoreDataManagement.Instance.AccountCoinDataChangeDelegate += AccountCoinDataChange;
     }
 
     public void SetData(Action closeAction)
@@ -139,7 +139,7 @@ public class CoinStoreView : BasicView
             {
                 CoinStoreUnitData data = new()
                 {
-                    AccountData = TempDataManagement.Instance.TempAccountData,
+                    AccountData = FirestoreDataManagement.Instance?.GameTempData?.TempAccountData,
                     CoinStoreData = GetCoinStoreData(coinType),
                     CoverSprite = CoinSprites[index]
                 };

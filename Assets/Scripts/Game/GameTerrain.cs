@@ -88,10 +88,13 @@ public class GameTerrain : NetworkBehaviour
         NetworkRunnerManagement.Instance.PlayerLeftEvent += LeftRoom;
 
         // 初始化座位座標
-        foreach (var seat in Seats)
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
-            TempDataManagement.Instance.SeatPositions.Add(seat.position);
-        }
+            foreach (var seat in Seats)
+            {
+                FirestoreDataManagement.Instance.GameTempData.SeatPositions.Add(seat.position);
+            }
+        }        
     }
 
     public override void Spawned()
@@ -105,8 +108,11 @@ public class GameTerrain : NetworkBehaviour
                 obj.SetActive(false); 
             });
 
-        WaterWaveTime = TempDataManagement.Instance.CurrentLevelData.WaterWaveTime;
-        SpecialSpawnTime = TempDataManagement.Instance.CurrentLevelData.SpecialFishTime;
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+        {
+            WaterWaveTime = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.WaterWaveTime;
+            SpecialSpawnTime = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.SpecialFishTime;
+        }        
 
         if (Object.HasStateAuthority)
         {
@@ -229,6 +235,9 @@ public class GameTerrain : NetworkBehaviour
             int index = i;
             if (SeatPlayerIDs[index] == Runner.LocalPlayer.PlayerId)
             {
+                if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+                    return;
+
                 isLocalSpawn = true;
                 bool isMirror = index == 1 || index == 3;
 
@@ -247,7 +256,7 @@ public class GameTerrain : NetworkBehaviour
                         PlayerTurret playerTurret = obj.GetComponent<PlayerTurret>();
                         if(playerTurret != null)
                         {
-                            playerTurret.SetData(turretIndex: TempDataManagement.Instance.TempAccountData.DefaultTurret, seatIndex: index);
+                            playerTurret.SetData(turretIndex: FirestoreDataManagement.Instance.GameTempData.TempAccountData.DefaultTurret, seatIndex: index);
                         }
                     });
 
@@ -257,8 +266,10 @@ public class GameTerrain : NetworkBehaviour
                     Transform cameraTr = Camera.main.transform;
                     cameraTr.rotation = Quaternion.Euler(90, 0, 180);
                 }
-                TempDataManagement.Instance.IsMirror = index == 1 || index == 3;
-                TempDataManagement.Instance.LocalSeatIndex = index;
+
+                FirestoreDataManagement.Instance.GameTempData.IsMirror = index == 1 || index == 3;
+                FirestoreDataManagement.Instance.GameTempData.LocalSeatIndex = index;
+
                 break;
             }
         }
@@ -433,25 +444,28 @@ public class GameTerrain : NetworkBehaviour
     {
         CurrentState = GameState.SpecialFish;
 
-        switch (TempDataManagement.Instance.CurrentLevelData.LevelType)
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
-            // 經典關卡
-            case LevelEnum.ClassicLevel:
-                if (SpecialFishCoroutine != null)
-                    StopCoroutine(SpecialFishCoroutine);
+            switch (FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.LevelType)
+            {
+                // 經典關卡
+                case LevelEnum.ClassicLevel:
+                    if (SpecialFishCoroutine != null)
+                        StopCoroutine(SpecialFishCoroutine);
 
-                SpecialFishCoroutine = StartCoroutine(ISpawnStingrayFish());
-                break;
+                    SpecialFishCoroutine = StartCoroutine(ISpawnStingrayFish());
+                    break;
 
-            // 鯊魚關卡
-            case LevelEnum.SharkLevel:
-                SpawnSharkFish();
-                break;
+                // 鯊魚關卡
+                case LevelEnum.SharkLevel:
+                    SpawnSharkFish();
+                    break;
 
-            // 金龍關卡
-            case LevelEnum.DragonLevel:
-                SpawnDragonFish();
-                break;
+                // 金龍關卡
+                case LevelEnum.DragonLevel:
+                    SpawnDragonFish();
+                    break;
+            }
         }
     }
 
@@ -516,10 +530,13 @@ public class GameTerrain : NetworkBehaviour
             yield return new WaitForSeconds(yieldTime);
         }
 
-        FishData fishData = TempDataManagement.Instance.GetFishData(fishType);
-        if(fishData != null)
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
-            ResetTimmer(fishDuration: fishData.Duration, yieldTime: yieldTime);
+            FishData fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(fishType);
+            if (fishData != null)
+            {
+                ResetTimmer(fishDuration: fishData.Duration, yieldTime: yieldTime);
+            }
         }
     }
 
@@ -569,11 +586,14 @@ public class GameTerrain : NetworkBehaviour
                         skipWaypoint: skipWaypoint);
             });
 
-        FishData fishData = TempDataManagement.Instance.GetFishData(fishType);
-        if (fishData != null)
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
-            ResetTimmer(fishDuration: fishData.Duration);
-        }
+            FishData fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(fishType);
+            if (fishData != null)
+            {
+                ResetTimmer(fishDuration: fishData.Duration);
+            }
+        }        
     }
 
     /// <summary>
@@ -614,11 +634,14 @@ public class GameTerrain : NetworkBehaviour
                         skipWaypoint: skipWaypoint);
             });
 
-        FishData fishData = TempDataManagement.Instance.GetFishData(fishType);
-        if (fishData != null)
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
-            ResetTimmer(fishDuration: fishData.Duration);
-        }
+            FishData fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(fishType);
+            if (fishData != null)
+            {
+                ResetTimmer(fishDuration: fishData.Duration);
+            }
+        }        
     }
 
     /// <summary>
@@ -853,8 +876,11 @@ public class GameTerrain : NetworkBehaviour
         // 產生浪潮魚群
         if (SpawnTimer.ExpiredOrNotRunning(Runner))
         {
-            if (WaterWaveFishData == null)
-                WaterWaveFishData = WaterWaveFishManagement.GetWaterWaveFishData(TempDataManagement.Instance.CurrentLevelData.LevelType);
+            if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+            {
+                if (WaterWaveFishData == null)
+                    WaterWaveFishData = WaterWaveFishManagement.GetWaterWaveFishData(FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.LevelType);
+            }            
 
             SpawnTimer = TickTimer.CreateFromSeconds(Runner, WaterWaveFishData.SpawnBetweenTime);
 
@@ -896,8 +922,11 @@ public class GameTerrain : NetworkBehaviour
         if (WayPointMain == null)
             WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}").GetComponent<WayPointMain>();
 
-        if (WaterWaveFishData == null)
-            WaterWaveFishData = WaterWaveFishManagement.GetWaterWaveFishData(TempDataManagement.Instance.CurrentLevelData.LevelType);
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+        {
+            if (WaterWaveFishData == null)
+                WaterWaveFishData = WaterWaveFishManagement.GetWaterWaveFishData(FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.LevelType);
+        }        
 
         if (FishPool == null || WayPointMain == null || WaterWaveFishData == null)
         {

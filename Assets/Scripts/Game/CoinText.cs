@@ -22,6 +22,9 @@ public class CoinText : MonoBehaviour
 
     public void SetData(string str, int recycleSeatIndex)
     {
+        if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+            return;
+
         if (MainText != null)
             MainText.text = str;
 
@@ -30,13 +33,13 @@ public class CoinText : MonoBehaviour
             IsSetMirror = true;
 
             transform.localRotation =
-                TempDataManagement.Instance.IsMirror ?
+                FirestoreDataManagement.Instance.GameTempData.IsMirror ?
                 Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 180) :
                 Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 0);
         }
 
         // 有噴發效果給予回收目標位置
-        Vector3 seatPos = TempDataManagement.Instance.SeatPositions[recycleSeatIndex];
+        Vector3 seatPos = FirestoreDataManagement.Instance.GameTempData.SeatPositions[recycleSeatIndex];
         foreach (var effect in EruptionEffects)
         {
             effect.SetData(targetRecycle: seatPos);

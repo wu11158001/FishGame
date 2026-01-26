@@ -17,74 +17,10 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
 {
 #if !UNITY_WEBGL || UNITY_EDITOR
     FirebaseFirestore db;
-
-    // 專門存儲 Editor 環境下的監聽器(Key: docId, Value: 監聽器執行個體)
-    private Dictionary<string, ListenerRegistration> EditorListeners = new();
 #endif
 
     // 用來儲存所有的回調，Key = GUID
     private Dictionary<string, Action<FirestoreResponse>> PendingCallbacks = new();
-
-    // 當下登入帳戶訊息
-    public LoginInfo CurrLoginInfo { get; set; }
-
-    // 帳戶資料變更監聽
-    public delegate void AccountDataChange(AccountData accountData);
-    public event AccountDataChange AsccountDataChangeDelegate;
-    // 帳戶金幣變更監聽
-    public delegate void AccountCoinChange(AccountData accountData);
-    public event AccountCoinChange AccountCoinDataChangeDelegate;
-    // 帳戶砲台資料變更監聽
-    public delegate void AccountTurretDataChange(AccountData accountData);
-    public event AccountTurretDataChange AccountTurretDataChangeDelegate;
-    // 關卡資料變更監聽
-    public delegate void LevelDataChange(LevelData levelData);
-    public event LevelDataChange LevelDataChangeDelegate;
-
-
-    public AccountData CurrAccountData { get; private set; } = new();
-
-    Coroutine HeartbeatCoroutine;
-
-    // 心跳包發送間格時間(秒)
-    public int HeartbeatTime { get; private set; } = 20;
-
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-
-#if !UNITY_WEBGL || UNITY_EDITOR
-        foreach (var listener in EditorListeners.Values)
-        {
-            listener.Stop();
-        }
-        EditorListeners.Clear();
-#endif
-
-        StopListenAccountData();
-        StopAllCoroutines();
-    }
-
-    private void Start()
-    {
-#if !UNITY_EDITOR && UNITY_WEBGL
-        // 綁定滑鼠鼠移出Canvas事件
-        BindMouseEvents(gameObject.name, nameof(OnMouseLeaveCanvas), nameof(OnMouseEnterCanvas));
-#endif
-    }
-
-    /// <summary>
-    /// DB初始化
-    /// </summary>
-    private void DBInstance()
-    {
-#if !UNITY_WEBGL || UNITY_EDITOR
-        if (db == null)
-        {
-            db = FirebaseFirestore.DefaultInstance;
-        }
-#endif
-    }
 
     /// <summary>
     /// 獲取Json資料轉字典
@@ -99,72 +35,20 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
         return null;
     }
 
-    #region 心跳包
-
-    /// <summary>
-    /// 停止心跳包發送
-    /// </summary>
-    public void StopHeartbeat()
-    {
-        if (HeartbeatCoroutine != null)
-            StopCoroutine(HeartbeatCoroutine);
-
-        var updates = new Dictionary<string, object>
-        {
-            { "HeartbeatUpdateTime", 0 }
-        };
-
-        UpdateDataToFirestore(
-            path: FirestoreCollectionNameEnum.AccountData,
-            docId: CurrLoginInfo.Account,
-            updates: updates,
-            callback: (res) => {
-                if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
-            });
-    }
-
-    /// <summary>
-    /// 開始心跳包發送
-    /// </summary>
-    public void StartHeartbeat()
-    {
-        if (HeartbeatCoroutine != null)
-            StopCoroutine(HeartbeatCoroutine);
-
-        HeartbeatCoroutine = StartCoroutine(ISendHeartbeat());
-    }
-
-    /// <summary>
-    /// 心跳包發送
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator ISendHeartbeat()
-    {
-        while (true)
-        {
-            // 獲取當前 Unix 時間戳 (秒)
-            long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
-            var updates = new Dictionary<string, object>
-            {
-                { "HeartbeatUpdateTime", currentTimestamp }
-            };
-
-            UpdateDataToFirestore(
-                path: FirestoreCollectionNameEnum.AccountData,
-                docId: CurrLoginInfo.Account,
-                updates: updates,
-                callback: (res) => {
-                    if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
-                });
-
-            yield return new WaitForSeconds(HeartbeatTime);
-        }
-    }
-
-    #endregion
-
     #region Firestore資料處理
+
+    /// <summary>
+    /// DB初始化
+    /// </summary>
+    private void DBInstance()
+    {
+#if !UNITY_WEBGL || UNITY_EDITOR
+        if (db == null)
+        {
+            db = FirebaseFirestore.DefaultInstance;
+        }
+#endif
+    }
 
     /// <summary>
     /// 寫入新資料
@@ -432,160 +316,13 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// 監聽資料變更
     /// </summary>
     [DllImport("__Internal")]
-    private static extern void ListenToFirestoreData(string path, string docId, string callbackObj, string callbackMethod);
+    public static extern void ListenToFirestoreData(string path, string docId, string callbackObj, string callbackMethod);
 
     /// <summary>
     /// 停止監聽
     /// </summary>
     [DllImport("__Internal")]
-    private static extern void StopListenToFirestoreData(string docId);
-
-    /// <summary>
-    /// 開始監聽帳戶資料
-    /// </summary>
-    public void StartListenAccountData()
-    {
-        string path = FirestoreCollectionNameEnum.AccountData.ToString();
-        string docId = CurrLoginInfo.Account;
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-        ListenToFirestoreData(path, docId, gameObject.name, nameof(OnAccountDataChanged));
-        Debug.Log($"[WebGL] 開始監聽: {docId}");
-#else
-        // 已經在監聽停止
-        StopListenAccountData();
-
-        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
-        DocumentReference docRef = db.Collection(path).Document(docId);
-
-        ListenerRegistration registration = docRef.Listen(snapshot => {
-            if (snapshot == null) return;
-
-            bool exists = snapshot.Exists;
-            string innerJson = exists ? JsonConvert.SerializeObject(snapshot.ToDictionary()) : "";
-
-            var response = new
-            {
-                IsSuccess = exists,
-                Status = exists ? "DataChanged" : "AccountNotFound",
-                JsonData = innerJson
-            };
-
-            OnAccountDataChanged(JsonConvert.SerializeObject(response));
-        });
-
-        EditorListeners.Add(docId, registration);
-#endif
-    }
-
-    /// <summary>
-    /// 停止監聽帳戶資料
-    /// </summary>
-    public void StopListenAccountData()
-    {
-        string docId = CurrLoginInfo.Account;
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-        // WebGL 端：呼叫 .jslib 刪除 JS 字典裡的監聽
-        StopListenToFirestoreData(docId);
-#else
-        if (EditorListeners.ContainsKey(docId))
-        {
-            EditorListeners[docId].Stop();
-            EditorListeners.Remove(docId);
-        }
-#endif
-    }
-
-    /// <summary>
-    /// 帳戶資料變更
-    /// </summary>
-    public void OnAccountDataChanged(string jsonResponse)
-    {
-        var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
-        AccountData accountData = JsonConvert.DeserializeObject<AccountData>(response.JsonData);
-
-        // 帳戶金幣資料變更
-        if (CurrAccountData.Coins != accountData.Coins)
-            AccountCoinDataChangeDelegate?.Invoke(accountData);
-
-        // 帳戶砲台資料變更
-        if (CurrAccountData.DefaultTurret != accountData.DefaultTurret || CurrAccountData.OwnTurret != accountData.OwnTurret)
-            AccountTurretDataChangeDelegate?.Invoke(accountData);
-
-        // 帳戶資料變更
-        AsccountDataChangeDelegate?.Invoke(accountData);
-
-        CurrAccountData = accountData;
-    }
-
-
-    /// <summary>
-    /// 開始監聽關卡資料
-    /// </summary>
-    public void StartListenLevelData(LevelEnum levelType)
-    {
-        string path = FirestoreCollectionNameEnum.LevelData.ToString();
-        string docId = levelType.ToString();
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-        ListenToFirestoreData(path, docId, gameObject.name, nameof(OnLevelDataChanged));
-        Debug.Log($"[WebGL] 開始監聽: {docId}");
-#else
-        // 已經在監聽停止
-        StopListenLevelData(levelType);
-
-        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
-        DocumentReference docRef = db.Collection(path).Document(docId);
-
-        ListenerRegistration registration = docRef.Listen(snapshot => {
-            if (snapshot == null) return;
-
-            bool exists = snapshot.Exists;
-            string innerJson = exists ? JsonConvert.SerializeObject(snapshot.ToDictionary()) : "";
-
-            var response = new
-            {
-                IsSuccess = exists,
-                Status = exists ? "DataChanged" : "AccountNotFound",
-                JsonData = innerJson
-            };
-
-            OnLevelDataChanged(JsonConvert.SerializeObject(response));
-        });
-
-        EditorListeners.Add(docId, registration);
-#endif
-    }
-
-    /// <summary>
-    /// 停止監聽關卡資料
-    /// </summary>
-    public void StopListenLevelData(LevelEnum levelType)
-    {
-        string docId = levelType.ToString();
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-        // WebGL 端：呼叫 .jslib 刪除 JS 字典裡的監聽
-        StopListenToFirestoreData(docId);
-#else
-        if (EditorListeners.ContainsKey(docId))
-        {
-            EditorListeners[docId].Stop();
-            EditorListeners.Remove(docId);
-        }
-#endif
-    }
-
-    /// <summary>
-    /// 關卡資料變更
-    /// </summary>
-    public void OnLevelDataChanged(string jsonResponse)
-    {
-        var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
-        LevelData levelData = JsonConvert.DeserializeObject<LevelData>(response.JsonData);
-        LevelDataChangeDelegate?.Invoke(levelData);
-    }
+    public static extern void StopListenToFirestoreData(string docId);
 
     #endregion
 
@@ -595,20 +332,7 @@ public class FirestoreManagement : SingletonMonoBehaviour<FirestoreManagement>
     /// 綁定滑鼠鼠移出Canvas事件
     /// </summary>
     [DllImport("__Internal")]
-    private static extern void BindMouseEvents(string callbackObj, string leaveCallbackMethod, string enterCallbackMethod);
-    public void OnMouseLeaveCanvas()
-    {
-        if (TempDataManagement.Instance != null)
-        {
-            TempDataManagement.Instance.SendUpdateAccountCoinData();
-            TempDataManagement.Instance.SendUpdateLevelDataJackpot();
-        }  
-    }
-
-    public void OnMouseEnterCanvas()
-    {
-
-    }
+    public static extern void BindMouseEvents(string callbackObj, string leaveCallbackMethod, string enterCallbackMethod);
 
     #endregion
 }

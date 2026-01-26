@@ -29,7 +29,7 @@ public class Canvas_Global : SingletonMonoBehaviour<Canvas_Global>
     #region SceneLoading
 
     /// <summary>
-    /// 開啟Loading
+    /// 開啟場景轉換介面
     /// </summary>
     public void ShowSceneLoadingView()
     {
@@ -38,7 +38,7 @@ public class Canvas_Global : SingletonMonoBehaviour<Canvas_Global>
     }
 
     /// <summary>
-    /// 關閉Loading
+    /// 關閉場景轉換介面
     /// </summary>
     public void CloseSceneLoadingView()
     {

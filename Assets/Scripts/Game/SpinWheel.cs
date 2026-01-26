@@ -163,6 +163,12 @@ public class SpinWheel : MonoBehaviour
     /// </summary>
     private IEnumerator IShowReward()
     {
+        if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+        {
+            Destroy(gameObject);
+            yield break;
+        }
+
         // 中獎特效與金額
         RewardEffect.SetActive(true);
         RewardText.gameObject.SetActive(true);
@@ -171,7 +177,7 @@ public class SpinWheel : MonoBehaviour
         RewardText.transform.DOScale(1, 0.5f).SetEase(Ease.OutElastic);
 
         // 金幣噴發效果
-        Vector3 seatPos = TempDataManagement.Instance.SeatPositions[SpinWhellData.SeatIndex];
+        Vector3 seatPos = FirestoreDataManagement.Instance.GameTempData.SeatPositions[SpinWhellData.SeatIndex];
         EruptionAndRecycleEffect.SetData(targetRecycle: seatPos);
 
         yield return new WaitForSeconds(ShowTime);
@@ -183,9 +189,9 @@ public class SpinWheel : MonoBehaviour
             .OnComplete(() =>
             {
                 // 關閉停止射擊
-                TempDataManagement.Instance.IsStopShot = false;
+                FirestoreDataManagement.Instance.GameTempData.IsStopShot = false;
                 // 更新金幣
-                TempDataManagement.Instance.InvokeTempAccountCoinChangeDelegate();
+                FirestoreDataManagement.Instance.GameTempData.InvokeTempAccountCoinChangeDelegate();
                 // 關閉遮罩
                 GameView gameView = FindFirstObjectByType<GameView>();
                 if (gameView != null)

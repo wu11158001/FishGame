@@ -55,32 +55,68 @@ public class GameFloatBtn : MonoBehaviour
             btn.gameObject.SetActive(false);
         }
 
+        // 主按鈕
         MainBtn.onClick.AddListener(SwitchShowBtns);
+
+        // 返回大廳按鈕
         HomeBtn.onClick.AddListener(() =>
         {
-            TempDataManagement.Instance.IsStopShot = true;
+            if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+            {
+                FirestoreDataManagement.Instance.GameTempData.IsStopShot = true;
+            }           
 
-            AddressableManagement.Instance.ShowConfirmView(
+            if(AddressableManagement.Instance != null)
+            {
+                AddressableManagement.Instance.ShowConfirmView(
                 contentKey: "Leave the game?",
                 comfirmAction: () =>
                 {
-                    Canvas_Global.Instance.ShowLoading();
-                    NetworkRunnerManagement.Instance.Shutdown();
+                    if (Canvas_Global.Instance != null)
+                        Canvas_Global.Instance.ShowLoading();
+
+                    if (NetworkRunnerManagement.Instance != null)
+                    {
+                        NetworkRunnerManagement.Instance.IsSafeShutdown = true;
+                        NetworkRunnerManagement.Instance.Shutdown();
+                    }
+
+                    if (SceneManagement.Instance != null)
+                    {
+                        SceneManagement.Instance.LoadScene(
+                            sceneEnum: SceneEnum.Lobby,
+                            callback: async () =>
+                            {
+                                if (AddressableManagement.Instance != null)
+                                    await AddressableManagement.Instance.OpenLobbyView();
+                            });
+                    }
                 },
                 cancelAction: () =>
                 {
-                    TempDataManagement.Instance.IsStopShot = false;
+                    if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+                    {
+                        FirestoreDataManagement.Instance.GameTempData.IsStopShot = false;
+                    }
                 });
+            }
         });
 
+        // 分配表按鈕
         GuideBtn.onClick.AddListener(() =>
         {
-            TempDataManagement.Instance.IsStopShot = true;
+            if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+            {
+                FirestoreDataManagement.Instance.GameTempData.IsStopShot = true;
+            }
 
             AddressableManagement.Instance.OpenGuideView(
                 closeAction: () =>
                 {
-                    TempDataManagement.Instance.IsStopShot = false;
+                    if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+                    {
+                        FirestoreDataManagement.Instance.GameTempData.IsStopShot = false;
+                    }
                 });
         });
 

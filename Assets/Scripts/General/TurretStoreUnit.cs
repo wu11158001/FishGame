@@ -145,11 +145,11 @@ public class TurretStoreUnit : MonoBehaviour
             { "OwnTurret", result }
         };
 
-        if (FirestoreManagement.Instance != null)
+        if (FirestoreManagement.Instance != null && FirestoreDataManagement.Instance != null)
         {
             FirestoreManagement.Instance.UpdateDataToFirestore(
             path: FirestoreCollectionNameEnum.AccountData,
-            docId: FirestoreManagement.Instance.CurrLoginInfo.Account,
+            docId: FirestoreDataManagement.Instance.CurrLoginInfo.Account,
             updates: updates,
             callback: (res) =>
             {

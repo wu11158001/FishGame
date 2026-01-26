@@ -223,6 +223,12 @@ public enum GamePrefabEnum
     /// <summary> 浪潮效果 </summary>
     WaterWave = 3,
 
+    /// <summary> 遊戲入口 </summary>
+    GameEntry = 4,
+
+    /// <summary> 遊戲暫存資料 </summary>
+    GameTempData = 5,
+
     /// <summary> 技能_鎖定 </summary>
     Skill_Locking = 50,
 

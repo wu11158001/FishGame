@@ -57,20 +57,24 @@ public class PlayerTurret : NetworkBehaviour
     {
         StopAllCoroutines();
 
-        if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AccountTurretDataChangeDelegate -= AccountTurretDataChange;
+        if (FirestoreDataManagement.Instance != null)
+        {
+            FirestoreDataManagement.Instance.AccountTurretDataChangeDelegate -= AccountTurretDataChange;
 
-        if (TempDataManagement.Instance != null)
-            TempDataManagement.Instance.CurrCostChangeDelegate -= CurrCostChange;
+            if (FirestoreDataManagement.Instance.GameTempData != null)
+                FirestoreDataManagement.Instance.GameTempData.CurrCostChangeDelegate -= CurrCostChange;
+        }
     }
 
     private void Start()
     {
-        if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AccountTurretDataChangeDelegate += AccountTurretDataChange;
+        if (FirestoreDataManagement.Instance != null)
+        {
+            FirestoreDataManagement.Instance.AccountTurretDataChangeDelegate += AccountTurretDataChange;
 
-        if(TempDataManagement.Instance != null)
-            TempDataManagement.Instance.CurrCostChangeDelegate += CurrCostChange;
+            if (FirestoreDataManagement.Instance.GameTempData != null)
+                FirestoreDataManagement.Instance.GameTempData.CurrCostChangeDelegate += CurrCostChange;
+        }
     }
 
     public void SetData(int turretIndex, int seatIndex)
@@ -84,9 +88,12 @@ public class PlayerTurret : NetworkBehaviour
         BulletPool = GameObject.Find(FusionPoolNameEnum.BulletPool.ToString()).transform;
 
         if(Object.HasStateAuthority)
-        {            
-            TempDataManagement.Instance.StartTimingUpdateAccountData();
-            TempDataManagement.Instance.StartTimingUpdateLevelDataJackpot();
+        {
+            if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+                return;
+
+            FirestoreDataManagement.Instance.GameTempData.StartTimingUpdateAccountData();
+            FirestoreDataManagement.Instance.GameTempData.StartTimingUpdateLevelDataJackpot();
 
             // 產生鎖定技能
             _ = AddressableManagement.Instance.CreateGamePrefab(
@@ -101,7 +108,7 @@ public class PlayerTurret : NetworkBehaviour
                     Skill_LockingAni = Skill_Locking.GetComponent<Animator>();
                 });
 
-            CurrCostChange(TempDataManagement.Instance.CurrentLevelData.DefaultCost);
+            CurrCostChange(FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost);
             StartCoroutine(IYieldShow());
         }
 
@@ -136,7 +143,6 @@ public class PlayerTurret : NetworkBehaviour
     {
         yield return new WaitForSeconds(1);
 
-        Canvas_Global.Instance.CloseLoading();
         Canvas_Global.Instance.CloseSceneLoadingView();
     }
 
@@ -187,7 +193,10 @@ public class PlayerTurret : NetworkBehaviour
         if (!Object.HasStateAuthority)
             return;
 
-        bool isLocking = TempDataManagement.Instance.IsSkill_Locking;
+        if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+            return;
+
+        bool isLocking = FirestoreDataManagement.Instance.GameTempData.IsSkill_Locking;
 
         // 檢測鎖定技能是否關閉
         if (Skill_Locking != null && Skill_Locking.activeSelf && !isLocking)
@@ -200,7 +209,7 @@ public class PlayerTurret : NetworkBehaviour
 
         if (isLocking)
         {
-            bool isAuto = TempDataManagement.Instance.IsSkill_Auto;
+            bool isAuto = FirestoreDataManagement.Instance.GameTempData.IsSkill_Auto;
 
             // 有鎖定目標，但目標消失
             if (TargetLockingFish != null && (!TargetLockingFish.gameObject.activeInHierarchy || !TargetLockingFish .Object.IsValid || TargetLockingFish.IsDie))
@@ -323,10 +332,13 @@ public class PlayerTurret : NetworkBehaviour
     {
         if (GetInput(out NetworkInputData input))
         {
+            if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+                return;
+
             var pressed = input.Buttons.GetPressed(ButtonsPrevious);
             ButtonsPrevious = input.Buttons;
 
-            if (pressed.IsSet(NetworkInputData.MOUSE_LEFT) && TempDataManagement.Instance.IsSkill_Locking)
+            if (pressed.IsSet(NetworkInputData.MOUSE_LEFT) && FirestoreDataManagement.Instance.GameTempData.IsSkill_Locking)
             {
                 Vector2 mousePos = input.MousePosition;
                 Ray ray = MainCamera.ScreenPointToRay(mousePos);
@@ -358,8 +370,11 @@ public class PlayerTurret : NetworkBehaviour
     /// </summary>
     private void OnRotationControl()
     {
+        if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+            return;
+
         // 是否有鎖定目標
-        bool isLocking = TempDataManagement.Instance.IsSkill_Locking && TargetLockingFish != null;
+        bool isLocking = FirestoreDataManagement.Instance.GameTempData.IsSkill_Locking && TargetLockingFish != null;
 
         if (GetInput(out NetworkInputData input) && !isLocking)
         {
@@ -391,9 +406,12 @@ public class PlayerTurret : NetworkBehaviour
     /// </summary>
     private void OnFire()
     {
-        bool isAuto = TempDataManagement.Instance.IsSkill_Auto;
-        bool isLocking = TempDataManagement.Instance.IsSkill_Locking;
-        bool isOpenView = TempDataManagement.Instance.IsStopShot;
+        if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+            return;
+
+        bool isAuto = FirestoreDataManagement.Instance.GameTempData.IsSkill_Auto;
+        bool isLocking = FirestoreDataManagement.Instance.GameTempData.IsSkill_Locking;
+        bool isOpenView = FirestoreDataManagement.Instance.GameTempData.IsStopShot;
 
         // 自動 & 鎖定 但沒有目標
         if (isAuto && isLocking && TargetLockingFish == null)
@@ -421,13 +439,13 @@ public class PlayerTurret : NetworkBehaviour
 
             if ((manualFire || isAuto) && Delay.ExpiredOrNotRunning(Runner))
             {
-                TurretData turretData = TempDataManagement.Instance.GetTurrethData((TurretEnum)TurretIndex);
+                TurretData turretData = FirestoreDataManagement.Instance.GameTempData.GetTurrethData((TurretEnum)TurretIndex);
                 // 重製冷卻時間
                 Delay = TickTimer.CreateFromSeconds(Runner, turretData.Rate);
 
                 // 判斷子彈花費
-                double accountCoin = TempDataManagement.Instance.TempAccountData.Coins;
-                double currCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
+                double accountCoin = FirestoreDataManagement.Instance.GameTempData.TempAccountData.Coins;
+                double currCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost;
                 double totalCost = currCost * CurrShotPoints.Count;
 
                 if (accountCoin < totalCost)
@@ -435,16 +453,16 @@ public class PlayerTurret : NetworkBehaviour
                     Debug.Log("金幣不足!");
                     AddressableManagement.Instance.ShowToast("Insufficient Coin");
 
-                    TempDataManagement.Instance.IsStopShot = true;
+                    FirestoreDataManagement.Instance.GameTempData.IsStopShot = true;
                     _ = AddressableManagement.Instance.OpenCoinStoreView(closeAction: () =>
                     {
-                        TempDataManagement.Instance.IsStopShot = false;
+                        FirestoreDataManagement.Instance.GameTempData.IsStopShot = false;
                     });
 
                     // 自動狀態下強制關閉自動
                     if (isAuto)
                     {
-                        TempDataManagement.Instance.IsSkill_AutoCloseEvent();
+                        FirestoreDataManagement.Instance.GameTempData.IsSkill_AutoCloseEvent();
                     }
 
                     return;
@@ -453,8 +471,8 @@ public class PlayerTurret : NetworkBehaviour
                 // 扣除金幣
                 if (Runner.IsForward)
                 {
-                    TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: -totalCost, isInvokeChange: true);
-                    TempDataManagement.Instance.RecodJackpot += totalCost;
+                    FirestoreDataManagement.Instance.GameTempData.ChangeTempAccountCoin(changeValue: -totalCost, isInvokeChange: true);
+                    FirestoreDataManagement.Instance.GameTempData.RecodJackpot += totalCost;
                 }                    
 
                 // 觸發後座力

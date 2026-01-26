@@ -46,8 +46,8 @@ public class TurretStoreView : BasicView
 
         Model3DEvenySystemHandler.DragHandlerDelegate -= Model3DDragHandler;
 
-        if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AccountTurretDataChangeDelegate -= AccountTurretDataChange;
+        if (FirestoreDataManagement.Instance != null)
+            FirestoreDataManagement.Instance.AccountTurretDataChangeDelegate -= AccountTurretDataChange;
     }
 
     protected override void Start()
@@ -58,8 +58,8 @@ public class TurretStoreView : BasicView
 
         Model3DEvenySystemHandler.DragHandlerDelegate += Model3DDragHandler;
 
-        if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AccountTurretDataChangeDelegate += AccountTurretDataChange;
+        if (FirestoreDataManagement.Instance != null)
+            FirestoreDataManagement.Instance.AccountTurretDataChangeDelegate += AccountTurretDataChange;
     }
 
     private void Update()
@@ -187,7 +187,7 @@ public class TurretStoreView : BasicView
             {
                 TurretStoreUnitData data = new()
                 {
-                   AccountData = TempDataManagement.Instance.TempAccountData,
+                   AccountData = FirestoreDataManagement.Instance?.GameTempData?.TempAccountData,
                    TurretData = GetTurrethData(turretType),
                    CoverSprite = StroeTurretSprites[index],
                    Model3D = Model3DObjects[index],

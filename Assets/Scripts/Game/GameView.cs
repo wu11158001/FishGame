@@ -48,10 +48,10 @@ public class GameView : BasicView
     {
         base.OnDestroy();
 
-        if(TempDataManagement.Instance != null)
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
-            TempDataManagement.Instance.TempAccountCoinChangeDelegate -= TempAccountCoinChange;
-            TempDataManagement.Instance.IsSkill_AutoCloseDelegate -= Skill_AutoClose;
+            FirestoreDataManagement.Instance.GameTempData.TempAccountCoinChangeDelegate -= TempAccountCoinChange;
+            FirestoreDataManagement.Instance.GameTempData.IsSkill_AutoCloseDelegate -= Skill_AutoClose;
         }
     }
 
@@ -62,27 +62,48 @@ public class GameView : BasicView
         // 更換砲台
         TurretBtn.onClick.AddListener(() => 
         {
-            TempDataManagement.Instance.IsStopShot = true;
+            if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+                return;
+
+            FirestoreDataManagement.Instance.GameTempData.IsStopShot = true;
+
             _ = AddressableManagement.Instance.OpenTurretStoreView(closeAction: () =>
             {
-                TempDataManagement.Instance.IsStopShot = false;
+                FirestoreDataManagement.Instance.GameTempData.IsStopShot = false;
             });
         });
 
         // 金幣商店
         CoinStoreBtn.onClick.AddListener(() => 
         {
-            TempDataManagement.Instance.IsStopShot = true;
+            if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+                return;
+
+            FirestoreDataManagement.Instance.GameTempData.IsStopShot = true;
+
             _ = AddressableManagement.Instance.OpenCoinStoreView(closeAction: () =>
             {
-                TempDataManagement.Instance.IsStopShot = false;
+                FirestoreDataManagement.Instance.GameTempData.IsStopShot = false;
             });
         });
 
         // 減少子彈花費
-        ReduceCostBtn.onClick.AddListener(() => { TempDataManagement.Instance.ChangeCurrCost(isReduce: true); });
+        ReduceCostBtn.onClick.AddListener(() => 
+        {
+            if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+                return;
+
+            FirestoreDataManagement.Instance.GameTempData.ChangeCurrCost(isReduce: true); }
+        );
+
         // 增加子彈花費
-        AddCostBtn.onClick.AddListener(() => { TempDataManagement.Instance.ChangeCurrCost(isReduce: false); });
+        AddCostBtn.onClick.AddListener(() => 
+        {
+            if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+                return;
+
+            FirestoreDataManagement.Instance.GameTempData.ChangeCurrCost(isReduce: false); 
+        });
 
         // 基本技能_鎖定
         LockingTog.onValueChanged.AddListener((isOn) => { Skill_Lock(isOn); });
@@ -92,10 +113,10 @@ public class GameView : BasicView
         // 道具_冰凍
         Props_FreezeBtn.onClick.AddListener(PropsFreezeBtnClick);
 
-        if (TempDataManagement.Instance != null)
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
-            TempDataManagement.Instance.TempAccountCoinChangeDelegate += TempAccountCoinChange;
-            TempDataManagement.Instance.IsSkill_AutoCloseDelegate += Skill_AutoClose;
+            FirestoreDataManagement.Instance.GameTempData.TempAccountCoinChangeDelegate += TempAccountCoinChange;
+            FirestoreDataManagement.Instance.GameTempData.IsSkill_AutoCloseDelegate += Skill_AutoClose;
         }
 
         AddressableManagement.Instance.OpenGameFloatBtn(
@@ -125,8 +146,11 @@ public class GameView : BasicView
             LeftSeatPosision :
             RightSeatPosision;
 
-        AccountText.text = TempDataManagement.Instance.TempAccountData.Account;
-        AccountCoinText.text = StringUtility.CurrencyFormat(TempDataManagement.Instance.TempAccountData.Coins);
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+        {
+            AccountText.text = FirestoreDataManagement.Instance.GameTempData.TempAccountData.Account;
+            AccountCoinText.text = StringUtility.CurrencyFormat(FirestoreDataManagement.Instance.GameTempData.TempAccountData.Coins);
+        }
 
         StartCoroutine(IYieldShow());
     }
@@ -250,7 +274,11 @@ public class GameView : BasicView
     private void Skill_Lock(bool isOn)
     {
         LockingSelectFrame.SetActive(isOn);
-        TempDataManagement.Instance.IsSkill_Locking = isOn;
+
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+        {
+            FirestoreDataManagement.Instance.GameTempData.IsSkill_Locking = isOn;
+        }        
     }
 
     /// <summary>
@@ -267,6 +295,10 @@ public class GameView : BasicView
     private void Skill_Auto(bool isOn)
     {
         AutoSelectFrame.SetActive(isOn);
-        TempDataManagement.Instance.IsSkill_Auto = isOn;
+
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+        {
+            FirestoreDataManagement.Instance.GameTempData.IsSkill_Auto = isOn;
+        }
     }
 }

@@ -35,7 +35,13 @@ public class SpecialFishCatchView : MonoBehaviour
 
         if (seatIndex >= 0 && seatIndex < SeatPositions.Length)
         {
-            int index = TempDataManagement.Instance.IsMirror ? 3 - seatIndex : seatIndex;
+            int index = seatIndex;
+            if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+            {
+                if (FirestoreDataManagement.Instance.GameTempData.IsMirror)
+                    index = 3 - seatIndex;
+            }
+          
             UnitRect.anchoredPosition = SeatPositions[index];
         }
 

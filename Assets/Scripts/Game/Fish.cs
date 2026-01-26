@@ -40,7 +40,7 @@ public class Fish : NetworkBehaviour
     public void SetData(NetworkPrefabEnum fishType, bool isMirror, int depth, int wayPointId, int skipWaypoint, float customDuration = 0)
     {
         // 獲取魚資料
-        FishData fishData = TempDataManagement.Instance.GetFishData(fishType);
+        FishData fishData = FirestoreDataManagement.Instance?.GameTempData?.GetFishData(fishType);
         if (fishData != null)
         {
             FishData fishDataInstance = fishData.Clone();
@@ -372,6 +372,9 @@ public class Fish : NetworkBehaviour
     /// </summary>
     private void ShowSpinWheel(FishHitData fishHitData)
     {
+        if (AddressableManagement.Instance == null || FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+            return;
+
         _ = AddressableManagement.Instance.CreateGamePrefab(
                         prefabType: GamePrefabEnum.SpinWheel,
                         callback: (obj) =>
@@ -380,8 +383,8 @@ public class Fish : NetworkBehaviour
                             pos.y = 2;
                             obj.transform.position = pos;
 
-                            obj.transform.rotation = 
-                                TempDataManagement.Instance.IsMirror?
+                            obj.transform.rotation =
+                                FirestoreDataManagement.Instance.GameTempData.IsMirror?
                                 Quaternion.Euler(90, 180, 0) :
                                 Quaternion.Euler(90, 0, 0);
 

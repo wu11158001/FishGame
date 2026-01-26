@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using Newtonsoft.Json;
 
-public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
+public class GameTempData : MonoBehaviour
 {
     /// <summary>
     /// 當前關卡資料
@@ -63,24 +63,21 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     // 技能_鎖定
     public bool IsSkill_Locking { get; set; }
 
-    protected override void OnDestroy()
+    protected void OnDestroy()
     {
-        base.OnDestroy();
-
-        if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AccountCoinDataChangeDelegate -= AccountCoinDataChange;
+        if (FirestoreDataManagement.Instance != null)
+            FirestoreDataManagement.Instance.AccountCoinDataChangeDelegate -= AccountCoinDataChange;
 
         SendUpdateAccountCoinData();
-
         StopAllCoroutines();
     }
 
     private void Start()
     {
-        if (FirestoreManagement.Instance != null)
+        if (FirestoreDataManagement.Instance != null)
         {
-            FirestoreManagement.Instance.AccountCoinDataChangeDelegate += AccountCoinDataChange;
-            FirestoreManagement.Instance.LevelDataChangeDelegate += LevelDataChange;
+            FirestoreDataManagement.Instance.AccountCoinDataChangeDelegate += AccountCoinDataChange;
+            FirestoreDataManagement.Instance.LevelDataChangeDelegate += LevelDataChange;
         }            
     }
 
@@ -291,9 +288,15 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
     {
         GetTempAccountDataAction = callback;
 
+        if(FirestoreManagement.Instance == null || FirestoreDataManagement.Instance == null)
+        {
+            Debug.LogError("獲取暫存帳戶資料錯誤!");
+            return;
+        }
+
         FirestoreManagement.Instance.GetDataFromFirestore(
             path: FirestoreCollectionNameEnum.AccountData,
-            docId: FirestoreManagement.Instance.CurrLoginInfo.Account,
+            docId: FirestoreDataManagement.Instance.CurrLoginInfo.Account,
             callback: GetTempAccountDataCallback);
     }
 
@@ -415,22 +418,25 @@ public class TempDataManagement : SingletonMonoBehaviour<TempDataManagement>
         {
             PreUpdateCoin = TempAccountData.Coins;
 
+            if (FirestoreManagement.Instance == null || FirestoreDataManagement.Instance == null)
+            {
+                Debug.LogError("發送更新Firestore帳戶金幣資料錯誤!");
+                return;
+            }
+
             var updates = new Dictionary<string, object>
             {
                 { "Coins", TempAccountData.Coins }
             };
 
-            if(FirestoreManagement.Instance != null)
-            {
-                FirestoreManagement.Instance.UpdateDataToFirestore(
+            FirestoreManagement.Instance.UpdateDataToFirestore(
                 path: FirestoreCollectionNameEnum.AccountData,
-                docId: FirestoreManagement.Instance.CurrLoginInfo.Account,
+                docId: FirestoreDataManagement.Instance.CurrLoginInfo.Account,
                 updates: updates,
                 callback: (res) =>
                 {
                     if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶金幣資料失敗");
                 });
-            }            
         }
     }
 

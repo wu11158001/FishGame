@@ -203,6 +203,9 @@ public class Bullet : NetworkBehaviour
             return;
         }
 
+        if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+            return;
+
         // 產生子彈擊中效果
         NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                         key: NetworkPrefabEnum.HitEffect,
@@ -215,8 +218,8 @@ public class Bullet : NetworkBehaviour
 
         // 判斷階段(休閒/咬分/吐分)
         GamePeriod period = GamePeriod.IdlePeriod;
-        GamePeriod playerPeriod = TempDataManagement.Instance.TempAccountData.GamePeriod;
-        GamePeriod levelPeriod = TempDataManagement.Instance.CurrentLevelData.GamePeriod;
+        GamePeriod playerPeriod = FirestoreDataManagement.Instance.GameTempData.TempAccountData.GamePeriod;
+        GamePeriod levelPeriod = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.GamePeriod;
         if(playerPeriod == GamePeriod.IdlePeriod)
         {
             // 玩家屬於休閒期，依照關卡設置
@@ -231,9 +234,9 @@ public class Bullet : NetworkBehaviour
         // 如果屬於休閒期，判斷獎池
         if(period == GamePeriod.IdlePeriod)
         {
-            double payoutPeriodValue = TempDataManagement.Instance.CurrentLevelData.PayoutPeriodValue;
-            double suckingPeriodValue = TempDataManagement.Instance.CurrentLevelData.SuckingPeriodValue;
-            double jackpot = TempDataManagement.Instance.CurrentLevelData.Jackpot;
+            double payoutPeriodValue = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.PayoutPeriodValue;
+            double suckingPeriodValue = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.SuckingPeriodValue;
+            double jackpot = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.Jackpot;
 
             if (jackpot < suckingPeriodValue)
                 period = GamePeriod.SuckingPeriod;
@@ -254,14 +257,14 @@ public class Bullet : NetworkBehaviour
             // 咬分期
             case GamePeriod.SuckingPeriod:
                 // 減少倍率
-                float lose = Mathf.Max(0, (float)TempDataManagement.Instance.CurrentLevelData.SuckingPeriodLose);
+                float lose = Mathf.Max(0, (float)FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.SuckingPeriodLose);
                 probability /= lose;
                 break;
 
             // 吐分期
             case GamePeriod.PayoutPeriod:
                 // 增加倍率
-                float add = Mathf.Max(0, (float)TempDataManagement.Instance.CurrentLevelData.PayoutPeriodAdd);
+                float add = Mathf.Max(0, (float)FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.PayoutPeriodAdd);
                 probability *= add;
                 break;
         }      
@@ -271,7 +274,7 @@ public class Bullet : NetworkBehaviour
         if (hitValue <= probability)
         {
             // 獲得金幣
-            double currDefaultCost = TempDataManagement.Instance.CurrentLevelData.DefaultCost;
+            double currDefaultCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost;
             double reward = currDefaultCost * fishData.Magnification;
 
             // 特殊使用_轉盤Index
@@ -281,7 +284,7 @@ public class Bullet : NetworkBehaviour
             // 爆金文字
             string eruptionCoinString = StringUtility.CurrencyFormat(reward);
             // 座位
-            int seatIndex = TempDataManagement.Instance.LocalSeatIndex;
+            int seatIndex = FirestoreDataManagement.Instance.GameTempData.LocalSeatIndex;
             // 是否只有本地顯示
             bool isLocalShow = true;
 
@@ -325,15 +328,15 @@ public class Bullet : NetworkBehaviour
             }
 
             // 判斷獎池
-            if (TempDataManagement.Instance.CurrentLevelData.Jackpot < reward)
+            if (FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.Jackpot < reward)
             {
-                Debug.LogError($"獎池不足! Jackpot:{TempDataManagement.Instance.CurrentLevelData.Jackpot} 獎勵: {reward}");
+                Debug.LogError($"獎池不足! Jackpot:{FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.Jackpot} 獎勵: {reward}");
                 Runner.Despawn(Object);
                 return;
             }
 
             // 當前不可射擊
-            if (TempDataManagement.Instance.IsStopShot)
+            if (FirestoreDataManagement.Instance.GameTempData.IsStopShot)
             {
                 Debug.LogError($"當前不可射擊不判斷獎勵!");
                 Runner.Despawn(Object);
@@ -368,7 +371,7 @@ public class Bullet : NetworkBehaviour
                     // 不及時更新金幣
                     isUpdateCoin = false;
                     // 不可射擊
-                    TempDataManagement.Instance.IsStopShot = true;
+                    FirestoreDataManagement.Instance.GameTempData.IsStopShot = true;
                     // 開啟遮罩
                     GameView.MaskEnable(true);
 
@@ -382,7 +385,7 @@ public class Bullet : NetworkBehaviour
                 // 特殊魚_金龍
                 case NetworkPrefabEnum.DragonFish:
                     // 不可射擊
-                    TempDataManagement.Instance.IsStopShot = true;
+                    FirestoreDataManagement.Instance.GameTempData.IsStopShot = true;
 
                     // 金龍全屏捕獲魚
                     if (SpecialEffectController == null)
@@ -421,8 +424,8 @@ public class Bullet : NetworkBehaviour
             fish.GetHit(fishHitData);
 
             // 更新獎池與玩家金幣
-            TempDataManagement.Instance.RecodJackpot -= reward;
-            TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: reward, isInvokeChange: isUpdateCoin);
+            FirestoreDataManagement.Instance.GameTempData.RecodJackpot -= reward;
+            FirestoreDataManagement.Instance.GameTempData.ChangeTempAccountCoin(changeValue: reward, isInvokeChange: isUpdateCoin);
         }
 
         Runner.Despawn(Object);

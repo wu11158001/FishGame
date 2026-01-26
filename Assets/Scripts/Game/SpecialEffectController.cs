@@ -4,7 +4,7 @@ using System.Collections;
 using System;
 
 /// <summary>
-/// 特殊效果控制中心
+/// 遊戲特殊效果控制中心
 /// </summary>
 public class SpecialEffectController : NetworkBehaviour
 {
@@ -49,7 +49,8 @@ public class SpecialEffectController : NetworkBehaviour
         yield return new WaitForSeconds(0.5f);
 
         // 產生全屏水攻擊特效
-        _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.DragonFullHitEffect);
+        if (AddressableManagement.Instance != null)
+            _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.DragonFullHitEffect);
 
         // 等待特效結束
         yield return new WaitForSeconds(3);            
@@ -71,37 +72,40 @@ public class SpecialEffectController : NetworkBehaviour
             // 擊中者獲得獎勵
             DragonFullHit_UpdateCoin(data, totalReward);
 
-            _ = AddressableManagement.Instance.CreateGamePrefab(
-            prefabType: GamePrefabEnum.DragonFullOdds,
-            callback: (obj) =>
+            if(AddressableManagement.Instance != null && FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
             {
-                obj.transform.rotation =
-                    TempDataManagement.Instance.IsMirror ?
-                    Quaternion.Euler(0, 180, 0) :
-                    Quaternion.Euler(0, 0, 0);
+                _ = AddressableManagement.Instance.CreateGamePrefab(
+                    prefabType: GamePrefabEnum.DragonFullOdds,
+                    callback: (obj) =>
+                    {
+                        obj.transform.rotation =
+                            FirestoreDataManagement.Instance.GameTempData.IsMirror ?
+                            Quaternion.Euler(0, 180, 0) :
+                            Quaternion.Euler(0, 0, 0);
 
-                // 完成事件
-                Action finishCallback = () =>
-                {
-                    // 射擊回復
-                    TempDataManagement.Instance.IsStopShot = false;
-                    // 關閉遮罩
-                    GameView.MaskEnable(false);
-                    // 更新顯示金幣
-                    TempDataManagement.Instance.InvokeTempAccountCoinChangeDelegate();
-                };
+                        // 完成事件
+                        Action finishCallback = () =>
+                        {
+                            // 射擊回復
+                            FirestoreDataManagement.Instance.GameTempData.IsStopShot = false;
+                            // 關閉遮罩
+                            GameView.MaskEnable(false);
+                            // 更新顯示金幣
+                            FirestoreDataManagement.Instance.GameTempData.InvokeTempAccountCoinChangeDelegate();
+                        };
 
-                // 金龍獲得場上魚群倍率效果
-                DragonFullOdds dragonFullOdds = obj.GetComponent<DragonFullOdds>();
-                if (dragonFullOdds != null)
-                {
-                    dragonFullOdds.SetData(
-                        targetRecycle: TempDataManagement.Instance.SeatPositions[data.SeatIndex],
-                        targerOdds: data.Odds,
-                        totalReward: totalReward,
-                        finishCallback: finishCallback);
-                }
-            });
+                        // 金龍獲得場上魚群倍率效果
+                        DragonFullOdds dragonFullOdds = obj.GetComponent<DragonFullOdds>();
+                        if (dragonFullOdds != null)
+                        {
+                            dragonFullOdds.SetData(
+                                targetRecycle: FirestoreDataManagement.Instance.GameTempData.SeatPositions[data.SeatIndex],
+                                targerOdds: data.Odds,
+                                totalReward: totalReward,
+                                finishCallback: finishCallback);
+                        }
+                    });
+            }            
         }
     }
 
@@ -171,8 +175,11 @@ public class SpecialEffectController : NetworkBehaviour
             double totalCoin = dragonTotal + fishTotal;
 
             // 更新獎池與玩家金幣
-            TempDataManagement.Instance.RecodJackpot -= totalCoin;
-            TempDataManagement.Instance.ChangeTempAccountCoin(changeValue: totalCoin, isInvokeChange: false);
+            if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+            {
+                FirestoreDataManagement.Instance.GameTempData.RecodJackpot -= totalCoin;
+                FirestoreDataManagement.Instance.GameTempData.ChangeTempAccountCoin(changeValue: totalCoin, isInvokeChange: false);
+            }
         }
     }
 

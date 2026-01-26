@@ -193,58 +193,61 @@ public class GuideView : BasicView
         Sprite sprite = null;
         FishData fishData = null;
 
-        switch (TempDataManagement.Instance.CurrentLevelData.LevelType)
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
-            // 經典關卡
-            case LevelEnum.ClassicLevel:
-                SpecialMessageLocalized.SetReference(tableName, "Stingray Fish Message");
+            switch (FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.LevelType)
+            {
+                // 經典關卡
+                case LevelEnum.ClassicLevel:
+                    SpecialMessageLocalized.SetReference(tableName, "Stingray Fish Message");
 
-                fishData = TempDataManagement.Instance.GetFishData(NetworkPrefabEnum.StingrayFish);
-                if (fishData != null)
-                {
-                    // 隨機給予{0}-{1}倍獎勵\n最高<size=48><color=#FAFF51> {2}X </color></size>!
-                    SpecialMessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
+                    fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(NetworkPrefabEnum.StingrayFish);
+                    if (fishData != null)
+                    {
+                        // 隨機給予{0}-{1}倍獎勵\n最高<size=48><color=#FAFF51> {2}X </color></size>!
+                        SpecialMessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
 
-                    SpecialOddsText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
-                }
+                        SpecialOddsText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
+                    }
 
-                sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.StingrayFish);
-                break;
+                    sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.StingrayFish);
+                    break;
 
-            // 鯊魚關卡
-            case LevelEnum.SharkLevel:
-                SpecialMessageLocalized.SetReference(tableName, "Shark Fish Message");
+                // 鯊魚關卡
+                case LevelEnum.SharkLevel:
+                    SpecialMessageLocalized.SetReference(tableName, "Shark Fish Message");
 
-                fishData = TempDataManagement.Instance.GetFishData(NetworkPrefabEnum.SharkFish);
-                if (fishData != null)
-                {
-                    // 可獲得一次轉輪遊戲，結束獲得對應的倍率\n最高<size=48><color=#FAFF51> {0}X </color></size>!
-                    SpecialMessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
+                    fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(NetworkPrefabEnum.SharkFish);
+                    if (fishData != null)
+                    {
+                        // 可獲得一次轉輪遊戲，結束獲得對應的倍率\n最高<size=48><color=#FAFF51> {0}X </color></size>!
+                        SpecialMessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
 
-                    SpecialOddsText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
-                }
+                        SpecialOddsText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
+                    }
 
-                sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.SharkFish);
-                break;
+                    sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.SharkFish);
+                    break;
 
-            // 金龍關卡
-            case LevelEnum.DragonLevel:
-                SpecialMessageLocalized.SetReference(tableName, "Dragon Fish Message");
+                // 金龍關卡
+                case LevelEnum.DragonLevel:
+                    SpecialMessageLocalized.SetReference(tableName, "Dragon Fish Message");
 
-                fishData = TempDataManagement.Instance.GetFishData(NetworkPrefabEnum.DragonFish);
-                if (fishData != null)
-                {
-                    // 最高倍率 = 金龍倍率 * 最高倍率 + 魚群(最大預設30之3倍率)
-                    int maxOdds = (int)((fishData.Magnification * fishData.MaxMagnification) + (30 * 3));
+                    fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(NetworkPrefabEnum.DragonFish);
+                    if (fishData != null)
+                    {
+                        // 最高倍率 = 金龍倍率 * 最高倍率 + 魚群(最大預設30之3倍率)
+                        int maxOdds = (int)((fishData.Magnification * fishData.MaxMagnification) + (30 * 3));
 
-                    // 固定獲得{0}倍獎勵，並捕獲全屏魚群，獎勵再翻倍，最高翻倍X{0}\n最高<size=48><color=#FAFF51> {1}X </color></size>!
-                    SpecialMessageLocalized.Arguments = new object[] { fishData.MaxMagnification, maxOdds };
-                                        
-                    SpecialOddsText.text = $"{fishData.Magnification}X - {maxOdds}X";
-                }
+                        // 固定獲得{0}倍獎勵，並捕獲全屏魚群，獎勵再翻倍，最高翻倍X{0}\n最高<size=48><color=#FAFF51> {1}X </color></size>!
+                        SpecialMessageLocalized.Arguments = new object[] { fishData.MaxMagnification, maxOdds };
 
-                sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.DragonFish);
-                break;
+                        SpecialOddsText.text = $"{fishData.Magnification}X - {maxOdds}X";
+                    }
+
+                    sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.DragonFish);
+                    break;
+            }
         }
 
         SpecialMessageText.text = SpecialMessageLocalized.GetLocalizedString();

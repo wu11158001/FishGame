@@ -10,16 +10,17 @@ public class LobbyPopupController : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (FirestoreManagement.Instance != null)
-            FirestoreManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
+        if (FirestoreDataManagement.Instance != null)
+            FirestoreDataManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
     }
 
     private void Start()
     {
-        if (FirestoreManagement.Instance != null)
+        if (FirestoreDataManagement.Instance != null)
         {
-            FirestoreManagement.Instance.AsccountDataChangeDelegate += AccountDataChange;
-            FirestoreManagement.Instance.StartListenAccountData();
+            //FirestoreDataManagement.Instance.GameTempData = null;
+            FirestoreDataManagement.Instance.AsccountDataChangeDelegate += AccountDataChange;
+            FirestoreDataManagement.Instance.StartListenAccountData();
         }            
     }
 
@@ -30,8 +31,10 @@ public class LobbyPopupController : MonoBehaviour
     {
         if (accountData != null)
         {
-            AccountData = accountData;
+            Debug.Log("進入大廳，開始彈窗流程");
             Canvas_Global.Instance.CloseLoading();
+            Canvas_Global.Instance.CloseSceneLoadingView();
+            AccountData = accountData;
             PopupQueue.Clear();
             foreach (LobbyPopupEnum popup in Enum.GetValues(typeof(LobbyPopupEnum)))
             {

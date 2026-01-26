@@ -20,6 +20,11 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
     FusionPool FusionPool;
 
+    /// <summary>
+    /// 是否是安全斷線
+    /// </summary>
+    public bool IsSafeShutdown { get; set; }
+
     private void Start()
     {
         NetworkSceneManagerDefault = GetComponent<NetworkSceneManagerDefault>();
@@ -65,7 +70,6 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
             GameMode = GameMode.Shared,
             ObjectProvider = FusionPool,
             SessionName = sessionName,
-            Scene = SceneRef.FromIndex((int)SceneEnum.Game),
             SceneManager = NetworkSceneManagerDefault,
             PlayerCount = 4,
         });
@@ -147,6 +151,19 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log($"玩家加入: {player.PlayerId}");
+
+        AddressableManagement.Instance.SetCanvase();
+
+        // 產生遊戲地形
+        if (runner.IsSharedModeMasterClient)
+        {
+            NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                key: NetworkPrefabEnum.GameTerrain,
+                Pos: Vector3.zero,
+                rot: Quaternion.Euler(90, 0, 0),
+                parent: null,
+                player: PlayerRef.None);
+        }
     }
 
     /// <summary>
@@ -173,18 +190,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     /// </summary>
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        AddressableManagement.Instance.SetCanvase();
-
-        // 產生遊戲地形
-        if (runner.IsSharedModeMasterClient)
-        {
-            NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
-                key: NetworkPrefabEnum.GameTerrain,
-                Pos: Vector3.zero,
-                rot: Quaternion.Euler(90, 0, 0),
-                parent: null,
-                player: PlayerRef.None);
-        }
+        
     }
 
     /// <summary>
@@ -221,22 +227,22 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         if (AddressableManagement.Instance != null)
             AddressableManagement.Instance.ClearGamePrefab();
         
-        if (TempDataManagement.Instance != null)
+        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
             // 停止計時更新Firestore帳戶資料
-            TempDataManagement.Instance.StopTimingUpdateAccountData();
+            FirestoreDataManagement.Instance.GameTempData.StopTimingUpdateAccountData();
             // 停止計時更新Firestore關卡獎池資料
-            TempDataManagement.Instance.StopTimingUpdateLevelDataJackpot();
+            FirestoreDataManagement.Instance.GameTempData.StopTimingUpdateLevelDataJackpot();
 
-            if (FirestoreManagement.Instance != null)
+            if (FirestoreDataManagement.Instance != null)
             {
                 // 停止監聽關卡資料
-                FirestoreManagement.Instance.StopListenLevelData(TempDataManagement.Instance.CurrentLevelData.LevelType);
+                FirestoreDataManagement.Instance.StopListenLevelData(FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.LevelType);
             }
         }
 
-        // 回大廳
-        if(SceneManagement.Instance != null)
+        // 非安全斷線返回大廳
+        if(!IsSafeShutdown && SceneManagement.Instance != null)
         {
             SceneManagement.Instance.LoadScene(
                 sceneEnum: SceneEnum.Lobby,
@@ -246,6 +252,8 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
                         await AddressableManagement.Instance.OpenLobbyView();
                 });
         }
+
+        IsSafeShutdown = false;
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)

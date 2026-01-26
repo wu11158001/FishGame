@@ -80,6 +80,12 @@ public class RegisterRewardView : BasicView
     /// </summary>
     private void ReciveReward()
     {
+        if(FirestoreManagement.Instance == null || FirestoreDataManagement.Instance == null)
+        {
+            Debug.LogError("接收註冊獎勵錯誤!");
+            return;
+        }
+
         Canvas_Global.Instance.ShowLoading();
 
         // 顯示獲得獎勵
@@ -90,25 +96,23 @@ public class RegisterRewardView : BasicView
         // 更新註冊時間 & 帳戶金幣
         DateTime taiwanTime = DateTime.UtcNow.AddHours(8);
         string currentTimestamp = taiwanTime.ToString("yyyy-MM-dd HH:mm:ss");
-        double currAccountCoin = FirestoreManagement.Instance.CurrAccountData.Coins;
+        double currAccountCoin = FirestoreDataManagement.Instance.CurrAccountData.Coins;
+
         var updates = new Dictionary<string, object>
         {
-             { "Coins", currAccountCoin + Reward},
+            { "Coins", currAccountCoin + Reward},
             { "RegisterTime", currentTimestamp }
         };
 
-        if (FirestoreManagement.Instance != null)
-        {
-            FirestoreManagement.Instance.UpdateDataToFirestore(
-                path: FirestoreCollectionNameEnum.AccountData,
-                docId: FirestoreManagement.Instance.CurrLoginInfo.Account,
-                updates: updates,
-                callback: (res) =>
-                {
-                    Canvas_Global.Instance.CloseLoading();
-                    if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶更新註冊時間失敗");
-                    Close();
-                });
-        }
+        FirestoreManagement.Instance.UpdateDataToFirestore(
+            path: FirestoreCollectionNameEnum.AccountData,
+            docId: FirestoreDataManagement.Instance.CurrLoginInfo.Account,
+            updates: updates,
+            callback: (res) =>
+            {
+                Canvas_Global.Instance.CloseLoading();
+                if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶更新註冊時間失敗");
+                Close();
+            });
     }
 }

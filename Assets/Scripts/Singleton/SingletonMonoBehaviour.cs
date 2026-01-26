@@ -25,6 +25,7 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
                     {
                         var singletonGO = new GameObject(typeof(T).Name);
                         _instance = singletonGO.AddComponent<T>();
+
                         DontDestroyOnLoad(singletonGO);
                     }
                 }
@@ -51,6 +52,7 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
         {
             transform.SetParent(null);
         }
+
         DontDestroyOnLoad(gameObject);
 
         _isShuttingDown = false;

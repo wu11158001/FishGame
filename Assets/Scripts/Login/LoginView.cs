@@ -418,11 +418,11 @@ public class LoginView : BasicView
                         long lastHeartbeat = data.HeartbeatUpdateTime;
                         long difference = now - lastHeartbeat;
 
-                        if (lastHeartbeat > 0 && difference < FirestoreManagement.Instance.HeartbeatTime)
+                        if (lastHeartbeat > 0 && difference < FirestoreDataManagement.Instance.HeartbeatTime)
                         {
                             AddressableManagement.Instance.ShowToast("Account logged in");
                             ShowRecord();
-                            Debug.LogError($"帳號已登入! 差距:{FirestoreManagement.Instance.HeartbeatTime - difference}秒");
+                            Debug.LogError($"帳號已登入! 差距:{FirestoreDataManagement.Instance.HeartbeatTime - difference}秒");
                         }
                         else
                         {
@@ -570,7 +570,7 @@ public class LoginView : BasicView
         PlayerPrefs.SetString(PlayerPrefsManagement.LOGIN_INFO, loginInfoJson);
 
         // 紀錄當下登入帳戶訊息
-        FirestoreManagement.Instance.CurrLoginInfo = loginInfo;
+        FirestoreDataManagement.Instance.CurrLoginInfo = loginInfo;
 
         // 紀錄曾經登入帳號訊息
         RecordLoginInfo recordData = PlayerPrefsManagement.GetRecordLoginInfo();
@@ -599,14 +599,18 @@ public class LoginView : BasicView
     private void InLobby()
     {
         // 開始發送心跳包
-        FirestoreManagement.Instance.StartHeartbeat();
+        if (FirestoreDataManagement.Instance != null)
+            FirestoreDataManagement.Instance.StartHeartbeat();
 
-        SceneManagement.Instance.LoadScene(
+        if(SceneManagement.Instance != null)
+        {
+            SceneManagement.Instance.LoadScene(
                 sceneEnum: SceneEnum.Lobby,
                 callback: async () =>
                 {
                     await AddressableManagement.Instance.OpenLobbyView();
                 });
+        }
 
         Close();
     }
