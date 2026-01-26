@@ -35,6 +35,7 @@ public class LocalizationManagement : SingletonMonoBehaviour<LocalizationManagem
             return;
         }
 
+        PlayerPrefs.SetInt(PlayerPrefsManagement.LANGUAGE, (int)language);
         StartCoroutine(IChangeLanguage(language));
     }
 

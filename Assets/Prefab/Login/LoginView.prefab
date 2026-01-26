@@ -5317,6 +5317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LoginView
   IsShowYieldShow: 1
   MainCanvasGroup: {fileID: 6290990974565850853}
+  IsFadeIn: 0
   FadeInTime: 1
   IsShowClose: 0
   BgBtn: {fileID: 0}

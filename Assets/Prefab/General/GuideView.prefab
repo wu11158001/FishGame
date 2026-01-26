@@ -2631,7 +2631,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6708643385299701398}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.000047683716}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2639,7 +2639,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 30, y: 40.00006}
+  m_AnchoredPosition: {x: 30, y: 40}
   m_SizeDelta: {x: 86, y: 89}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &5421775074005565691
@@ -2832,8 +2832,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameGuideView
   IsShowYieldShow: 1
   MainCanvasGroup: {fileID: 7943822261544527136}
+  IsFadeIn: 0
   FadeInTime: 1
-  IsFadeOutClose: 1
   IsShowClose: 1
   BgBtn: {fileID: 3279086789621223690}
   CloseBtn: {fileID: 349684288181432569}

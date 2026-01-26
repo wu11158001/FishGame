@@ -13,6 +13,9 @@ public static class PlayerPrefsManagement
     /// <summary> 已登入帳號本地資料 </summary>
     public static string LOCAL_ACCOUNT_DATA = "LOCAL_ACCOUNT_DATA";
 
+    /// <summary> 使用語言 </summary>
+    public static string LANGUAGE = "LANGUAGE";
+
     /// <summary>
     /// 獲取上次玩家登入資料
     /// </summary>

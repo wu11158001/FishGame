@@ -597,6 +597,30 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             });
     }
 
+    /// <summary>
+    /// 開啟設置介面
+    /// </summary>
+    public async void OpenSettingView(Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.SettingView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveSceneView(view);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<SettingView>().SetData(closeAction: viewCloseAction);
+                }
+            });
+    }
+
     #endregion
 
     #region 介面(Canvas_Global)

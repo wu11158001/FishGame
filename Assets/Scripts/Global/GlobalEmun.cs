@@ -25,10 +25,10 @@ public enum CanvasEnum
 public enum Language
 {
     /// <summary> 中文 </summary>
-    zh_TW,
+    zh_TW = 0,
 
     /// <summary> 英文 </summary>
-    en,
+    en = 1,
 }
 
 /// <summary>
@@ -80,6 +80,9 @@ public enum ViewEnum
 
     /// <summary> 關卡選擇介面 </summary>
     LevelView,
+
+    /// <summary> 設置介面 </summary>
+    SettingView,
 }
 
 #endregion

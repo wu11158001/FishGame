@@ -5,6 +5,9 @@ using DG.Tweening;
 
 public class LobbyView : BasicView
 {
+    [Header("Top Area")]
+    [SerializeField] Button SettingBtn;
+
     [Header("Bottom Area")]
     [SerializeField] RectTransform BottomAreaRect;
     [SerializeField] RectTransform LevelBtnRect;
@@ -22,12 +25,16 @@ public class LobbyView : BasicView
     {
         base.Start();
 
+        // 設置按鈕
+        SettingBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenSettingView(); });
+
         // 關卡按鈕上下移動
         LevelBtnRect.DOKill();
         LevelBtnRect.DOLocalMoveY(LevelBtnRect.anchoredPosition.y + 10, 1.5f)
             .SetEase(Ease.InOutSine) 
             .SetLoops(-1, LoopType.Yoyo);
 
+        // 關卡按鈕
         LevelBtn.onClick.AddListener(() =>
         {
             HideBottomArea();
@@ -60,23 +67,5 @@ public class LobbyView : BasicView
         BottomAreaRect.anchoredPosition = new(0, -BottomAreaRect.sizeDelta.y);
         BottomAreaRect.DOAnchorPos(new Vector2(0, 0), PopUpTime)
             .SetEase(Ease.Linear);
-    }
-
-    /// <summary>
-    /// 登出
-    /// </summary>
-    private void Logout()
-    {
-        Canvas_Global.Instance.ShowLoading();
-        FirestoreDataManagement.Instance.StopHeartbeat();
-
-        SceneManagement.Instance.LoadScene(
-            sceneEnum: SceneEnum.Login,
-            callback: async () =>
-            {
-                await AddressableManagement.Instance.OpenLoginView(isLogout: true);
-            });
-
-        CloseAction?.Invoke();
     }
 }

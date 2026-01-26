@@ -26,7 +26,7 @@ public class LevelUnit : MonoBehaviour
     Action NotSelectClickAction;
 
     // 紀錄當前獎池
-    double currentJackpot = 0;
+    double CurrentJackpot = 0;
 
     private void OnDestroy()
     {
@@ -49,8 +49,12 @@ public class LevelUnit : MonoBehaviour
         LevelName.text = LocalizationManagement.Instance.GetLocalizedString(data.LevelNameKey);
         NotSelectClickAction = data.NotSelectClickAction;
 
-        if(FirestoreDataManagement.Instance != null)
-        JackpotText.text = StringUtility.CurrencyFormat(FirestoreDataManagement.Instance.GetLevelData(levelType: data.LevelType).Jackpot);
+        if (FirestoreDataManagement.Instance != null)
+        {
+            double jackpot = FirestoreDataManagement.Instance.GetLevelData(levelType: data.LevelType).Jackpot;
+            JackpotText.text = StringUtility.CurrencyFormat(jackpot);
+            CurrentJackpot = jackpot;
+        }
 
         StartListenLevelData(levelType: LevelUnitData.LevelType);
     }
@@ -163,9 +167,9 @@ public class LevelUnit : MonoBehaviour
         double newJackpot = levelData.Jackpot;
 
         // 更新獎池
-        DOTween.To(() => currentJackpot, x => currentJackpot = x, newJackpot, 1f)
+        DOTween.To(() => CurrentJackpot, x => CurrentJackpot = x, newJackpot, 1f)
             .OnUpdate(() => {
-                JackpotText.text = currentJackpot.ToString("#,##0");
+                JackpotText.text = CurrentJackpot.ToString("#,##0");
             });
     }
 

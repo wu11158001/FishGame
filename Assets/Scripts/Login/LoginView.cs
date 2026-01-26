@@ -87,8 +87,17 @@ public class LoginView : BasicView
 
         SwitchPanel(PanelType.Login);
 
-        LoginTog.isOn = true;
-        ChineseTog.isOn = true;
+        int localLanguage = PlayerPrefs.GetInt(PlayerPrefsManagement.LANGUAGE);
+        if (localLanguage <= 0 || localLanguage > Enum.GetNames(typeof(Language)).Length)
+        {
+            ChineseTog.isOn = true;
+            LocalizationManagement.Instance.ChangeLanguage(Language.zh_TW);
+        }
+        else
+        {
+            EnglishTog.isOn = true;
+            LocalizationManagement.Instance.ChangeLanguage(Language.en);
+        }
 
         RecordArea.SetActive(false);
 
