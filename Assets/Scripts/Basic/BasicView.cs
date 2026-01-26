@@ -46,7 +46,7 @@ public abstract class BasicView : MonoBehaviour
     /// 關閉介面
     /// </summary>
     protected virtual void Close()
-    {       
+    {
         CloseAction?.Invoke();
     }
 
@@ -56,6 +56,8 @@ public abstract class BasicView : MonoBehaviour
     /// <returns></returns>
     protected IEnumerator IYieldShow()
     {
+        Canvas.ForceUpdateCanvases();
+
         yield return null;
         yield return null;
         yield return null;

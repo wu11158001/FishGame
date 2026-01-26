@@ -358,8 +358,11 @@ public enum CheckFixedDataEnum
     /// <summary> 登入與註冊資料 </summary>
     LoginAndRegisterData,
 
-    /// <summary> 砲台資料 </summary>
-    TurretData,
+    /// <summary> 所有砲台資料 </summary>
+    AllTurretData,
+
+    /// <summary> 所有關卡資料 </summary>
+    AllLevelData,
 }
 
 /// <summary>

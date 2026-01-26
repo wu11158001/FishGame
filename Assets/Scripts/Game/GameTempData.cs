@@ -3,9 +3,19 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 using Newtonsoft.Json;
+using Firebase.Firestore;
 
 public class GameTempData : MonoBehaviour
 {
+#if !UNITY_WEBGL || UNITY_EDITOR
+    // 專門存儲 Editor 環境下的監聽器(Key: docId, Value: 監聽器執行個體)
+    private Dictionary<string, ListenerRegistration> EditorListeners = new();
+#endif
+
+    // 當前進入關卡資料變更監聽
+    public delegate void LevelDataChange(LevelData levelData);
+    public event LevelDataChange LevelDataChangeDelegate;
+
     /// <summary>
     /// 當前關卡資料
     /// </summary>
@@ -67,6 +77,9 @@ public class GameTempData : MonoBehaviour
         if (FirestoreDataManagement.Instance != null)
             FirestoreDataManagement.Instance.AccountCoinDataChangeDelegate -= AccountCoinDataChange;
 
+        LevelDataChangeDelegate -= CurrLevelDataChange;
+        StopListenLevelData(CurrentLevelData.LevelType);
+
         SendUpdateAccountCoinData();
         StopAllCoroutines();
     }
@@ -76,8 +89,9 @@ public class GameTempData : MonoBehaviour
         if (FirestoreDataManagement.Instance != null)
         {
             FirestoreDataManagement.Instance.AccountCoinDataChangeDelegate += AccountCoinDataChange;
-            FirestoreDataManagement.Instance.LevelDataChangeDelegate += LevelDataChange;
-        }            
+        }
+
+        LevelDataChangeDelegate += CurrLevelDataChange;
     }
 
     public void Initialize()
@@ -86,6 +100,75 @@ public class GameTempData : MonoBehaviour
         IsSkill_Auto = false;
         IsSkill_Locking = false;
     }
+
+    #region 關卡資料監聽
+
+    /// <summary>
+    /// 停止監聽關卡資料
+    /// </summary>
+    public void StopListenLevelData(LevelEnum levelType)
+    {
+        string docId = levelType.ToString();
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        
+        FirestoreManagement.StopListenToFirestoreData(docId);              
+#else
+        if (EditorListeners.ContainsKey(docId))
+        {
+            EditorListeners[docId].Stop();
+            EditorListeners.Remove(docId);
+        }
+#endif
+    }
+
+    /// <summary>
+    /// 開始監聽關卡資料
+    /// </summary>
+    public void StartListenLevelData(LevelEnum levelType)
+    {
+        string path = FirestoreCollectionNameEnum.LevelData.ToString();
+        string docId = levelType.ToString();
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        FirestoreManagement.ListenToFirestoreData(path, docId, gameObject.name, nameof(OnLevelDataChanged));
+#else
+        StopListenLevelData(levelType);
+
+        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+        DocumentReference docRef = db.Collection(path).Document(docId);
+
+        ListenerRegistration registration = docRef.Listen(snapshot => {
+            if (snapshot == null) return;
+
+            bool exists = snapshot.Exists;
+            string innerJson = exists ? JsonConvert.SerializeObject(snapshot.ToDictionary()) : "";
+
+            var response = new
+            {
+                IsSuccess = exists,
+                Status = exists ? "DataChanged" : "AccountNotFound",
+                JsonData = innerJson
+            };
+
+            OnLevelDataChanged(JsonConvert.SerializeObject(response));
+        });
+
+        EditorListeners.Add(docId, registration);
+#endif
+    }
+
+    /// <summary>
+    /// 關卡資料變更
+    /// </summary>
+    public void OnLevelDataChanged(string jsonResponse)
+    {
+        var response = JsonUtility.FromJson<FirestoreResponse>(jsonResponse);
+        LevelData levelData = JsonConvert.DeserializeObject<LevelData>(response.JsonData);
+        LevelDataChangeDelegate?.Invoke(levelData);
+    }
+
+    #endregion
 
     #region 當前關卡資料
 
@@ -131,9 +214,9 @@ public class GameTempData : MonoBehaviour
     }
 
     /// <summary>
-    /// 關卡資料變更
+    /// 當前關卡資料變更
     /// </summary>
-    private void LevelDataChange(LevelData levelData)
+    private void CurrLevelDataChange(LevelData levelData)
     {
         if(levelData != null)
         {

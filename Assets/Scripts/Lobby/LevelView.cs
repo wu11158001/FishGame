@@ -28,20 +28,28 @@ public class LevelView : BasicView, IDragHandler, IEndDragHandler
     // 關卡單位最小透明值
     [SerializeField] float MinAlpha = 0.4f;
     // 關卡單位最前方Y軸高度
-    [SerializeField] float baseHeight = -90f;
+    [SerializeField] float BaseHeight = -110f;
     // 關卡單位後方Y軸高出多少高度
-    [SerializeField] float verticalOffset = 260f;
-
+    [SerializeField] float VerticalOffset = 260f;
+    // 關卡單位上下浮動幅度
+    [SerializeField] float BobbingAmplitude = 10f;
+    // 關卡單位上下浮動速度
+    [SerializeField] float BobbingSpeed = 1.5f;     
+   
     // 紀錄關卡單位按鈕
     List<RectTransform> UnitButtons = new();
     // 紀錄當前滑動角度
-    private float CurrentAngle = 0f;
+    float CurrentAngle = 0f;
     // 關卡單位數量
-    private int ButtonCount;
+    int ButtonCount;
     // 角度偏移量
-    private float AngleStep;
+    float AngleStep;
     // 滑動速度
-    private float DragVelocity;
+    float DragVelocity;
+    // 當前浮動偏移量
+    float CurrentBobbingOffset = 0f;
+    // 是否正在拖拽
+    bool IsDragging = false;
 
     protected override void OnDestroy()
     {
@@ -70,9 +78,33 @@ public class LevelView : BasicView, IDragHandler, IEndDragHandler
 
         Initialize();
         CreateLevelUnit();
-        Canvas.ForceUpdateCanvases();
         UpdateLayout();
         StartCoroutine(IYieldShow());
+    }
+
+    private void Update()
+    {
+        // 檢查目前是否正在進行 DOTween 動畫
+        bool isTweening = DOTween.IsTweening("RotateTween");
+
+        // 如果沒有在拖拽且沒有在動畫中，則計算浮動量
+        if (!IsDragging && !isTweening)
+        {
+            // 使用正弦波計算偏移量
+            float targetBob = Mathf.Sin(Time.time * BobbingSpeed) * BobbingAmplitude;
+            CurrentBobbingOffset = Mathf.Lerp(CurrentBobbingOffset, targetBob, Time.deltaTime * 2f);
+        }
+        else
+        {
+            // 操作時，將浮動偏移快速歸零，避免干擾視覺準確度
+            CurrentBobbingOffset = Mathf.Lerp(CurrentBobbingOffset, 0f, Time.deltaTime * 5f);
+        }
+
+        // 只要有偏移量，就持續更新佈局
+        if (Mathf.Abs(CurrentBobbingOffset) > 0.01f || IsDragging || isTweening)
+        {
+            UpdateLayout();
+        }
     }
 
     /// <summary>
@@ -114,6 +146,8 @@ public class LevelView : BasicView, IDragHandler, IEndDragHandler
     /// </summary>
     public void OnDrag(PointerEventData eventData)
     {
+        IsDragging = true;
+
         DOTween.Kill("RotateTween");
 
         // 計算這一幀的角度變化
@@ -132,6 +166,8 @@ public class LevelView : BasicView, IDragHandler, IEndDragHandler
     /// <param name="eventData"></param>
     public void OnEndDrag(PointerEventData eventData)
     {
+        IsDragging = false;
+
         // 設定一個速度門檻，例如 5f
         float velocityThreshold = 5f;
         float offset = 0f;
@@ -153,7 +189,7 @@ public class LevelView : BasicView, IDragHandler, IEndDragHandler
     }
 
     /// <summary>
-    /// 非選種點擊
+    /// 非選中點擊
     /// </summary>
     private void RotateToIndex(int index)
     {
@@ -191,7 +227,7 @@ public class LevelView : BasicView, IDragHandler, IEndDragHandler
     {
         if (UnitButtons == null || UnitButtons.Count == 0) return;
 
-        // 1. 計算位置 (嚴禁在迴圈內對 UnitButtons 進行 Sort)
+        // 計算位置 (嚴禁在迴圈內對 UnitButtons 進行 Sort)
         for (int i = 0; i < UnitButtons.Count; i++)
         {
             // 確保 i 永遠對應正確的按鈕
@@ -199,7 +235,7 @@ public class LevelView : BasicView, IDragHandler, IEndDragHandler
 
             float x = Mathf.Sin(angle) * Radius;
             float z = Mathf.Cos(angle);
-            float y = baseHeight + ((1f - z) * 0.5f * verticalOffset);
+            float y = BaseHeight + ((1f - z) * 0.5f * VerticalOffset) + CurrentBobbingOffset;
 
             UnitButtons[i].anchoredPosition = new Vector2(x, y);
 
@@ -212,7 +248,7 @@ public class LevelView : BasicView, IDragHandler, IEndDragHandler
             }
         }
 
-        // 2. 僅為了層級顯示做臨時排序，不影響原本的 List
+        // 為了層級顯示做臨時排序
         List<RectTransform> renderOrder = new List<RectTransform>(UnitButtons);
         renderOrder.Sort((a, b) => a.localScale.x.CompareTo(b.localScale.x));
         for (int i = 0; i < renderOrder.Count; i++)
@@ -242,6 +278,6 @@ public struct LevelUnitData
     /// <summary> 關卡名稱顏色 </summary>
     public VertexGradient LevelNameColor;
 
-    /// <summary> 非選種點擊按鈕回傳 </summary>
+    /// <summary> 非選中點擊按鈕回傳 </summary>
     public Action NotSelectClickAction;
 }

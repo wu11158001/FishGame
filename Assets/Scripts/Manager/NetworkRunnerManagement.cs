@@ -234,10 +234,10 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
             // 停止計時更新Firestore關卡獎池資料
             FirestoreDataManagement.Instance.GameTempData.StopTimingUpdateLevelDataJackpot();
 
-            if (FirestoreDataManagement.Instance != null)
+            if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
             {
                 // 停止監聽關卡資料
-                FirestoreDataManagement.Instance.StopListenLevelData(FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.LevelType);
+                FirestoreDataManagement.Instance.GameTempData.StopListenLevelData(FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.LevelType);
             }
         }
 

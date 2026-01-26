@@ -45,9 +45,6 @@ public class GameEntry : MonoBehaviour
                 CheckJoinRoomDic.Add(item, false);
             }
 
-            // 開始監聽關卡資料
-            FirestoreDataManagement.Instance.StartListenLevelData(levelType: levelType);
-
             // 產生遊戲入口物件
             await AddressableManagement.Instance.CreateGamePrefab(
                 prefabType: GamePrefabEnum.GameTempData,
@@ -68,6 +65,9 @@ public class GameEntry : MonoBehaviour
 
                         // 獲取關卡資料
                         gameTempData.GetCurrentLevelData(levelType: levelType, callback: CheckJoinRoomData);
+
+                        // 開始監聽關卡資料
+                        gameTempData.StartListenLevelData(levelType: levelType);
 
                         // 獲取帳戶資料
                         gameTempData.GetTempAccountData(callback: CheckJoinRoomData);
