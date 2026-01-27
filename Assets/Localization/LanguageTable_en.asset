@@ -221,6 +221,18 @@ MonoBehaviour:
     m_Localized: Avatar Frame
     m_Metadata:
       m_Items: []
+  - m_Id: 12429906994204672
+    m_Localized: Edit nickname
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12432243963924480
+    m_Localized: Nickname (4-12 characters)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12432886829092864
+    m_Localized: Edit
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

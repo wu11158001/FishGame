@@ -211,6 +211,22 @@ MonoBehaviour:
     m_Key: Avatar Frame
     m_Metadata:
       m_Items: []
+  - m_Id: 12429869291606016
+    m_Key: New Entry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12429906994204672
+    m_Key: Edit nickname
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12432243963924480
+    m_Key: NicknameTip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12432886829092864
+    m_Key: Edit
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

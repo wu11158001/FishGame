@@ -76,6 +76,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 913843941efd0c14aacc519d7f1d0334
+    m_Address: EditNicknameView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bea0f48f69ac97840a62bd3523aed499
     m_Address: RegisterRewardView
     m_ReadOnly: 0

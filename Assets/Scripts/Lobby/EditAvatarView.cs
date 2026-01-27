@@ -32,27 +32,34 @@ public class EditAvatarView : BasicView
 
     protected override void Close()
     {
-        if (Canvas_Global.Instance)
-            Canvas_Global.Instance.ShowLoading();
-
-        // 更新帳戶頭像與頭相框
-        var updates = new Dictionary<string, object>
+        if(FirestoreManagement.Instance != null)
         {
-            { "Avatar", currAvatarIndex },
-            { "AvatarFrame", currAvatarFrameIndex },
-        };
+            if (Canvas_Global.Instance)
+                Canvas_Global.Instance.ShowLoading();
 
-        FirestoreManagement.Instance.UpdateDataToFirestore(
-            path: FirestoreCollectionNameEnum.AccountData,
-            docId: FirestoreDataManagement.Instance.CurrLoginInfo.Account,
-            updates: updates,
-            callback: (res) =>
+            // 更新帳戶頭像與頭相框
+            var updates = new Dictionary<string, object>
             {
-                if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶金幣資料失敗");
+                { "Avatar", currAvatarIndex },
+                { "AvatarFrame", currAvatarFrameIndex },
+            };
 
-                Canvas_Global.Instance.CloseLoading();
-                CloseAction?.Invoke();
-            });
+            FirestoreManagement.Instance.UpdateDataToFirestore(
+                path: FirestoreCollectionNameEnum.AccountData,
+                docId: FirestoreDataManagement.Instance.CurrLoginInfo.Account,
+                updates: updates,
+                callback: (res) =>
+                {
+                    if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶帳戶頭像與頭相框資料失敗");
+
+                    Canvas_Global.Instance.CloseLoading();
+                    CloseAction?.Invoke();
+                });
+        }
+        else
+        {
+            CloseAction?.Invoke();
+        }        
     }
 
     private void Initialize()

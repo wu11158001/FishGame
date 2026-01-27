@@ -1,9 +1,24 @@
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
+using TMPro;
 
 public static class StringUtility
 {
+    /// <summary>
+    /// UI元件跟隨在文字後方
+    /// </summary>
+    public static void RectFollowTextBehind(RectTransform rt, TextMeshProUGUI tmpText, Vector2 offset)
+    {
+        tmpText.ForceMeshUpdate();
+
+        TMP_TextInfo textInfo = tmpText.textInfo;
+        int lastCharIndex = textInfo.characterCount - 1;
+
+        Vector3 lastCharPos = textInfo.characterInfo[lastCharIndex].bottomLeft;
+        rt.localPosition = new Vector3(lastCharPos.x + offset.x, lastCharPos.y + offset.y, 0);
+    }
+
     /// <summary>
     /// SHA256加密
     /// </summary>

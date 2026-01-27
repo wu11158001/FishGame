@@ -10,6 +10,7 @@ public class LobbyView : BasicView
     [SerializeField] Button AvatarBtn;
     [SerializeField] AvatatUnit AvatatUnit;
     [SerializeField] TextMeshProUGUI NickNameText;
+    [SerializeField] Button NicknameEditBtn;
     [SerializeField] TextMeshProUGUI CoinText;
     [SerializeField] Button SettingBtn;
 
@@ -37,6 +38,9 @@ public class LobbyView : BasicView
 
         // 頭像按鈕
         AvatarBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenEditAvatarView(); });
+
+        // 編輯暱稱按鈕
+        NicknameEditBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenEditNicknameView(); });
 
         // 設置按鈕
         SettingBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenSettingView(); });
@@ -67,12 +71,8 @@ public class LobbyView : BasicView
         if(FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.CurrAccountData!= null)
         {
             AccountData accountData = FirestoreDataManagement.Instance.CurrAccountData;
-            NickNameText.text = accountData.Nickname;
-            CoinText.text = StringUtility.CurrencyFormat(accountData.Coins);
-            AvatatUnit.SetData(
-                avatarImg: TextureManagement.Instance.GetAvatar(accountData.Avatar),
-                avatarFrameImg: TextureManagement.Instance.GetAvatarFrame(accountData.AvatarFrame));
-        }       
+            AccountDataChange(accountData);
+        }  
     }
 
     /// <summary>
@@ -88,6 +88,14 @@ public class LobbyView : BasicView
                avatarFrameImg: TextureManagement.Instance.GetAvatarFrame(accountData.AvatarFrame));
 
         CoinText.text = StringUtility.CurrencyFormat(accountData.Coins);
+
+        NickNameText.text = accountData.Nickname;
+
+        RectTransform rt = NicknameEditBtn.GetComponent<RectTransform>();
+        StringUtility.RectFollowTextBehind(
+            rt: rt, 
+            tmpText: NickNameText, 
+            offset: new Vector2(50, -7));
     }
 
     /// <summary>
