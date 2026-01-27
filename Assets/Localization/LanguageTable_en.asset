@@ -205,6 +205,22 @@ MonoBehaviour:
     m_Localized: Sign Out
     m_Metadata:
       m_Items: []
+  - m_Id: 12326037035356160
+    m_Localized: Edit Avatar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12326420952584192
+    m_Localized: Edit Avatar Frame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12333487520157696
+    m_Localized: Avatar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12333526476853248
+    m_Localized: Avatar Frame
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

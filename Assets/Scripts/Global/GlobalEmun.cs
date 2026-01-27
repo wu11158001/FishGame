@@ -83,6 +83,9 @@ public enum ViewEnum
 
     /// <summary> 設置介面 </summary>
     SettingView,
+
+    /// <summary> 編輯頭像介面 </summary>
+    EditAvatarView,
 }
 
 #endregion

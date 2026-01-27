@@ -18,6 +18,7 @@ public class GameView : BasicView
     [SerializeField] List<GameObject> PlayerCostPanels = new();
 
     [Header("AccountInfoArea")]
+    [SerializeField] AvatatUnit AvatatUnit;
     [SerializeField] TextMeshProUGUI AccountText;
     [SerializeField] Button CoinStoreBtn;
     [SerializeField] TextMeshProUGUI AccountCoinText;
@@ -148,8 +149,12 @@ public class GameView : BasicView
 
         if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
-            AccountText.text = FirestoreDataManagement.Instance.GameTempData.TempAccountData.Account;
-            AccountCoinText.text = StringUtility.CurrencyFormat(FirestoreDataManagement.Instance.GameTempData.TempAccountData.Coins);
+            AccountData accountData = FirestoreDataManagement.Instance.GameTempData.TempAccountData;
+            AvatatUnit.SetData(
+                avatarImg: TextureManagement.Instance.GetAvatar(accountData.Avatar),
+                avatarFrameImg: TextureManagement.Instance.GetAvatarFrame(accountData.AvatarFrame));
+            AccountText.text = accountData.Account;
+            AccountCoinText.text = StringUtility.CurrencyFormat(accountData.Coins);
         }
 
         StartCoroutine(IYieldShow());

@@ -508,6 +508,9 @@ public class LoginView : BasicView
                 {
                     Account = AccountIF_Register.text,
                     Password = StringUtility.ToHash256(PasswordIF_Register.text),
+                    Nickname = AccountIF_Register.text,
+                    Avatar = 0,
+                    AvatarFrame = 0,
                     Coins = 0,
                     DefaultTurret = 0,
                     OwnTurret = "0",

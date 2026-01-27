@@ -195,6 +195,22 @@ MonoBehaviour:
     m_Key: Sign Out
     m_Metadata:
       m_Items: []
+  - m_Id: 12326037035356160
+    m_Key: Edit Avatar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12326420952584192
+    m_Key: Edit Avatar Frame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12333487520157696
+    m_Key: Avatar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12333526476853248
+    m_Key: Avatar Frame
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

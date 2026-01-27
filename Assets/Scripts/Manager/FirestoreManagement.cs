@@ -394,6 +394,15 @@ public class AccountData
     /// <summary> 密碼 </summary>
     public string Password;
 
+    /// <summary> 暱稱 </summary>
+    public string Nickname;
+
+    /// <summary> 頭像編號 </summary>
+    public int Avatar;
+
+    /// <summary> 頭像框編號 </summary>
+    public int AvatarFrame;
+
     /// <summary> 金幣 </summary>
     public double Coins;
 

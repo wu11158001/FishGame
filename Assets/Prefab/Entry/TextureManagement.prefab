@@ -71,3 +71,23 @@ MonoBehaviour:
     Sp: {fileID: -2633863979938418355, guid: cb4c9483fd8efdd42bf80dee4b2125dd, type: 3}
   - FishType: 202
     Sp: {fileID: -4805769625168836833, guid: b3f42de574b6f164591fb5ce865c124d, type: 3}
+  <AvatarList>k__BackingField:
+  - {fileID: 21300000, guid: 0819acdfbccdb264e8ec1a4c21f10ce2, type: 3}
+  - {fileID: 21300000, guid: 65b7a581ca86f8e43bb04d7f0865d085, type: 3}
+  - {fileID: 21300000, guid: 86a40bda771037a47abf9c14f10864b9, type: 3}
+  - {fileID: 21300000, guid: c254369a49e908f4fb28dc906dea9b6e, type: 3}
+  - {fileID: 21300000, guid: c098aee2274d94648922ce8019bae10e, type: 3}
+  - {fileID: 21300000, guid: b1b2b27d1e6a2fb4c997925fcae5c2d9, type: 3}
+  - {fileID: 21300000, guid: 7ada31286348c8f499009b5e4b747662, type: 3}
+  - {fileID: 21300000, guid: 76c857dbc7485e740a25da7172f08ef2, type: 3}
+  - {fileID: 21300000, guid: acd1b6590cbb1e1488345d41a2b933ee, type: 3}
+  <AvatarFrameList>k__BackingField:
+  - {fileID: 0}
+  - {fileID: 3285886813759836063, guid: 328f3f7b7dae330459acc31511b89ef0, type: 3}
+  - {fileID: 5003151735520192706, guid: 2d1f0432bc447b94b85ebc2b42a0d719, type: 3}
+  - {fileID: 9209855184621862668, guid: 8b8f27d4593501047b5c2eb9fffeef73, type: 3}
+  - {fileID: 3237181293087730761, guid: f248b41ca60461f4fbbfa16ae6d8f2f1, type: 3}
+  - {fileID: 8337701724369535196, guid: 22dd17547a3bbd545bf3c1b31c356e94, type: 3}
+  - {fileID: 8623583509335786545, guid: e739df8c967947b43b3d14f3326b9edc, type: 3}
+  - {fileID: 6524588438002596979, guid: 175aa2f464111734897efd6b2af62f83, type: 3}
+  - {fileID: 1746638902869821063, guid: e9f9a2e983bb4fc43a93d0ef2e8f5302, type: 3}

@@ -2,10 +2,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using DG.Tweening;
+using TMPro;
 
 public class LobbyView : BasicView
 {
     [Header("Top Area")]
+    [SerializeField] Button AvatarBtn;
+    [SerializeField] AvatatUnit AvatatUnit;
+    [SerializeField] TextMeshProUGUI NickNameText;
+    [SerializeField] TextMeshProUGUI CoinText;
     [SerializeField] Button SettingBtn;
 
     [Header("Bottom Area")]
@@ -19,11 +24,19 @@ public class LobbyView : BasicView
 
         LevelBtnRect.DOKill();
         BottomAreaRect.DOKill();
+
+        if (FirestoreDataManagement.Instance != null)
+        {
+            FirestoreDataManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
+        }
     }
 
     protected override void Start()
     {
         base.Start();
+
+        // 頭像按鈕
+        AvatarBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenEditAvatarView(); });
 
         // 設置按鈕
         SettingBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenSettingView(); });
@@ -40,11 +53,41 @@ public class LobbyView : BasicView
             HideBottomArea();
             AddressableManagement.Instance.OpenLevelView(ShowBottomArea);
         });
+
+        if(FirestoreDataManagement.Instance != null)
+        {
+            FirestoreDataManagement.Instance.AsccountDataChangeDelegate += AccountDataChange;
+        }
     }
 
     public void SetData(Action closeAction)
     {
         CloseAction = closeAction;
+
+        if(FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.CurrAccountData!= null)
+        {
+            AccountData accountData = FirestoreDataManagement.Instance.CurrAccountData;
+            NickNameText.text = accountData.Nickname;
+            CoinText.text = StringUtility.CurrencyFormat(accountData.Coins);
+            AvatatUnit.SetData(
+                avatarImg: TextureManagement.Instance.GetAvatar(accountData.Avatar),
+                avatarFrameImg: TextureManagement.Instance.GetAvatarFrame(accountData.AvatarFrame));
+        }       
+    }
+
+    /// <summary>
+    /// 帳戶資料變更
+    /// </summary>
+    private void AccountDataChange(AccountData accountData)
+    {
+        if (accountData == null)
+            return;
+
+        AvatatUnit.SetData(
+               avatarImg: TextureManagement.Instance.GetAvatar(accountData.Avatar),
+               avatarFrameImg: TextureManagement.Instance.GetAvatarFrame(accountData.AvatarFrame));
+
+        CoinText.text = StringUtility.CurrencyFormat(accountData.Coins);
     }
 
     /// <summary>
