@@ -44,6 +44,14 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
     Dictionary<TurretEnum, TurretData> TurretDataDic { get; } = new();
     Action<CheckFixedDataEnum, bool> GetAllTurretDataAction;
 
+    // 金幣商店資料
+    Dictionary<ShopCoinEnum, CoinStoreData> CoinStoreDataDic = new();
+    Action<CheckFixedDataEnum, bool> GetCoinStoreDataAction;
+
+    // 所有道具商店資料
+    Dictionary<PropsEnum, PropsStoreData> PropsStoreDataDic = new();
+    Action<CheckFixedDataEnum, bool> GetAllPropsStoreDataAction;
+
     // 遊戲暫存資料
     public GameTempData GameTempData { get; set; }
 
@@ -270,6 +278,7 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
             try
             {
                 LoginAndRegisterData = JsonConvert.DeserializeObject<LoginAndRegisterData>(response.JsonData);
+                Debug.Log("獲取登入獎勵資料完成。");
                 GetLoginAndRegisterDataAction?.Invoke(CheckFixedDataEnum.LoginAndRegisterData, true);
             }
             catch (Exception e)
@@ -311,6 +320,7 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
                 TurretDataDic.Add(data.TurretType, data);
             }
 
+            Debug.Log("獲取所有砲台資料完成。");
             GetAllTurretDataAction?.Invoke(CheckFixedDataEnum.AllTurretData, true);
         }
         else
@@ -367,6 +377,7 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
                 LevelDataDic.Add(data.LevelType, data);
             }
 
+            Debug.Log("獲取所有關卡資料完成。");
             GetAllLevelDataAction?.Invoke(CheckFixedDataEnum.AllLevelData, true);
         }
         else
@@ -389,6 +400,128 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
         }
 
         Debug.LogWarning($"找不到關卡資料: {levelType}");
+        return null;
+    }
+
+    #endregion
+
+    #region 金幣商店資料
+
+    /// <summary>
+    /// 獲取金幣商店資料
+    /// </summary>
+    public void GetCoinStoreData(Action<CheckFixedDataEnum, bool> callback)
+    {
+        GetCoinStoreDataAction = callback;
+
+        if (FirestoreManagement.Instance != null)
+        {
+            FirestoreManagement.Instance.GetAllDocumentsFromCollection(
+                path: FirestoreCollectionNameEnum.CoinStoreData,
+                callback: GetCoinStoreDataCallback);
+        }
+    }
+
+    /// <summary>
+    /// 獲取金幣商店資料Callback
+    /// </summary>
+    private void GetCoinStoreDataCallback(FirestoreResponse response)
+    {
+        if (response.IsSuccess)
+        {
+            try
+            {
+                List<CoinStoreData> coinList = JsonConvert.DeserializeObject<List<CoinStoreData>>(response.JsonData);
+
+                foreach (var data in coinList)
+                {
+                    CoinStoreDataDic.Add(data.CoinType, data);
+                }
+
+                Debug.Log("獲取金幣商店資料完成。");
+                GetCoinStoreDataAction?.Invoke(CheckFixedDataEnum.CoinStoreData, true);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"獲取金幣商店資料錯誤: {e}");
+                GetCoinStoreDataAction?.Invoke(CheckFixedDataEnum.CoinStoreData, false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 獲取商店金幣資料
+    /// </summary>
+    public CoinStoreData GetCoinStoreData(ShopCoinEnum coinType)
+    {
+        // 嘗試從字典中獲取資料
+        if (CoinStoreDataDic.TryGetValue(coinType, out CoinStoreData data))
+        {
+            return data;
+        }
+
+        Debug.LogWarning($"找不到商店金幣資料: {coinType}");
+        return null;
+    }
+
+    #endregion
+
+    #region 道具商店資料
+
+    /// <summary>
+    /// 獲取所有道具商店資料
+    /// </summary>
+    public void GetAllPropsStoreData(Action<CheckFixedDataEnum, bool> callback)
+    {
+        GetAllPropsStoreDataAction = callback;
+
+        if (FirestoreManagement.Instance != null)
+        {
+            FirestoreManagement.Instance.GetAllDocumentsFromCollection(
+                path: FirestoreCollectionNameEnum.PropsStoreData,
+                callback: GetAllPropsStoreDataCallback);
+        }
+    }
+
+    /// <summary>
+    /// 獲取所有道具商店資料Callback
+    /// </summary>
+    private void GetAllPropsStoreDataCallback(FirestoreResponse response)
+    {
+        if (response.IsSuccess)
+        {
+            try
+            {
+                List<PropsStoreData> propsList = JsonConvert.DeserializeObject<List<PropsStoreData>>(response.JsonData);
+
+                foreach (var data in propsList)
+                {
+                    PropsStoreDataDic.Add(data.PropsType, data);
+                }
+
+                Debug.Log("獲取所有道具商店資料完成。");
+                GetAllPropsStoreDataAction?.Invoke(CheckFixedDataEnum.PropsStoreData, true);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"獲取所有道具商店資料錯誤: {e}");
+                GetAllPropsStoreDataAction?.Invoke(CheckFixedDataEnum.PropsStoreData, false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 獲取商店道具資料
+    /// </summary>
+    public PropsStoreData GetPropsStoreData(PropsEnum propsType)
+    {
+        // 嘗試從字典中獲取資料
+        if (PropsStoreDataDic.TryGetValue(propsType, out PropsStoreData data))
+        {
+            return data;
+        }
+
+        Debug.LogWarning($"找不到商店道具資料: {propsType}");
         return null;
     }
 

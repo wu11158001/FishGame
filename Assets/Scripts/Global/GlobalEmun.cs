@@ -88,7 +88,10 @@ public enum ViewEnum
     EditAvatarView,
 
     /// <summary> 編輯暱稱介面 </summary>
-    EditNicknameView
+    EditNicknameView,
+
+    /// <summary> 商店介面 </summary>
+    ShopView,
 }
 
 #endregion
@@ -117,6 +120,9 @@ public enum FirestoreCollectionNameEnum
 
     /// <summary> 活動資料 </summary>
     ActivityData,
+
+    /// <summary> 道具資料 </summary>
+    PropsStoreData,
 }
 
 /// <summary>
@@ -372,12 +378,33 @@ public enum CheckFixedDataEnum
 
     /// <summary> 所有關卡資料 </summary>
     AllLevelData,
+
+    /// <summary> 金幣商店資料 </summary>
+    CoinStoreData,
+
+    /// <summary> 所有道具商店資料 </summary>
+    PropsStoreData,
+}
+
+/// <summary>
+/// 商店標籤
+/// </summary>
+public enum ShopSwitchEnum
+{
+    /// <summary> 金幣商店標籤 </summary>
+    CoinTag,
+
+    /// <summary> 砲台商店標籤 </summary>
+    TurretTag,
+
+    /// <summary> 道具商店標籤 </summary>
+    PropsTag,
 }
 
 /// <summary>
 /// 金幣商店
 /// </summary>
-public enum StoreCoinEnum
+public enum ShopCoinEnum
 {
     None = -1,
     StoreCoin_0,
@@ -395,6 +422,17 @@ public enum TurretEnum
     Turret_1,
     Turret_2,
     Turret_3,
+}
+
+/// <summary>
+/// 道具
+/// </summary>
+public enum PropsEnum
+{
+    None = -1,
+
+    /// <summary> 冰凍 </summary>
+    Freeze = 0,
 }
 
 #endregion

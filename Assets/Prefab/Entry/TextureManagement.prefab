@@ -91,3 +91,6 @@ MonoBehaviour:
   - {fileID: 8623583509335786545, guid: e739df8c967947b43b3d14f3326b9edc, type: 3}
   - {fileID: 6524588438002596979, guid: 175aa2f464111734897efd6b2af62f83, type: 3}
   - {fileID: 1746638902869821063, guid: e9f9a2e983bb4fc43a93d0ef2e8f5302, type: 3}
+  PropsTextureEntryList:
+  - PropsType: 0
+    Sp: {fileID: 21300000, guid: 1ccb94c7bbebc484f80299fba0b575ed, type: 3}

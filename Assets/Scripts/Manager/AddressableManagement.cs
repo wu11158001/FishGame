@@ -669,6 +669,30 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             });
     }
 
+    /// <summary>
+    /// 開啟商店介面
+    /// </summary>
+    public async void OpenShopView(ShopSwitchEnum defaultShopType = ShopSwitchEnum.TurretTag, Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.ShopView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveSceneView(view);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<ShopView>().SetData(defaultShopType: defaultShopType, closeAction: viewCloseAction);
+                }
+            });
+    }
+
     #endregion
 
     #region 介面(Canvas_Global)

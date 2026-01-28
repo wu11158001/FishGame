@@ -412,6 +412,9 @@ public class AccountData
     /// <summary> 擁有砲台編號(","隔開) </summary>
     public string OwnTurret;
 
+    /// <summary> 冰凍道具數量 </summary>
+    public int FreezeProps;
+
     /// <summary>
     ///  獲取擁有砲台編號列表
     /// </summary>
@@ -661,20 +664,47 @@ public class CoinStoreData
         set
         {
             _coinName = value;
-            if (Enum.TryParse(_coinName, out StoreCoinEnum type))
+            if (Enum.TryParse(_coinName, out ShopCoinEnum type))
                 CoinType = type;
             else
-                CoinType = StoreCoinEnum.None;
+                CoinType = ShopCoinEnum.None;
         }
     }
 
-    public StoreCoinEnum CoinType;
+    public ShopCoinEnum CoinType;
 
     /// <summary> 價格 </summary>
     public double Price;
 
     /// <summary> 獲得金幣 </summary>
     public double GetCoin;
+}
+
+/// <summary>
+/// 道具商店資料
+/// </summary>
+[Serializable]
+public class PropsStoreData
+{
+    /// <summary> 識別名稱 </summary>
+    private string _propsName;
+    public string PropsName
+    {
+        get => _propsName;
+        set
+        {
+            _propsName = value;
+            if (Enum.TryParse(_propsName, out PropsEnum type))
+                PropsType = type;
+            else
+                PropsType = PropsEnum.None;
+        }
+    }
+
+    public PropsEnum PropsType;
+
+    /// <summary> 單價價格 </summary>
+    public double UnitPrice;
 }
 
 #endregion

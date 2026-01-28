@@ -96,7 +96,7 @@ public abstract class BasicView : MonoBehaviour
     /// </summary>
     protected void PopUpEffect()
     {
-        if(PopUpRect != null)
+        if(PopUpRect != null && IsUsePopUp)
         {
             PopUpRect.anchoredPosition = new(0, -LocalData.TargetResolution.y);
             PopUpRect.DOAnchorPos(Vector2.zero, PopUpTime).SetEase(Ease.OutBack);

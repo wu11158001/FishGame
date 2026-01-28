@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using TMPro;
 using System.Collections;
-using System.Linq;
-using Newtonsoft.Json;
 
 public class TurretStoreView : BasicView
 {
@@ -33,7 +31,6 @@ public class TurretStoreView : BasicView
     [SerializeField] float ShowDuration = 1;
     [SerializeField] float ShowTargetAlpha = 180;
 
-    Dictionary<TurretEnum, TurretData> TurretDataDic = new();
     List<TurretStoreUnit> TurretStoreUnits = new();
     bool IsModel3DAuto;
     Coroutine ShowTurret3DCoroutine;
@@ -73,7 +70,12 @@ public class TurretStoreView : BasicView
         CloseAction = closeAction;
         MainCanvasGroup.alpha = 0;
 
-        GetAllTurretData();
+        ContentToggleGroup.allowSwitchOff = true;
+
+        CreateTurretUnit();
+        StartCoroutine(IYieldShow());
+
+        ContentToggleGroup.allowSwitchOff = false;
     }
 
     /// <summary>
@@ -90,75 +92,12 @@ public class TurretStoreView : BasicView
         }
     }
 
-    #region 砲台資料
-
     /// <summary>
-    /// 獲取所有砲台資料
+    /// 控制顯示
     /// </summary>
-    private void GetAllTurretData()
+    public void CanvasGroupShow(bool isShow)
     {
-        List<TurretEnum> turretTypes = Enum.GetValues(typeof(TurretEnum))
-            .Cast<TurretEnum>()
-            .Where(e => e.ToString().StartsWith("Turret"))
-            .ToList();
-
-        FirestoreManagement.Instance.GetAllDocumentsFromCollection(
-                path: FirestoreCollectionNameEnum.TurretData,
-                callback: GetAllTurretDataCallback);
-    }
-
-    /// <summary>
-    /// 獲取所有砲台資料Callback
-    /// </summary>
-    private void GetAllTurretDataCallback(FirestoreResponse response)
-    {
-        if (response.IsSuccess)
-        {
-            TurretDataDic.Clear();
-            List<TurretData> turretList = JsonConvert.DeserializeObject<List<TurretData>>(response.JsonData);
-
-            foreach (var data in turretList)
-            {
-                TurretDataDic.Add(data.TurretType, data);
-            }
-
-            ReciveAllDataComplete();            
-        }
-        else
-        {
-            Debug.LogError($"獲取所有砲台資料失敗");
-            AddressableManagement.Instance.ShowToast("Wiring Error");
-        }
-    }
-
-    /// <summary>
-    /// 獲取砲台資料
-    /// </summary>
-    private TurretData GetTurrethData(TurretEnum turretType)
-    {
-        // 嘗試從字典中獲取資料
-        if (TurretDataDic.TryGetValue(turretType, out TurretData data))
-        {
-            return data;
-        }
-
-        Debug.LogWarning($"找不到砲台資料: {turretType}");
-        return null;
-    }
-
-    #endregion
-
-    /// <summary>
-    /// 接收資料完成
-    /// </summary>
-    private void ReciveAllDataComplete()
-    {
-        ContentToggleGroup.allowSwitchOff = true;
-
-        CreateTurretUnit();
-        StartCoroutine(IYieldShow());
-
-        ContentToggleGroup.allowSwitchOff = false;
+        MainCanvasGroup.alpha = isShow ? 1 : 0;
     }
 
     /// <summary>
@@ -185,16 +124,12 @@ public class TurretStoreView : BasicView
 
             if(storeTuretUnit != null)
             {
-                TurretStoreUnitData data = new()
-                {
-                   AccountData = FirestoreDataManagement.Instance?.GameTempData?.TempAccountData,
-                   TurretData = GetTurrethData(turretType),
-                   CoverSprite = StroeTurretSprites[index],
-                   Model3D = Model3DObjects[index],
-                   SelectCallback = OnSelectTurret
-                };
+                storeTuretUnit.SetData(
+                    turretType: turretType,
+                    coverSprite: StroeTurretSprites[index],
+                    model3D: Model3DObjects[index],
+                    selectCallback: OnSelectTurret);
 
-                storeTuretUnit.SetData(data);
                 TurretStoreUnits.Add(storeTuretUnit);
             }
             else
@@ -311,25 +246,4 @@ public class TurretStoreView : BasicView
             yield return new WaitForSeconds(TurretAbilityTextEffectSpeed);
         }
     }
-}
-
-/// <summary>
-/// 砲台商品資料
-/// </summary>
-public class TurretStoreUnitData
-{
-    /// <summary> 帳戶資料 </summary>
-    public AccountData AccountData;
-
-    /// <summary> 砲台資料 </summary>
-    public TurretData TurretData;
-
-    /// <summary> 砲台圖 </summary>
-    public Sprite CoverSprite;
-
-    /// <summary> 對應3D模型 </summary>
-    public Transform Model3D;
-
-    /// <summary> 選擇Callback </summary>
-    public Action<TurretData, RectTransform> SelectCallback;
 }

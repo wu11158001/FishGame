@@ -12,10 +12,14 @@ public class LobbyView : BasicView
     [SerializeField] TextMeshProUGUI NickNameText;
     [SerializeField] Button NicknameEditBtn;
     [SerializeField] TextMeshProUGUI CoinText;
+    [SerializeField] Button CoinStoreBtn;
     [SerializeField] Button SettingBtn;
 
     [Header("Bottom Area")]
     [SerializeField] RectTransform BottomAreaRect;
+    [SerializeField] Button ShopBtn;
+
+    [Header("Level")]
     [SerializeField] RectTransform LevelBtnRect;
     [SerializeField] Button LevelBtn;
 
@@ -44,6 +48,11 @@ public class LobbyView : BasicView
 
         // 設置按鈕
         SettingBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenSettingView(); });
+
+        CoinStoreBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenShopView(defaultShopType: ShopSwitchEnum.CoinTag); });
+
+        // 商店按鈕
+        ShopBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenShopView(); });
 
         // 關卡按鈕上下移動
         LevelBtnRect.DOKill();

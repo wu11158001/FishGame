@@ -36,6 +36,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 29b9e37381f86434989f0a8a8ec39fcd
+    m_Address: ShopView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2b1170922db500a43a1f76890e2e2014
     m_Address: EditAvatarView
     m_ReadOnly: 0

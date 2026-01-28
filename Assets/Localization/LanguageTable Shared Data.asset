@@ -212,7 +212,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12429869291606016
-    m_Key: New Entry
+    m_Key: Props
     m_Metadata:
       m_Items: []
   - m_Id: 12429906994204672
@@ -225,6 +225,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 12432886829092864
     m_Key: Edit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12459409300721664
+    m_Key: Shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12462635794239488
+    m_Key: Turret
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12465031245139968
+    m_Key: 
     m_Metadata:
       m_Items: []
   m_Metadata:

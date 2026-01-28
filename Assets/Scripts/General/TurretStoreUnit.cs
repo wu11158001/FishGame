@@ -15,7 +15,10 @@ public class TurretStoreUnit : MonoBehaviour
     [SerializeField] GameObject IconBlock;
     [SerializeField] Image CoverImage;
 
-    TurretStoreUnitData TurretStoreUnitData;
+    TurretData TurretData;
+    Sprite CoverSprite;
+    Transform Model3D;
+    Action<TurretData, RectTransform> SelectCallback;
     bool IsOwn;
 
     private void Start()
@@ -24,22 +27,25 @@ public class TurretStoreUnit : MonoBehaviour
         MainTog.onValueChanged.AddListener(SetModel3D);
     }
 
-    public void SetData(TurretStoreUnitData data)
+    public void SetData(TurretEnum turretType, Sprite coverSprite, Transform model3D, Action<TurretData, RectTransform> selectCallback)
     {
-        TurretStoreUnitData = data;
+        CoverSprite = coverSprite;
+        Model3D = model3D;
+        SelectCallback = selectCallback;
+        TurretData = FirestoreDataManagement.Instance?.GetTurrethData(turretType);
 
-        if (data == null)
+        if (TurretData == null)
         {
             Debug.LogError($"砲台商店單位獲取資料錯誤!");
             return;
         }
 
         // 設置砲台圖片
-        CoverImage.sprite = data.CoverSprite;
+        CoverImage.sprite = CoverSprite;
         CoverImage.SetNativeSize();
         CoverImage.rectTransform.anchoredPosition = Vector2.zero;
 
-        CheckTurret(data.AccountData);
+        CheckTurret(FirestoreDataManagement.Instance.CurrAccountData);
     }
 
     /// <summary>
@@ -47,16 +53,13 @@ public class TurretStoreUnit : MonoBehaviour
     /// </summary>
     public void CheckTurret(AccountData accountData)
     {
-        // 更新帳戶資料
-        TurretStoreUnitData.AccountData = accountData;
-
         bool isSelect = false;
 
         bool isOwn = false;
         List<int> ownTurrets = accountData.GetOwnTurretList();
         for (int i = 0; i < ownTurrets.Count; i++)
         {
-            if (ownTurrets[i] == (int)TurretStoreUnitData.TurretData.TurretType)
+            if (ownTurrets[i] == (int)TurretData.TurretType)
             {
                 isOwn = true;
                 break;
@@ -65,7 +68,7 @@ public class TurretStoreUnit : MonoBehaviour
 
         if (isOwn)
         {
-            if (accountData.DefaultTurret == (int)TurretStoreUnitData.TurretData.TurretType)
+            if (accountData.DefaultTurret == (int)TurretData.TurretType)
             {
                 MainTog.isOn = true;
                 isSelect = true;
@@ -81,7 +84,7 @@ public class TurretStoreUnit : MonoBehaviour
         }
         else
         {
-            BuyBtnText.text = StringUtility.CurrencyFormat(TurretStoreUnitData.TurretData.Price);
+            BuyBtnText.text = StringUtility.CurrencyFormat(TurretData.Price);
         }
 
         IconBlock.SetActive(!isOwn);
@@ -94,11 +97,11 @@ public class TurretStoreUnit : MonoBehaviour
     /// </summary>
     private void SetModel3D(bool isOn)
     {
-        if (TurretStoreUnitData.Model3D != null)
-            TurretStoreUnitData.Model3D.gameObject.SetActive(isOn);
+        if (Model3D != null)
+            Model3D.gameObject.SetActive(isOn);
 
         if (isOn)
-            TurretStoreUnitData.SelectCallback?.Invoke(TurretStoreUnitData.TurretData, MainRect);
+            SelectCallback?.Invoke(TurretData, MainRect);
     }
 
     /// <summary>
@@ -106,16 +109,11 @@ public class TurretStoreUnit : MonoBehaviour
     /// </summary>
     private void BuyBtnClick()
     {
+        // 暫存購買前擁有狀態
         bool isOwn = IsOwn;
 
-        if (TurretStoreUnitData.TurretData == null || TurretStoreUnitData.AccountData == null)
-        {
-            Debug.LogError($"砲台商店單位獲取資料錯誤!");
-            return;
-        }
-
         // 判斷帳戶金錢
-        if (!isOwn && TurretStoreUnitData.AccountData.Coins - TurretStoreUnitData.TurretData.Price < 0)
+        if (!isOwn && FirestoreDataManagement.Instance.CurrAccountData.Coins - TurretData.Price < 0)
         {
             // 金幣不足!
             AddressableManagement.Instance.ShowToast("Insufficient Coin");
@@ -127,21 +125,21 @@ public class TurretStoreUnit : MonoBehaviour
         MainTog.isOn = true;
 
         // 扣除金幣
-        double newCoin = TurretStoreUnitData.AccountData.Coins;
-        int defaultTurret = (int)TurretStoreUnitData.TurretData.TurretType;
-        SortedSet<int> owns = new(TurretStoreUnitData.AccountData.GetOwnTurretList());
+        double newCoin = FirestoreDataManagement.Instance.CurrAccountData.Coins;
+        int defaultTurret = (int)TurretData.TurretType;
+        SortedSet<int> owns = new(FirestoreDataManagement.Instance.CurrAccountData.GetOwnTurretList());
 
         // 未購買
         if (!isOwn)
-            newCoin -= TurretStoreUnitData.TurretData.Price;
+            newCoin -= TurretData.Price;
 
-        owns.Add((int)TurretStoreUnitData.TurretData.TurretType);
+        owns.Add((int)TurretData.TurretType);
         string result = string.Join(",", owns);
 
         var updates = new Dictionary<string, object>
         {
             { "Coins", newCoin },
-            { "DefaultTurret", (int)TurretStoreUnitData.TurretData.TurretType },
+            { "DefaultTurret", (int)TurretData.TurretType },
             { "OwnTurret", result }
         };
 
@@ -162,7 +160,7 @@ public class TurretStoreUnit : MonoBehaviour
                     {
                         // 顯示獲得物品
                         AddressableManagement.Instance.ShowGetItemView(
-                            iconSprite: TurretStoreUnitData.CoverSprite);
+                            iconSprite: CoverSprite);
                     }
                 }
             });

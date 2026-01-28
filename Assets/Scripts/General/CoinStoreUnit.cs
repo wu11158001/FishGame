@@ -10,35 +10,29 @@ public class CoinStoreUnit : MonoBehaviour
     [SerializeField] Button BuyBtn;
     [SerializeField] TextMeshProUGUI BuyBtnText;
 
-    CoinStoreUnitData CoinStoreUnitData;
+    CoinStoreData CoinStoreData;
+    Sprite CoverSprite;
 
     private void Start()
     {
+        // 購買按鈕
         BuyBtn.onClick.AddListener(BuyCoin);
     }
 
-    public void SetData(CoinStoreUnitData data)
+    public void SetData(Sprite coverSprite, ShopCoinEnum coinType)
     {
-        if(data == null)
+        CoverSprite = coverSprite;
+        CoinStoreData = FirestoreDataManagement.Instance?.GetCoinStoreData(coinType);
+
+        if(CoinStoreData == null)
         {
-            Debug.LogError("金幣商店單位獲取資料錯誤");
-            return;
+            Debug.LogError($"獲取金幣資料錯誤: {coinType}");
+            Destroy(gameObject);
         }
 
-        CoinStoreUnitData = data;
-
-        CoverImage.sprite = data.CoverSprite;
-        GetCoinText.text = StringUtility.CurrencyFormat(data.CoinStoreData.GetCoin);
-        BuyBtnText.text = $"$ : {StringUtility.CurrencyFormat(data.CoinStoreData.Price)}";
-    }
-
-    /// <summary>
-    /// 更新帳戶資料
-    /// </summary>
-    /// <param name="accountData"></param>
-    public void UpdateAccountData(AccountData accountData)
-    {
-        CoinStoreUnitData.AccountData = accountData;
+        CoverImage.sprite = coverSprite;
+        GetCoinText.text = StringUtility.CurrencyFormat(CoinStoreData.GetCoin);
+        BuyBtnText.text = $"$ : {StringUtility.CurrencyFormat(CoinStoreData.Price)}";
     }
 
     /// <summary>
@@ -48,7 +42,7 @@ public class CoinStoreUnit : MonoBehaviour
     {
         Canvas_Global.Instance.ShowLoading();
 
-        double newCoin = CoinStoreUnitData.AccountData.Coins + CoinStoreUnitData.CoinStoreData.GetCoin;
+        double newCoin = FirestoreDataManagement.Instance.CurrAccountData.Coins + CoinStoreData.GetCoin;
 
         var updates = new Dictionary<string, object>
         {
@@ -70,8 +64,8 @@ public class CoinStoreUnit : MonoBehaviour
                 {
                     // 顯示獲得物品
                     AddressableManagement.Instance.ShowGetItemView(
-                        iconSprite: CoinStoreUnitData.CoverSprite,
-                        value: CoinStoreUnitData.CoinStoreData.GetCoin);
+                        iconSprite: CoverSprite,
+                        value: CoinStoreData.GetCoin);
                 }
             });
         }

@@ -226,11 +226,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12432243963924480
-    m_Localized: Nickname (4-12 characters)
+    m_Localized: Nickname (4-12 characters, no spaces allowed)
     m_Metadata:
       m_Items: []
   - m_Id: 12432886829092864
     m_Localized: Edit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12459409300721664
+    m_Localized: Shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12462635794239488
+    m_Localized: Turret
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12429869291606016
+    m_Localized: Props
     m_Metadata:
       m_Items: []
   references:

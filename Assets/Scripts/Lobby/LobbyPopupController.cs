@@ -59,6 +59,12 @@ public class LobbyPopupController : MonoBehaviour
 
                     // 所有關卡資料
                     FirestoreDataManagement.Instance.GetAllLevelData(callback: CheckFixedData);
+
+                    // 金幣商店資料
+                    FirestoreDataManagement.Instance.GetCoinStoreData(callback: CheckFixedData);
+
+                    // 所有道具商店資料
+                    FirestoreDataManagement.Instance.GetAllPropsStoreData(callback: CheckFixedData);
                 }
             }
         }

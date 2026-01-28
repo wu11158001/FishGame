@@ -78,4 +78,74 @@ public class TextureManagement : SingletonMonoBehaviour<TextureManagement>
     }
 
     #endregion
+
+    #region 道具圖片
+
+    /// <summary>
+    /// 道具圖片資料
+    /// </summary>
+    [Serializable]
+    public struct PropsEntry
+    {
+        public PropsEnum PropsType;
+        public Sprite Sp;
+    }
+
+    /// <summary>
+    /// 道具圖集
+    /// </summary>
+    [SerializeField] List<PropsEntry> PropsTextureEntryList = new();
+
+    /// <summary>
+    /// 獲取道具圖片
+    /// </summary>
+    public Sprite GetPropsTexture(PropsEnum propsType)
+    {
+        var entry = PropsTextureEntryList.Find(x => x.PropsType == propsType);
+
+        if (entry.Sp == null)
+        {
+            Debug.LogError($"無法在清單中找到 {propsType} 的圖片");
+            return null;
+        }
+
+        return entry.Sp;
+    }
+
+    #endregion
+
+    #region 金幣圖片
+
+    /// <summary>
+    /// 金幣圖片資料
+    /// </summary>
+    [Serializable]
+    public struct CoinTextureEntry
+    {
+        public ShopCoinEnum ShopCoinType;
+        public Sprite Sp;
+    }
+
+    /// <summary>
+    /// 金幣圖集
+    /// </summary>
+    [SerializeField] List<CoinTextureEntry> ShopCoinTextureEntryList = new();
+
+    /// <summary>
+    /// 獲取金幣圖片
+    /// </summary>
+    public Sprite GetCoinTexture(ShopCoinEnum coinType)
+    {
+        var entry = ShopCoinTextureEntryList.Find(x => x.ShopCoinType == coinType);
+
+        if (entry.Sp == null)
+        {
+            Debug.LogError($"無法在清單中找到 {coinType} 的圖片");
+            return null;
+        }
+
+        return entry.Sp;
+    }
+
+    #endregion
 }
