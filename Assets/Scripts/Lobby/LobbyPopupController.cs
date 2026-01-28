@@ -16,7 +16,7 @@ public class LobbyPopupController : MonoBehaviour
     private void OnDestroy()
     {
         if (FirestoreDataManagement.Instance != null)
-            FirestoreDataManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
+            FirestoreDataManagement.Instance.AccountDataChangeDelegate -= AccountDataChange;
     }
 
     private void Start()
@@ -24,7 +24,7 @@ public class LobbyPopupController : MonoBehaviour
         if (FirestoreDataManagement.Instance != null)
         {
             FirestoreDataManagement.Instance.GameTempData = null;
-            FirestoreDataManagement.Instance.AsccountDataChangeDelegate += AccountDataChange;
+            FirestoreDataManagement.Instance.AccountDataChangeDelegate += AccountDataChange;
             FirestoreDataManagement.Instance.StartListenAccountData();
         }            
     }

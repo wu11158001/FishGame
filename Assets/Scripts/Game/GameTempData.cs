@@ -509,7 +509,6 @@ public class GameTempData : MonoBehaviour
 
             if (FirestoreManagement.Instance == null || FirestoreDataManagement.Instance == null)
             {
-                Debug.LogError("發送更新Firestore帳戶金幣資料錯誤!");
                 return;
             }
 

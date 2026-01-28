@@ -24,7 +24,7 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
 
     // 帳戶資料變更監聽
     public delegate void AccountDataChange(AccountData accountData);
-    public event AccountDataChange AsccountDataChangeDelegate;
+    public event AccountDataChange AccountDataChangeDelegate;
     // 帳戶金幣變更監聽
     public delegate void AccountCoinChange(AccountData accountData);
     public event AccountCoinChange AccountCoinDataChangeDelegate;
@@ -246,7 +246,7 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
             AccountTurretDataChangeDelegate?.Invoke(accountData);
 
         // 帳戶資料變更
-        AsccountDataChangeDelegate?.Invoke(accountData);
+        AccountDataChangeDelegate?.Invoke(accountData);
 
         CurrAccountData = accountData;
     }
@@ -431,6 +431,7 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
         {
             try
             {
+                CoinStoreDataDic.Clear();
                 List<CoinStoreData> coinList = JsonConvert.DeserializeObject<List<CoinStoreData>>(response.JsonData);
 
                 foreach (var data in coinList)
@@ -492,6 +493,7 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
         {
             try
             {
+                PropsStoreDataDic.Clear();
                 List<PropsStoreData> propsList = JsonConvert.DeserializeObject<List<PropsStoreData>>(response.JsonData);
 
                 foreach (var data in propsList)

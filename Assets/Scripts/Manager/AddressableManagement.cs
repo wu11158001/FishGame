@@ -473,6 +473,30 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     }
 
     /// <summary>
+    /// 開啟道具商店介面
+    /// </summary>
+    public async void OpenPropsStoreView(Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.PropsStoreView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveSceneView(view);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<PropsStoreView>().SetData(closeAction: viewCloseAction);
+                }
+            });
+    }
+
+    /// <summary>
     /// 開啟分配表介面
     /// </summary>
     public async void OpenGuideView(Action closeAction = null)

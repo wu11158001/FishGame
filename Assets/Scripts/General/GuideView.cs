@@ -23,7 +23,6 @@ public class GuideView : BasicView
 
     [Header("SpecialContent")]
     [SerializeField] TextMeshProUGUI SpecialOddsText;
-    [SerializeField] LocalizedString SpecialMessageLocalized;
     [SerializeField] TextMeshProUGUI SpecialMessageText;
     [SerializeField] Image SpecialCoverImage;
 
@@ -189,6 +188,7 @@ public class GuideView : BasicView
     /// </summary>
     private void SetSpecialGuideContent()
     {
+        LocalizedString SpecialMessageLocalized = new();
         string tableName = LocalizationManagement.Instance.TableName;
         Sprite sprite = null;
         FishData fishData = null;

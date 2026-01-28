@@ -2,9 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using DG.Tweening;
+using UnityEngine.EventSystems;
+using UnityEngine.Localization;
 
 public class PropsStoreUnit : MonoBehaviour
 {
+    [Header("PropsStoreUnit")]
     [SerializeField] Image CoverImage;
     [SerializeField] TMP_InputField CountIF;
     [SerializeField] Button ReduceBtn;
@@ -12,9 +16,20 @@ public class PropsStoreUnit : MonoBehaviour
     [SerializeField] Button BuyBtn;
     [SerializeField] TextMeshProUGUI BuyBtnText;
 
+    [Header("Describe Area")]
+    [SerializeReference] EventSystemsHandler EventSystemsHandler;
+    [SerializeField] RectTransform DescribeRect;
+    [SerializeField] TextMeshProUGUI DescribeText;
+
     PropsStoreData PropsStoreData;
     Sprite CoverSprite;
     int BuyCount = 1;
+
+    private void OnDestroy()
+    {
+        DescribeRect.DOKill();
+        EventSystemsHandler.PointerEnterHandleDelegate -= ShowDescribe;
+    }
 
     private void Start()
     {
@@ -50,6 +65,14 @@ public class PropsStoreUnit : MonoBehaviour
             BuyCount = Mathf.Min(99, ++BuyCount);
             BuyCountChange();
         });
+
+        // 描述區域上下移動
+        DescribeRect.DOKill();
+        DescribeRect.DOLocalMoveY(DescribeRect.anchoredPosition.y + 10, 1.5f)
+            .SetEase(Ease.InOutSine)
+            .SetLoops(-1, LoopType.Yoyo);
+
+        EventSystemsHandler.PointerEnterHandleDelegate += ShowDescribe;
     }
 
     public void SetData(Sprite coverSprite, PropsEnum propsType)
@@ -67,7 +90,31 @@ public class PropsStoreUnit : MonoBehaviour
         CoverImage.sprite = coverSprite;
         BuyCount = 1;
 
+        // 設置描述內容
+        string tableName = LocalizationManagement.Instance.TableName;
+        LocalizedString DescribeLocalized = new();
+        switch (propsType)
+        {
+            // 冰凍描述
+            case PropsEnum.Freeze:
+                // 冰凍全屏魚 {0}秒。
+                DescribeLocalized.SetReference(tableName, "Freeze Message");
+                DescribeLocalized.Arguments = new object[] { LocalData.FreezeTime };                
+                break;
+        }
+        DescribeText.text = DescribeLocalized.GetLocalizedString();
+        DescribeRect.gameObject.SetActive(false);
+
+        Canvas.ForceUpdateCanvases();
         BuyCountChange();
+    }
+
+    /// <summary>
+    /// 顯示描述區域
+    /// </summary>
+    private void ShowDescribe(PointerEventData eventData, bool isEnter)
+    {
+        DescribeRect.gameObject.SetActive(isEnter);
     }
 
     /// <summary>

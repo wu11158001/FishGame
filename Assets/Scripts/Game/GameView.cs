@@ -34,7 +34,8 @@ public class GameView : BasicView
     [SerializeField] Image FreezeMask;
 
     [Header("Props Btns")]
-    [SerializeField] Button Props_FreezeBtn;
+    [SerializeField] Button PropsBtnUnit;
+    [SerializeField] RectTransform PropsContent;
 
     GameFloatBtn GameFloatBtn;
     bool IsLocalMirror;
@@ -111,9 +112,6 @@ public class GameView : BasicView
         // 基本技能_自動射擊
         AutoTog.onValueChanged.AddListener((isOn) => { Skill_Auto(isOn); });
 
-        // 道具_冰凍
-        Props_FreezeBtn.onClick.AddListener(PropsFreezeBtnClick);
-
         if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
             FirestoreDataManagement.Instance.GameTempData.TempAccountCoinChangeDelegate += TempAccountCoinChange;
@@ -157,6 +155,7 @@ public class GameView : BasicView
             AccountCoinText.text = StringUtility.CurrencyFormat(accountData.Coins);
         }
 
+        CreateProps();
         StartCoroutine(IYieldShow());
     }
 
@@ -171,21 +170,82 @@ public class GameView : BasicView
     }
 
     /// <summary>
-    /// 點擊冰凍道具
+    /// 創建道具列表
     /// </summary>
-    public void PropsFreezeBtnClick()
+    private void CreateProps()
     {
-        if (FreezeMask.gameObject.activeInHierarchy)
+        PropsBtnUnit.gameObject.SetActive(false);
+        foreach (PropsEnum propsType in Enum.GetValues(typeof(PropsEnum)))
         {
-            // 冰凍道具使用中!
-            AddressableManagement.Instance.ShowToast("Freezing item in use");
-            return;
+            if (propsType == PropsEnum.None)
+                continue;
+
+            PropsEnum type = propsType;
+
+            GameObject obj = Instantiate(PropsBtnUnit.gameObject, PropsContent);
+            obj.SetActive(true);
+            GamePropsBtnUnit gamePropsBtnUnit = obj.GetComponent<GamePropsBtnUnit>();
+            if(gamePropsBtnUnit != null)
+            {
+                gamePropsBtnUnit.SetData(propsType: propsType, clickAction: () => { UseProps(type); });
+            }
+        }
+    }
+
+    /// <summary>
+    /// 使用道具
+    /// </summary>
+    private void UseProps(PropsEnum propsType)
+    {
+        int newFreezeCount = 0;
+
+        switch (propsType)
+        {
+            // 冰凍道具
+            case PropsEnum.Freeze:
+                if (FreezeMask.gameObject.activeInHierarchy)
+                {
+                    // 冰凍道具使用中!
+                    AddressableManagement.Instance.ShowToast("Freezing item in use");
+                    return;
+                }
+
+                int currFreezeCount = FirestoreDataManagement.Instance.CurrAccountData.FreezeProps;
+                newFreezeCount = currFreezeCount - 1;
+                if(newFreezeCount < 0)
+                {
+                    // 道具數量不足!
+                    AddressableManagement.Instance.ShowToast("Not Props");
+                    AddressableManagement.Instance.OpenPropsStoreView();
+                    return;
+                }
+
+                // 顯示與發送RPC冰凍效果
+                if (GameTerrain == null)
+                    GameTerrain = FindFirstObjectByType<GameTerrain>();
+                if (GameTerrain != null)
+                    GameTerrain.AddFreezeTime();
+
+                break;
         }
 
-        if (GameTerrain == null)
-            GameTerrain = FindFirstObjectByType<GameTerrain>();
-        if (GameTerrain != null)
-            GameTerrain.AddFreezeTime();
+        // 更新帳戶道具數量
+        var updates = new Dictionary<string, object>
+        {
+            { $"{propsType}Props", newFreezeCount}
+        };
+
+        if (FirestoreManagement.Instance != null && FirestoreDataManagement.Instance != null)
+        {
+            FirestoreManagement.Instance.UpdateDataToFirestore(
+            path: FirestoreCollectionNameEnum.AccountData,
+            docId: FirestoreDataManagement.Instance.CurrLoginInfo.Account,
+            updates: updates,
+            callback: (res) =>
+            {
+                if (!res.IsSuccess) Debug.LogError($"更新Firestore帳戶{propsType}道具資料失敗");
+            });
+        }
     }
 
     /// <summary>

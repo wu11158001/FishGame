@@ -28,7 +28,7 @@ public class ShopView : BasicView
 
         if (FirestoreDataManagement.Instance != null)
         {
-            FirestoreDataManagement.Instance.AsccountDataChangeDelegate -= AccountDataChange;
+            FirestoreDataManagement.Instance.AccountDataChangeDelegate -= AccountDataChange;
         }
     }
 
@@ -56,7 +56,7 @@ public class ShopView : BasicView
 
         if (FirestoreDataManagement.Instance != null)
         {
-            FirestoreDataManagement.Instance.AsccountDataChangeDelegate += AccountDataChange;
+            FirestoreDataManagement.Instance.AccountDataChangeDelegate += AccountDataChange;
         }
     }
 

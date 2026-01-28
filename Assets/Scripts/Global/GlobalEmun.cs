@@ -66,6 +66,9 @@ public enum ViewEnum
     /// <summary> 金幣商店介面 </summary>
     CoinStoreView,
 
+    /// <summary> 道具商店介面 </summary>
+    PropsStoreView,
+
     /// <summary> 分配表介面 </summary>
     GuideView,
 
