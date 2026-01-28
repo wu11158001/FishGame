@@ -236,7 +236,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12465031245139968
-    m_Key: 
+    m_Key: Not Props
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12736600768974848
+    m_Key: Freeze Message
     m_Metadata:
       m_Items: []
   m_Metadata:

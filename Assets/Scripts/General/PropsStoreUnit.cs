@@ -5,10 +5,14 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 using UnityEngine.Localization;
+using System;
 
 public class PropsStoreUnit : MonoBehaviour
 {
     [Header("PropsStoreUnit")]
+    [SerializeField] float MaxCoverSize = 256f;
+    [SerializeField] Button MainBtn;
+    [SerializeField] RectTransform MainRect;
     [SerializeField] Image CoverImage;
     [SerializeField] TMP_InputField CountIF;
     [SerializeField] Button ReduceBtn;
@@ -25,6 +29,8 @@ public class PropsStoreUnit : MonoBehaviour
     Sprite CoverSprite;
     int BuyCount = 1;
 
+    Action<RectTransform> SelectAction;
+
     private void OnDestroy()
     {
         DescribeRect.DOKill();
@@ -33,6 +39,9 @@ public class PropsStoreUnit : MonoBehaviour
 
     private void Start()
     {
+        // 滑動條移動至顯示位置
+        MainBtn.onClick.AddListener(() => { SelectAction?.Invoke(MainRect); });
+
         // 購買按鈕
         BuyBtn.onClick.AddListener(BuyCoin);
 
@@ -75,8 +84,9 @@ public class PropsStoreUnit : MonoBehaviour
         EventSystemsHandler.PointerEnterHandleDelegate += ShowDescribe;
     }
 
-    public void SetData(Sprite coverSprite, PropsEnum propsType)
+    public void SetData(Sprite coverSprite, PropsEnum propsType, Action<RectTransform> selectAction)
     {
+        SelectAction = selectAction;
         CoverSprite = coverSprite;
         PropsStoreData = FirestoreDataManagement.Instance?.GetPropsStoreData(propsType);
 
@@ -87,7 +97,9 @@ public class PropsStoreUnit : MonoBehaviour
         }
 
         CoverImage.sprite = coverSprite;
-        CoverImage.sprite = coverSprite;
+        CoverImage.SetNativeSize();
+        UIUtility.SetMaxUISize(targetRt: CoverImage.rectTransform, maxSize: MaxCoverSize);
+
         BuyCount = 1;
 
         // 設置描述內容
@@ -125,7 +137,7 @@ public class PropsStoreUnit : MonoBehaviour
         CountIF.text = StringUtility.CurrencyFormat(BuyCount);
 
         double totalPrice = PropsStoreData.UnitPrice * BuyCount;
-        BuyBtnText.text = $"$ : {StringUtility.CurrencyFormat(totalPrice)}";
+        BuyBtnText.text = StringUtility.CurrencyFormat(totalPrice);
     }
 
     /// <summary>

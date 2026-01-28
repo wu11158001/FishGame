@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class PropsStoreView : BasicView
 {
-
     [Header("PropsStoreView")]
+    [SerializeField] ScrollViewTool StoreContentScrollViewTool;
     [SerializeField] PropsStoreUnit PropsStoreUnit;
     [SerializeField] RectTransform ContentRect;
 
@@ -54,7 +54,13 @@ public class PropsStoreView : BasicView
             if (propsStoreUnit != null)
             {
                 Sprite coverSprite = TextureManagement.Instance.GetPropsTexture(propsType);
-                propsStoreUnit.SetData(coverSprite: coverSprite, propsType: propsType);
+                propsStoreUnit.SetData(
+                    coverSprite: coverSprite, 
+                    propsType: propsType,
+                    selectAction: (unitRect) =>
+                    {
+                        StoreContentScrollViewTool.SnapTo(unitRect);
+                    });
                 PropsStoreUnitDatas.Add(propsStoreUnit);
             }
             else

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class CoinStoreView : BasicView
 {
     [Header("CoinStoreView")]
+    [SerializeField] ScrollViewTool StoreContentScrollViewTool;
     [SerializeField] CoinStoreUnit CoinStoreUnit;
     [SerializeField] RectTransform ContentRect;
 
@@ -53,7 +54,13 @@ public class CoinStoreView : BasicView
             if(coinStoreUnit != null)
             {
                 Sprite coverSprite = TextureManagement.Instance.GetCoinTexture(coinType);
-                coinStoreUnit.SetData(coverSprite: coverSprite, coinType: coinType);
+                coinStoreUnit.SetData(
+                    coverSprite: coverSprite, 
+                    coinType: coinType,
+                    selectAction: (unitRect) =>
+                    {
+                        StoreContentScrollViewTool.SnapTo(unitRect);
+                    });
                 CoinStoreUnitDatas.Add(coinStoreUnit);
             }
             else

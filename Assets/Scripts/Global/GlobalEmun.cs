@@ -413,6 +413,8 @@ public enum ShopCoinEnum
     StoreCoin_0,
     StoreCoin_1,
     StoreCoin_2,
+    StoreCoin_3,
+    StoreCoin_4,
 }
 
 /// <summary>

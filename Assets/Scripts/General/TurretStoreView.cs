@@ -9,7 +9,6 @@ using System.Collections;
 public class TurretStoreView : BasicView
 {
     [Header("TurretStoreView")]
-    [SerializeField] List<Sprite> StroeTurretSprites = new();
     [SerializeField] ScrollViewTool StoreContentScrollViewTool;
     [SerializeField] RectTransform ContentRect;
     [SerializeField] TurretStoreUnit TurretStoreUnit;
@@ -126,9 +125,9 @@ public class TurretStoreView : BasicView
             {
                 storeTuretUnit.SetData(
                     turretType: turretType,
-                    coverSprite: StroeTurretSprites[index],
+                    coverSprite: TextureManagement.Instance.GetTurretTexture(turretType),
                     model3D: Model3DObjects[index],
-                    selectCallback: OnSelectTurret);
+                    selectAction: OnSelectTurret);
 
                 TurretStoreUnits.Add(storeTuretUnit);
             }

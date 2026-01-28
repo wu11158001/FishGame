@@ -148,4 +148,39 @@ public class TextureManagement : SingletonMonoBehaviour<TextureManagement>
     }
 
     #endregion
+
+    #region 砲台圖片
+
+    /// <summary>
+    /// 道具圖片資料
+    /// </summary>
+    [Serializable]
+    public struct TurretEntry
+    {
+        public TurretEnum TurretType;
+        public Sprite Sp;
+    }
+
+    /// <summary>
+    /// 道具圖集
+    /// </summary>
+    [SerializeField] List<TurretEntry> TurretTextureEntryList = new();
+
+    /// <summary>
+    /// 獲取砲台圖片
+    /// </summary>
+    public Sprite GetTurretTexture(TurretEnum turretType)
+    {
+        var entry = TurretTextureEntryList.Find(x => x.TurretType == turretType);
+
+        if (entry.Sp == null)
+        {
+            Debug.LogError($"無法在清單中找到 {turretType} 的圖片");
+            return null;
+        }
+
+        return entry.Sp;
+    }
+
+    #endregion
 }

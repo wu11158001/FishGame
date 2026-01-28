@@ -1207,6 +1207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9df227e8816e9b441a295f55d27b0384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoreTuretUnit
+  MaxCoverSize: 272
   MainTog: {fileID: 2658938913653063681}
   MainRect: {fileID: 4370941962884274689}
   BuyBtn: {fileID: 2417222778225040304}
@@ -2063,11 +2064,6 @@ MonoBehaviour:
   IsUsePopUp: 1
   PopUpRect: {fileID: 4902079615132489920}
   PopUpTime: 0.5
-  StroeTurretSprites:
-  - {fileID: 21300000, guid: f6c169ec69bf90c48b73ee6d96fffa4d, type: 3}
-  - {fileID: 21300000, guid: 6c372daad1e1a2d4f9151623d27403e8, type: 3}
-  - {fileID: 21300000, guid: 9d8bf2970b6251d49851e5ed9ebda470, type: 3}
-  - {fileID: 21300000, guid: cd298bbf8e894a6448d18b1b1747adb9, type: 3}
   StoreContentScrollViewTool: {fileID: 3697240126866716478}
   ContentRect: {fileID: 2679188738775444701}
   TurretStoreUnit: {fileID: 3115421051086069803}

@@ -245,6 +245,15 @@ MonoBehaviour:
     m_Localized: Props
     m_Metadata:
       m_Items: []
+  - m_Id: 12465031245139968
+    m_Localized: Insufficient number of props!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12736600768974848
+    m_Localized: Freeze full-screen fish for {0} seconds.
+    m_Metadata:
+      m_Items:
+      - rid: 8068190351354495079
   references:
     version: 2
     RefIds:
@@ -256,3 +265,4 @@ MonoBehaviour:
         - id: 9126740382912512
         - id: 9728630103674880
         - id: 10366013622915072
+        - id: 12736600768974848

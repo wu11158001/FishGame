@@ -96,8 +96,21 @@ MonoBehaviour:
     Sp: {fileID: 21300000, guid: 1ccb94c7bbebc484f80299fba0b575ed, type: 3}
   ShopCoinTextureEntryList:
   - ShopCoinType: 0
-    Sp: {fileID: 21300000, guid: 3cc08f6a5f18b164184b9854ffa642ba, type: 3}
+    Sp: {fileID: -1048013061285917987, guid: e4c591aa84bdedc4ab0b8736bf86373b, type: 3}
   - ShopCoinType: 1
-    Sp: {fileID: 21300000, guid: c303a323048e00843bc7289e4c055843, type: 3}
+    Sp: {fileID: 804326060314261637, guid: b7f7ac78178dab54ab760988f5aadeb9, type: 3}
   - ShopCoinType: 2
-    Sp: {fileID: 21300000, guid: e0f7d847defdb3444bbfe9684523f555, type: 3}
+    Sp: {fileID: -5815060958783322241, guid: 51a172b329aa5074fae2b9dd806a34d0, type: 3}
+  - ShopCoinType: 3
+    Sp: {fileID: -4899199973589032331, guid: 66de8cbc67a6fbd48bb69dc3751028ed, type: 3}
+  - ShopCoinType: 4
+    Sp: {fileID: 4540038396185817624, guid: 374baff59a973a548aa9292ebab93522, type: 3}
+  TurretTextureEntryList:
+  - TurretType: 0
+    Sp: {fileID: 21300000, guid: f6c169ec69bf90c48b73ee6d96fffa4d, type: 3}
+  - TurretType: 1
+    Sp: {fileID: 21300000, guid: 6c372daad1e1a2d4f9151623d27403e8, type: 3}
+  - TurretType: 2
+    Sp: {fileID: 21300000, guid: 9d8bf2970b6251d49851e5ed9ebda470, type: 3}
+  - TurretType: 3
+    Sp: {fileID: 21300000, guid: 9d8bf2970b6251d49851e5ed9ebda470, type: 3}

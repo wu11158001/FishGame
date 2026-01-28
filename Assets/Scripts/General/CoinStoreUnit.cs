@@ -2,9 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System;
 
 public class CoinStoreUnit : MonoBehaviour
 {
+    [Header("CoinStoreUnit")]
+    [SerializeField] float MaxCoverSize = 256f;
+    [SerializeField] Button MainBtn;
+    [SerializeField] RectTransform MainRect;
     [SerializeField] Image CoverImage;
     [SerializeField] TextMeshProUGUI GetCoinText;
     [SerializeField] Button BuyBtn;
@@ -12,15 +17,20 @@ public class CoinStoreUnit : MonoBehaviour
 
     CoinStoreData CoinStoreData;
     Sprite CoverSprite;
+    Action<RectTransform> SelectAction;
 
     private void Start()
     {
+        // 滑動條移動至顯示位置
+        MainBtn.onClick.AddListener(() => { SelectAction?.Invoke(MainRect); });
+
         // 購買按鈕
         BuyBtn.onClick.AddListener(BuyCoin);
     }
 
-    public void SetData(Sprite coverSprite, ShopCoinEnum coinType)
+    public void SetData(Sprite coverSprite, ShopCoinEnum coinType, Action<RectTransform> selectAction)
     {
+        SelectAction = selectAction;
         CoverSprite = coverSprite;
         CoinStoreData = FirestoreDataManagement.Instance?.GetCoinStoreData(coinType);
 
@@ -31,6 +41,9 @@ public class CoinStoreUnit : MonoBehaviour
         }
 
         CoverImage.sprite = coverSprite;
+        CoverImage.SetNativeSize();
+        UIUtility.SetMaxUISize(targetRt: CoverImage.rectTransform, maxSize: MaxCoverSize);
+
         GetCoinText.text = StringUtility.CurrencyFormat(CoinStoreData.GetCoin);
         BuyBtnText.text = $"$ : {StringUtility.CurrencyFormat(CoinStoreData.Price)}";
     }

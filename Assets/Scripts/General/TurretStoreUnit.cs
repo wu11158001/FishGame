@@ -7,6 +7,8 @@ using System;
 
 public class TurretStoreUnit : MonoBehaviour
 {
+    [Header("TurretStoreUnit")]
+    [SerializeField] float MaxCoverSize = 256f;
     [SerializeField] Toggle MainTog;
     [SerializeField] RectTransform MainRect;
     [SerializeField] Button BuyBtn;
@@ -18,7 +20,7 @@ public class TurretStoreUnit : MonoBehaviour
     TurretData TurretData;
     Sprite CoverSprite;
     Transform Model3D;
-    Action<TurretData, RectTransform> SelectCallback;
+    Action<TurretData, RectTransform> SelectAction;
     bool IsOwn;
 
     private void Start()
@@ -27,11 +29,11 @@ public class TurretStoreUnit : MonoBehaviour
         MainTog.onValueChanged.AddListener(SetModel3D);
     }
 
-    public void SetData(TurretEnum turretType, Sprite coverSprite, Transform model3D, Action<TurretData, RectTransform> selectCallback)
+    public void SetData(TurretEnum turretType, Sprite coverSprite, Transform model3D, Action<TurretData, RectTransform> selectAction)
     {
         CoverSprite = coverSprite;
         Model3D = model3D;
-        SelectCallback = selectCallback;
+        SelectAction = selectAction;
         TurretData = FirestoreDataManagement.Instance?.GetTurrethData(turretType);
 
         if (TurretData == null)
@@ -43,6 +45,7 @@ public class TurretStoreUnit : MonoBehaviour
         // 設置砲台圖片
         CoverImage.sprite = CoverSprite;
         CoverImage.SetNativeSize();
+        UIUtility.SetMaxUISize(targetRt: CoverImage.rectTransform, maxSize: MaxCoverSize);
         CoverImage.rectTransform.anchoredPosition = Vector2.zero;
 
         CheckTurret(FirestoreDataManagement.Instance.CurrAccountData);
@@ -101,7 +104,7 @@ public class TurretStoreUnit : MonoBehaviour
             Model3D.gameObject.SetActive(isOn);
 
         if (isOn)
-            SelectCallback?.Invoke(TurretData, MainRect);
+            SelectAction?.Invoke(TurretData, MainRect);
     }
 
     /// <summary>

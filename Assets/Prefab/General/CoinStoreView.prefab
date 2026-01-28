@@ -579,8 +579,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 15}
-  m_SizeDelta: {x: 256, y: 256}
+  m_AnchoredPosition: {x: 0, y: 25}
+  m_SizeDelta: {x: 243.08, y: 151.287}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5644371723280065093
 CanvasRenderer:
@@ -610,7 +610,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3cc08f6a5f18b164184b9854ffa642ba, type: 3}
+  m_Sprite: {fileID: 4540038396185817624, guid: 374baff59a973a548aa9292ebab93522, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3132,6 +3132,7 @@ MonoBehaviour:
   IsUsePopUp: 1
   PopUpRect: {fileID: 9035194407121055454}
   PopUpTime: 0.5
+  StoreContentScrollViewTool: {fileID: 3534982334731131430}
   CoinStoreUnit: {fileID: 644039595268291504}
   ContentRect: {fileID: 6578266298172628581}
 --- !u!1 &7881958045778729692
@@ -3147,7 +3148,7 @@ GameObject:
   - component: {fileID: 8693074136588924049}
   - component: {fileID: 3362861138025627583}
   - component: {fileID: 1153454281216096803}
-  - component: {fileID: 5518410384836795755}
+  - component: {fileID: 8485159764598130005}
   m_Layer: 5
   m_Name: CoinStoreUnit
   m_TagString: Untagged
@@ -3189,6 +3190,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e672b964f4e05a34591c5118a546dc32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoinStoreUnit
+  MaxCoverSize: 235
+  MainBtn: {fileID: 8485159764598130005}
+  MainRect: {fileID: 412026137634719285}
   CoverImage: {fileID: 2133919188488040032}
   GetCoinText: {fileID: 290296388950188429}
   BuyBtn: {fileID: 3470046908435635915}
@@ -3338,7 +3342,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &5518410384836795755
+--- !u!114 &8485159764598130005
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3347,9 +3351,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7881958045778729692}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Toggle
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -3379,13 +3383,9 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 3362861138025627583}
-  toggleTransition: 1
-  graphic: {fileID: 0}
-  m_Group: {fileID: 0}
-  onValueChanged:
+  m_OnClick:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 0
 --- !u!1 &8330353497995412490
 GameObject:
   m_ObjectHideFlags: 0
