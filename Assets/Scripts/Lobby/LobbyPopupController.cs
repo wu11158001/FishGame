@@ -16,6 +16,8 @@ public class LobbyPopupController : MonoBehaviour
     // 用於判斷是否過隔日
     int DiffDays;
 
+    LobbyView LobbyView;
+
     private void OnDestroy()
     {
         if (FirestoreDataManagement.Instance != null)
@@ -44,31 +46,38 @@ public class LobbyPopupController : MonoBehaviour
             if(!IsCheckData)
             {
                 IsCheckData = true;
-                Debug.Log("進入大廳，開始獲取Firestore固定資料");
 
-                CheckFixedDataDic.Clear();
-                foreach (CheckFixedDataEnum item in Enum.GetValues(typeof(CheckFixedDataEnum)))
+                // 創建大廳
+                AddressableManagement.Instance.OpenLobbyView(callback: (lobbyView) =>
                 {
-                    CheckFixedDataDic.Add(item, false);
-                }
+                    LobbyView = lobbyView;
 
-                if (FirestoreDataManagement.Instance != null)
-                {
-                    // 登入與註冊獎勵資料
-                    FirestoreDataManagement.Instance.GetLoginAndRegisterData(callback: CheckFixedData);
+                    Debug.Log("大廳創建完成，開始獲取Firestore固定資料");
 
-                    // 所有砲台資料
-                    FirestoreDataManagement.Instance.GetAllTurretData(callback: CheckFixedData);
+                    CheckFixedDataDic.Clear();
+                    foreach (CheckFixedDataEnum item in Enum.GetValues(typeof(CheckFixedDataEnum)))
+                    {
+                        CheckFixedDataDic.Add(item, false);
+                    }
 
-                    // 所有關卡資料
-                    FirestoreDataManagement.Instance.GetAllLevelData(callback: CheckFixedData);
+                    if (FirestoreDataManagement.Instance != null)
+                    {
+                        // 登入與註冊獎勵資料
+                        FirestoreDataManagement.Instance.GetLoginAndRegisterData(callback: CheckFixedData);
 
-                    // 金幣商店資料
-                    FirestoreDataManagement.Instance.GetCoinStoreData(callback: CheckFixedData);
+                        // 所有砲台資料
+                        FirestoreDataManagement.Instance.GetAllTurretData(callback: CheckFixedData);
 
-                    // 所有道具商店資料
-                    FirestoreDataManagement.Instance.GetAllPropsStoreData(callback: CheckFixedData);
-                }
+                        // 所有關卡資料
+                        FirestoreDataManagement.Instance.GetAllLevelData(callback: CheckFixedData);
+
+                        // 金幣商店資料
+                        FirestoreDataManagement.Instance.GetCoinStoreData(callback: CheckFixedData);
+
+                        // 所有道具商店資料
+                        FirestoreDataManagement.Instance.GetAllPropsStoreData(callback: CheckFixedData);
+                    }
+                });
             }
             else
             {
@@ -225,7 +234,7 @@ public class LobbyPopupController : MonoBehaviour
         {
             if (AddressableManagement.Instance != null)
             {
-                AddressableManagement.Instance.OpenSevenDayView(closeAction: PopupProcess);
+                AddressableManagement.Instance.OpenSevenDayView(lobbyView: LobbyView, closeAction: PopupProcess);
             }
         }
         else

@@ -1403,7 +1403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141109fb25f0083469e71ce8cb3e75c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 341d886379978a2458520139794f93c3, type: 2}
   m_Color: {r: 1, g: 0.9972226, b: 0.0039215684, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1421,7 +1421,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  m_DrawShape: 5
+  m_DrawShape: 3
   m_ImageType: 0
   m_MaterialMode: 1
   m_StrokeWidth: 5
@@ -1436,13 +1436,13 @@ MonoBehaviour:
     m_CornerRadius: {x: 0, y: 0, z: 0}
     m_UniformCornerRadius: 0
   m_Rectangle:
-    m_CornerRadius: {x: 30, y: 30, z: 30, w: 30}
+    m_CornerRadius: {x: 25, y: 25, z: 25, w: 25}
     m_UniformCornerRadius: 1
   m_ChamferBox:
     m_ChamferSize: 0
   m_Parallelogram:
-    m_Skew: 10
-    m_CornerRadius: 8
+    m_Skew: 0
+    m_CornerRadius: 0
   m_Circle:
     m_Radius: 0
     m_FitRadius: 0
@@ -1564,7 +1564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141109fb25f0083469e71ce8cb3e75c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: c12a24b48d0e5c34f855047b28c39aa1, type: 2}
   m_Color: {r: 0, g: 0.4599332, b: 0.7924528, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1582,7 +1582,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  m_DrawShape: 5
+  m_DrawShape: 3
   m_ImageType: 0
   m_MaterialMode: 1
   m_StrokeWidth: 0
@@ -1597,13 +1597,13 @@ MonoBehaviour:
     m_CornerRadius: {x: 0, y: 0, z: 0}
     m_UniformCornerRadius: 0
   m_Rectangle:
-    m_CornerRadius: {x: 30, y: 30, z: 30, w: 30}
+    m_CornerRadius: {x: 25, y: 25, z: 25, w: 25}
     m_UniformCornerRadius: 1
   m_ChamferBox:
-    m_ChamferSize: 22.08
+    m_ChamferSize: 0
   m_Parallelogram:
-    m_Skew: 10
-    m_CornerRadius: 8
+    m_Skew: 0
+    m_CornerRadius: 0
   m_Circle:
     m_Radius: 0
     m_FitRadius: 0
@@ -1613,7 +1613,7 @@ MonoBehaviour:
     m_TipRadius: 0.001
     m_TipSize: 8.47
   m_Hexagon:
-    m_CornerRadius: {x: 1, y: 1, z: 15.63, w: 1}
+    m_CornerRadius: {x: 1, y: 1, z: 1, w: 1}
     m_UniformCornerRadius: 0
     m_TipSize: {x: 33.92, y: 1.6}
     m_UniformTipSize: 0

@@ -230,6 +230,12 @@ public enum NetworkPrefabEnum
     /// <summary> 魚擊中特效 </summary>
     FishHitEffect = 4,
 
+    /// <summary> 特殊效果控制中心 </summary>
+    SpecialEffectController,
+
+    /// <summary> Fusion物件池 </summary>
+    FusionPool,
+
     /// <summary> 一般魚魚物件 </summary>
     NormalFish_0 = 100,
     NormalFish_1 = 101,

@@ -62,7 +62,7 @@ public class Fish : NetworkBehaviour
         };
 
         if (WayPointMain == null)
-            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}").GetComponent<WayPointMain>();
+            WayPointMain = UnityEngine.Object.FindFirstObjectByType<WayPointMain>();
 
         WayPoint wayPoint = WayPointMain.GetWayPointById(wayPointId);
         int totalPoints = wayPoint.Points.Count;

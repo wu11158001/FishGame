@@ -51,7 +51,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     /// <summary>
     /// 開始遊戲
     /// </summary>
-    public async Task<StartGameResult> StartGame(string sessionName)
+    public async Task<StartGameResult> StartGame(string sessionName, LevelEnum level)
     {
         if (FusionPool != null)
         {
@@ -65,10 +65,14 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         poolObj.transform.SetParent(gameObject.transform);
         FusionPool = poolObj.AddComponent<FusionPool>();
 
+        var customProps = new Dictionary<string, SessionProperty>();
+        customProps["Level"] = (SessionProperty)(int)level;
+
         return await NetworkRunner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             ObjectProvider = FusionPool,
+            SessionProperties = customProps,
             SessionName = sessionName,
             SceneManager = NetworkSceneManagerDefault,
             PlayerCount = 4,
@@ -154,9 +158,26 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
         AddressableManagement.Instance.SetCanvase();
 
-        // 產生遊戲地形
+
         if (runner.IsSharedModeMasterClient)
         {
+            // 產生Fusion物件池
+            NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                key: NetworkPrefabEnum.FusionPool,
+                Pos: Vector3.zero,
+                rot: Quaternion.Euler(0, 0, 0),
+                parent: null,
+                player: PlayerRef.None);
+
+            // 產生特殊效果控制中心
+            NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                key: NetworkPrefabEnum.SpecialEffectController,
+                Pos: Vector3.zero,
+                rot: Quaternion.Euler(0, 0, 0),
+                parent: null,
+                player: PlayerRef.None);
+
+            // 產生遊戲地形
             NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                 key: NetworkPrefabEnum.GameTerrain,
                 Pos: Vector3.zero,
@@ -244,13 +265,7 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         // 非安全斷線返回大廳
         if(!IsSafeShutdown && SceneManagement.Instance != null)
         {
-            SceneManagement.Instance.LoadScene(
-                sceneEnum: SceneEnum.Lobby,
-                callback: async () =>
-                {
-                    if (AddressableManagement.Instance != null)
-                        await AddressableManagement.Instance.OpenLobbyView();
-                });
+            SceneManagement.Instance.LoadScene(sceneEnum: SceneEnum.Lobby);
         }
 
         IsSafeShutdown = false;

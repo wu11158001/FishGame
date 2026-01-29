@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion;
 using System.Linq;
 using System.Collections;
+using System.Threading.Tasks;
 
 public class GameEntry : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class GameEntry : MonoBehaviour
 
     Dictionary<CheckJoinRoomDataEnum, bool> CheckJoinRoomDic = new();
     Coroutine MatchmakingCoroutine;
+
+    LevelEnum CurrentLevel;
 
     private void OnDestroy()
     {
@@ -27,16 +30,25 @@ public class GameEntry : MonoBehaviour
 
     public void SetData(LevelEnum levelType)
     {
-        StartJoInGame(levelType);
+        CurrentLevel = levelType;
+        StartJoInGame();
     }
 
     /// <summary>
     /// 開始加入遊戲
     /// </summary>
-    private async void StartJoInGame(LevelEnum levelType)
+    private async void StartJoInGame()
     {
         try
         {
+            // 產生路線主物件
+            var task1 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.WayPointMain);
+            // 產生本地物件池
+            var task2 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.LocalPool);
+            // 產生場景特效
+            var task3 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.SceneEffect);
+            await Task.WhenAll(task1, task2, task3);
+
             IsMatchmaking = true;
             CheckJoinRoomDic.Clear();
 
@@ -64,10 +76,10 @@ public class GameEntry : MonoBehaviour
                         gameTempData.GetAllTurretData(callback: CheckJoinRoomData);
 
                         // 獲取關卡資料
-                        gameTempData.GetCurrentLevelData(levelType: levelType, callback: CheckJoinRoomData);
+                        gameTempData.GetCurrentLevelData(levelType: CurrentLevel, callback: CheckJoinRoomData);
 
                         // 開始監聽關卡資料
-                        gameTempData.StartListenLevelData(levelType: levelType);
+                        gameTempData.StartListenLevelData(levelType: CurrentLevel);
 
                         // 獲取帳戶資料
                         gameTempData.GetTempAccountData(callback: CheckJoinRoomData);
@@ -89,13 +101,7 @@ public class GameEntry : MonoBehaviour
         // 回大廳
         if (SceneManagement.Instance != null)
         {
-            SceneManagement.Instance.LoadScene(
-                sceneEnum: SceneEnum.Lobby,
-                callback: async () =>
-                {
-                    if (AddressableManagement.Instance != null)
-                        await AddressableManagement.Instance.OpenLobbyView();
-                });
+            SceneManagement.Instance.LoadScene(sceneEnum: SceneEnum.Lobby);
         }
     }
 
@@ -161,7 +167,7 @@ public class GameEntry : MonoBehaviour
     /// <returns></returns>
     private IEnumerator WaitAndCheckRoomList()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
 
         // 等待超時
         if (IsMatchmaking)
@@ -178,12 +184,17 @@ public class GameEntry : MonoBehaviour
     {
         if (!IsMatchmaking) return;
 
-        // 尋找第一個還沒滿且開啟中的房間
-        SessionInfo availableSession = sessionList.FirstOrDefault(s => s.IsOpen && s.PlayerCount < s.MaxPlayers);
+        SessionInfo availableSession = sessionList.FirstOrDefault(s =>
+            s.IsOpen &&
+            s.PlayerCount < s.MaxPlayers &&
+            s.Properties != null &&
+            s.Properties.TryGetValue("Level", out var levelProp) &&
+            levelProp == (int)CurrentLevel
+        );
 
         if (availableSession != null)
         {
-            Debug.Log($"[列表更新] 找到可用房間: {availableSession.Name}");
+            Debug.Log($"[列表更新] 找到匹配關卡 {CurrentLevel} 的房間: {availableSession.Name}");
             JoinRoom(availableSession.Name);
         }
     }
@@ -207,7 +218,7 @@ public class GameEntry : MonoBehaviour
         Debug.Log($"準備進入房間: {sessionName}");
 
         // 執行 StartGame
-        var result = await NetworkRunnerManagement.Instance.StartGame(sessionName);
+        var result = await NetworkRunnerManagement.Instance.StartGame(sessionName: sessionName, level: CurrentLevel);
 
         if (!result.Ok)
         {

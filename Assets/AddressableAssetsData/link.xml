@@ -22,6 +22,7 @@
     <type fullname="LevelUnit" preserve="all" />
     <type fullname="LevelView" preserve="all" />
     <type fullname="LobbyView" preserve="all" />
+    <type fullname="LocalPool" preserve="all" />
     <type fullname="LoginRewardView" preserve="all" />
     <type fullname="LoginView" preserve="all" />
     <type fullname="PropsStoreUnit" preserve="all" />
@@ -41,6 +42,8 @@
     <type fullname="TurretStoreUnit" preserve="all" />
     <type fullname="TurretStoreView" preserve="all" />
     <type fullname="WaterFullHitEffect" preserve="all" />
+    <type fullname="WayPoint" preserve="all" />
+    <type fullname="WayPointMain" preserve="all" />
   </assembly>
   <assembly fullname="MPUIKit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="MPUIKIT.MPImage" preserve="all" />

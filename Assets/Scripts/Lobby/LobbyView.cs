@@ -142,6 +142,7 @@ public class LobbyView : BasicView
             EffectObjectShowControl(false);
 
             AddressableManagement.Instance.OpenSevenDayView(
+                lobbyView: this,
                 closeAction: () =>
                 {
                     EffectObjectShowControl(true);

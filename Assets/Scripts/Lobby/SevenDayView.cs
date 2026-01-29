@@ -61,43 +61,17 @@ public class SevenDayView : BasicView
         base.Close();
     }
 
-    public void SetData(Action closeAction)
+    public void SetData(LobbyView lobbyView, Action closeAction)
     {
         CloseAction = closeAction;
+        LobbyView = lobbyView;
 
         MainCanvasGroup.alpha = 0;
 
-        if (LobbyView == null)
-            LobbyView = UnityEngine.Object.FindFirstObjectByType<LobbyView>();
-        if (LobbyView != null)
-            LobbyView.EffectObjectShowControl(false);
+        lobbyView.EffectObjectShowControl(false);
 
         CreateSignInDayUnit();
         StartCoroutine(IYieldShow());
-    }
-
-    protected override IEnumerator IYieldShow()
-    {
-        // 等待抓取大廳
-        if (LobbyView == null)
-            LobbyView = UnityEngine.Object.FindFirstObjectByType<LobbyView>();
-        while (LobbyView == null)
-        {
-            LobbyView = UnityEngine.Object.FindFirstObjectByType<LobbyView>();
-            yield return new WaitForSeconds(0.1f);
-        }
-        LobbyView.EffectObjectShowControl(false);
-
-        Canvas.ForceUpdateCanvases();
-
-        yield return null;
-        yield return null;
-        yield return null;
-
-        if (MainCanvasGroup != null)
-            MainCanvasGroup.alpha = 1;
-
-        PopUpEffect();
     }
 
     /// <summary>
@@ -285,8 +259,7 @@ public class SevenDayView : BasicView
                                 iconSprite: sevenDayUnitData.RewardSprite,
                                 value: sevenDayUnitData.RewardValue);
 
-                            // 刷新介面
-                            CreateSignInDayUnit();
+                            Close();
                         }
                     });
                 }

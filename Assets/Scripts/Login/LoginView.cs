@@ -616,12 +616,7 @@ public class LoginView : BasicView
 
         if(SceneManagement.Instance != null)
         {
-            SceneManagement.Instance.LoadScene(
-                sceneEnum: SceneEnum.Lobby,
-                callback: async () =>
-                {
-                    await AddressableManagement.Instance.OpenLobbyView();
-                });
+            SceneManagement.Instance.LoadScene(sceneEnum: SceneEnum.Lobby);
         }
 
         Close();

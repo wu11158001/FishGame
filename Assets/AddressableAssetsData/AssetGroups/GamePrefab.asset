@@ -40,6 +40,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 402ddfa21f9680c4c9ec31a0825b89ff
+    m_Address: WayPointMain
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4d93f7e39deac5c47acf36bbf585eee7
     m_Address: WaterWave
     m_ReadOnly: 0
@@ -67,6 +72,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b5929c1a0fe8dc6448852b65004fff8a
     m_Address: CoinText_7
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b751d2847fd3fe44f8472b3f65d73681
+    m_Address: LocalPool
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

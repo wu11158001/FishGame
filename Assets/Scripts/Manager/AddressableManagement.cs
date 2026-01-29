@@ -344,7 +344,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 開啟大廳介面
     /// </summary>
-    public async Task OpenLobbyView(Action closeAction = null)
+    public async void OpenLobbyView(Action closeAction = null, Action<LobbyView> callback = null)
     {
         ViewEnum view = ViewEnum.LobbyView;
 
@@ -360,7 +360,9 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             {
                 if (viewObj != null)
                 {
-                    viewObj.GetComponent<LobbyView>().SetData(closeAction: viewCloseAction);
+                    LobbyView lobbyView = viewObj.GetComponent<LobbyView>();
+                    lobbyView.SetData(closeAction: viewCloseAction);
+                    callback?.Invoke(lobbyView);
                 }
             });
     }
@@ -597,7 +599,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 開啟7日簽到介面
     /// </summary>
-    public async void OpenSevenDayView(Action closeAction = null)
+    public async void OpenSevenDayView(LobbyView lobbyView, Action closeAction = null)
     {
         ViewEnum view = ViewEnum.SevenDayView;
 
@@ -613,7 +615,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             {
                 if (viewObj != null)
                 {
-                    viewObj.GetComponent<SevenDayView>().SetData(closeAction: viewCloseAction);
+                    viewObj.GetComponent<SevenDayView>().SetData(lobbyView: lobbyView, closeAction: viewCloseAction);
                 }
             });
     }

@@ -45,6 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkPrefabManagement
   NetworkPrefabList:
+  - Key: 6
+    PrefabRef:
+      RawGuidValue: e1e6a3bd95c426d4c83c95251ca67600
+  - Key: 5
+    PrefabRef:
+      RawGuidValue: 89a54607421554140b28960d990762f5
   - Key: 0
     PrefabRef:
       RawGuidValue: ffc19def1ae48cd468f5539ca2bf2465

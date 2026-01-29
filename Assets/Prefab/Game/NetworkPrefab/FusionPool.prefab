@@ -50,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
   SortKey: 1338925550
   ObjectInterest: 1
-  Flags: 1
+  Flags: 131073
   NestedObjects:
   - {fileID: 1183873532882209236}
   - {fileID: 8380254291468631887}
