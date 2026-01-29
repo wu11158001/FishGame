@@ -207,7 +207,7 @@ public class SevenDayView : BasicView
                     break;
 
                 case 6:
-                    sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_4);
+                    sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_3);
                     sevenDayUnitData.RewardValue = 77777;
                     break;
             }

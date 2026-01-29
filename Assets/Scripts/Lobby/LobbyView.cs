@@ -158,11 +158,18 @@ public class LobbyView : BasicView
     {
         // 獲取當前時間與註冊時間相差天數
         string registerDay = FirestoreDataManagement.Instance.CurrAccountData.RegisterTime;
-        DateTime registerDate = DateTime.Parse(registerDay);
-        DateTime now = DateTime.UtcNow.AddHours(8);
-        TimeSpan diff = now.Date - registerDate.Date;
-        int registerDays = diff.Days;
+        if(string.IsNullOrEmpty(registerDay))
+        {
+            SevenDayBtn.gameObject.SetActive(true);
+        }
+        else
+        {
+            DateTime registerDate = DateTime.Parse(registerDay);
+            DateTime now = DateTime.UtcNow.AddHours(8);
+            TimeSpan diff = now.Date - registerDate.Date;
+            int registerDays = diff.Days;
 
-        SevenDayBtn.gameObject.SetActive(registerDays < 7);
+            SevenDayBtn.gameObject.SetActive(registerDays < 7);
+        }
     }
 }

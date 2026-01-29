@@ -23,12 +23,14 @@ public class SevenDayUnit : MonoBehaviour
     public void SetData(SevenDayUnitData sevenDayUnitData)
     {
         SignInAction = sevenDayUnitData.SignInAction;
-        RewardImage.sprite = sevenDayUnitData.RewardSprite;
         RewardValueText.text = StringUtility.CurrencyFormat(sevenDayUnitData.RewardValue);
         SignInDayAni.enabled = sevenDayUnitData.IsSignInDay;
         SignInBtn.interactable = sevenDayUnitData.IsSignInDay && !sevenDayUnitData.IsReceived;
         ExpiredObj.SetActive(sevenDayUnitData.IsExpired);
         DayNumberImage.sprite = sevenDayUnitData.NumberSprite;
+        RewardImage.sprite = sevenDayUnitData.RewardSprite;
+        RewardImage.SetNativeSize();
+        UIUtility.SetMaxUISize(targetRt: RewardImage.rectTransform, maxSize: 83f);
 
         // 簽到
         string btnStr = LocalizationManagement.Instance.GetLocalizedString("Sign in");

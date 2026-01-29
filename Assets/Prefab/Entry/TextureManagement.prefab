@@ -100,11 +100,11 @@ MonoBehaviour:
   - ShopCoinType: 1
     Sp: {fileID: 804326060314261637, guid: b7f7ac78178dab54ab760988f5aadeb9, type: 3}
   - ShopCoinType: 2
-    Sp: {fileID: -5815060958783322241, guid: 51a172b329aa5074fae2b9dd806a34d0, type: 3}
-  - ShopCoinType: 3
     Sp: {fileID: -4899199973589032331, guid: 66de8cbc67a6fbd48bb69dc3751028ed, type: 3}
-  - ShopCoinType: 4
+  - ShopCoinType: 3
     Sp: {fileID: 4540038396185817624, guid: 374baff59a973a548aa9292ebab93522, type: 3}
+  - ShopCoinType: 4
+    Sp: {fileID: 7091146362038215915, guid: 44a376d68971eea40b89eda4625522d3, type: 3}
   TurretTextureEntryList:
   - TurretType: 0
     Sp: {fileID: 21300000, guid: f6c169ec69bf90c48b73ee6d96fffa4d, type: 3}
