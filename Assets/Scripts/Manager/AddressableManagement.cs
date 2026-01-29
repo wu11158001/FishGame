@@ -22,9 +22,6 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     private RectTransform SafeArea_Scene;
     private RectTransform SafeArea_Global;
 
-    // 防止Loading物件創建多個
-    private GameObject CurrLoadingObj;
-
     private class PrefabInstance
     {
         public GameObject Go;

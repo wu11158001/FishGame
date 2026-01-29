@@ -13,6 +13,9 @@ public class LobbyPopupController : MonoBehaviour
     bool IsCheckData = false;
     Dictionary<CheckFixedDataEnum, bool> CheckFixedDataDic = new();
 
+    // 用於判斷是否過隔日
+    int DiffDays;
+
     private void OnDestroy()
     {
         if (FirestoreDataManagement.Instance != null)
@@ -67,6 +70,12 @@ public class LobbyPopupController : MonoBehaviour
                     FirestoreDataManagement.Instance.GetAllPropsStoreData(callback: CheckFixedData);
                 }
             }
+            else
+            {
+                int diffDays = FirestoreDataManagement.Instance.GetDifferenceDays();
+                if (DiffDays != diffDays)
+                    StartPopupProcess();
+            }
         }
     }
 
@@ -88,15 +97,27 @@ public class LobbyPopupController : MonoBehaviour
             Debug.Log("固定資料獲取完成，開始彈窗流程");
             Canvas_Global.Instance.CloseLoading();
             Canvas_Global.Instance.CloseSceneLoadingView();
-            
-            PopupQueue.Clear();
-            foreach (LobbyPopupEnum popup in Enum.GetValues(typeof(LobbyPopupEnum)))
-            {
-                PopupQueue.Enqueue(popup);
-            }
 
-            PopupProcess();
+            StartPopupProcess();
         }
+    }
+
+    /// <summary>
+    /// 開始彈窗流程
+    /// </summary>
+    private void StartPopupProcess()
+    {
+        // 當前時間與註冊時間相差天數
+        int diffDays = FirestoreDataManagement.Instance.GetDifferenceDays();
+        DiffDays = diffDays;
+
+        PopupQueue.Clear();
+        foreach (LobbyPopupEnum popup in Enum.GetValues(typeof(LobbyPopupEnum)))
+        {
+            PopupQueue.Enqueue(popup);
+        }
+
+        PopupProcess();
     }
 
     /// <summary>
@@ -194,14 +215,13 @@ public class LobbyPopupController : MonoBehaviour
     /// </summary>
     private void CheckSevenDay()
     {
-        // 獲取當前時間與註冊時間相差天數
-        string registerDay = FirestoreDataManagement.Instance.CurrAccountData.RegisterTime;
-        DateTime registerDate = DateTime.Parse(registerDay);
-        DateTime now = DateTime.UtcNow.AddHours(8);
-        TimeSpan diff = now.Date - registerDate.Date;
-        int registerDays = diff.Days;
+        // 獲取已簽到天
+        SortedSet<int> sigInDays = FirestoreDataManagement.Instance.GetSignInDays();
 
-        if(registerDays < 7)
+        // 當前時間與註冊時間相差天數
+        int diffDays = FirestoreDataManagement.Instance.GetDifferenceDays();
+
+        if (diffDays < 7 && !sigInDays.Contains(diffDays))
         {
             if (AddressableManagement.Instance != null)
             {

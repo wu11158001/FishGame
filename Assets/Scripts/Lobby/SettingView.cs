@@ -59,6 +59,7 @@ public class SettingView : BasicView
     {
         Canvas_Global.Instance.ShowLoading();
         FirestoreDataManagement.Instance.StopHeartbeat();
+        FirestoreDataManagement.Instance.StopListenAccountData();
 
         SceneManagement.Instance.LoadScene(
             sceneEnum: SceneEnum.Login,

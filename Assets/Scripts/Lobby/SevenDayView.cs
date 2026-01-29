@@ -17,6 +17,8 @@ public class SevenDayView : BasicView
     // 紀錄介面開啟時間，判斷介面開著時已過隔日
     DateTime ViewStartTime;
 
+    LobbyView LobbyView;
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -39,7 +41,7 @@ public class SevenDayView : BasicView
         ViewStartTime = DateTime.UtcNow.AddHours(8);
 
         // 7天內未簽到顯示下次簽到時間倒數
-        if(GetDifferenceDays() < 7)
+        if(FirestoreDataManagement.Instance.GetDifferenceDays() < 7)
         {
             StartCoroutine(UpdateNextTimer());
         }
@@ -49,14 +51,53 @@ public class SevenDayView : BasicView
         }
     }
 
+    protected override void Close()
+    {
+        if (LobbyView == null)
+            LobbyView = UnityEngine.Object.FindFirstObjectByType<LobbyView>();
+        if (LobbyView != null)
+            LobbyView.EffectObjectShowControl(true);
+
+        base.Close();
+    }
+
     public void SetData(Action closeAction)
     {
         CloseAction = closeAction;
 
         MainCanvasGroup.alpha = 0;
 
+        if (LobbyView == null)
+            LobbyView = UnityEngine.Object.FindFirstObjectByType<LobbyView>();
+        if (LobbyView != null)
+            LobbyView.EffectObjectShowControl(false);
+
         CreateSignInDayUnit();
         StartCoroutine(IYieldShow());
+    }
+
+    protected override IEnumerator IYieldShow()
+    {
+        // 等待抓取大廳
+        if (LobbyView == null)
+            LobbyView = UnityEngine.Object.FindFirstObjectByType<LobbyView>();
+        while (LobbyView == null)
+        {
+            LobbyView = UnityEngine.Object.FindFirstObjectByType<LobbyView>();
+            yield return new WaitForSeconds(0.1f);
+        }
+        LobbyView.EffectObjectShowControl(false);
+
+        Canvas.ForceUpdateCanvases();
+
+        yield return null;
+        yield return null;
+        yield return null;
+
+        if (MainCanvasGroup != null)
+            MainCanvasGroup.alpha = 1;
+
+        PopUpEffect();
     }
 
     /// <summary>
@@ -109,23 +150,11 @@ public class SevenDayView : BasicView
     }
 
     /// <summary>
-    /// 獲取當前時間與註冊時間相差天數
-    /// </summary>
-    private int GetDifferenceDays()
-    {
-        string registerDay = FirestoreDataManagement.Instance.CurrAccountData.RegisterTime;
-        DateTime registerDate = DateTime.Parse(registerDay);
-        DateTime now = DateTime.UtcNow.AddHours(8);
-        TimeSpan diff = now.Date - registerDate.Date;
-        return diff.Days;
-    }
-
-    /// <summary>
     /// 創建簽到單位
     /// </summary>
     private void CreateSignInDayUnit()
     {
-        int registerDays = GetDifferenceDays();
+        int registerDays = FirestoreDataManagement.Instance.GetDifferenceDays();
 
         if (registerDays > 7)
         {
@@ -134,16 +163,7 @@ public class SevenDayView : BasicView
         }
 
         // 獲取已簽到天
-        string sigInDaysStr = FirestoreDataManagement.Instance.CurrAccountData.SevenDays;
-        List<int> sigInDays = new();
-        if (!string.IsNullOrEmpty(sigInDaysStr))
-        {
-            var parts = sigInDaysStr.Trim().Split(',');
-            foreach (var p in parts)
-            {
-                if (int.TryParse(p, out int id)) sigInDays.Add(id);
-            }
-        }
+        SortedSet<int> sigInDays = FirestoreDataManagement.Instance.GetSignInDays();
 
         // 移除舊的物件
         for (int i = 0; i < UnitObjs.Count; i++)

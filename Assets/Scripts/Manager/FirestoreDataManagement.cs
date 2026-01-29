@@ -99,6 +99,46 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
 
     }
 
+    #region 簽到資料
+
+    /// <summary>
+    /// 獲取當前時間與註冊時間相差天數
+    /// </summary>
+    public int GetDifferenceDays()
+    {
+        string registerDay = CurrAccountData.RegisterTime;
+        if (string.IsNullOrEmpty(registerDay))
+        {
+            return 0;
+        }
+        
+        DateTime registerDate = DateTime.Parse(registerDay);
+        DateTime now = DateTime.UtcNow.AddHours(8);
+        TimeSpan diff = now.Date - registerDate.Date;
+        return diff.Days;
+    }
+
+    /// <summary>
+    /// 獲取已簽到天
+    /// </summary>
+    public SortedSet<int> GetSignInDays()
+    {
+        string sigInDaysStr = CurrAccountData.SevenDays;
+        SortedSet<int> signInDays = new();
+        if (!string.IsNullOrEmpty(sigInDaysStr))
+        {
+            var parts = sigInDaysStr.Trim().Split(',');
+            foreach (var p in parts)
+            {
+                if (int.TryParse(p, out int id)) signInDays.Add(id);
+            }
+        }
+
+        return signInDays;
+    }
+
+    #endregion
+
     #region 心跳包
 
     /// <summary>

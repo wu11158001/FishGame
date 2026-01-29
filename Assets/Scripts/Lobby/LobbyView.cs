@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using System;
 using DG.Tweening;
 using TMPro;
+using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 public class LobbyView : BasicView
 {
@@ -20,12 +22,19 @@ public class LobbyView : BasicView
     [SerializeField] Button ShopBtn;
 
     [Header("Left Area")]
+    [SerializeField] RectTransform LeftAreaRect;
     [SerializeField] Button SevenDayBtn;
     [SerializeField] RectTransform SevenDayRect;
 
     [Header("Level")]
     [SerializeField] RectTransform LevelBtnRect;
     [SerializeField] Button LevelBtn;
+
+    [Header("Effect Object")]
+    [SerializeField] List<SortingGroup> Effects = new();
+
+    // 父物件Canvas層級
+    int ParentCanvasOrder;
 
     protected override void OnDestroy()
     {
@@ -34,6 +43,7 @@ public class LobbyView : BasicView
         LevelBtnRect.DOKill();
         BottomAreaRect.DOKill();
         SevenDayRect.DOKill();
+        LeftAreaRect.DOKill();
 
         if (FirestoreDataManagement.Instance != null)
         {
@@ -45,31 +55,97 @@ public class LobbyView : BasicView
     {
         base.Start();
 
+        ParentCanvasOrder = GetComponentInParent<Canvas>().sortingOrder;
+
         // 頭像按鈕
-        AvatarBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenEditAvatarView(); });
+        AvatarBtn.onClick.AddListener(() => 
+        {
+            EffectObjectShowControl(false);
+
+            AddressableManagement.Instance.OpenEditAvatarView(
+                closeAction: () =>
+                {
+                    EffectObjectShowControl(true);
+                });
+        });
 
         // 編輯暱稱按鈕
-        NicknameEditBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenEditNicknameView(); });
+        NicknameEditBtn.onClick.AddListener(() => 
+        {
+            EffectObjectShowControl(false);
+
+            AddressableManagement.Instance.OpenEditNicknameView(
+                closeAction: () =>
+                {
+                    EffectObjectShowControl(true);
+                });
+        });
 
         // 設置按鈕
-        SettingBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenSettingView(); });
+        SettingBtn.onClick.AddListener(() => 
+        {
+            EffectObjectShowControl(false);
 
-        CoinStoreBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenShopView(defaultShopType: ShopSwitchEnum.CoinTag); });
+            AddressableManagement.Instance.OpenSettingView(
+                closeAction: () =>
+                {
+                    EffectObjectShowControl(true);
+                });
+        });
+
+        // 帳戶金幣商店按鈕
+        CoinStoreBtn.onClick.AddListener(() => 
+        {
+            Canvas_Global.Instance.ShowLoading();
+            EffectObjectShowControl(false);
+
+            AddressableManagement.Instance.OpenShopView(
+                defaultShopType: ShopSwitchEnum.CoinTag,
+                closeAction: () =>
+                {
+                    EffectObjectShowControl(true);
+                }); 
+        });
 
         // 商店按鈕
-        ShopBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenShopView(); });
+        ShopBtn.onClick.AddListener(() => 
+        {
+            Canvas_Global.Instance.ShowLoading();
+            EffectObjectShowControl(false);
+
+            AddressableManagement.Instance.OpenShopView(
+                closeAction: () =>
+                {
+                    EffectObjectShowControl(true);
+                }); 
+        });
 
         // 關卡按鈕
         LevelBtn.onClick.AddListener(() =>
         {
+            EffectObjectShowControl(false);
+            HideLeftArea();
             HideBottomArea();
-            AddressableManagement.Instance.OpenLevelView(ShowBottomArea);
+
+            AddressableManagement.Instance.OpenLevelView(
+                closeAction: () =>
+                {
+                    EffectObjectShowControl(true);
+                    ShowBottomArea();
+                    ShowLeftArea();
+                });
         });
 
         // 7日簽到按鈕
         SevenDayBtn.onClick.AddListener(() =>
         {
-            AddressableManagement.Instance.OpenSevenDayView();
+            EffectObjectShowControl(false);
+
+            AddressableManagement.Instance.OpenSevenDayView(
+                closeAction: () =>
+                {
+                    EffectObjectShowControl(true);
+                });
         });
 
         // 7日按鈕上下移動
@@ -130,28 +206,6 @@ public class LobbyView : BasicView
     }
 
     /// <summary>
-    /// 影藏底部區域
-    /// </summary>
-    private void HideBottomArea()
-    {
-        BottomAreaRect.DOKill();
-        BottomAreaRect.anchoredPosition = new(0, 0);
-        BottomAreaRect.DOAnchorPos(new Vector2(BottomAreaRect.anchoredPosition.x, -BottomAreaRect.sizeDelta.y), PopUpTime)
-            .SetEase(Ease.Linear);
-    }
-
-    /// <summary>
-    /// 顯示底部區域
-    /// </summary>
-    private void ShowBottomArea()
-    {
-        BottomAreaRect.DOKill();
-        BottomAreaRect.anchoredPosition = new(0, -BottomAreaRect.sizeDelta.y);
-        BottomAreaRect.DOAnchorPos(new Vector2(0, 0), PopUpTime)
-            .SetEase(Ease.Linear);
-    }
-
-    /// <summary>
     /// 判斷7日簽到按鈕是否顯示
     /// </summary>
     private void CheckSevenDay()
@@ -172,4 +226,70 @@ public class LobbyView : BasicView
             SevenDayBtn.gameObject.SetActive(registerDays < 7);
         }
     }
+
+    /// <summary>
+    /// 帶有特效物件顯示控制
+    /// </summary>
+    public void EffectObjectShowControl(bool isShow)
+    {
+        foreach (var effect in Effects)
+        {
+            effect.sortingOrder = isShow ? ParentCanvasOrder + 1 : 0;
+        }
+    }
+
+    #region 區塊顯示控制
+
+    /// <summary>
+    /// 影藏底部區域
+    /// </summary>
+    private void HideBottomArea()
+    {
+        BottomAreaRect.DOKill();
+        BottomAreaRect.anchoredPosition = new(0, 0);
+        BottomAreaRect.DOAnchorPos(new Vector2(0, -BottomAreaRect.sizeDelta.y), PopUpTime)
+            .SetEase(Ease.Linear)
+            .OnComplete(() => { BottomAreaRect.gameObject.SetActive(false); });
+    }
+
+    /// <summary>
+    /// 顯示底部區域
+    /// </summary>
+    private void ShowBottomArea()
+    {
+        BottomAreaRect.gameObject.SetActive(true);
+
+        BottomAreaRect.DOKill();
+        BottomAreaRect.anchoredPosition = new(0, -BottomAreaRect.sizeDelta.y);
+        BottomAreaRect.DOAnchorPos(new Vector2(0, 0), PopUpTime)
+            .SetEase(Ease.Linear);
+            
+    }
+
+    /// <summary>
+    /// 影藏左側區域
+    /// </summary>
+    private void HideLeftArea()
+    {
+        LeftAreaRect.DOKill();
+        LeftAreaRect.anchoredPosition = new(0, 0);
+        LeftAreaRect.DOAnchorPos(new Vector2(-LeftAreaRect.sizeDelta.x, BottomAreaRect.anchoredPosition.y), PopUpTime)
+            .SetEase(Ease.Linear)
+            .OnComplete(() => { LeftAreaRect.gameObject.SetActive(false); });
+    }
+
+    /// <summary>
+    /// 顯示左側區域
+    /// </summary>
+    private void ShowLeftArea()
+    {
+        LeftAreaRect.gameObject.SetActive(true);
+
+        LeftAreaRect.DOKill();
+        LeftAreaRect.anchoredPosition = new(-LeftAreaRect.sizeDelta.x, 0);
+        LeftAreaRect.DOAnchorPos(new Vector2(0, 0), PopUpTime)
+            .SetEase(Ease.Linear);
+    }
+
+    #endregion
 }

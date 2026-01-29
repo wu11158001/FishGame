@@ -54,7 +54,7 @@ public abstract class BasicView : MonoBehaviour
     /// 等待介面排版在顯示
     /// </summary>
     /// <returns></returns>
-    protected IEnumerator IYieldShow()
+    protected virtual IEnumerator IYieldShow()
     {
         Canvas.ForceUpdateCanvases();
 

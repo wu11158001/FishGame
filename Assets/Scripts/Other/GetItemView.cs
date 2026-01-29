@@ -9,14 +9,9 @@ public class GetItemView : BasicView
     [Header("Main")]
     [SerializeField] Image ItemImage;
     [SerializeField] TextMeshProUGUI ValueText;
-    [SerializeField] float ShowTime = 3;    
-
-    protected override void Start()
-    {
-        base.Start();
-
-        StartCoroutine(IShowItem());
-    }
+    [SerializeField] float MaxIconSize = 200f;
+    [SerializeField] float ShowTime = 2;
+    [SerializeField] float TextEffectSpeed = 0.05f;
 
     public void SetData(Sprite iconSprite, double value, Action closeAction)
     {
@@ -24,19 +19,31 @@ public class GetItemView : BasicView
 
         ItemImage.sprite = iconSprite;
         ItemImage.SetNativeSize();
-        UIUtility.SetMaxUISize(targetRt: ItemImage.rectTransform, maxSize: 256f);
+        UIUtility.SetMaxUISize(targetRt: ItemImage.rectTransform, maxSize: MaxIconSize);
 
-        ValueText.text = $"X {StringUtility.CurrencyFormat(value)}";        
+        ValueText.gameObject.SetActive(value > 1);
+        StartCoroutine(ITextEffect($"X {StringUtility.CurrencyFormat(value)}"));
     }
 
     /// <summary>
-    /// 物品顯示效果
+    /// 砲台能力文字效果
     /// </summary>
-    private IEnumerator IShowItem()
+    private IEnumerator ITextEffect(string str)
     {
-        yield return IFadeInShow();
-        yield return new WaitForSeconds(ShowTime);
+        ValueText.text = str;
+        ValueText.maxVisibleCharacters = 0;
 
+        yield return IFadeInShow();
+
+        int totalCharacters = str.Length;
+
+        for (int i = 0; i <= totalCharacters; i++)
+        {
+            ValueText.maxVisibleCharacters = i;
+            yield return new WaitForSeconds(TextEffectSpeed);
+        }
+
+        yield return new WaitForSeconds(ShowTime);
         Close();
     }
 }
