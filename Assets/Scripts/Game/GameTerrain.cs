@@ -302,12 +302,25 @@ public class GameTerrain : NetworkBehaviour
                 }
             }
 
-            // 請求所有場上魚的權限
+            // 請求權限
             foreach (var netObj in Runner.GetAllNetworkObjects())
             {
                 if (netObj != null && netObj.IsValid && !netObj.HasStateAuthority)
                 {
+                    // 請求所有場上魚的權限
                     if (netObj.GetComponent<Fish>() != null)
+                    {
+                        netObj.RequestStateAuthority();
+                    }
+
+                    // 請求特殊效果控制權限
+                    if (netObj.GetComponent<SpecialEffectController>() != null)
+                    {
+                        netObj.RequestStateAuthority();
+                    }
+
+                    // 請求Fusion物件池權限
+                    if (netObj.gameObject.name == "FusionPool")
                     {
                         netObj.RequestStateAuthority();
                     }

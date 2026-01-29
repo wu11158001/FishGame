@@ -2353,7 +2353,7 @@ MonoBehaviour:
   LevelBtnRect: {fileID: 3397893505552998756}
   LevelBtn: {fileID: 9191775787317247776}
   Effects:
-  - {fileID: 965290263228724300}
+  - {fileID: 7682606462513199507}
 --- !u!225 &6715337969855491096
 CanvasGroup:
   m_ObjectHideFlags: 0

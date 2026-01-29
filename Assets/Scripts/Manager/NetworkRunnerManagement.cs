@@ -158,7 +158,6 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
 
         AddressableManagement.Instance.SetCanvase();
 
-
         if (runner.IsSharedModeMasterClient)
         {
             // 產生Fusion物件池

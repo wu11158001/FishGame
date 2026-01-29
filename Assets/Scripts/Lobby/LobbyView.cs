@@ -31,7 +31,7 @@ public class LobbyView : BasicView
     [SerializeField] Button LevelBtn;
 
     [Header("Effect Object")]
-    [SerializeField] List<SortingGroup> Effects = new();
+    [SerializeField] List<GameObject> Effects = new();
 
     // 父物件Canvas層級
     int ParentCanvasOrder;
@@ -123,16 +123,12 @@ public class LobbyView : BasicView
         // 關卡按鈕
         LevelBtn.onClick.AddListener(() =>
         {
-            EffectObjectShowControl(false);
-            HideLeftArea();
-            HideBottomArea();
+            AreaMoveEffectSwitch(isShow: false);
 
             AddressableManagement.Instance.OpenLevelView(
                 closeAction: () =>
                 {
-                    EffectObjectShowControl(true);
-                    ShowBottomArea();
-                    ShowLeftArea();
+                    AreaMoveEffectSwitch(isShow: true);
                 });
         });
 
@@ -235,62 +231,49 @@ public class LobbyView : BasicView
     {
         foreach (var effect in Effects)
         {
-            effect.sortingOrder = isShow ? ParentCanvasOrder + 1 : 0;
+            effect.gameObject.SetActive(isShow);
         }
     }
 
-    #region 區塊顯示控制
-
     /// <summary>
-    /// 影藏底部區域
+    /// 大廳區塊移動顯示/影藏效果
     /// </summary>
-    private void HideBottomArea()
+    private void AreaMoveEffectSwitch(bool isShow)
     {
-        BottomAreaRect.DOKill();
-        BottomAreaRect.anchoredPosition = new(0, 0);
-        BottomAreaRect.DOAnchorPos(new Vector2(0, -BottomAreaRect.sizeDelta.y), PopUpTime)
-            .SetEase(Ease.Linear)
-            .OnComplete(() => { BottomAreaRect.gameObject.SetActive(false); });
+        if(isShow)
+        {
+            // 顯示底部區域
+            BottomAreaRect.gameObject.SetActive(true);
+            BottomAreaRect.DOKill();
+            BottomAreaRect.anchoredPosition = new(0, -BottomAreaRect.sizeDelta.y);
+            BottomAreaRect.DOAnchorPos(new Vector2(0, 0), PopUpTime)
+                .SetEase(Ease.Linear);
+
+            // 顯示左側區域
+            LeftAreaRect.gameObject.SetActive(true);
+            LeftAreaRect.DOKill();
+            LeftAreaRect.anchoredPosition = new(-LeftAreaRect.sizeDelta.x, 0);
+            LeftAreaRect.DOAnchorPos(new Vector2(0, 0), PopUpTime)
+                .SetEase(Ease.Linear)
+                .OnComplete(() => { EffectObjectShowControl(true); });
+        }
+        else
+        {
+            EffectObjectShowControl(false);
+
+            // 影藏底部區域
+            BottomAreaRect.DOKill();
+            BottomAreaRect.anchoredPosition = new(0, 0);
+            BottomAreaRect.DOAnchorPos(new Vector2(0, -BottomAreaRect.sizeDelta.y), PopUpTime)
+                .SetEase(Ease.Linear)
+                .OnComplete(() => { BottomAreaRect.gameObject.SetActive(false); });
+
+            // 影藏左側區域
+            LeftAreaRect.DOKill();
+            LeftAreaRect.anchoredPosition = new(0, 0);
+            LeftAreaRect.DOAnchorPos(new Vector2(-LeftAreaRect.sizeDelta.x, BottomAreaRect.anchoredPosition.y), PopUpTime)
+                .SetEase(Ease.Linear)
+                .OnComplete(() => { LeftAreaRect.gameObject.SetActive(false); });
+        }
     }
-
-    /// <summary>
-    /// 顯示底部區域
-    /// </summary>
-    private void ShowBottomArea()
-    {
-        BottomAreaRect.gameObject.SetActive(true);
-
-        BottomAreaRect.DOKill();
-        BottomAreaRect.anchoredPosition = new(0, -BottomAreaRect.sizeDelta.y);
-        BottomAreaRect.DOAnchorPos(new Vector2(0, 0), PopUpTime)
-            .SetEase(Ease.Linear);
-            
-    }
-
-    /// <summary>
-    /// 影藏左側區域
-    /// </summary>
-    private void HideLeftArea()
-    {
-        LeftAreaRect.DOKill();
-        LeftAreaRect.anchoredPosition = new(0, 0);
-        LeftAreaRect.DOAnchorPos(new Vector2(-LeftAreaRect.sizeDelta.x, BottomAreaRect.anchoredPosition.y), PopUpTime)
-            .SetEase(Ease.Linear)
-            .OnComplete(() => { LeftAreaRect.gameObject.SetActive(false); });
-    }
-
-    /// <summary>
-    /// 顯示左側區域
-    /// </summary>
-    private void ShowLeftArea()
-    {
-        LeftAreaRect.gameObject.SetActive(true);
-
-        LeftAreaRect.DOKill();
-        LeftAreaRect.anchoredPosition = new(-LeftAreaRect.sizeDelta.x, 0);
-        LeftAreaRect.DOAnchorPos(new Vector2(0, 0), PopUpTime)
-            .SetEase(Ease.Linear);
-    }
-
-    #endregion
 }

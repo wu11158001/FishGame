@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.UI;
 
 public class AddressableManagement : SingletonMonoBehaviour<AddressableManagement>
 {
@@ -61,6 +62,11 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
         {
             GameObject newObj = new GameObject("SafeArea", typeof(RectTransform));
             newObj.transform.SetParent(canvasObj.transform, false);
+            if(!newObj.TryGetComponent(out RectMask2D rectMask2D))
+            {
+                newObj.AddComponent<RectMask2D>();
+            }
+
             safeArea = newObj.GetComponent<RectTransform>();
         }
 
