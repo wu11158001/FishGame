@@ -81,6 +81,9 @@ public enum ViewEnum
     /// <summary> 註冊獎勵介面 </summary>
     RegisterRewardView,
 
+    /// <summary> 7日簽到介面 </summary>
+    SevenDayView,
+
     /// <summary> 關卡選擇介面 </summary>
     LevelView,
 
@@ -454,6 +457,9 @@ public enum LobbyPopupEnum
 
     /// <summary> 登入獎勵 </summary>
     LoginReward,
+
+    /// <summary> 7日簽到 </summary>
+    SevenDays,
 }
 
 #endregion

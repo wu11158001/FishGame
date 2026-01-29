@@ -598,6 +598,30 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     }
 
     /// <summary>
+    /// 開啟7日簽到介面
+    /// </summary>
+    public async void OpenSevenDayView(Action closeAction = null)
+    {
+        ViewEnum view = ViewEnum.SevenDayView;
+
+        Action viewCloseAction = () =>
+        {
+            closeAction?.Invoke();
+            RemoveSceneView(view);
+        };
+
+        await OpenView(
+            viewType: view,
+            callback: (viewObj) =>
+            {
+                if (viewObj != null)
+                {
+                    viewObj.GetComponent<SevenDayView>().SetData(closeAction: viewCloseAction);
+                }
+            });
+    }
+
+    /// <summary>
     /// 開啟關卡選擇介面
     /// </summary>
     public async void OpenLevelView(Action closeAction = null)

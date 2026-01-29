@@ -412,6 +412,9 @@ public class AccountData
     /// <summary> 擁有砲台編號(","隔開) </summary>
     public string OwnTurret;
 
+    /// <summary> 7日已簽到天(","隔開) </summary>
+    public string SevenDays;
+
     /// <summary> 冰凍道具數量 </summary>
     public int FreezeProps;
 

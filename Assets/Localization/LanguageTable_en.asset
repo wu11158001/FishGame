@@ -254,6 +254,35 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 8068190351354495079
+  - m_Id: 12794655116300288
+    m_Localized: Own
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12811809689636864
+    m_Localized: Sign in
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12811860046450688
+    m_Localized: 7-day check-in
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12822148632219648
+    m_Localized: '* Missed rewards cannot be claimed again!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12836277304627200
+    m_Localized: Expired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12844176223440896
+    m_Localized: Received
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12848306807574528
+    m_Localized: 'Update time : (0)'
+    m_Metadata:
+      m_Items:
+      - rid: 8068190351354495079
   references:
     version: 2
     RefIds:
@@ -266,3 +295,4 @@ MonoBehaviour:
         - id: 9728630103674880
         - id: 10366013622915072
         - id: 12736600768974848
+        - id: 12848306807574528

@@ -100,6 +100,7 @@ public class PropsStoreUnit : MonoBehaviour
         CoverImage.SetNativeSize();
         UIUtility.SetMaxUISize(targetRt: CoverImage.rectTransform, maxSize: MaxCoverSize);
 
+        int ownCount = 0;
         BuyCount = 1;
 
         // 設置描述內容
@@ -111,10 +112,17 @@ public class PropsStoreUnit : MonoBehaviour
             case PropsEnum.Freeze:
                 // 冰凍全屏魚 {0}秒。
                 DescribeLocalized.SetReference(tableName, "Freeze Message");
-                DescribeLocalized.Arguments = new object[] { LocalData.FreezeTime };                
+                DescribeLocalized.Arguments = new object[] { LocalData.FreezeTime };
+
+                ownCount = FirestoreDataManagement.Instance.CurrAccountData.FreezeProps;
                 break;
         }
-        DescribeText.text = DescribeLocalized.GetLocalizedString();
+
+        string ownStr = LocalizationManagement.Instance.GetLocalizedString("Own");
+        
+
+        // 描述 \n 擁有: X
+        DescribeText.text = $"{DescribeLocalized.GetLocalizedString()}\n{ownStr} : {ownCount}";
         DescribeRect.gameObject.SetActive(false);
 
         Canvas.ForceUpdateCanvases();

@@ -114,3 +114,14 @@ MonoBehaviour:
     Sp: {fileID: 21300000, guid: 9d8bf2970b6251d49851e5ed9ebda470, type: 3}
   - TurretType: 3
     Sp: {fileID: 21300000, guid: 9d8bf2970b6251d49851e5ed9ebda470, type: 3}
+  <NumberList>k__BackingField:
+  - {fileID: 21300000, guid: 7dcf160ffaa57d5498e4a530d25a63af, type: 3}
+  - {fileID: 21300000, guid: b7039e844bfd4e44fa70f2e01dd8845d, type: 3}
+  - {fileID: 21300000, guid: de93f70761dda9a4b930551d98fbdfad, type: 3}
+  - {fileID: 21300000, guid: 335d5c277060fa64b9a3da6f10ad9b1e, type: 3}
+  - {fileID: 21300000, guid: 54918ce0e43192a4ebf65d506b602db2, type: 3}
+  - {fileID: 21300000, guid: 0c565ecfbe63751438a3c6ea38b2d1ca, type: 3}
+  - {fileID: 21300000, guid: 25ef32241b8e46741b733b7605088abb, type: 3}
+  - {fileID: 21300000, guid: d99095528f494da41829cc229c0c3b09, type: 3}
+  - {fileID: 21300000, guid: a4e117fd7f71b264c894e94a11373477, type: 3}
+  - {fileID: 21300000, guid: 986fb9973722d0144aa0e2c7cfc0a348, type: 3}

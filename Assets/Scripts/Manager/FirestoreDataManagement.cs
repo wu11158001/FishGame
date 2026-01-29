@@ -245,10 +245,10 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
         if (CurrAccountData.DefaultTurret != accountData.DefaultTurret || CurrAccountData.OwnTurret != accountData.OwnTurret)
             AccountTurretDataChangeDelegate?.Invoke(accountData);
 
+        CurrAccountData = accountData;
+
         // 帳戶資料變更
         AccountDataChangeDelegate?.Invoke(accountData);
-
-        CurrAccountData = accountData;
     }
 
     #endregion

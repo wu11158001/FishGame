@@ -183,4 +183,24 @@ public class TextureManagement : SingletonMonoBehaviour<TextureManagement>
     }
 
     #endregion
+
+    #region 數字圖片
+
+    /// <summary>
+    /// 數字圖片
+    /// </summary>
+    [field: SerializeField] public List<Sprite> NumberList { get; private set; } = new();
+
+    /// <summary>
+    /// 獲取數字圖片
+    /// </summary>
+    public Sprite GetNumberSprite(int index)
+    {
+        if (index <= 0) index = 0;
+        else if (index >= NumberList.Count) index = NumberList.Count - 1;
+
+        return NumberList[index];
+    }
+
+    #endregion
 }

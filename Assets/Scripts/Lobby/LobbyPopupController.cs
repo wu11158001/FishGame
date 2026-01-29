@@ -126,6 +126,11 @@ public class LobbyPopupController : MonoBehaviour
                 CheckLoginReward();
                 break;
 
+            // 7日簽到
+            case LobbyPopupEnum.SevenDays:
+                CheckSevenDay();
+                break;
+
             default:
                 CheckLoginReward();
                 break;
@@ -181,7 +186,31 @@ public class LobbyPopupController : MonoBehaviour
             {
                 PopupProcess();
             }
+        }        
+    }
+
+    /// <summary>
+    /// 檢測7日簽到
+    /// </summary>
+    private void CheckSevenDay()
+    {
+        // 獲取當前時間與註冊時間相差天數
+        string registerDay = FirestoreDataManagement.Instance.CurrAccountData.RegisterTime;
+        DateTime registerDate = DateTime.Parse(registerDay);
+        DateTime now = DateTime.UtcNow.AddHours(8);
+        TimeSpan diff = now.Date - registerDate.Date;
+        int registerDays = diff.Days;
+
+        if(registerDays < 7)
+        {
+            if (AddressableManagement.Instance != null)
+            {
+                AddressableManagement.Instance.OpenSevenDayView(closeAction: PopupProcess);
+            }
         }
-        
+        else
+        {
+            PopupProcess();
+        }
     }
 }

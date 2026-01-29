@@ -96,6 +96,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ccc0b542f1fc93b45aed99b4797023bf
+    m_Address: SevenDayView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d528c63562cee6a469c09a20204fa076
     m_Address: ToastView
     m_ReadOnly: 0
