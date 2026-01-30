@@ -1,23 +1,10 @@
 fileFormatVersion: 2
-guid: 925bf2a3a9d5e4b4ea56f050675972ac
-AssetOrigin:
-  serializedVersion: 1
-  productId: 311704
-  packageName: Simple UI Icons
-  packageVersion: 1.1
-  assetPath: Assets/HardArtcore/UI/SimpleIcons/Sprites/Icons/Filled/ic_shopping_cart_fill.png
-  uploadId: 742599
+guid: a91100d9067be8544819dc737ca4e4f9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1363375730323869445
-    second: ic_shopping_cart_fill_0
-  - first:
-      213: -1960935257811920802
-    second: ic_shopping_cart_fill_1
-  - first:
-      213: 4524726895012596158
-    second: ic_shopping_cart_fill_2
+      213: -2790574696826750058
+    second: Snipaste_2026-01-31_02-10-44_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -59,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -85,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 64
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -123,21 +110,8 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: iOS
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
     buildTarget: WebGL
-    maxTextureSize: 512
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -152,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ic_shopping_cart_fill_0
+      name: Snipaste_2026-01-31_02-10-44_0
       rect:
         serializedVersion: 2
-        x: 10
-        y: 108
-        width: 494
-        height: 396
+        x: 43
+        y: 17
+        width: 315
+        height: 380
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -167,52 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 50fc755d00fabe210800000000000000
-      internalID: 1363375730323869445
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ic_shopping_cart_fill_1
-      rect:
-        serializedVersion: 2
-        x: 155
-        y: 8
-        width: 85
-        height: 85
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e58d492c5cb59c4e0800000000000000
-      internalID: -1960935257811920802
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ic_shopping_cart_fill_2
-      rect:
-        serializedVersion: 2
-        x: 398
-        y: 8
-        width: 85
-        height: 85
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: eb9c1e2532f0bce30800000000000000
-      internalID: 4524726895012596158
+      spriteID: 69bb27c2913e549d0800000000000000
+      internalID: -2790574696826750058
       vertices: []
       indices: 
       edges: []
@@ -221,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -231,9 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ic_shopping_cart_fill_0: 1363375730323869445
-      ic_shopping_cart_fill_1: -1960935257811920802
-      ic_shopping_cart_fill_2: 4524726895012596158
+      Snipaste_2026-01-31_02-10-44_0: -2790574696826750058
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

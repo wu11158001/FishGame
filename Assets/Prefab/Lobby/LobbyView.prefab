@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4561190568081428797}
   - component: {fileID: 7411463799137013411}
-  - component: {fileID: 2231723837538014490}
+  - component: {fileID: 4536669294811406483}
   m_Layer: 5
-  m_Name: Icon
+  m_Name: IconBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,13 +29,14 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5304636420722785227}
   m_Father: {fileID: 4991662512193294583}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 88.976, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7411463799137013411
 CanvasRenderer:
@@ -45,7 +46,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 159300764445236968}
   m_CullTransparentMesh: 1
---- !u!114 &2231723837538014490
+--- !u!114 &4536669294811406483
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,27 +55,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 159300764445236968}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.9339623, g: 0.9339623, b: 0.9339623, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 925bf2a3a9d5e4b4ea56f050675972ac, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &298686060230549432
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,8 +176,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967250
-  m_fontColor: {r: 0.8254717, g: 0.9982556, b: 1, a: 1}
+    rgba: 4281808695
+  m_fontColor: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -485,7 +476,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 140}
+  m_SizeDelta: {x: 0, y: 120}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &3608899019113203439
 MonoBehaviour:
@@ -499,9 +490,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 241f6ab550f1e474c9f20469c0dcda99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageGradients
-  color1: {r: 0, g: 0.43344525, b: 0.8113208, a: 1}
-  color2: {r: 0, g: 0.52709365, b: 1, a: 0.7058824}
-  Angle: -90
+  color1: {r: 0, g: 0.5194844, b: 0.6132076, a: 0.78431374}
+  color2: {r: 0, g: 0.5754717, b: 0.41708493, a: 0.7058824}
+  Angle: -14
 --- !u!222 &7482181622879521743
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -540,7 +531,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  m_DrawShape: 0
+  m_DrawShape: 3
   m_ImageType: 0
   m_MaterialMode: 0
   m_StrokeWidth: 0
@@ -1101,7 +1092,7 @@ GameObject:
   - component: {fileID: 4991662512193294583}
   - component: {fileID: 1635120200329986773}
   m_Layer: 5
-  m_Name: IconBlock
+  m_Name: IconPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1125,7 +1116,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1635120200329986773
 MonoBehaviour:
@@ -1147,9 +1138,9 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
+  m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
+  m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
@@ -1267,7 +1258,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -150, y: 0}
-  m_SizeDelta: {x: -300, y: 100}
+  m_SizeDelta: {x: -300, y: 80}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &3481113732906925968
 MonoBehaviour:
@@ -1281,7 +1272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 241f6ab550f1e474c9f20469c0dcda99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageGradients
-  color1: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 0.9019608}
+  color1: {r: 0.19001423, g: 0.25909013, b: 0.6603774, a: 0.78431374}
   color2: {r: 1, g: 1, b: 1, a: 0}
   Angle: -90
 --- !u!222 &7226735647603296184
@@ -1342,7 +1333,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 380, y: 100}
+  m_CellSize: {x: 380, y: 80}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -1404,7 +1395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: 341d886379978a2458520139794f93c3, type: 2}
-  m_Color: {r: 1, g: 0.9972226, b: 0.0039215684, a: 1}
+  m_Color: {r: 1, g: 0.75416166, b: 0.0039215684, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1511,6 +1502,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1610887926199437117}
+  - component: {fileID: 6803572235461275790}
   - component: {fileID: 7322084609106595076}
   - component: {fileID: 2522699611310844444}
   - component: {fileID: 1739704676957213919}
@@ -1544,6 +1536,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6803572235461275790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5450216572877008569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 241f6ab550f1e474c9f20469c0dcda99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ImageGradients
+  color1: {r: 1, g: 0.8862746, b: 0, a: 1}
+  color2: {r: 1, g: 0.6096754, b: 0, a: 1}
+  Angle: -180
 --- !u!222 &7322084609106595076
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1565,7 +1572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MPUIKit::MPUIKIT.MPImage
   m_Material: {fileID: 2100000, guid: c12a24b48d0e5c34f855047b28c39aa1, type: 2}
-  m_Color: {r: 0, g: 0.4599332, b: 0.7924528, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2132,7 +2139,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 120}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &6374140040114896205
 CanvasRenderer:
@@ -2307,8 +2314,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5305268808712010823}
-  - {fileID: 8146293443499112112}
   - {fileID: 7709792475203350958}
+  - {fileID: 8146293443499112112}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2395,6 +2402,81 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 1f516f20fac589548bb84272f2315a81, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7077702596515463029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5304636420722785227}
+  - component: {fileID: 377381140786458528}
+  - component: {fileID: 5651278876868137879}
+  m_Layer: 5
+  m_Name: ShopIcon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5304636420722785227
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7077702596515463029}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4561190568081428797}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 20}
+  m_SizeDelta: {x: 92.8652, y: 112.0278}
+  m_Pivot: {x: 0.5, y: 0}
+--- !u!222 &377381140786458528
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7077702596515463029}
+  m_CullTransparentMesh: 1
+--- !u!114 &5651278876868137879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7077702596515463029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -2790574696826750058, guid: a91100d9067be8544819dc737ca4e4f9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2901,9 +2983,9 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_Spacing: 30
   m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
+  m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
-  m_ChildControlHeight: 0
+  m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
@@ -2958,7 +3040,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 241f6ab550f1e474c9f20469c0dcda99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageGradients
-  color1: {r: 0, g: 0, b: 0, a: 1}
+  color1: {r: 0.02647741, g: 0.14278889, b: 0.8018868, a: 1}
   color2: {r: 1, g: 1, b: 1, a: 0}
   Angle: -90
 --- !u!222 &8172415107485961086

@@ -265,9 +265,6 @@ public enum GamePrefabEnum
     /// <summary> 魚群路線主物件 </summary>
     WayPointMain = 0,
 
-    /// <summary> 場景特效 </summary>
-    SceneEffect = 1,
-
     /// <summary> 本地物件池 </summary>
     LocalPool = 2,
 
