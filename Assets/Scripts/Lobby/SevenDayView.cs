@@ -172,37 +172,37 @@ public class SevenDayView : BasicView
             {
                 case 0:
                     sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_0);
-                    sevenDayUnitData.RewardValue = 5000;
+                    sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_0;
                     break;
 
                 case 1:
                     sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_0);
-                    sevenDayUnitData.RewardValue = 10000;
+                    sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_1;
                     break;
 
                 case 2:
                     sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_1);
-                    sevenDayUnitData.RewardValue = 20000;
+                    sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_2;
                     break;
 
                 case 3:
                     sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_2);
-                    sevenDayUnitData.RewardValue = 25000;
+                    sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_3;
                     break;
 
                 case 4:
                     sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_2);
-                    sevenDayUnitData.RewardValue = 30000;
+                    sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_4;
                     break;
 
                 case 5:
                     sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_3);
-                    sevenDayUnitData.RewardValue = 66666;
+                    sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_5;
                     break;
 
                 case 6:
                     sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_3);
-                    sevenDayUnitData.RewardValue = 77777;
+                    sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_6;
                     break;
             }
 

@@ -715,7 +715,7 @@ public class PropsStoreData
 #region 活動
 
 /// <summary>
-/// 登入與註冊獎勵
+/// 登入與註冊獎勵資料
 /// </summary>
 [Serializable]
 public class LoginAndRegisterData
@@ -725,6 +725,21 @@ public class LoginAndRegisterData
 
     /// <summary> 註冊獎勵 </summary>
     public double RegisterReward;
+}
+
+/// <summary>
+/// 7日獎勵資料
+/// </summary>
+[Serializable]
+public class SevenDayData
+{
+    public double Day_0;
+    public double Day_1;
+    public double Day_2;
+    public double Day_3;
+    public double Day_4;
+    public double Day_5;
+    public double Day_6;
 }
 
 #endregion

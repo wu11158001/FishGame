@@ -40,6 +40,10 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
     public LoginAndRegisterData LoginAndRegisterData { get; private set; } = new();
     Action<CheckFixedDataEnum, bool> GetLoginAndRegisterDataAction;
 
+    // 7日獎勵資料
+    public SevenDayData SevenDayData { get; private set; } = new();
+    Action<CheckFixedDataEnum, bool> GetSevenDayDataAction;
+
     // 所有砲台資料
     Dictionary<TurretEnum, TurretData> TurretDataDic { get; } = new();
     Action<CheckFixedDataEnum, bool> GetAllTurretDataAction;
@@ -97,47 +101,7 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
     public void OnMouseEnterCanvas()
     {
 
-    }
-
-    #region 簽到資料
-
-    /// <summary>
-    /// 獲取當前時間與註冊時間相差天數
-    /// </summary>
-    public int GetDifferenceDays()
-    {
-        string registerDay = CurrAccountData.RegisterTime;
-        if (string.IsNullOrEmpty(registerDay))
-        {
-            return 0;
-        }
-        
-        DateTime registerDate = DateTime.Parse(registerDay);
-        DateTime now = DateTime.UtcNow.AddHours(8);
-        TimeSpan diff = now.Date - registerDate.Date;
-        return diff.Days;
-    }
-
-    /// <summary>
-    /// 獲取已簽到天
-    /// </summary>
-    public SortedSet<int> GetSignInDays()
-    {
-        string sigInDaysStr = CurrAccountData.SevenDays;
-        SortedSet<int> signInDays = new();
-        if (!string.IsNullOrEmpty(sigInDaysStr))
-        {
-            var parts = sigInDaysStr.Trim().Split(',');
-            foreach (var p in parts)
-            {
-                if (int.TryParse(p, out int id)) signInDays.Add(id);
-            }
-        }
-
-        return signInDays;
-    }
-
-    #endregion
+    }   
 
     #region 心跳包
 
@@ -323,10 +287,84 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
             }
             catch (Exception e)
             {
-                Debug.LogError($"獲取獲取登入獎勵資料錯誤: {e}");
+                Debug.LogError($"獲取登入獎勵資料錯誤: {e}");
                 GetLoginAndRegisterDataAction?.Invoke(CheckFixedDataEnum.LoginAndRegisterData, false);
             }
         }
+    }
+
+    #endregion
+
+    #region 簽到資料
+
+    /// <summary>
+    /// 獲取7日獎勵資料
+    /// </summary>
+    public void GetSevenDayData(Action<CheckFixedDataEnum, bool> callback)
+    {
+        GetLoginAndRegisterDataAction = callback;
+
+        FirestoreManagement.Instance.GetDataFromFirestore(
+            path: FirestoreCollectionNameEnum.ActivityData,
+            docId: FirestoreActivityDataFileNameEnum.SevenDay.ToString(),
+            callback: GetSevenDayDataCallback);
+    }
+
+    /// <summary>
+    /// 獲取7日獎勵資料Callback
+    /// </summary>
+    private void GetSevenDayDataCallback(FirestoreResponse response)
+    {
+        if (response.IsSuccess)
+        {
+            try
+            {
+                SevenDayData = JsonConvert.DeserializeObject<SevenDayData>(response.JsonData);
+                Debug.Log("獲取7日獎勵資料完成。");
+                GetLoginAndRegisterDataAction?.Invoke(CheckFixedDataEnum.SevenDayData, true);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"獲取7日獎勵資料錯誤: {e}");
+                GetLoginAndRegisterDataAction?.Invoke(CheckFixedDataEnum.SevenDayData, false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 獲取當前時間與註冊時間相差天數
+    /// </summary>
+    public int GetDifferenceDays()
+    {
+        string registerDay = CurrAccountData.RegisterTime;
+        if (string.IsNullOrEmpty(registerDay))
+        {
+            return 0;
+        }
+
+        DateTime registerDate = DateTime.Parse(registerDay);
+        DateTime now = DateTime.UtcNow.AddHours(8);
+        TimeSpan diff = now.Date - registerDate.Date;
+        return diff.Days;
+    }
+
+    /// <summary>
+    /// 獲取已簽到天
+    /// </summary>
+    public SortedSet<int> GetSignInDays()
+    {
+        string sigInDaysStr = CurrAccountData.SevenDays;
+        SortedSet<int> signInDays = new();
+        if (!string.IsNullOrEmpty(sigInDaysStr))
+        {
+            var parts = sigInDaysStr.Trim().Split(',');
+            foreach (var p in parts)
+            {
+                if (int.TryParse(p, out int id)) signInDays.Add(id);
+            }
+        }
+
+        return signInDays;
     }
 
     #endregion

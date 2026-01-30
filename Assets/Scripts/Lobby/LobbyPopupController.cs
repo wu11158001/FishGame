@@ -65,6 +65,9 @@ public class LobbyPopupController : MonoBehaviour
                         // 登入與註冊獎勵資料
                         FirestoreDataManagement.Instance.GetLoginAndRegisterData(callback: CheckFixedData);
 
+                        // 7日獎勵資料
+                        FirestoreDataManagement.Instance.GetSevenDayData(callback: CheckFixedData);
+
                         // 所有砲台資料
                         FirestoreDataManagement.Instance.GetAllTurretData(callback: CheckFixedData);
 

@@ -138,6 +138,9 @@ public enum FirestoreActivityDataFileNameEnum
 {
     /// <summary> 活動_登入與註冊獎勵 </summary>
     LoginAndRegister,
+
+    /// <summary> 活動_7日獎勵 </summary>
+    SevenDay,
 }
 
 /// <summary>
@@ -382,8 +385,11 @@ public enum GamePeriod
 /// </summary>
 public enum CheckFixedDataEnum
 {
-    /// <summary> 登入與註冊資料 </summary>
+    /// <summary> 登入與註冊獎勵資料 </summary>
     LoginAndRegisterData,
+
+    /// <summary> 7日獎勵資料 </summary>
+    SevenDayData,
 
     /// <summary> 所有砲台資料 </summary>
     AllTurretData,
