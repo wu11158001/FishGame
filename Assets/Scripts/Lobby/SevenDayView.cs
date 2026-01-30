@@ -171,40 +171,46 @@ public class SevenDayView : BasicView
             switch (index)
             {
                 case 0:
-                    sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_0);
                     sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_0;
                     break;
 
                 case 1:
-                    sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_0);
                     sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_1;
                     break;
 
                 case 2:
-                    sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_1);
                     sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_2;
                     break;
 
                 case 3:
-                    sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_2);
                     sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_3;
                     break;
 
                 case 4:
-                    sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_2);
                     sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_4;
                     break;
 
                 case 5:
-                    sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_3);
                     sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_5;
                     break;
 
                 case 6:
-                    sevenDayUnitData.RewardSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_3);
                     sevenDayUnitData.RewardValue = FirestoreDataManagement.Instance.SevenDayData.Day_6;
                     break;
             }
+
+            // 圖片依照金額變化
+            Sprite rewaedSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_0);
+            if (sevenDayUnitData.RewardValue >= 100000)
+                rewaedSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_4);
+            else if(sevenDayUnitData.RewardValue >= 70000)
+                rewaedSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_3);
+            else if (sevenDayUnitData.RewardValue >= 50000)
+                rewaedSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_2);
+            else if (sevenDayUnitData.RewardValue >= 20000)
+                rewaedSprite = TextureManagement.Instance.GetCoinTexture(ShopCoinEnum.StoreCoin_1);
+
+            sevenDayUnitData.RewardSprite = rewaedSprite;
 
             // 簽到更新帳戶金幣
             sevenDayUnitData.SignInAction = () =>
