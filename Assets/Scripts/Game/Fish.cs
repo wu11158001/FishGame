@@ -291,7 +291,7 @@ public class Fish : NetworkBehaviour
     {
         if (WayPointMain == null)
         {
-            var wayPointObj = GameObject.Find($"{GamePrefabEnum.WayPointMain}");
+            var wayPointObj = UnityEngine.Object.FindFirstObjectByType<WayPointMain>();
             if (wayPointObj != null)
                 WayPointMain = wayPointObj.GetComponent<WayPointMain>();
         }

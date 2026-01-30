@@ -157,8 +157,8 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         Debug.Log($"玩家加入: {player.PlayerId}");
 
         AddressableManagement.Instance.SetCanvase();
-
-        if (runner.IsSharedModeMasterClient)
+        
+        if (runner.IsSharedModeMasterClient && player == runner.LocalPlayer)
         {
             // 產生Fusion物件池
             NetworkPrefabManagement.Instance.SpawnNetworkPrefab(

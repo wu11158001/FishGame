@@ -933,7 +933,7 @@ public class GameTerrain : NetworkBehaviour
             FishPool = GameObject.Find(FusionPoolNameEnum.FishPool.ToString()).transform;
 
         if (WayPointMain == null)
-            WayPointMain = GameObject.Find($"{GamePrefabEnum.WayPointMain}").GetComponent<WayPointMain>();
+            WayPointMain = UnityEngine.Object.FindFirstObjectByType<WayPointMain>();
 
         if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
