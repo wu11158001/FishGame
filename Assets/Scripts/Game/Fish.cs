@@ -37,6 +37,18 @@ public class Fish : NetworkBehaviour
         StopAllCoroutines();
     }
 
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        if (runner == null || !runner.IsRunning) return;
+
+        if (Object != null && Object.HasStateAuthority)
+        {
+            // 更新場景中魚的數量
+            if (GameTerrain != null)
+                GameTerrain.UpdateCurrFishCount(-1);
+        }
+    }
+
     public void SetData(NetworkPrefabEnum fishType, bool isMirror, int depth, int wayPointId, int skipWaypoint, float customDuration = 0)
     {
         // 獲取魚資料
@@ -119,6 +131,15 @@ public class Fish : NetworkBehaviour
         {
             GetDragonAnimProgress();
         }
+
+        // 更新場景中魚的數量
+        if (Object != null && Object.HasStateAuthority)
+        {
+            if (GameTerrain == null)
+                GameTerrain = FindFirstObjectByType<GameTerrain>();
+            if (GameTerrain != null)
+                GameTerrain.UpdateCurrFishCount(changeValue: 1);
+        }            
     }
 
     public override void Render()

@@ -4,6 +4,7 @@ using System;
 using TMPro;
 using System.Collections.Generic;
 using System.Collections;
+using MPUIKIT;
 
 public class GameView : BasicView
 {
@@ -16,6 +17,8 @@ public class GameView : BasicView
     [Header("CostArea")]
     [SerializeField] List<TextMeshProUGUI> PlayerCostTexts = new();
     [SerializeField] List<GameObject> PlayerCostPanels = new();
+    [SerializeField] List<ImageGradients> PlayerCostBgImageGradients = new();
+    [SerializeField] List<MPImage> PlayerCostFrameImageGradients = new();
 
     [Header("AccountInfoArea")]
     [SerializeField] AvatatUnit AvatatUnit;
@@ -141,7 +144,7 @@ public class GameView : BasicView
 
         // 座位區域
         SeatArea.anchoredPosition =
-            localSeat % 2 == 0 ?
+            localSeat == 0 || localSeat  == 3?
             LeftSeatPosision :
             RightSeatPosision;
 
@@ -305,7 +308,7 @@ public class GameView : BasicView
     /// <summary>
     /// 玩家子彈花費變更
     /// </summary>
-    public void PlayerCostChange(int seatIndex, double cost)
+    public void PlayerCostChange(bool hasStateAuthority, int seatIndex, double cost)
     {
         int seat = seatIndex;
 
@@ -331,6 +334,32 @@ public class GameView : BasicView
             PlayerCostPanels[seat].SetActive(true);
 
         PlayerCostTexts[seat].text = StringUtility.CurrencyFormat(cost);
+
+        Color myColor;
+        if (!hasStateAuthority)
+        {
+            // 背景顏色
+            if (ColorUtility.TryParseHtmlString("#F8F4C1", out myColor))
+                PlayerCostBgImageGradients[seat].color1 = myColor;
+            if (ColorUtility.TryParseHtmlString("#07FFCB", out myColor))
+                PlayerCostBgImageGradients[seat].color2 = myColor;
+
+            // 框顏色
+            if (ColorUtility.TryParseHtmlString("#6EDBC0", out myColor))
+                PlayerCostFrameImageGradients[seat].color = myColor;
+        }
+        else
+        {
+            // 背景顏色
+            if (ColorUtility.TryParseHtmlString("#F8F4C1", out myColor))
+                PlayerCostBgImageGradients[seat].color1 = myColor;
+            if (ColorUtility.TryParseHtmlString("#F8E1C1", out myColor))
+                PlayerCostBgImageGradients[seat].color2 = myColor;
+
+            // 框顏色
+            if (ColorUtility.TryParseHtmlString("#FFD37E", out myColor))
+                PlayerCostFrameImageGradients[seat].color = myColor;
+        }
     }
 
     /// <summary>

@@ -53,8 +53,6 @@ public class SevenDayView : BasicView
 
     protected override void Close()
     {
-        if (LobbyView == null)
-            LobbyView = UnityEngine.Object.FindFirstObjectByType<LobbyView>();
         if (LobbyView != null)
             LobbyView.EffectObjectShowControl(true);
 
@@ -67,7 +65,6 @@ public class SevenDayView : BasicView
         LobbyView = lobbyView;
 
         MainCanvasGroup.alpha = 0;
-
         lobbyView.EffectObjectShowControl(false);
 
         CreateSignInDayUnit();

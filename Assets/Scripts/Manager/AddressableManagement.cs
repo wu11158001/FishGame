@@ -557,7 +557,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 開啟註冊獎勵介面
     /// </summary>
-    public async void OpenRegisterRewardView(Action closeAction = null)
+    public async void OpenRegisterRewardView(LobbyView lobbyView, Action closeAction = null)
     {
         ViewEnum view = ViewEnum.RegisterRewardView;
 
@@ -573,7 +573,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             {
                 if (viewObj != null)
                 {
-                    viewObj.GetComponent<RegisterRewardView>().SetData(closeAction: viewCloseAction);
+                    viewObj.GetComponent<RegisterRewardView>().SetData(lobbyView: lobbyView, closeAction: viewCloseAction);
                 }
             });
     }
@@ -581,7 +581,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// <summary>
     /// 開啟登入獎勵介面
     /// </summary>
-    public async void OpenLoginRewardView(Action closeAction = null)
+    public async void OpenLoginRewardView(LobbyView lobbyView, Action closeAction = null)
     {
         ViewEnum view = ViewEnum.LoginRewardView;
 
@@ -597,7 +597,7 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             {
                 if (viewObj != null)
                 {
-                    viewObj.GetComponent<LoginRewardView>().SetData(closeAction: viewCloseAction);
+                    viewObj.GetComponent<LoginRewardView>().SetData(lobbyView: lobbyView, closeAction: viewCloseAction);
                 }
             });
     }

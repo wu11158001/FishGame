@@ -25,6 +25,7 @@ public class PropsStoreUnit : MonoBehaviour
     [SerializeField] RectTransform DescribeRect;
     [SerializeField] TextMeshProUGUI DescribeText;
 
+    PropsEnum PropsType;
     PropsStoreData PropsStoreData;
     Sprite CoverSprite;
     int BuyCount = 1;
@@ -84,9 +85,16 @@ public class PropsStoreUnit : MonoBehaviour
         EventSystemsHandler.PointerEnterHandleDelegate += ShowDescribe;
     }
 
+    private void Initialize()
+    {
+        BuyCount = 1;
+        DescribeRect.gameObject.SetActive(false);
+    }
+
     public void SetData(Sprite coverSprite, PropsEnum propsType, Action<RectTransform> selectAction)
     {
         SelectAction = selectAction;
+        PropsType = propsType;
         CoverSprite = coverSprite;
         PropsStoreData = FirestoreDataManagement.Instance?.GetPropsStoreData(propsType);
 
@@ -100,30 +108,7 @@ public class PropsStoreUnit : MonoBehaviour
         CoverImage.SetNativeSize();
         UIUtility.SetMaxUISize(targetRt: CoverImage.rectTransform, maxSize: MaxCoverSize);
 
-        int ownCount = 0;
-        BuyCount = 1;
-
-        // 設置描述內容
-        string tableName = LocalizationManagement.Instance.TableName;
-        LocalizedString DescribeLocalized = new();
-        switch (propsType)
-        {
-            // 冰凍描述
-            case PropsEnum.Freeze:
-                // 冰凍全屏魚 {0}秒。
-                DescribeLocalized.SetReference(tableName, "Freeze Message");
-                DescribeLocalized.Arguments = new object[] { LocalData.FreezeTime };
-
-                ownCount = FirestoreDataManagement.Instance.CurrAccountData.FreezeProps;
-                break;
-        }
-
-        string ownStr = LocalizationManagement.Instance.GetLocalizedString("Own");
-        
-
-        // 描述 \n 擁有: X
-        DescribeText.text = $"{DescribeLocalized.GetLocalizedString()}\n{ownStr} : {ownCount}";
-        DescribeRect.gameObject.SetActive(false);
+        Initialize();
 
         Canvas.ForceUpdateCanvases();
         BuyCountChange();
@@ -134,6 +119,30 @@ public class PropsStoreUnit : MonoBehaviour
     /// </summary>
     private void ShowDescribe(PointerEventData eventData, bool isEnter)
     {
+        int ownCount = 0;
+        if (isEnter)
+        {
+            // 設置描述內容
+            string tableName = LocalizationManagement.Instance.TableName;
+            LocalizedString DescribeLocalized = new();
+            switch (PropsType)
+            {
+                // 冰凍描述
+                case PropsEnum.Freeze:
+                    // 冰凍全屏魚 {0}秒。
+                    DescribeLocalized.SetReference(tableName, "Freeze Message");
+                    DescribeLocalized.Arguments = new object[] { LocalData.FreezeTime };
+
+                    ownCount = FirestoreDataManagement.Instance.CurrAccountData.FreezeProps;
+                    break;
+            }
+
+            string ownStr = LocalizationManagement.Instance.GetLocalizedString("Own");
+
+            // 描述 \n 擁有: X
+            DescribeText.text = $"{DescribeLocalized.GetLocalizedString()}\n{ownStr} : {ownCount}";
+        }
+
         DescribeRect.gameObject.SetActive(isEnter);
     }
 

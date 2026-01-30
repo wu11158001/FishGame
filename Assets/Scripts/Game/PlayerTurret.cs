@@ -179,8 +179,8 @@ public class PlayerTurret : NetworkBehaviour
             GameView = FindFirstObjectByType<GameView>();
             if (GameView == null) yield return new WaitForSeconds(0.2f);
         }
-
-        GameView.PlayerCostChange(seatIndex: SeatIndex, cost: NetworkedCost);
+        
+        GameView.PlayerCostChange(hasStateAuthority: Object.HasStateAuthority, seatIndex: SeatIndex, cost: NetworkedCost);
     }
 
     #region 鎖定技能

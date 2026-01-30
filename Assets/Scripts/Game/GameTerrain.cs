@@ -11,6 +11,8 @@ public class GameTerrain : NetworkBehaviour
     [SerializeField] public List<Transform> Seats;
 
     [Header("Fish Value")]
+    // 最大生成數量
+    [SerializeField] int MaxCreateFishCount = 20;
     // 初始生成數量
     [SerializeField] int InitCreateFishCount = 12;
     // 一般魚生成時間(秒)
@@ -29,13 +31,15 @@ public class GameTerrain : NetworkBehaviour
     [SerializeField] float WaterWaveDuration = 4;
 
     // 紀錄座位上玩家ID
-    [Networked, Capacity(4), OnChangedRender(nameof(OnSpawnLocalTurret))]
+    [Networked, Capacity(4), OnChangedRender(nameof(OnSeatPlayerIsChange))]
     NetworkArray<int> SeatPlayerIDs { get; }
 
     // 產生一般魚計時器
     [Networked] TickTimer SpawnTimer { get; set; }
     // 首次產生魚
     [Networked] bool IsFirstCreate { get; set; }
+    // 場景中魚的數量
+    [Networked] int CurrFishCount { get; set; }
 
     // 產生特殊魚計時器
     [Networked] TickTimer SpecialSpawnTimer { get; set; }
@@ -219,21 +223,20 @@ public class GameTerrain : NetworkBehaviour
 
         yield return null;
 
-        OnSpawnLocalTurret();
+        OnSeatPlayerIsChange();
     }
 
     /// <summary>
-    /// 產生本地玩家砲台
+    /// 座位玩家變化
     /// </summary>
-    private async void OnSpawnLocalTurret()
+    private async void OnSeatPlayerIsChange()
     {
-        if (isLocalSpawn) 
-            return;
-
         for (int i = 0; i < SeatPlayerIDs.Length; i++)
         {
             int index = i;
-            if (SeatPlayerIDs[index] == Runner.LocalPlayer.PlayerId)
+
+            // 產生本地玩家砲台
+            if (!isLocalSpawn && SeatPlayerIDs[index] == Runner.LocalPlayer.PlayerId)
             {
                 if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
                     return;
@@ -269,8 +272,16 @@ public class GameTerrain : NetworkBehaviour
 
                 FirestoreDataManagement.Instance.GameTempData.IsMirror = index == 1 || index == 3;
                 FirestoreDataManagement.Instance.GameTempData.LocalSeatIndex = index;
+            }
 
-                break;
+            // 座位玩家已離開
+            if(SeatPlayerIDs[index] == -1)
+            {
+                // UI清理
+                if (GameView == null)
+                    GameView = FindFirstObjectByType<GameView>();
+                if (GameView != null)
+                    GameView.PlayerCostChange(hasStateAuthority: false, seatIndex: index, cost: -1);
             }
         }
     }
@@ -377,12 +388,6 @@ public class GameTerrain : NetworkBehaviour
 
             if (SeatPlayerIDs[i] == leftPlayer.PlayerId)
             {
-                // UI清理
-                if (GameView == null)
-                    GameView = FindFirstObjectByType<GameView>();
-                if (GameView != null)
-                    GameView.PlayerCostChange(seatIndex: index, cost: -1);
-
                 // 清理座位
                 SeatPlayerIDs.Set(i, -1);
                 Debug.Log($"[Master] 已清理玩家 {leftPlayer.PlayerId} 的座位 {i}");
@@ -443,10 +448,14 @@ public class GameTerrain : NetworkBehaviour
         {
             SpawnTimer = TickTimer.CreateFromSeconds(Runner, NormalFishCreatTime);
 
-            if (CreateFishCoroutine != null)
-                StopCoroutine(CreateFishCoroutine);
+            // 控制場景中魚的數量
+            if (CurrFishCount < MaxCreateFishCount)
+            {
+                if (CreateFishCoroutine != null)
+                    StopCoroutine(CreateFishCoroutine);
 
-            CreateFishCoroutine = StartCoroutine(ICreatNormalFish());
+                CreateFishCoroutine = StartCoroutine(ICreatNormalFish());
+            }
         }
     }
 
@@ -689,10 +698,14 @@ public class GameTerrain : NetworkBehaviour
         {
             SpawnTimer = TickTimer.CreateFromSeconds(Runner, NormalFishCreatTime);
 
-            if (CreateFishCoroutine != null)
-                StopCoroutine(CreateFishCoroutine);
+            // 控制場景中魚的數量
+            if(CurrFishCount < MaxCreateFishCount)
+            {
+                if (CreateFishCoroutine != null)
+                    StopCoroutine(CreateFishCoroutine);
 
-            CreateFishCoroutine = StartCoroutine(ICreatNormalFish());
+                CreateFishCoroutine = StartCoroutine(ICreatNormalFish());
+            }
         }
 
         // 產生特殊魚
@@ -802,6 +815,17 @@ public class GameTerrain : NetworkBehaviour
 
         if (IsFirstCreate)
             IsFirstCreate = false;
+    }
+
+    /// <summary>
+    /// 更新場景中魚的數量
+    /// </summary>
+    public void UpdateCurrFishCount(int changeValue)
+    {
+        if (Object!= null && Object.IsValid && Object.HasStateAuthority)
+        {
+            CurrFishCount += changeValue;
+        }
     }
 
     #endregion
