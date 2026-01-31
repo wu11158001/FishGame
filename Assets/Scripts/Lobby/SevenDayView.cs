@@ -51,7 +51,7 @@ public class SevenDayView : BasicView
         }
     }
 
-    protected override void Close()
+    public override void Close()
     {
         if (LobbyView != null)
             LobbyView.EffectObjectShowControl(true);

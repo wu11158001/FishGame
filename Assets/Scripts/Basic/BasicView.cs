@@ -45,7 +45,7 @@ public abstract class BasicView : MonoBehaviour
     /// <summary>
     /// 關閉介面
     /// </summary>
-    protected virtual void Close()
+    public virtual void Close()
     {
         CloseAction?.Invoke();
     }

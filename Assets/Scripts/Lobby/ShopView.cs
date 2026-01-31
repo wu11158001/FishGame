@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
 
 public class ShopView : BasicView
 {
@@ -17,10 +19,14 @@ public class ShopView : BasicView
     [SerializeField] Toggle TurretTog;
     [SerializeField] Toggle PropsTog;
 
-    [Header("ShopContent")]
+    [Header("Shop Content")]
     [SerializeField] CoinStoreView CoinStoreView;
     [SerializeField] TurretStoreView TurretStoreView;
     [SerializeField] PropsStoreView PropsStoreView;
+
+    [Header("Start Icon Area")]
+    [SerializeField] List<Image> Stars_Ahpha = new();
+    [SerializeField] List<RectTransform> Stars_Size = new();
 
     protected override void OnDestroy()
     {
@@ -53,6 +59,31 @@ public class ShopView : BasicView
         {
             if (isOn) OnTagSwitch(shopType: ShopSwitchEnum.PropsTag);
         });
+
+        // 星星效果_圖片Alpha
+        foreach (var start_Alpha in Stars_Ahpha)
+        {
+            float duration = UnityEngine.Random.Range(0.5f, 2f);
+            start_Alpha.DOFade(0f, duration)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetDelay(UnityEngine.Random.Range(0f, 1f))
+                .SetLink(start_Alpha.gameObject);
+        }
+
+        // 星星效果_大小縮放
+        foreach (var star_Size in Stars_Size)
+        {
+            float size = UnityEngine.Random.Range(1.2f, 1.5f);
+            float duration = UnityEngine.Random.Range(0.5f, 1.5f);
+            float waitTime = UnityEngine.Random.Range(3f, 5f);
+
+            DOTween.Sequence()
+                .Append(star_Size.DOScale(size, duration)) // 放大
+                .Append(star_Size.DOScale(1.0f, duration)) // 縮小
+                .AppendInterval(waitTime)                  // 停留
+                .SetLoops(-1)                              // 無限循環
+                .SetLink(star_Size.gameObject);
+        }
 
         if (FirestoreDataManagement.Instance != null)
         {

@@ -30,7 +30,7 @@ public class EditAvatarView : BasicView
     List<Toggle> AvatarTogs = new();
     List<Toggle> AvatarFrameTogs = new();
 
-    protected override void Close()
+    public override void Close()
     {
         if(FirestoreManagement.Instance != null)
         {

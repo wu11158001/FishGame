@@ -20,6 +20,9 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     // 紀錄已開啟遊戲預製物
     private Dictionary<GamePrefabEnum, List<PrefabInstance>> GamePrefabDic = new();
 
+    // 紀錄前一個獲得物品介面
+    private GetItemView PreGetItemView;
+
     private RectTransform SafeArea_Scene;
     private RectTransform SafeArea_Global;
 
@@ -782,6 +785,13 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
     /// </summary>
     public async void ShowGetItemView(Sprite iconSprite, double value = 1)
     {
+        // 關閉前一個介面
+        if (PreGetItemView != null)
+        {
+            PreGetItemView.Close();
+            PreGetItemView = null;
+        }            
+
         ViewEnum view = ViewEnum.GetItemView;
 
         Action viewCloseAction = () =>
@@ -795,10 +805,13 @@ public class AddressableManagement : SingletonMonoBehaviour<AddressableManagemen
             {
                 if (viewObj != null)
                 {
-                    viewObj.GetComponent<GetItemView>().SetData(
+                    GetItemView getItemView = viewObj.GetComponent<GetItemView>();
+                    getItemView.SetData(
                         iconSprite: iconSprite,
                         value: value,
                         closeAction: viewCloseAction);
+
+                    PreGetItemView = getItemView;
                 }
             },
             IsCanStack: true,
