@@ -68,9 +68,9 @@ MonoBehaviour:
   - FishType: 200
     Sp: {fileID: -858068209387110090, guid: 9e74ff50b04212946a66a90433e49fa4, type: 3}
   - FishType: 201
-    Sp: {fileID: -2633863979938418355, guid: cb4c9483fd8efdd42bf80dee4b2125dd, type: 3}
+    Sp: {fileID: 21300000, guid: 2b3a0b0c825de7741ae1f14e87c2e13f, type: 3}
   - FishType: 202
-    Sp: {fileID: -4805769625168836833, guid: b3f42de574b6f164591fb5ce865c124d, type: 3}
+    Sp: {fileID: 21300000, guid: f74db9603d012d141be737aaab82e4cd, type: 3}
   <AvatarList>k__BackingField:
   - {fileID: 21300000, guid: 0819acdfbccdb264e8ec1a4c21f10ce2, type: 3}
   - {fileID: 21300000, guid: 65b7a581ca86f8e43bb04d7f0865d085, type: 3}

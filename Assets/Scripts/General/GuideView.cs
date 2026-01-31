@@ -221,7 +221,7 @@ public class GuideView : BasicView
                     if (fishData != null)
                     {
                         // 可獲得一次轉輪遊戲，結束獲得對應的倍率\n最高<size=48><color=#FAFF51> {0}X </color></size>!
-                        SpecialMessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
+                        SpecialMessageLocalized.Arguments = new object[] { fishData.MaxMagnification };
 
                         SpecialOddsText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
                     }
@@ -239,8 +239,8 @@ public class GuideView : BasicView
                         // 最高倍率 = 金龍倍率 * 最高倍率 + 魚群(最大預設30之3倍率)
                         int maxOdds = (int)((fishData.Magnification * fishData.MaxMagnification) + (30 * 3));
 
-                        // 固定獲得{0}倍獎勵，並捕獲全屏魚群，獎勵再翻倍，最高翻倍X{0}\n最高<size=48><color=#FAFF51> {1}X </color></size>!
-                        SpecialMessageLocalized.Arguments = new object[] { fishData.MaxMagnification, maxOdds };
+                        // 固定獲得{0}倍獎勵，並捕獲全屏魚群，獎勵再翻倍，最高翻倍X{1}\n最高<size=48><color=#FAFF51> {2}X </color></size>!
+                        SpecialMessageLocalized.Arguments = new object[] { fishData.Magnification, fishData.MaxMagnification, maxOdds };
 
                         SpecialOddsText.text = $"{fishData.Magnification}X - {maxOdds}X";
                     }

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b3f42de574b6f164591fb5ce865c124d
+guid: f74db9603d012d141be737aaab82e4cd
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4805769625168836833
-    second: DragonFish_0
+      213: -8631609066709817366
+    second: fish_icon35_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: DragonFish_0
+      name: fish_icon35_0
       rect:
         serializedVersion: 2
-        x: 9
-        y: 21
-        width: 298
-        height: 288
+        x: 0
+        y: 0
+        width: 180
+        height: 183
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f17037becf97e4db0800000000000000
-      internalID: -4805769625168836833
+      spriteID: ae768ba394d563880800000000000000
+      internalID: -8631609066709817366
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      DragonFish_0: -4805769625168836833
+      fish_icon35_0: -8631609066709817366
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
