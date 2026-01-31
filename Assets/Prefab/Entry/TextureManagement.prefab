@@ -96,15 +96,15 @@ MonoBehaviour:
     Sp: {fileID: 21300000, guid: 1ccb94c7bbebc484f80299fba0b575ed, type: 3}
   ShopCoinTextureEntryList:
   - ShopCoinType: 0
-    Sp: {fileID: -1048013061285917987, guid: e4c591aa84bdedc4ab0b8736bf86373b, type: 3}
+    Sp: {fileID: 21300000, guid: 18403c067782bea48a18ca5d36c121aa, type: 3}
   - ShopCoinType: 1
-    Sp: {fileID: 804326060314261637, guid: b7f7ac78178dab54ab760988f5aadeb9, type: 3}
+    Sp: {fileID: 21300000, guid: 74cd7d86c6883e44f96127e479186b7c, type: 3}
   - ShopCoinType: 2
-    Sp: {fileID: -4899199973589032331, guid: 66de8cbc67a6fbd48bb69dc3751028ed, type: 3}
+    Sp: {fileID: 21300000, guid: 137222aaa9e72814b8d4b6488bef570d, type: 3}
   - ShopCoinType: 3
-    Sp: {fileID: 4540038396185817624, guid: 374baff59a973a548aa9292ebab93522, type: 3}
+    Sp: {fileID: 21300000, guid: 4c94397e19a1c764592dcbd512526ec0, type: 3}
   - ShopCoinType: 4
-    Sp: {fileID: 7091146362038215915, guid: 44a376d68971eea40b89eda4625522d3, type: 3}
+    Sp: {fileID: 21300000, guid: 8fb74f824673da1439c5f8e6462cb389, type: 3}
   TurretTextureEntryList:
   - TurretType: 0
     Sp: {fileID: 21300000, guid: f6c169ec69bf90c48b73ee6d96fffa4d, type: 3}
@@ -125,3 +125,31 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d99095528f494da41829cc229c0c3b09, type: 3}
   - {fileID: 21300000, guid: a4e117fd7f71b264c894e94a11373477, type: 3}
   - {fileID: 21300000, guid: 986fb9973722d0144aa0e2c7cfc0a348, type: 3}
+  LevelInfoEntryList:
+  - LevelType: 0
+    LevelBg: {fileID: 8535709553763001397, guid: 7cf5f25eb4c396e49a4b51ca6ac5873f, type: 3}
+    LevelIcon: {fileID: 589187965062626237, guid: 41f4886df67187b4c9a39b541db695d5, type: 3}
+    LevelNameKey: Phantom Tides
+    LevelNameColors:
+      topLeft: {r: 0.21176471, g: 0.20392157, b: 1, a: 1}
+      topRight: {r: 0, g: 0, b: 0, a: 1}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 1}
+      bottomRight: {r: 0.0627451, g: 0, b: 1, a: 1}
+  - LevelType: 1
+    LevelBg: {fileID: 8535709553763001397, guid: 7cf5f25eb4c396e49a4b51ca6ac5873f, type: 3}
+    LevelIcon: {fileID: 6403117479668722627, guid: 2558cbc679c79cf41bebbc2b038eca53, type: 3}
+    LevelNameKey: Shark Abyss
+    LevelNameColors:
+      topLeft: {r: 0.21176471, g: 0.20392157, b: 1, a: 1}
+      topRight: {r: 0, g: 0, b: 0, a: 1}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 1}
+      bottomRight: {r: 0.21176471, g: 0.20392157, b: 1, a: 1}
+  - LevelType: 2
+    LevelBg: {fileID: -8372162604625061551, guid: 0f74fa7c7ea0c7046a1cc14d0d8c16ee, type: 3}
+    LevelIcon: {fileID: 2631065926260867546, guid: 8e0ebae59224edd459aa866aec03f9ab, type: 3}
+    LevelNameKey: Golden Dragon Realm
+    LevelNameColors:
+      topLeft: {r: 0.9372549, g: 0.73333335, b: 0.2901961, a: 1}
+      topRight: {r: 0, g: 0, b: 0, a: 1}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 1}
+      bottomRight: {r: 1, g: 0.20392157, b: 0, a: 1}

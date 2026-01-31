@@ -259,7 +259,7 @@ public class LoginView : BasicView
     /// <returns></returns>
     private IEnumerator ICloseRecord()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.2f);
         RecordArea.SetActive(false);
     }
 

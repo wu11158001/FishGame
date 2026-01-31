@@ -21,7 +21,6 @@ public class LevelUnit : MonoBehaviour
     [SerializeField] TextMeshProUGUI LevelName;
     [SerializeField] TextMeshProUGUI JackpotText;
 
-    LevelUnitData LevelUnitData;
     LevelEnum LevelType;
     Action NotSelectClickAction;
 
@@ -30,7 +29,7 @@ public class LevelUnit : MonoBehaviour
 
     private void OnDestroy()
     {
-        StopListenLevelData(levelType: LevelUnitData.LevelType);
+        StopListenLevelData(levelType: LevelType);
     }
 
     private void Start()
@@ -38,25 +37,26 @@ public class LevelUnit : MonoBehaviour
         MainBtn.onClick.AddListener(CheckPos);
     }
 
-    public void SetData(LevelUnitData data)
+    public void SetData(LevelEnum levelType, Action notSelectClickAction)
     {
-        LevelUnitData = data;
+        LevelType = levelType;
+        NotSelectClickAction = notSelectClickAction;
 
-        LevelType = data.LevelType;
-        BgImage.sprite = data.LevelBg;
-        LevelIcon.sprite = data.LevelIcon;
-        LevelName.colorGradient = data.LevelNameColor;
-        LevelName.text = LocalizationManagement.Instance.GetLocalizedString(data.LevelNameKey);
-        NotSelectClickAction = data.NotSelectClickAction;
+        LevelInfoEntry levelInfo = TextureManagement.Instance.GetLevelInfo(levelType);
+
+        BgImage.sprite = levelInfo.LevelBg;
+        LevelIcon.sprite = levelInfo.LevelIcon;
+        LevelName.colorGradient = levelInfo.LevelNameColors;
+        LevelName.text = LocalizationManagement.Instance.GetLocalizedString(levelInfo.LevelNameKey);
 
         if (FirestoreDataManagement.Instance != null)
         {
-            double jackpot = FirestoreDataManagement.Instance.GetLevelData(levelType: data.LevelType).Jackpot;
+            double jackpot = FirestoreDataManagement.Instance.GetLevelData(levelType: levelType).Jackpot;
             JackpotText.text = StringUtility.CurrencyFormat(jackpot);
             CurrentJackpot = jackpot;
         }
 
-        StartListenLevelData(levelType: LevelUnitData.LevelType);
+        StartListenLevelData(levelType: levelType);
     }
 
     /// <summary>

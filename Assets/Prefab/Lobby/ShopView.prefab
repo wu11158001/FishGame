@@ -334,7 +334,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 66228138138302107}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -525,7 +525,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 25}
-  m_SizeDelta: {x: 195.2784, y: 121.5369}
+  m_SizeDelta: {x: 207, y: 192}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2787667237975545221
 CanvasRenderer:
@@ -555,7 +555,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5815060958783322241, guid: 51a172b329aa5074fae2b9dd806a34d0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8fb74f824673da1439c5f8e6462cb389, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8957,7 +8957,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5539036913037939791}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -10848,7 +10848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e672b964f4e05a34591c5118a546dc32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoinStoreUnit
-  MaxCoverSize: 195
+  MaxCoverSize: 207
   MainBtn: {fileID: 3035335393530103694}
   MainRect: {fileID: 1143831544056906559}
   CoverImage: {fileID: 5364014046122499277}

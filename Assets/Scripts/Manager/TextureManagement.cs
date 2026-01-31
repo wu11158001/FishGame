@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class TextureManagement : SingletonMonoBehaviour<TextureManagement>
@@ -203,4 +204,44 @@ public class TextureManagement : SingletonMonoBehaviour<TextureManagement>
     }
 
     #endregion
+
+    #region 關卡訊息
+
+    /// <summary>
+    /// 關卡訊息集合
+    /// </summary>
+    [SerializeField] List<LevelInfoEntry> LevelInfoEntryList = new();
+
+    /// <summary>
+    /// 獲取關卡訊息
+    /// </summary>
+    public LevelInfoEntry GetLevelInfo(LevelEnum levelType)
+    {
+        var entry = LevelInfoEntryList.Find(x => x.LevelType == levelType);
+        return entry;
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// 關卡訊息
+/// </summary>
+[Serializable]
+public struct LevelInfoEntry
+{
+    /// <summary> 關卡類型 </summary>
+    public LevelEnum LevelType;
+
+    /// <summary> 關卡單位背景 </summary>
+    public Sprite LevelBg;
+
+    /// <summary> 關卡單位Icon </summary>
+    public Sprite LevelIcon;
+
+    /// <summary> 關卡名稱Key </summary>
+    public string LevelNameKey;
+
+    /// <summary> 關卡名稱顏色 </summary>
+    public VertexGradient LevelNameColors;
 }

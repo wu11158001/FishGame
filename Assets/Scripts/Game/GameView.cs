@@ -40,6 +40,10 @@ public class GameView : BasicView
     [SerializeField] Button PropsBtnUnit;
     [SerializeField] RectTransform PropsContent;
 
+    [Header("CurrLevelInfoArea")]
+    [SerializeField] Image CurrLevelIconImage;
+    [SerializeField] TextMeshProUGUI CurrLevelNameText;
+
     GameFloatBtn GameFloatBtn;
     bool IsLocalMirror;
     Coroutine FreezeCoroutine;
@@ -158,8 +162,22 @@ public class GameView : BasicView
             AccountCoinText.text = StringUtility.CurrencyFormat(accountData.Coins);
         }
 
+        SetCurrLevelInfo();
         CreateProps();
         StartCoroutine(IYieldShow());
+    }
+
+    /// <summary>
+    /// 設置關卡訊息
+    /// </summary>
+    private void SetCurrLevelInfo()
+    {
+        LevelEnum levelType = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.LevelType;
+        LevelInfoEntry levelInfo = TextureManagement.Instance.GetLevelInfo(levelType);
+
+        CurrLevelIconImage.sprite = levelInfo.LevelIcon;
+        CurrLevelNameText.text = LocalizationManagement.Instance.GetLocalizedString(levelInfo.LevelNameKey);
+        CurrLevelNameText.colorGradient = levelInfo.LevelNameColors;
     }
 
     /// <summary>

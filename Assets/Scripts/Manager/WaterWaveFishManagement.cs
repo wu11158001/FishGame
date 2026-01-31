@@ -13,8 +13,8 @@ public static class WaterWaveFishManagement
             LevelEnum.ClassicLevel,
             new()
             {
-                SpawnBetweenTime = 4f,
-                MoveDuration = 30,
+                SpawnBetweenTime = 2f,
+                MoveDuration = 20,
                 FishsType = new()
                 {
                     NetworkPrefabEnum.NormalFish_8,

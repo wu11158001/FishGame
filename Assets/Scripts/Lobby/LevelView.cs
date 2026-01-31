@@ -4,17 +4,12 @@ using System;
 using TMPro;
 using DG.Tweening;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class LevelView : BasicView, IDragHandler, IEndDragHandler
 {
     [Header("Level Unit")]
     [SerializeField] RectTransform LevelUnitArea;
     [SerializeField] LevelUnit LevelUnit;
-    [SerializeField] List<Sprite> UnitBgs = new();
-    [SerializeField] List<Sprite> UnitIcons = new();
-    [SerializeField] List<string> LevelNameKeys = new();
-    [SerializeField] List<VertexGradient> LevelNameColors = new();
 
     [Header("Level Unit Rotate Settings")]
     // 關卡單位距離
@@ -116,24 +111,14 @@ public class LevelView : BasicView, IDragHandler, IEndDragHandler
         int index = 0;
         foreach (LevelEnum levelType in Enum.GetValues(typeof(LevelEnum)))
         {
-            int currIndex = index;
+            int currIndex = index;    
 
             GameObject obj = Instantiate(LevelUnit.gameObject, LevelUnitArea);
             obj.SetActive(true);
             LevelUnit levelUnit = obj.GetComponent<LevelUnit>();
             if(levelUnit != null)
             {
-                LevelUnitData data = new()
-                {
-                    LevelType = levelType,
-                    LevelBg = UnitBgs[index],
-                    LevelIcon = UnitIcons[index],
-                    LevelNameKey = LevelNameKeys[index],
-                    LevelNameColor = LevelNameColors[index],
-                    NotSelectClickAction = () => { RotateToIndex(currIndex); },
-                };
-
-                levelUnit.SetData(data);
+                levelUnit.SetData(levelType: levelType, notSelectClickAction: () => { RotateToIndex(currIndex); });
                 UnitButtons.Add(obj.GetComponent<RectTransform>());
 
                 index++;
@@ -256,28 +241,4 @@ public class LevelView : BasicView, IDragHandler, IEndDragHandler
             renderOrder[i].SetAsLastSibling();
         }
     }
-}
-
-/// <summary>
-/// 選擇關卡單位資料
-/// </summary>
-public struct LevelUnitData
-{
-    /// <summary> 關卡類型 </summary>
-    public LevelEnum LevelType;
-
-    /// <summary> 關卡背景 </summary>
-    public Sprite LevelBg;
-
-    /// <summary> 關卡圖片 </summary>
-    public Sprite LevelIcon;
-
-    /// <summary> 關卡名稱Key </summary>
-    public string LevelNameKey;
-
-    /// <summary> 關卡名稱顏色 </summary>
-    public VertexGradient LevelNameColor;
-
-    /// <summary> 非選中點擊按鈕回傳 </summary>
-    public Action NotSelectClickAction;
 }

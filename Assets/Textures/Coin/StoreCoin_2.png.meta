@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 51a172b329aa5074fae2b9dd806a34d0
+guid: 137222aaa9e72814b8d4b6488bef570d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5815060958783322241
-    second: COIN270_0
+      213: -6915913067629576546
+    second: money4_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: COIN270_0
+      name: money4_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 303
-        height: 151
+        x: 23
+        y: 13
+        width: 161
+        height: 166
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f774a741ed0cc4fa0800000000000000
-      internalID: -5815060958783322241
+      spriteID: e9ef47205bdb500a0800000000000000
+      internalID: -6915913067629576546
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      COIN270_0: -5815060958783322241
+      money4_0: -6915913067629576546
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
