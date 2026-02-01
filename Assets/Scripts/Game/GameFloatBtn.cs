@@ -83,7 +83,12 @@ public class GameFloatBtn : MonoBehaviour
 
                     if (SceneManagement.Instance != null)
                     {
-                        SceneManagement.Instance.LoadScene(sceneEnum: SceneEnum.Lobby);
+                        SceneManagement.Instance.LoadScene(
+                            sceneEnum: SceneEnum.Lobby,
+                            callback: () =>
+                            {
+                                _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.LobbyPopupController);
+                            });
                     }
                 },
                 cancelAction: () =>

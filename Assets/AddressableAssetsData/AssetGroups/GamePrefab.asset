@@ -65,6 +65,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a912f8784e3d21148a77ab7c6f70cbb0
+    m_Address: LobbyPopupController
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b5929c1a0fe8dc6448852b65004fff8a
     m_Address: CoinText_7
     m_ReadOnly: 0

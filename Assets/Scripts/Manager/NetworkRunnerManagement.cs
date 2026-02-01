@@ -264,7 +264,12 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
         // 非安全斷線返回大廳
         if(!IsSafeShutdown && SceneManagement.Instance != null)
         {
-            SceneManagement.Instance.LoadScene(sceneEnum: SceneEnum.Lobby);
+            SceneManagement.Instance.LoadScene(
+                sceneEnum: SceneEnum.Lobby,
+                callback: () =>
+                {
+                    _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.LobbyPopupController);
+                });
         }
 
         IsSafeShutdown = false;

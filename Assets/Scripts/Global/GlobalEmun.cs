@@ -234,10 +234,10 @@ public enum NetworkPrefabEnum
     FishHitEffect = 4,
 
     /// <summary> 特殊效果控制中心 </summary>
-    SpecialEffectController,
+    SpecialEffectController = 5,
 
     /// <summary> Fusion物件池 </summary>
-    FusionPool,
+    FusionPool = 6,
 
     /// <summary> 一般魚魚物件 </summary>
     NormalFish_0 = 100,
@@ -262,6 +262,9 @@ public enum NetworkPrefabEnum
 /// </summary>
 public enum GamePrefabEnum
 {
+    /// <summary> 大廳流程控制中心 </summary>
+    LobbyPopupController = -1,
+
     /// <summary> 魚群路線主物件 </summary>
     WayPointMain = 0,
 

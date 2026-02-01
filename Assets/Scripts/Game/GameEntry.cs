@@ -99,7 +99,12 @@ public class GameEntry : MonoBehaviour
         // 回大廳
         if (SceneManagement.Instance != null)
         {
-            SceneManagement.Instance.LoadScene(sceneEnum: SceneEnum.Lobby);
+            SceneManagement.Instance.LoadScene(
+                sceneEnum: SceneEnum.Lobby,
+                callback: () =>
+                {
+                    _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.LobbyPopupController);
+                });
         }
     }
 
