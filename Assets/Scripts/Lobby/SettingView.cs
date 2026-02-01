@@ -58,8 +58,8 @@ public class SettingView : BasicView
     private void SignOut()
     {
         Canvas_Global.Instance.ShowLoading();
-        FirestoreDataManagement.Instance.StopHeartbeat();
         FirestoreDataManagement.Instance.StopListenAccountData();
+        FirestoreDataManagement.Instance.StopHeartbeat();
 
         SceneManagement.Instance.LoadScene(
             sceneEnum: SceneEnum.Login,

@@ -4,7 +4,6 @@ using System;
 using DG.Tweening;
 using TMPro;
 using System.Collections.Generic;
-using UnityEngine.Rendering;
 
 public class LobbyView : BasicView
 {
@@ -33,9 +32,6 @@ public class LobbyView : BasicView
     [Header("Effect Object")]
     [SerializeField] List<GameObject> Effects = new();
 
-    // 父物件Canvas層級
-    int ParentCanvasOrder;
-
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -54,8 +50,6 @@ public class LobbyView : BasicView
     protected override void Start()
     {
         base.Start();
-
-        ParentCanvasOrder = GetComponentInParent<Canvas>().sortingOrder;
 
         // 頭像按鈕
         AvatarBtn.onClick.AddListener(() => 
@@ -179,7 +173,7 @@ public class LobbyView : BasicView
     /// </summary>
     private void AccountDataChange(AccountData accountData)
     {
-        if (accountData == null)
+        if (accountData == null || gameObject == null || !gameObject.activeInHierarchy)
             return;
 
         // 頭像
