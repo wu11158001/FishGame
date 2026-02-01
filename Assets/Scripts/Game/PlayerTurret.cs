@@ -116,15 +116,6 @@ public class PlayerTurret : NetworkBehaviour
         OnCostChanged();
     }
 
-    public override void Render()
-    {
-        if (Object == null || !Object.IsValid)
-            return;
-
-        OnRotation();
-        HandleRecoil();
-    }
-
     public override void FixedUpdateNetwork()   
     {
         if (Object == null || !Object.IsValid)
@@ -133,7 +124,9 @@ public class PlayerTurret : NetworkBehaviour
         SelfLocking();
         OnSkill_Locking();
         OnRotationControl();
+        OnRotation();
         OnFire();
+        HandleRecoil();
     }
 
     /// <summary>
@@ -373,11 +366,14 @@ public class PlayerTurret : NetworkBehaviour
         if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
             return;
 
-        // 是否有鎖定目標
         bool isLocking = FirestoreDataManagement.Instance.GameTempData.IsSkill_Locking && TargetLockingFish != null;
 
         if (GetInput(out NetworkInputData input) && !isLocking)
         {
+            // 如果座標是 (0,0)，通常代表手機端沒在觸碰，直接跳過不更新角度
+            if (input.MousePosition == Vector2.zero)
+                return;
+
             if (MainCamera == null)
             {
                 MainCamera = Camera.main;
@@ -393,7 +389,7 @@ public class PlayerTurret : NetworkBehaviour
                 Vector3 dir = mouseWorldPos - transform.position;
                 dir.y = 0;
 
-                if (dir.sqrMagnitude > 0.1f) // 避免向量過小時產生抖動
+                if (dir.sqrMagnitude > 0.1f)
                 {
                     NetworkedAngle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
                 }

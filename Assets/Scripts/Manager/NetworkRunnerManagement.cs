@@ -126,25 +126,23 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         NetworkInputData inputData = new();
 
-        // 優先獲取觸碰座標，若無則獲取滑鼠座標
-        Vector2 pointerPosition = Vector2.zero;
-        bool isInputActive = false;
+        // 檢查是否有滑鼠
+        bool isMouseActive = Mouse.current != null;
+        // 檢查是否有觸碰
+        bool isTouchActive = Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed;
 
-        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+        if (isTouchActive)
         {
-            pointerPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-            isInputActive = true;
+            // 手機模式：只有在按住時才更新座標
+            inputData.MousePosition = Touchscreen.current.primaryTouch.position.ReadValue();
+            inputData.Buttons.Set(NetworkInputData.MOUSE_LEFT, true);
         }
-        else if (Mouse.current != null)
+        else if (isMouseActive)
         {
-            pointerPosition = Mouse.current.position.ReadValue();
-            isInputActive = Mouse.current.leftButton.isPressed;
+            // PC 模式：隨時更新滑鼠座標
+            inputData.MousePosition = Mouse.current.position.ReadValue();
+            inputData.Buttons.Set(NetworkInputData.MOUSE_LEFT, Mouse.current.leftButton.isPressed);
         }
-
-        inputData.MousePosition = pointerPosition;
-
-        // 設定按鈕狀態
-        inputData.Buttons.Set(NetworkInputData.MOUSE_LEFT, isInputActive);
 
         input.Set(inputData);
     }
