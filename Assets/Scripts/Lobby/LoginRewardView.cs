@@ -13,21 +13,11 @@ public class LoginRewardView : BasicView
     [SerializeField] TextMeshProUGUI RewardValueText;
     [SerializeField] RectTransform CoinIcon;
 
-    LobbyView LobbyView;
-
     protected override void OnDestroy()
     {
         base.OnDestroy();
 
         CoinIcon.DOKill();
-    }
-
-    public override void Close()
-    {
-        if (LobbyView != null)
-            LobbyView.EffectObjectShowControl(true);
-
-        base.Close();
     }
 
     protected override void Start()
@@ -42,13 +32,11 @@ public class LoginRewardView : BasicView
             .SetLoops(-1, LoopType.Restart);
     }
 
-    public void SetData(LobbyView lobbyView, Action closeAction)
+    public void SetData(Action closeAction)
     {
-        LobbyView = lobbyView;
         CloseAction = closeAction;
 
         MainCanvasGroup.alpha = 0;
-        lobbyView.EffectObjectShowControl(false);
 
         if (FirestoreDataManagement.Instance != null)
         {

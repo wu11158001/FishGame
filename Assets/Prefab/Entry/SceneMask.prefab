@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3653918700332115624}
+  - component: {fileID: 7303029080976121574}
   m_Layer: 0
   m_Name: SceneMask
   m_TagString: Untagged
@@ -35,6 +36,18 @@ Transform:
   - {fileID: 1692301755246655183}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7303029080976121574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265085312050733700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b9d26b9ba21bb44080bdb40df354762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneMask
 --- !u!1 &2976263910828162545
 GameObject:
   m_ObjectHideFlags: 0

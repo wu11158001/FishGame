@@ -29,9 +29,6 @@ public class LobbyView : BasicView
     [SerializeField] RectTransform LevelBtnRect;
     [SerializeField] Button LevelBtn;
 
-    [Header("Effect Object")]
-    [SerializeField] List<GameObject> Effects = new();
-
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -52,92 +49,37 @@ public class LobbyView : BasicView
         base.Start();
 
         // 頭像按鈕
-        AvatarBtn.onClick.AddListener(() => 
-        {
-            EffectObjectShowControl(false);
-
-            AddressableManagement.Instance.OpenEditAvatarView(
-                closeAction: () =>
-                {
-                    EffectObjectShowControl(true);
-                });
-        });
+        AvatarBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenEditAvatarView(); });
 
         // 編輯暱稱按鈕
-        NicknameEditBtn.onClick.AddListener(() => 
-        {
-            EffectObjectShowControl(false);
-
-            AddressableManagement.Instance.OpenEditNicknameView(
-                closeAction: () =>
-                {
-                    EffectObjectShowControl(true);
-                });
-        });
+        NicknameEditBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenEditNicknameView(); });
 
         // 設置按鈕
-        SettingBtn.onClick.AddListener(() => 
-        {
-            EffectObjectShowControl(false);
-
-            AddressableManagement.Instance.OpenSettingView(
-                closeAction: () =>
-                {
-                    EffectObjectShowControl(true);
-                });
-        });
+        SettingBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenSettingView(); });
 
         // 帳戶金幣商店按鈕
         CoinStoreBtn.onClick.AddListener(() => 
         {
             Canvas_Global.Instance.ShowLoading();
-            EffectObjectShowControl(false);
-
-            AddressableManagement.Instance.OpenShopView(
-                defaultShopType: ShopSwitchEnum.CoinTag,
-                closeAction: () =>
-                {
-                    EffectObjectShowControl(true);
-                }); 
+            AddressableManagement.Instance.OpenShopView(defaultShopType: ShopSwitchEnum.CoinTag);
         });
 
         // 商店按鈕
         ShopBtn.onClick.AddListener(() => 
         {
             Canvas_Global.Instance.ShowLoading();
-            EffectObjectShowControl(false);
-
-            AddressableManagement.Instance.OpenShopView(
-                closeAction: () =>
-                {
-                    EffectObjectShowControl(true);
-                }); 
+            AddressableManagement.Instance.OpenShopView(); 
         });
 
         // 關卡按鈕
         LevelBtn.onClick.AddListener(() =>
         {
             AreaMoveEffectSwitch(isShow: false);
-
-            AddressableManagement.Instance.OpenLevelView(
-                closeAction: () =>
-                {
-                    AreaMoveEffectSwitch(isShow: true);
-                });
+            AddressableManagement.Instance.OpenLevelView();
         });
 
         // 7日簽到按鈕
-        SevenDayBtn.onClick.AddListener(() =>
-        {
-            EffectObjectShowControl(false);
-
-            AddressableManagement.Instance.OpenSevenDayView(
-                lobbyView: this,
-                closeAction: () =>
-                {
-                    EffectObjectShowControl(true);
-                });
-        });
+        SevenDayBtn.onClick.AddListener(() => { AddressableManagement.Instance.OpenSevenDayView(); });
 
         // 7日按鈕上下移動
         SevenDayRect.DOKill();
@@ -219,17 +161,6 @@ public class LobbyView : BasicView
     }
 
     /// <summary>
-    /// 帶有特效物件顯示控制
-    /// </summary>
-    public void EffectObjectShowControl(bool isShow)
-    {
-        foreach (var effect in Effects)
-        {
-            effect.gameObject.SetActive(isShow);
-        }
-    }
-
-    /// <summary>
     /// 大廳區塊移動顯示/影藏效果
     /// </summary>
     private void AreaMoveEffectSwitch(bool isShow)
@@ -249,11 +180,11 @@ public class LobbyView : BasicView
             LeftAreaRect.anchoredPosition = new(-LeftAreaRect.sizeDelta.x, 0);
             LeftAreaRect.DOAnchorPos(new Vector2(0, 0), PopUpTime)
                 .SetEase(Ease.Linear)
-                .OnComplete(() => { EffectObjectShowControl(true); });
+                .OnComplete(() => { /*EffectObjectShowControl(true);*/ });
         }
         else
         {
-            EffectObjectShowControl(false);
+            //EffectObjectShowControl(false);
 
             // 影藏底部區域
             BottomAreaRect.DOKill();

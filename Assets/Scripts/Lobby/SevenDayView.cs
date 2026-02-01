@@ -17,8 +17,6 @@ public class SevenDayView : BasicView
     // 紀錄介面開啟時間，判斷介面開著時已過隔日
     DateTime ViewStartTime;
 
-    LobbyView LobbyView;
-
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -51,21 +49,11 @@ public class SevenDayView : BasicView
         }
     }
 
-    public override void Close()
-    {
-        if (LobbyView != null)
-            LobbyView.EffectObjectShowControl(true);
-
-        base.Close();
-    }
-
-    public void SetData(LobbyView lobbyView, Action closeAction)
+    public void SetData(Action closeAction)
     {
         CloseAction = closeAction;
-        LobbyView = lobbyView;
 
         MainCanvasGroup.alpha = 0;
-        lobbyView.EffectObjectShowControl(false);
 
         CreateSignInDayUnit();
         StartCoroutine(IYieldShow());

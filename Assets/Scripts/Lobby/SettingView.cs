@@ -67,7 +67,5 @@ public class SettingView : BasicView
             {
                 await AddressableManagement.Instance.OpenLoginView(isLogout: true);
             });
-
-        CloseAction?.Invoke();
     }
 }

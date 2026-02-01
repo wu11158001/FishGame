@@ -180,7 +180,7 @@ public class LobbyPopupController : MonoBehaviour
             // 沒有註冊資料代表新註冊
             if (AddressableManagement.Instance != null)
             {
-                AddressableManagement.Instance.OpenRegisterRewardView(lobbyView: LobbyView, closeAction: PopupProcess);
+                AddressableManagement.Instance.OpenRegisterRewardView(closeAction: PopupProcess);
             }
         }
         else
@@ -199,7 +199,7 @@ public class LobbyPopupController : MonoBehaviour
             // 沒有登入資料代表新註冊
             if (AddressableManagement.Instance != null)
             {
-                AddressableManagement.Instance.OpenLoginRewardView(lobbyView: LobbyView, closeAction: PopupProcess);
+                AddressableManagement.Instance.OpenLoginRewardView(closeAction: PopupProcess);
             }
         }
         else
@@ -212,7 +212,7 @@ public class LobbyPopupController : MonoBehaviour
             {
                 if (AddressableManagement.Instance != null)
                 {
-                    AddressableManagement.Instance.OpenLoginRewardView(lobbyView: LobbyView, closeAction: PopupProcess);
+                    AddressableManagement.Instance.OpenLoginRewardView(closeAction: PopupProcess);
                 }
             }
             else
@@ -237,7 +237,7 @@ public class LobbyPopupController : MonoBehaviour
         {
             if (AddressableManagement.Instance != null)
             {
-                AddressableManagement.Instance.OpenSevenDayView(lobbyView: LobbyView, closeAction: PopupProcess);
+                AddressableManagement.Instance.OpenSevenDayView(closeAction: PopupProcess);
             }
         }
         else

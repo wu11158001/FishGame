@@ -330,7 +330,6 @@ public class Bullet : NetworkBehaviour
             // 判斷獎池
             if (FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.Jackpot < reward)
             {
-                Debug.LogError($"獎池不足! Jackpot:{FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.Jackpot} 獎勵: {reward}");
                 Runner.Despawn(Object);
                 return;
             }
@@ -338,7 +337,6 @@ public class Bullet : NetworkBehaviour
             // 當前不可射擊
             if (FirestoreDataManagement.Instance.GameTempData.IsStopShot)
             {
-                Debug.LogError($"當前不可射擊不判斷獎勵!");
                 Runner.Despawn(Object);
                 return;
             }
