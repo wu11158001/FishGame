@@ -495,6 +495,8 @@ MonoBehaviour:
   CoinTextType: 103
   FishModel: {fileID: 6666053332829180253}
   Animator: {fileID: 9050656029021909188}
+  _IsDie:
+    _value: 0
 --- !u!114 &3247019587191361611
 MonoBehaviour:
   m_ObjectHideFlags: 0

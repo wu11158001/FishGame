@@ -126,10 +126,25 @@ public class NetworkRunnerManagement : SingletonMonoBehaviour<NetworkRunnerManag
     {
         NetworkInputData inputData = new();
 
-        inputData.MousePosition = Mouse.current.position.ReadValue();
+        // 優先獲取觸碰座標，若無則獲取滑鼠座標
+        Vector2 pointerPosition = Vector2.zero;
+        bool isInputActive = false;
 
-        if (Mouse.current != null)
-            inputData.Buttons.Set(NetworkInputData.MOUSE_LEFT, Mouse.current.leftButton.isPressed);
+        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+        {
+            pointerPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+            isInputActive = true;
+        }
+        else if (Mouse.current != null)
+        {
+            pointerPosition = Mouse.current.position.ReadValue();
+            isInputActive = Mouse.current.leftButton.isPressed;
+        }
+
+        inputData.MousePosition = pointerPosition;
+
+        // 設定按鈕狀態
+        inputData.Buttons.Set(NetworkInputData.MOUSE_LEFT, isInputActive);
 
         input.Set(inputData);
     }

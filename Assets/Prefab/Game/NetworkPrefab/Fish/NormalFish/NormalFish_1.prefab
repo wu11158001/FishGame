@@ -1979,9 +1979,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c2393655d406c4dbc022b3e5ec7b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
-  CoinTextType: 104
+  CoinTextType: 105
   FishModel: {fileID: 3201909838559245476}
   Animator: {fileID: 5188342334272845423}
+  _IsDie:
+    _value: 0
 --- !u!114 &9013133534017025471
 MonoBehaviour:
   m_ObjectHideFlags: 0
