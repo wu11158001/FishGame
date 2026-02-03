@@ -427,6 +427,15 @@ public class Fish : NetworkBehaviour
     }
 
     /// <summary>
+    /// 關閉魚顯示
+    /// </summary>
+    private void DisableModel()
+    {
+        if (FishModel != null)
+            FishModel.SetActive(false);
+    }
+
+    /// <summary>
     /// 魚被擊中
     /// </summary>
     public void GetHit(FishHitData fishHitData)
@@ -443,8 +452,7 @@ public class Fish : NetworkBehaviour
             }
         }
 
-        if (FishModel != null)
-            FishModel.SetActive(false);
+        DisableModel();
 
         RPC_GetHit(fishHitData);
     }
@@ -464,10 +472,9 @@ public class Fish : NetworkBehaviour
             }
         }
 
-        if (FishModel != null)
-            FishModel.SetActive(false);
+        DisableModel();
 
-        if(Object.HasStateAuthority)
+        if (Object.HasStateAuthority)
         {
             IsDie = true;
         }
