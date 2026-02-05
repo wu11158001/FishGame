@@ -9,6 +9,7 @@ public class PlayerTurret : NetworkBehaviour
     [Header("Turrets")]
     [SerializeField] List<GameObject> Turrets = new();
     [SerializeField] List<Material> TurretMaterials = new();
+    [SerializeField] GameObject LightningAura;
 
     [Header("HandleRecoil")]
     // 後座力後退距離
@@ -20,7 +21,7 @@ public class PlayerTurret : NetworkBehaviour
     [OnChangedRender(nameof(ChangeTurret))]
     [Networked] int TurretIndex { get; set; }
     // 砲台材質球index(0 = 預設, 1 = 免費子彈)
-    [OnChangedRender(nameof(ChangeTurretMaterial))]
+    [OnChangedRender(nameof(ChangeTurretSkin))]
     [Networked] int TurretMaterialIndex { get; set; }
 
     // 同步角度變數
@@ -614,32 +615,34 @@ public class PlayerTurret : NetworkBehaviour
             }
         }
 
-        ChangeTurretMaterial();
+        ChangeTurretSkin();
     }
 
     /// <summary>
-    /// 更換砲台材質球
+    /// 更換砲台造型
     /// </summary>
-    private void ChangeTurretMaterial()
+    private void ChangeTurretSkin()
     {
         if (TurretMaterials == null || TurretMaterials.Count == 0)
             return;
 
         try
         {
+            // 更換材質球
             GameObject activeTurret = Turrets[TurretIndex];
             MeshRenderer[] barrelMR = activeTurret.transform.Find("Barrel").GetComponentsInChildren<MeshRenderer>();
             MeshRenderer[] bottomMR = activeTurret.transform.Find("Bottom").GetComponentsInChildren<MeshRenderer>();
-
             foreach (var mr in barrelMR)
             {
                 mr.material = TurretMaterials[TurretMaterialIndex];
             }
-
             foreach (var mr in bottomMR)
             {
                 mr.material = TurretMaterials[TurretMaterialIndex];
             }
+
+            // 靈氣物件判斷
+            LightningAura.SetActive(TurretMaterialIndex == 1);
         }
         catch (System.Exception e)
         {

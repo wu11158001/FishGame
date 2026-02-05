@@ -4916,7 +4916,7 @@ GameObject:
   - component: {fileID: 3030695469154982457}
   - component: {fileID: -4723763352073238618}
   m_Layer: 0
-  m_Name: HitEffect
+  m_Name: NormalHitEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

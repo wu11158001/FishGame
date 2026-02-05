@@ -215,8 +215,12 @@ public class Bullet : NetworkBehaviour
             return;
 
         // 產生子彈擊中效果
+        NetworkPrefabEnum hitEffect = NetworkPrefabEnum.NormalHitEffect;
+        if (BulletSpriteIndex == 1)
+            hitEffect = NetworkPrefabEnum.ElectroHitEffect;
+
         NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
-                        key: NetworkPrefabEnum.HitEffect,
+                        key: hitEffect,
                         Pos: transform.position,
                         rot: Quaternion.identity,
                         parent: EffectPool,
@@ -307,7 +311,7 @@ public class Bullet : NetworkBehaviour
                     specailMagnification = UnityEngine.Random.Range((int)fishData.MinMagnification, (int)fishData.MaxMagnification + 1);
                     reward = currDefaultCost * (specailMagnification + freeBulletAddOdds);
 
-                    eruptionCoinString = $"{StringUtility.CurrencyFormat(specailMagnification)}X";
+                    eruptionCoinString = $"{StringUtility.CurrencyFormat(specailMagnification + freeBulletAddOdds)}X";
                     isLocalShow = false;
                     break;
 
@@ -333,7 +337,7 @@ public class Bullet : NetworkBehaviour
 
                 // 特殊魚_金龍
                 case NetworkPrefabEnum.DragonFish:
-                    eruptionCoinString = $"{StringUtility.CurrencyFormat(fishData.Magnification)}X";
+                    eruptionCoinString = $"{StringUtility.CurrencyFormat(fishData.Magnification + freeBulletAddOdds)}X";
                     isLocalShow = false;
                     break;
             }
@@ -352,7 +356,7 @@ public class Bullet : NetworkBehaviour
                 return;
             }
 
-            // 產生魚擊中效果
+            // 產生魚捕獲效果
             BoxCollider[] colliders = fish.GetComponentsInChildren<BoxCollider>();
             foreach (var collider in colliders)
             {

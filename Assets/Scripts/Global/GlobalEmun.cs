@@ -227,10 +227,7 @@ public enum NetworkPrefabEnum
     /// <summary> 子彈物件 </summary>
     Bullet = 2,
 
-    /// <summary> 擊中特效 </summary>
-    HitEffect = 3,
-
-    /// <summary> 魚擊中特效 </summary>
+    /// <summary> 魚捕獲特效 </summary>
     FishHitEffect = 4,
 
     /// <summary> 特殊效果控制中心 </summary>
@@ -238,6 +235,12 @@ public enum NetworkPrefabEnum
 
     /// <summary> Fusion物件池 </summary>
     FusionPool = 6,
+
+    /// <summary> 預設擊中特效 </summary>
+    NormalHitEffect = 50,
+
+    /// <summary> 擊中特效_閃電 </summary>
+    ElectroHitEffect = 51,
 
     //  一般魚魚物件
     NormalFish_0 = 100,
