@@ -58,7 +58,7 @@ public class GuideSpecialUnit : MonoBehaviour
             case NetworkPrefabEnum.TurnoverFish_0:
                 MessageLocalized.SetReference(tableName, "Turnover fish message");
                 // 固定獲得{0}倍獎勵，並獲得免費{1}發子彈，子彈捕獲倍率增加{2}倍!
-                MessageLocalized.Arguments = new object[] { fishData.Magnification, fishData.FreeBullet, fishData.Magnification };
+                MessageLocalized.Arguments = new object[] { fishData.Magnification, fishData.FreeBullet, LocalData.FreeBulletAddOdds };
                 topMessage = UpdateTurnoverProgress();
                 break;
         }

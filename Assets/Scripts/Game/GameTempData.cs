@@ -54,6 +54,9 @@ public class GameTempData : MonoBehaviour
     // 暫存金幣變更事件
     public delegate void TempAccountCoinChange(double changeValue);
     public event TempAccountCoinChange TempAccountCoinChangeDelegate;
+    // 暫存免費子彈變更事件
+    public delegate void TempAccountFreeBulletChange(int changeValue);
+    public event TempAccountFreeBulletChange TempAccountFreeBulletChangeDelegate;
     // 帳戶金幣定時更新
     Coroutine UpdateAccountCoinCoroutine;
     // 前一次更新帳戶金幣金額
@@ -75,12 +78,15 @@ public class GameTempData : MonoBehaviour
     protected void OnDestroy()
     {
         if (FirestoreDataManagement.Instance != null)
+        {
             FirestoreDataManagement.Instance.AccountCoinDataChangeDelegate -= AccountCoinDataChange;
+            FirestoreDataManagement.Instance.AccountFreeBulletDataChangeDelegate -= AccountBulletDataChange;
+        }            
 
         LevelDataChangeDelegate -= CurrLevelDataChange;
         StopListenLevelData(CurrentLevelData.LevelType);
 
-        SendUpdateAccountCoinData();
+        SendUpdateAccounData();
         StopAllCoroutines();
     }
 
@@ -89,6 +95,7 @@ public class GameTempData : MonoBehaviour
         if (FirestoreDataManagement.Instance != null)
         {
             FirestoreDataManagement.Instance.AccountCoinDataChangeDelegate += AccountCoinDataChange;
+            FirestoreDataManagement.Instance.AccountFreeBulletDataChangeDelegate += AccountBulletDataChange;
         }
 
         LevelDataChangeDelegate += CurrLevelDataChange;
@@ -367,6 +374,31 @@ public class GameTempData : MonoBehaviour
     }
 
     /// <summary>
+    /// 變更暫存帳戶免費子彈
+    /// </summary>
+    /// <param name="changeValue"></param>
+    public void ChangeTempAccountFreeBullet(int changeValue)
+    {
+        if (TempAccountData == null)
+            return;
+
+        TempAccountData.FreeBullet += changeValue;
+        TempAccountFreeBulletChangeDelegate?.Invoke(TempAccountData.FreeBullet);
+    }
+
+    /// <summary>
+    /// 帳戶免費子彈變更
+    /// </summary>
+    private void AccountBulletDataChange(AccountData accountData)
+    {
+        if (accountData != null)
+        {
+            TempAccountData = accountData;
+            TempAccountFreeBulletChangeDelegate?.Invoke(accountData.FreeBullet);
+        }
+    }
+
+    /// <summary>
     /// 獲取暫存帳戶資料
     /// </summary>
     public void GetTempAccountData(Action<CheckJoinRoomDataEnum, bool> callback)
@@ -472,7 +504,7 @@ public class GameTempData : MonoBehaviour
         if (UpdateAccountCoinCoroutine != null)
             StopCoroutine(UpdateAccountCoinCoroutine);
 
-        SendUpdateAccountCoinData();
+        SendUpdateAccounData();
     }
 
     /// <summary>
@@ -494,14 +526,14 @@ public class GameTempData : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(UpdateAccountDataTime);
-            SendUpdateAccountCoinData();
+            SendUpdateAccounData();
         }
     }
 
     /// <summary>
-    /// 發送更新Firestore帳戶金幣資料
+    /// 發送更新Firestore帳戶資料
     /// </summary>
-    public void SendUpdateAccountCoinData()
+    public void SendUpdateAccounData()
     {
         if (TempAccountData != null && !string.IsNullOrEmpty(TempAccountData.Account) && PreUpdateCoin != TempAccountData.Coins)
         {
@@ -514,7 +546,8 @@ public class GameTempData : MonoBehaviour
 
             var updates = new Dictionary<string, object>
             {
-                { "Coins", TempAccountData.Coins }
+                { "Coins", TempAccountData.Coins },
+                { "FreeBullet", TempAccountData.FreeBullet }
             };
 
             FirestoreManagement.Instance.UpdateDataToFirestore(
@@ -523,7 +556,7 @@ public class GameTempData : MonoBehaviour
                 updates: updates,
                 callback: (res) =>
                 {
-                    if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶金幣資料失敗");
+                    if (!res.IsSuccess) Debug.LogError("更新Firestore帳戶資料失敗");
                 });
         }
     }

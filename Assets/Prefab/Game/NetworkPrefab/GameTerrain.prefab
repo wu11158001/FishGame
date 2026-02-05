@@ -150,7 +150,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4560303137306139489}
   m_Layer: 0
-  m_Name: BottomSR
+  m_Name: BottomSR_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -183,7 +183,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1274470981198727761}
   m_Layer: 0
-  m_Name: BottomSR
+  m_Name: BottomSR_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -752,7 +752,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6465625560379185588}
   m_Layer: 0
-  m_Name: BottomSR
+  m_Name: BottomSR_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -918,6 +918,11 @@ MonoBehaviour:
   - {fileID: 6972828699044630168}
   - {fileID: 2386968121885100608}
   - {fileID: 1434808478902774355}
+  BottomSRs:
+  - {fileID: 9108736287648168250}
+  - {fileID: 1761137797157638679}
+  - {fileID: 1790978571782679656}
+  - {fileID: 7016337309761566993}
   MaxCreateFishCount: 20
   InitCreateFishCount: 12
   NormalFishCreatTime: 1
@@ -926,6 +931,9 @@ MonoBehaviour:
   MaxFishDepth: -40
   MinFishDepth: -5
   WaterWaveDuration: 4
+  _TotalTurnover: 0
+  _TurnoverFishDic:
+    _items: []
 --- !u!114 &8927304616545405679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -977,7 +985,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3154886486414484658}
   m_Layer: 0
-  m_Name: BottomSR
+  m_Name: BottomSR_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

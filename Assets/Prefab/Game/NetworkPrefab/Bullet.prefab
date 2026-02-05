@@ -50,6 +50,7 @@ MonoBehaviour:
   Speed: 17
   RayDistance: 100
   BulletRadius: 0.4
+  BulletSR: {fileID: 5378047522147317064}
 --- !u!114 &138908526410943127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,7 +99,7 @@ GameObject:
   - component: {fileID: 54793638563481889}
   - component: {fileID: 5378047522147317064}
   m_Layer: 0
-  m_Name: Sprite
+  m_Name: BulletSR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

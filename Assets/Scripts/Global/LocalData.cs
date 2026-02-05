@@ -10,4 +10,7 @@ public static class LocalData
 
     /// <summary> 冰凍技能時間 </summary>
     public static float FreezeTime = 4f;
+
+    /// <summary> 免費子彈增加倍率 </summary>
+    public static float FreeBulletAddOdds = 10f;
 }

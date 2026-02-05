@@ -1,16 +1,18 @@
 using UnityEngine;
 using Fusion;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Bullet : NetworkBehaviour
 {
     [SerializeField] float Speed = 20;
     [SerializeField] float RayDistance = 100;
     [SerializeField] float BulletRadius = 0.4f;
+    [SerializeField] SpriteRenderer BulletSR;
 
     [Networked] Vector3 Direction { get; set; }
     [Networked] NetworkId TargetFishId { get; set; }
+    [Networked] int BulletSpriteIndex { get; set; }
 
     Transform EffectPool;
     Fish LocalTargetFish;
@@ -18,6 +20,8 @@ public class Bullet : NetworkBehaviour
     GameView GameView;
     SpecialEffectController SpecialEffectController;
     CameraShake CameraShake;
+
+    bool IsFreeBullet;
 
     readonly Vector2 MinBounds = new(-10f, -6f);
     readonly Vector2 MaxBounds = new(10f, 6f);
@@ -27,12 +31,14 @@ public class Bullet : NetworkBehaviour
         GameView = FindFirstObjectByType<GameView>();
     }
 
-    public void SetData(Fish targetLockingFish, Transform targetLockingObj)
+    public void SetData(Fish targetLockingFish, Transform targetLockingObj, bool isFreeBullet, int bulletSpriteIndex)
     {
         if (Object.HasStateAuthority)
         {
             TargetFishId = (targetLockingFish != null) ? targetLockingFish.Object.Id : default;
             TargetLockingObj = targetLockingObj;
+            IsFreeBullet = isFreeBullet;
+            BulletSpriteIndex = bulletSpriteIndex;
         }
     }
 
@@ -45,6 +51,8 @@ public class Bullet : NetworkBehaviour
         {
             Direction = transform.forward;
         }
+
+        BulletSR.sprite = TextureManagement.Instance.GetBulletSprite(BulletSpriteIndex);
     }
 
     public override void FixedUpdateNetwork()
@@ -256,14 +264,14 @@ public class Bullet : NetworkBehaviour
 
             // 咬分期
             case GamePeriod.SuckingPeriod:
-                // 減少倍率
+                // 減少機率
                 float lose = Mathf.Max(0, (float)FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.SuckingPeriodLose);
                 probability /= lose;
                 break;
 
             // 吐分期
             case GamePeriod.PayoutPeriod:
-                // 增加倍率
+                // 增加機率
                 float add = Mathf.Max(0, (float)FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.PayoutPeriodAdd);
                 probability *= add;
                 break;
@@ -273,9 +281,12 @@ public class Bullet : NetworkBehaviour
 
         if (hitValue <= probability)
         {
+            // 免費子彈增加倍率
+            double freeBulletAddOdds = IsFreeBullet ? LocalData.FreeBulletAddOdds : 0;
+
             // 獲得金幣
             double currDefaultCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost;
-            double reward = currDefaultCost * fishData.Magnification;
+            double reward = currDefaultCost * (fishData.Magnification + freeBulletAddOdds);
 
             // 特殊使用_轉盤Index
             int spinIndex = -1;
@@ -294,7 +305,7 @@ public class Bullet : NetworkBehaviour
                 // 特殊魚_魟魚
                 case NetworkPrefabEnum.StingrayFish:
                     specailMagnification = UnityEngine.Random.Range((int)fishData.MinMagnification, (int)fishData.MaxMagnification + 1);
-                    reward = currDefaultCost * specailMagnification;
+                    reward = currDefaultCost * (specailMagnification + freeBulletAddOdds);
 
                     eruptionCoinString = $"{StringUtility.CurrencyFormat(specailMagnification)}X";
                     isLocalShow = false;
@@ -314,7 +325,7 @@ public class Bullet : NetworkBehaviour
                         if (values[i] >= fishData.MaxMagnification) values[i] = (int)fishData.MaxMagnification;
                     }
                     spinIndex = UnityEngine.Random.Range(0, values.Length);
-                    reward = currDefaultCost * values[spinIndex];
+                    reward = currDefaultCost * (values[spinIndex] + freeBulletAddOdds);
 
                     eruptionCoinString = "Big Win !";
                     isLocalShow = false;
@@ -406,6 +417,18 @@ public class Bullet : NetworkBehaviour
                         CameraShake = FindFirstObjectByType<CameraShake>();
                     if (CameraShake != null)
                         CameraShake.DoShake();
+                    break;
+
+                // 流水魚_0
+                case NetworkPrefabEnum.TurnoverFish_0:
+                    // 攝影機震動
+                    if (CameraShake == null)
+                        CameraShake = FindFirstObjectByType<CameraShake>();
+                    if (CameraShake != null)
+                        CameraShake.DoShake();
+
+                    // 更新玩家免費子彈
+                    FirestoreDataManagement.Instance.GameTempData.ChangeTempAccountFreeBullet(changeValue: fishData.FreeBullet);
                     break;
             }
 

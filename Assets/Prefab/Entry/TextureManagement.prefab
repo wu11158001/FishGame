@@ -116,6 +116,9 @@ MonoBehaviour:
     Sp: {fileID: 21300000, guid: 9d8bf2970b6251d49851e5ed9ebda470, type: 3}
   - TurretType: 3
     Sp: {fileID: 21300000, guid: 9d8bf2970b6251d49851e5ed9ebda470, type: 3}
+  BulletSpriteList:
+  - {fileID: -2966200626249415253, guid: 7d0ea6b049e0a994fa2617b5c6d76d43, type: 3}
+  - {fileID: 7157561037332017152, guid: 35ed438388548ca4e8de9817c8e4b14a, type: 3}
   <NumberList>k__BackingField:
   - {fileID: 21300000, guid: 7dcf160ffaa57d5498e4a530d25a63af, type: 3}
   - {fileID: 21300000, guid: b7039e844bfd4e44fa70f2e01dd8845d, type: 3}

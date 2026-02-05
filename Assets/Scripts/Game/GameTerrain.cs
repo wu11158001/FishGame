@@ -8,7 +8,8 @@ using System.Linq;
 public class GameTerrain : NetworkBehaviour
 {
     [Header("Seat")]
-    [SerializeField] public List<Transform> Seats;
+    [SerializeField] public List<Transform> Seats = new();
+    [SerializeField] List<GameObject> BottomSRs = new();
 
     [Header("Fish Value")]
     // 最大生成數量
@@ -286,7 +287,7 @@ public class GameTerrain : NetworkBehaviour
                         {
                             playerTurret.SetData(
                                 gameTerrain: this,
-                                turretIndex: FirestoreDataManagement.Instance.GameTempData.TempAccountData.DefaultTurret, 
+                                accountData: FirestoreDataManagement.Instance.GameTempData.TempAccountData, 
                                 seatIndex: index);
                         }
                     });
@@ -311,6 +312,9 @@ public class GameTerrain : NetworkBehaviour
                 if (GameView != null)
                     GameView.PlayerCostChange(hasStateAuthority: false, seatIndex: index, cost: -1);
             }
+
+            // 底座物件
+            BottomSRs[index].SetActive(SeatPlayerIDs[index] == -1);
         }
     }
 

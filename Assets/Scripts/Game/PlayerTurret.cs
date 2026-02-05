@@ -7,7 +7,8 @@ using System.Collections;
 public class PlayerTurret : NetworkBehaviour
 {
     [Header("Turrets")]
-    [SerializeField] List<GameObject> Turrets = new();  
+    [SerializeField] List<GameObject> Turrets = new();
+    [SerializeField] List<Material> TurretMaterials = new();
 
     [Header("HandleRecoil")]
     // 後座力後退距離
@@ -18,6 +19,10 @@ public class PlayerTurret : NetworkBehaviour
     // 使用砲台
     [OnChangedRender(nameof(ChangeTurret))]
     [Networked] int TurretIndex { get; set; }
+    // 砲台材質球index(0 = 預設, 1 = 免費子彈)
+    [OnChangedRender(nameof(ChangeTurretMaterial))]
+    [Networked] int TurretMaterialIndex { get; set; }
+
     // 同步角度變數
     [Networked] float NetworkedAngle { get; set; }
     //射速
@@ -61,6 +66,7 @@ public class PlayerTurret : NetworkBehaviour
         if (FirestoreDataManagement.Instance != null)
         {
             FirestoreDataManagement.Instance.AccountTurretDataChangeDelegate -= AccountTurretDataChange;
+            FirestoreDataManagement.Instance.GameTempData.TempAccountFreeBulletChangeDelegate -= TempAccountFreeBulletDataChange;
 
             if (FirestoreDataManagement.Instance.GameTempData != null)
                 FirestoreDataManagement.Instance.GameTempData.CurrCostChangeDelegate -= CurrCostChange;
@@ -72,17 +78,19 @@ public class PlayerTurret : NetworkBehaviour
         if (FirestoreDataManagement.Instance != null)
         {
             FirestoreDataManagement.Instance.AccountTurretDataChangeDelegate += AccountTurretDataChange;
+            FirestoreDataManagement.Instance.GameTempData.TempAccountFreeBulletChangeDelegate += TempAccountFreeBulletDataChange;
 
             if (FirestoreDataManagement.Instance.GameTempData != null)
                 FirestoreDataManagement.Instance.GameTempData.CurrCostChangeDelegate += CurrCostChange;
         }
     }
 
-    public void SetData(GameTerrain gameTerrain, int turretIndex, int seatIndex)
+    public void SetData(GameTerrain gameTerrain, AccountData accountData, int seatIndex)
     {
         GameTerrain = gameTerrain;
-        TurretIndex = turretIndex;
+        TurretIndex = accountData.DefaultTurret;
         SeatIndex = seatIndex;
+        TurretMaterialIndex = accountData.FreeBullet > 0 ? 1 : 0;
     }
 
     public override void Spawned()
@@ -158,6 +166,15 @@ public class PlayerTurret : NetworkBehaviour
             StopCoroutine(UpdateUICoroutine);
 
         UpdateUICoroutine = StartCoroutine(IYieldUpdateUI());
+    }
+
+    /// <summary>
+    /// 帳戶免費子彈資料變更
+    /// </summary>
+    private void TempAccountFreeBulletDataChange(int newFreeBullet)
+    {
+        if (Object != null &&  Object.IsValid)
+            TurretMaterialIndex = newFreeBullet > 0 ? 1 : 0;
     }
 
     /// <summary>
@@ -441,10 +458,17 @@ public class PlayerTurret : NetworkBehaviour
                 // 重製冷卻時間
                 Delay = TickTimer.CreateFromSeconds(Runner, turretData.Rate);
 
+                // 免費子彈數量
+                int freeBullet = FirestoreDataManagement.Instance.GameTempData.TempAccountData.FreeBullet;
+                // 減少免費子彈數量
+                int reduceFreeBullet = freeBullet >= CurrShotPoints.Count ? CurrShotPoints.Count : freeBullet;
+                // 花費金幣子彈數量
+                int CostShotCount = freeBullet >= CurrShotPoints.Count ? 0 : CurrShotPoints.Count - freeBullet;
+
                 // 判斷子彈花費
                 double accountCoin = FirestoreDataManagement.Instance.GameTempData.TempAccountData.Coins;
                 double currCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost;
-                double totalCost = currCost * CurrShotPoints.Count;
+                double totalCost = currCost * CostShotCount;
 
                 if (accountCoin < totalCost)
                 {
@@ -474,13 +498,22 @@ public class PlayerTurret : NetworkBehaviour
 
                     // 累積關卡流水
                     GameTerrain?.AddTotalTurnover(addValue: totalCost);
-                }                    
+                }
+
+                // 扣除免費子彈
+                FirestoreDataManagement.Instance.GameTempData.ChangeTempAccountFreeBullet(changeValue: -reduceFreeBullet);
 
                 // 觸發後座力
                 CurrentRecoil = RecoilDistance;
 
                 for (int i = 0; i < CurrShotPoints.Count; i++)
                 {
+                    // 子彈圖(0=預設, 1=免費子彈)
+                    int bulletSpriteIndex = 0;
+
+                    if (reduceFreeBullet > 0 && reduceFreeBullet >= i + 1)
+                        bulletSpriteIndex = 1;
+
                     Vector3 pos = CurrShotPoints[i].position;
                     pos.y = 0;
 
@@ -495,7 +528,11 @@ public class PlayerTurret : NetworkBehaviour
                             Bullet bullet = networkObj.gameObject.GetComponent<Bullet>();
                             if (bullet != null)
                             {
-                                bullet.SetData(targetLockingFish: TargetLockingFish, targetLockingObj: TargetLockingObj);
+                                bullet.SetData(
+                                    targetLockingFish: TargetLockingFish, 
+                                    targetLockingObj: TargetLockingObj, 
+                                    isFreeBullet: freeBullet > 0,
+                                    bulletSpriteIndex: bulletSpriteIndex);
                             }
                         });
                 }
@@ -575,6 +612,38 @@ public class PlayerTurret : NetworkBehaviour
             {
                 CurrShotPoints.Add(t);
             }
+        }
+
+        ChangeTurretMaterial();
+    }
+
+    /// <summary>
+    /// 更換砲台材質球
+    /// </summary>
+    private void ChangeTurretMaterial()
+    {
+        if (TurretMaterials == null || TurretMaterials.Count == 0)
+            return;
+
+        try
+        {
+            GameObject activeTurret = Turrets[TurretIndex];
+            MeshRenderer[] barrelMR = activeTurret.transform.Find("Barrel").GetComponentsInChildren<MeshRenderer>();
+            MeshRenderer[] bottomMR = activeTurret.transform.Find("Bottom").GetComponentsInChildren<MeshRenderer>();
+
+            foreach (var mr in barrelMR)
+            {
+                mr.material = TurretMaterials[TurretMaterialIndex];
+            }
+
+            foreach (var mr in bottomMR)
+            {
+                mr.material = TurretMaterials[TurretMaterialIndex];
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"更換砲台材質球錯誤: {e}");
         }
     }
 

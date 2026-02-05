@@ -55,6 +55,9 @@ MonoBehaviour:
   - {fileID: 3527219022843785457}
   - {fileID: 8892238667030753926}
   - {fileID: 4183515190904064692}
+  TurretMaterials:
+  - {fileID: 2100000, guid: b2eeb922027d6104790c0dd8c53c239d, type: 2}
+  - {fileID: 2100000, guid: ed7be13acdf07864aa78b72e466b498e, type: 2}
   RecoilDistance: 0.2
   ReturnSpeed: 5
   _NetworkedCost: 0
@@ -153,7 +156,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5367333063995939560, guid: 6a09183bd83e71847a8e7dc051550bc3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5661393669593916281, guid: 6a09183bd83e71847a8e7dc051550bc3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -167,6 +170,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8311108761837872211, guid: 6a09183bd83e71847a8e7dc051550bc3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b2eeb922027d6104790c0dd8c53c239d, type: 2}
+    - target: {fileID: 8711906744170276768, guid: 6a09183bd83e71847a8e7dc051550bc3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b2eeb922027d6104790c0dd8c53c239d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

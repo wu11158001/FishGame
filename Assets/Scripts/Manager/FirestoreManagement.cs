@@ -418,6 +418,9 @@ public class AccountData
     /// <summary> 冰凍道具數量 </summary>
     public int FreezeProps;
 
+    /// <summary> 免費子彈數量 </summary>
+    public int FreeBullet;
+
     /// <summary>
     ///  獲取擁有砲台編號列表
     /// </summary>

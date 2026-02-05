@@ -583,7 +583,6 @@ public class LoginView : BasicView
 
         // 紀錄當下登入帳戶訊息
         FirestoreDataManagement.Instance.CurrLoginInfo = loginInfo;
-
         // 紀錄曾經登入帳號訊息
         RecordLoginInfo recordData = PlayerPrefsManagement.GetRecordLoginInfo();
 

@@ -31,6 +31,9 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
     // 帳戶砲台資料變更監聽
     public delegate void AccountTurretDataChange(AccountData accountData);
     public event AccountTurretDataChange AccountTurretDataChangeDelegate;
+    // 帳戶免費子彈變更監聽
+    public delegate void AccountFreeBulletDataChange(AccountData accountData);
+    public event AccountFreeBulletDataChange AccountFreeBulletDataChangeDelegate;
 
     // 所有關卡資料
     Dictionary<LevelEnum, LevelData> LevelDataDic { get; } = new();
@@ -90,7 +93,7 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
     {
         if(GameTempData != null)
         {
-            GameTempData.SendUpdateAccountCoinData();
+            GameTempData.SendUpdateAccounData();
             GameTempData.SendUpdateLevelDataJackpot();
         }
     }
@@ -113,21 +116,48 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
         if (HeartbeatCoroutine != null)
             StopCoroutine(HeartbeatCoroutine);
 
-        if(FirestoreManagement.Instance != null)
+        if(GameTempData == null)
         {
-            var updates = new Dictionary<string, object>
+            if (FirestoreManagement.Instance != null)
             {
-                { "HeartbeatUpdateTime", 0 }
-            };
+                var updates = new Dictionary<string, object>
+                {
+                    { "HeartbeatUpdateTime", 0 }
+                };
 
-            FirestoreManagement.Instance.UpdateDataToFirestore(
-                path: FirestoreCollectionNameEnum.AccountData,
-                docId: CurrLoginInfo.Account,
-                updates: updates,
-                callback: (res) => {
-                    if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
-                });
+                FirestoreManagement.Instance.UpdateDataToFirestore(
+                    path: FirestoreCollectionNameEnum.AccountData,
+                    docId: CurrLoginInfo.Account,
+                    updates: updates,
+                    callback: (res) => {
+                        if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
+                    });
+            }
         }
+        else
+        {
+            // 遊戲中多傳其他資料
+            if (FirestoreManagement.Instance != null)
+            {
+                double coin = GameTempData.TempAccountData.Coins;
+                int freeBullet = GameTempData.TempAccountData.FreeBullet;
+
+                var updates = new Dictionary<string, object>
+                {
+                    { "HeartbeatUpdateTime", 0 },
+                    { "Coins", coin },
+                    { "FreeBullet", freeBullet },
+                };
+
+                FirestoreManagement.Instance.UpdateDataToFirestore(
+                    path: FirestoreCollectionNameEnum.AccountData,
+                    docId: CurrLoginInfo.Account,
+                    updates: updates,
+                    callback: (res) => {
+                        if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
+                    });
+            }
+        }        
     }
 
     /// <summary>
@@ -148,25 +178,52 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
     private IEnumerator ISendHeartbeat()
     {
         while (true)
-        {            
-            if(FirestoreManagement.Instance != null)
+        {
+            // 獲取當前 Unix 時間戳 (秒)
+            long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+            if (GameTempData == null)
             {
-                // 獲取當前 Unix 時間戳 (秒)
-                long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
-                var updates = new Dictionary<string, object>
+                if (FirestoreManagement.Instance != null)
                 {
-                    { "HeartbeatUpdateTime", currentTimestamp }
-                };
+                    var updates = new Dictionary<string, object>
+                    {
+                        { "HeartbeatUpdateTime", currentTimestamp }
+                    };
 
-                FirestoreManagement.Instance.UpdateDataToFirestore(
-                    path: FirestoreCollectionNameEnum.AccountData,
-                    docId: CurrLoginInfo.Account,
-                    updates: updates,
-                    callback: (res) => {
-                        if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
-                    });
+                    FirestoreManagement.Instance.UpdateDataToFirestore(
+                        path: FirestoreCollectionNameEnum.AccountData,
+                        docId: CurrLoginInfo.Account,
+                        updates: updates,
+                        callback: (res) => {
+                            if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
+                        });
+                }
             }
+            else
+            {
+                // 遊戲中多傳其他資料
+                if (FirestoreManagement.Instance != null)
+                {
+                    double coin = GameTempData.TempAccountData.Coins;
+                    int freeBullet = GameTempData.TempAccountData.FreeBullet;
+
+                    var updates = new Dictionary<string, object>
+                    {
+                        { "HeartbeatUpdateTime", currentTimestamp },
+                        { "Coins", coin },
+                        { "FreeBullet", freeBullet },
+                    };
+
+                    FirestoreManagement.Instance.UpdateDataToFirestore(
+                        path: FirestoreCollectionNameEnum.AccountData,
+                        docId: CurrLoginInfo.Account,
+                        updates: updates,
+                        callback: (res) => {
+                            if (!res.IsSuccess) Debug.LogError("心跳更新失敗");
+                        });
+                }
+            }            
 
             yield return new WaitForSeconds(HeartbeatTime);
         }
@@ -248,6 +305,10 @@ public class FirestoreDataManagement : SingletonMonoBehaviour<FirestoreDataManag
         // 帳戶砲台資料變更
         if (CurrAccountData.DefaultTurret != accountData.DefaultTurret || CurrAccountData.OwnTurret != accountData.OwnTurret)
             AccountTurretDataChangeDelegate?.Invoke(accountData);
+
+        // 帳戶免費子彈資料變更
+        if (CurrAccountData.FreeBullet != accountData.FreeBullet)
+            AccountFreeBulletDataChangeDelegate?.Invoke(accountData);
 
         CurrAccountData = accountData;
 

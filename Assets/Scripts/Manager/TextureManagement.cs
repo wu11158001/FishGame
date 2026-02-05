@@ -185,6 +185,29 @@ public class TextureManagement : SingletonMonoBehaviour<TextureManagement>
 
     #endregion
 
+    #region 子彈圖片
+
+    /// <summary>
+    /// 子彈圖集(0=預設, 1=免費子彈)
+    /// </summary>
+    [SerializeField] List<Sprite> BulletSpriteList = new();
+
+    /// <summary>
+    /// 獲取子彈圖
+    /// </summary>
+    /// <param name="index"></param>
+    public Sprite GetBulletSprite(int index)
+    {
+        if (index <= 0) 
+            index = 0;
+        if (index >= BulletSpriteList.Count)
+            index = BulletSpriteList.Count - 1;
+
+        return BulletSpriteList[index];
+    }
+
+    #endregion
+
     #region 數字圖片
 
     /// <summary>

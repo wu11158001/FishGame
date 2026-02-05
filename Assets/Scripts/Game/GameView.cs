@@ -5,6 +5,7 @@ using TMPro;
 using System.Collections.Generic;
 using System.Collections;
 using MPUIKIT;
+using DG.Tweening;
 
 public class GameView : BasicView
 {
@@ -14,14 +15,16 @@ public class GameView : BasicView
     [SerializeField] Button ReduceCostBtn;
     [SerializeField] Button AddCostBtn;
 
-    [Header("CostArea")]
+    [Header("SeatArea")]
     [SerializeField] List<TextMeshProUGUI> PlayerCostTexts = new();
     [SerializeField] List<GameObject> PlayerCostPanels = new();
     [SerializeField] List<ImageGradients> PlayerCostBgImageGradients = new();
     [SerializeField] List<MPImage> PlayerCostFrameImageGradients = new();
+    [SerializeField] AvatatUnit AvatatUnit;
+    [SerializeField] GameObject FreeBulletBlock;
+    [SerializeField] TextMeshProUGUI FreeBulletText;
 
     [Header("AccountInfoArea")]
-    [SerializeField] AvatatUnit AvatatUnit;
     [SerializeField] TextMeshProUGUI AccountText;
     [SerializeField] Button CoinStoreBtn;
     [SerializeField] TextMeshProUGUI AccountCoinText;
@@ -47,8 +50,8 @@ public class GameView : BasicView
     GameFloatBtn GameFloatBtn;
     bool IsLocalMirror;
     Coroutine FreezeCoroutine;
-
     GameTerrain GameTerrain;
+    int TempFreeBullet = 0;
 
     readonly Vector2 LeftSeatPosision = new(-600, -500);
     readonly Vector2 RightSeatPosision = new(600, -500);
@@ -61,6 +64,7 @@ public class GameView : BasicView
         {
             FirestoreDataManagement.Instance.GameTempData.TempAccountCoinChangeDelegate -= TempAccountCoinChange;
             FirestoreDataManagement.Instance.GameTempData.IsSkill_AutoCloseDelegate -= Skill_AutoClose;
+            FirestoreDataManagement.Instance.GameTempData.TempAccountFreeBulletChangeDelegate -= TempAccountFreeBulletDataChange;
         }
     }
 
@@ -123,6 +127,7 @@ public class GameView : BasicView
         {
             FirestoreDataManagement.Instance.GameTempData.TempAccountCoinChangeDelegate += TempAccountCoinChange;
             FirestoreDataManagement.Instance.GameTempData.IsSkill_AutoCloseDelegate += Skill_AutoClose;
+            FirestoreDataManagement.Instance.GameTempData.TempAccountFreeBulletChangeDelegate += TempAccountFreeBulletDataChange;
         }
 
         AddressableManagement.Instance.OpenGameFloatBtn(
@@ -160,6 +165,7 @@ public class GameView : BasicView
                 avatarFrameImg: TextureManagement.Instance.GetAvatarFrame(accountData.AvatarFrame));
             AccountText.text = accountData.Account;
             AccountCoinText.text = StringUtility.CurrencyFormat(accountData.Coins);
+            TempAccountFreeBulletDataChange(accountData.FreeBullet);
         }
 
         SetCurrLevelInfo();
@@ -411,6 +417,29 @@ public class GameView : BasicView
         if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
         {
             FirestoreDataManagement.Instance.GameTempData.IsSkill_Auto = isOn;
+        }
+    }
+
+    /// <summary>
+    /// 帳戶免費子彈資料變更
+    /// </summary>
+    private void TempAccountFreeBulletDataChange(int newFreeBullet)
+    {
+        FreeBulletBlock.SetActive(newFreeBullet > 0);
+
+        if(newFreeBullet > 0 && TempFreeBullet != newFreeBullet)
+        {
+            TempFreeBullet = newFreeBullet;
+
+            FreeBulletText.text = $"Free : {StringUtility.CurrencyFormat(newFreeBullet)}";
+
+            // 縮放效果
+            FreeBulletText.rectTransform.DOKill();
+            Sequence freeBulletSequence = DOTween.Sequence();
+            freeBulletSequence
+                .Append(FreeBulletText.rectTransform.DOScale(1.3f, 0.2f).SetEase(Ease.OutQuad))
+                .Append(FreeBulletText.rectTransform.DOScale(1.0f, 0.2f).SetEase(Ease.InQuad))
+                .SetLink(FreeBulletText.gameObject);
         }
     }
 }
