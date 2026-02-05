@@ -49,14 +49,18 @@ public class GameTerrain : NetworkBehaviour
     // 遊戲狀態更換時間
     [Networked] public TickTimer StateChangeTimer { get; set; }
 
+    // 是否顯示浪潮
+    [Networked, OnChangedRender(nameof(UpdateShowWaterWave))]
+    NetworkBool IsShowWaterWave { get; set; }
+
     // 當前浪潮魚產生Index
     [Networked] int CurrWaterWaveFishIndex { get; set; }
 
     // 冰凍時間
     [Networked] public TickTimer FreezeTimer { get; set; }
-
-    [Networked, OnChangedRender(nameof(UpdateShowWaterWave))]
-    NetworkBool IsShowWaterWave { get; set; }
+    
+    // 累積流水
+    [Networked] public double TotalTurnover { get; set; }
 
     WayPointMain WayPointMain;
     Transform FishPool;
@@ -64,6 +68,11 @@ public class GameTerrain : NetworkBehaviour
     // 一般魚Enum
     List<NetworkPrefabEnum> NormalFishTypes = new();
     Coroutine CreateFishCoroutine;
+
+    // 流水魚Enum
+    List<NetworkPrefabEnum> TurnoverFishTypes = new();
+    // 紀錄流水魚產生次數
+    [Networked, Capacity(3)] public NetworkDictionary<NetworkPrefabEnum, int> TurnoverFishDic => default;
 
     // 浪潮
     float WaterWaveTime;
@@ -135,6 +144,22 @@ public class GameTerrain : NetworkBehaviour
             StateChangeTimer = TickTimer.CreateFromSeconds(Runner, WaterWaveTime);
             // 開始計時特殊魚產生時間
             SpecialSpawnTimer = TickTimer.CreateFromSeconds(Runner, SpecialSpawnTime);
+        }
+
+        // 初始化流水魚
+        if (TurnoverFishTypes == null || TurnoverFishTypes.Count == 0)
+        {
+            TurnoverFishTypes = Enum.GetValues(typeof(NetworkPrefabEnum))
+                .Cast<NetworkPrefabEnum>()
+                .Where(e => e.ToString().StartsWith("TurnoverFish"))
+                .ToList();
+        }
+        if (TurnoverFishDic.Count == 0)
+        {
+            foreach (var fishType in TurnoverFishTypes)
+            {
+                TurnoverFishDic.Add(fishType, 0);
+            }
         }
 
         StartCoroutine(IJoinSeat());
@@ -259,7 +284,10 @@ public class GameTerrain : NetworkBehaviour
                         PlayerTurret playerTurret = obj.GetComponent<PlayerTurret>();
                         if(playerTurret != null)
                         {
-                            playerTurret.SetData(turretIndex: FirestoreDataManagement.Instance.GameTempData.TempAccountData.DefaultTurret, seatIndex: index);
+                            playerTurret.SetData(
+                                gameTerrain: this,
+                                turretIndex: FirestoreDataManagement.Instance.GameTempData.TempAccountData.DefaultTurret, 
+                                seatIndex: index);
                         }
                     });
 
@@ -456,6 +484,9 @@ public class GameTerrain : NetworkBehaviour
 
                 CreateFishCoroutine = StartCoroutine(ICreatNormalFish());
             }
+
+            // 產生流水魚
+            CreatTurnoverFish();
         }
     }
 
@@ -706,6 +737,9 @@ public class GameTerrain : NetworkBehaviour
 
                 CreateFishCoroutine = StartCoroutine(ICreatNormalFish());
             }
+
+            // 產生流水魚
+            CreatTurnoverFish();
         }
 
         // 產生特殊魚
@@ -923,6 +957,9 @@ public class GameTerrain : NetworkBehaviour
 
             CreateWaterWaveFish();
 
+            // 產生流水魚
+            CreatTurnoverFish();
+
             // 浪潮魚群結束
             if (CurrWaterWaveFishIndex >= WaterWaveFishData.FishsType.Count)
             {
@@ -1015,6 +1052,134 @@ public class GameTerrain : NetworkBehaviour
         }
 
         CurrWaterWaveFishIndex++;
+    }
+
+    #endregion
+
+    #region 流水魚
+
+    /// <summary>
+    /// 產生流水魚
+    /// </summary>
+    private void CreatTurnoverFish()
+    {
+        if (!Object.HasStateAuthority)
+            return;
+
+        if (FishPool == null)
+            FishPool = GameObject.Find(FusionPoolNameEnum.FishPool.ToString()).transform;
+
+        if (WayPointMain == null)
+            WayPointMain = UnityEngine.Object.FindFirstObjectByType<WayPointMain>();
+
+        if (TurnoverFishTypes == null || TurnoverFishTypes.Count == 0)
+        {
+            TurnoverFishTypes = Enum.GetValues(typeof(NetworkPrefabEnum))
+                .Cast<NetworkPrefabEnum>()
+                .Where(e => e.ToString().StartsWith("TurnoverFish"))
+                .ToList();
+        }
+
+        if(TurnoverFishDic.Count == 0)
+        {
+            foreach (var fishType in TurnoverFishTypes)
+            {
+                TurnoverFishDic.Add(fishType, 0);
+            }
+        }
+
+        if (FishPool == null || WayPointMain == null || NormalFishTypes == null || NormalFishTypes.Count == 0 || TurnoverFishDic.Count == 0)
+        {
+            Debug.LogError("產生流水魚錯誤!");
+            return;
+        }
+
+        int preWaypointIndex = -1;
+
+        LevelData levelData = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData;
+        foreach (var fish in TurnoverFishDic)
+        {
+            // 判斷是否滿足所需流水
+            FishData fishData = FirestoreDataManagement.Instance?.GameTempData?.GetFishData(fish.Key);
+            double needTurnover = (fishData.NeedTurnoverOdds * levelData.MaxCost) * (fish.Value + 1);
+
+            if (TotalTurnover >= needTurnover)
+            {
+                int currentCount = TurnoverFishDic[fish.Key];
+                TurnoverFishDic.Set(fish.Key, currentCount + 1);
+
+                // 隨機魚種類
+                NetworkPrefabEnum fishType = fish.Key;
+
+                // 隨機選擇路線
+                List<WayPoint> wayPoints = WayPointMain.GetNormalWayPoints();
+                int wayPointIndex = UnityEngine.Random.Range(0, wayPoints.Count);
+                // 路線不與前一隻一樣
+                while (preWaypointIndex == wayPointIndex)
+                {
+                    wayPointIndex = UnityEngine.Random.Range(0, wayPoints.Count);
+                }
+                WayPoint wayPoint = wayPoints[wayPointIndex];
+
+                // 面向左或右
+                bool isMirror = UnityEngine.Random.value > 0.5f;
+
+                // 初始位置
+                Vector3 initPos =
+                    isMirror ?
+                    wayPoint.Points[wayPoint.Points.Count - 1].position :
+                    wayPoint.Points[0].position;
+
+                // 跳過路線點
+                int skipWaypoint = 0;
+
+                // 深度            
+                int depth = UnityEngine.Random.Range(MaxFishDepth, MinFishDepth);
+
+                NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                           key: fishType,
+                           Pos: initPos,
+                           rot: Quaternion.identity,
+                           parent: FishPool,
+                           player: Runner.LocalPlayer,
+                           callback: (fish) =>
+                           {
+                               Fish normalFish = fish.GetComponent<Fish>();
+                               if (normalFish != null)
+                                   normalFish.SetData(
+                                       fishType: fishType,
+                                       isMirror: isMirror,
+                                       depth: depth,
+                                       wayPointId: wayPoint.WayPointId,
+                                       skipWaypoint: skipWaypoint);
+                           });
+            }
+        }
+    }
+
+    /// <summary>
+    /// 增累積流水
+    /// </summary>
+    /// <param name="addValue"></param>
+    public void AddTotalTurnover(double addValue)
+    {
+        RPC_AddTotalTurnover(addValue);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_AddTotalTurnover(double addValue)
+    {
+        double totalTurnover = TotalTurnover;
+
+        // 檢查是否會超過 double 最大值，或者是否為無窮大
+        if (double.MaxValue - addValue < totalTurnover || double.IsInfinity(totalTurnover + addValue))
+        {
+            TotalTurnover = addValue;
+        }
+        else
+        {
+            TotalTurnover += addValue;
+        }
     }
 
     #endregion

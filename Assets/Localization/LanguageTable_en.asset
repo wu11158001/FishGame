@@ -283,6 +283,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 8068190351354495079
+  - m_Id: 15379127212904448
+    m_Localized: 'Turnover progress : {0}%'
+    m_Metadata:
+      m_Items:
+      - rid: 8068190351354495079
+  - m_Id: 15394995082825728
+    m_Localized: You will receive a fixed reward of {0} times and 1 free bullet.
+      The bullet capture rate is increased by {2} times!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
@@ -296,3 +306,4 @@ MonoBehaviour:
         - id: 10366013622915072
         - id: 12736600768974848
         - id: 12848306807574528
+        - id: 15379127212904448

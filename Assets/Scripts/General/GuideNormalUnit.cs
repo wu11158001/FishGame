@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class GuideUnit : MonoBehaviour
+public class GuideNormalUnit : MonoBehaviour
 {
     [SerializeField] Image CoverImage;
     [SerializeField] TextMeshProUGUI MagnificationText;

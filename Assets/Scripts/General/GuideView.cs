@@ -13,21 +13,24 @@ public class GuideView : BasicView
     [Header("Switch")]
     [SerializeField] Button LeftBtn;
     [SerializeField] Button RightBtn;
+    [SerializeField] RectTransform ViewRect;
     [SerializeField] HorizontalLayoutGroup MoveLayout;
     [SerializeField] RectTransform MoveRect;
     [SerializeField] ScrollRect MoveScrollRect;
 
-    [Header("NormalUnit")]
-    [SerializeField] GuideUnit GuideUnit;
+    [Header("Guide Normal Unit")]
+    [SerializeField] GuideNormalUnit GuideNormalUnit;
     [SerializeField] RectTransform NormalContentRect;
 
-    [Header("SpecialContent")]
-    [SerializeField] TextMeshProUGUI SpecialOddsText;
-    [SerializeField] TextMeshProUGUI SpecialMessageText;
-    [SerializeField] Image SpecialCoverImage;
+    [Header("Guide Special Unit")]
+    [SerializeField] GuideSpecialUnit GuideSpecialUnit;
 
     Dictionary<NetworkPrefabEnum, FishData> FishDataDic = new();
-    List<GuideUnit> GuideUnitDatas = new();
+    List<GuideNormalUnit> NormalUnitDatas = new();
+    List<GuideSpecialUnit> TurnoverUnitDatas = new();
+    GuideSpecialUnit SpecialData = null;
+
+    int CurrPage = 0;
 
     protected override void OnDestroy()
     {
@@ -53,11 +56,11 @@ public class GuideView : BasicView
 
         MoveScrollRect.enabled = true;
 
-        LeftBtn.GetComponent<RectTransform>().DOAnchorPosX(35, 1f)
+        LeftBtn.GetComponent<RectTransform>().DOAnchorPosX(5, 1f)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo);
 
-        RightBtn.GetComponent<RectTransform>().DOAnchorPosX(-35, 1f)
+        RightBtn.GetComponent<RectTransform>().DOAnchorPosX(-5, 1f)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo);
     }
@@ -77,13 +80,20 @@ public class GuideView : BasicView
     /// </summary>
     private void SwitchPanel(bool isToRight)
     {
-        LeftBtn.gameObject.SetActive(isToRight);
-        RightBtn.gameObject.SetActive(!isToRight);
+        CurrPage = isToRight ? CurrPage += 1 : CurrPage -= 1;
 
-        float targetPos =
-            isToRight ?
-            -(MoveRect.rect.size.x + MoveLayout .spacing):
-            0;
+        if(CurrPage <= 0)
+            CurrPage = 0;
+
+        // 最大面板數(一般魚 + 流水魚 + 關卡特殊魚)
+        int maxPage = 1 + TurnoverUnitDatas.Count + 1;
+        if (CurrPage >= maxPage - 1)
+            CurrPage = maxPage - 1;
+
+        LeftBtn.gameObject.SetActive(CurrPage > 0);
+        RightBtn.gameObject.SetActive(CurrPage < maxPage - 1);
+
+        float targetPos = -(ViewRect.rect.size.x + MoveLayout.spacing) * CurrPage;
 
         MoveRect.DOKill();
         MoveRect.DOAnchorPos(new Vector2(targetPos, 0), 0.5f).SetEase(Ease.OutQuad)
@@ -137,120 +147,106 @@ public class GuideView : BasicView
     /// </summary>
     private void ReciveAllDataComplete()
     {
-        CreateGameNormalGuideUnit();
-        SetSpecialGuideContent();
+        CreateGuideContent();
         StartCoroutine(IYieldShow());
     }
 
     /// <summary>
-    /// 創建一般分配表內容
+    /// 創建分配表內容
     /// </summary>
-    private void CreateGameNormalGuideUnit()
+    private void CreateGuideContent()
     {
-        for (int i = 0; i < GuideUnitDatas.Count; i++)
+        for (int i = 0; i < NormalUnitDatas.Count; i++)
         {
-            Destroy(GuideUnitDatas[i].gameObject);
+            Destroy(NormalUnitDatas[i].gameObject);
         }
-        GuideUnitDatas.Clear();
+        NormalUnitDatas.Clear();
+
+        for (int i = 0; i < TurnoverUnitDatas.Count; i++)
+        {
+            Destroy(TurnoverUnitDatas[i].gameObject);
+        }
+        TurnoverUnitDatas.Clear();
+
+        if(SpecialData != null && SpecialData.gameObject != null)
+        {
+            Destroy(SpecialData.gameObject);
+        }
 
         // 排序
         var sortedByMag = FishDataDic.OrderBy(x => x.Value.Magnification).ToList();
 
-        GuideUnit.gameObject.SetActive(false);
+        GuideNormalUnit.gameObject.SetActive(false);
+        GuideSpecialUnit.gameObject.SetActive(false);
         foreach (var fish in sortedByMag)
         {
-            if (!fish.Key.ToString().StartsWith("NormalFish"))
-                continue;
-
-            GameObject obj = Instantiate(GuideUnit.gameObject, NormalContentRect);
-            obj.SetActive(true);
-            GuideUnit gameGuideUnit = obj.GetComponent<GuideUnit>();
-
-            if (gameGuideUnit != null)
+            // 一般魚
+            if (fish.Key.ToString().StartsWith("NormalFish"))
             {
-                Sprite sprite = TextureManagement.Instance.GetFishTexture(fish.Key);
-                double magnification = fish.Value.Magnification;
+                GameObject obj = Instantiate(GuideNormalUnit.gameObject, NormalContentRect);
+                obj.SetActive(true);
+                GuideNormalUnit guideNormalUnit = obj.GetComponent<GuideNormalUnit>();
+                if (guideNormalUnit != null)
+                {
+                    Sprite sprite = TextureManagement.Instance.GetFishTexture(fish.Key);
+                    double magnification = fish.Value.Magnification;
 
-                gameGuideUnit.SetData(sprite: sprite, magnification: magnification);
-                GuideUnitDatas.Add(gameGuideUnit);
+                    guideNormalUnit.SetData(sprite: sprite, magnification: magnification);
+                    NormalUnitDatas.Add(guideNormalUnit);
+                }
             }
-            else
+            else if(fish.Key.ToString().StartsWith("TurnoverFish"))
             {
-                Debug.LogError("創建金幣商品錯誤");
+                // 流水魚
+                GameObject obj = Instantiate(GuideSpecialUnit.gameObject, MoveRect);
+                obj.SetActive(true);
+                GuideSpecialUnit turnoverUnit = obj.GetComponent<GuideSpecialUnit>();
+                if(turnoverUnit != null)
+                {
+                    turnoverUnit.SetData(fishType: fish.Key, fishData: fish.Value);
+                    TurnoverUnitDatas.Add(turnoverUnit);
+                }
+            }
+        }
+
+        // 關卡特殊魚
+        if(FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
+        {
+            GameObject obj = Instantiate(GuideSpecialUnit.gameObject, MoveRect);
+            obj.SetActive(true);
+            GuideSpecialUnit specialUnit = obj.GetComponent<GuideSpecialUnit>();
+            FishData fishData = null;
+            NetworkPrefabEnum fushType = NetworkPrefabEnum.None;
+            if (specialUnit != null)
+            {
+                switch (FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.LevelType)
+                {
+                    // 經典關卡
+                    case LevelEnum.ClassicLevel:
+                        fushType = NetworkPrefabEnum.StingrayFish;
+                        fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(fushType);
+                        specialUnit.SetData(fishType: fushType, fishData: fishData);
+                        break;
+
+                    // 鯊魚關卡
+                    case LevelEnum.SharkLevel:
+                        fushType = NetworkPrefabEnum.SharkFish;
+                        fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(fushType);
+                        specialUnit.SetData(fishType: fushType, fishData: fishData);
+                        break;
+
+                    // 金龍關卡
+                    case LevelEnum.DragonLevel:
+                        fushType = NetworkPrefabEnum.DragonFish;
+                        fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(fushType);
+                        specialUnit.SetData(fishType: fushType, fishData: fishData);
+                        break;
+                }
+
+                SpecialData = specialUnit;
             }
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(MoveRect);
-    }
-
-    /// <summary>
-    /// 設置特殊魚分配表內容
-    /// </summary>
-    private void SetSpecialGuideContent()
-    {
-        LocalizedString SpecialMessageLocalized = new();
-        string tableName = LocalizationManagement.Instance.TableName;
-        Sprite sprite = null;
-        FishData fishData = null;
-
-        if (FirestoreDataManagement.Instance != null && FirestoreDataManagement.Instance.GameTempData != null)
-        {
-            switch (FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.LevelType)
-            {
-                // 經典關卡
-                case LevelEnum.ClassicLevel:
-                    SpecialMessageLocalized.SetReference(tableName, "Stingray Fish Message");
-
-                    fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(NetworkPrefabEnum.StingrayFish);
-                    if (fishData != null)
-                    {
-                        // 隨機給予{0}-{1}倍獎勵\n最高<size=48><color=#FAFF51> {2}X </color></size>!
-                        SpecialMessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
-
-                        SpecialOddsText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
-                    }
-
-                    sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.StingrayFish);
-                    break;
-
-                // 鯊魚關卡
-                case LevelEnum.SharkLevel:
-                    SpecialMessageLocalized.SetReference(tableName, "Shark Fish Message");
-
-                    fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(NetworkPrefabEnum.SharkFish);
-                    if (fishData != null)
-                    {
-                        // 可獲得一次轉輪遊戲，結束獲得對應的倍率\n最高<size=48><color=#FAFF51> {0}X </color></size>!
-                        SpecialMessageLocalized.Arguments = new object[] { fishData.MaxMagnification };
-
-                        SpecialOddsText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
-                    }
-
-                    sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.SharkFish);
-                    break;
-
-                // 金龍關卡
-                case LevelEnum.DragonLevel:
-                    SpecialMessageLocalized.SetReference(tableName, "Dragon Fish Message");
-
-                    fishData = FirestoreDataManagement.Instance.GameTempData.GetFishData(NetworkPrefabEnum.DragonFish);
-                    if (fishData != null)
-                    {
-                        // 最高倍率 = 金龍倍率 * 最高倍率 + 魚群(最大預設30之3倍率)
-                        int maxOdds = (int)((fishData.Magnification * fishData.MaxMagnification) + (30 * 3));
-
-                        // 固定獲得{0}倍獎勵，並捕獲全屏魚群，獎勵再翻倍，最高翻倍X{1}\n最高<size=48><color=#FAFF51> {2}X </color></size>!
-                        SpecialMessageLocalized.Arguments = new object[] { fishData.Magnification, fishData.MaxMagnification, maxOdds };
-
-                        SpecialOddsText.text = $"{fishData.Magnification}X - {maxOdds}X";
-                    }
-
-                    sprite = TextureManagement.Instance.GetFishTexture(NetworkPrefabEnum.DragonFish);
-                    break;
-            }
-        }
-
-        SpecialMessageText.text = SpecialMessageLocalized.GetLocalizedString();
-        SpecialCoverImage.sprite = sprite;
     }
 }

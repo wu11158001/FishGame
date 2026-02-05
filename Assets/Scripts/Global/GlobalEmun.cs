@@ -239,7 +239,7 @@ public enum NetworkPrefabEnum
     /// <summary> Fusion物件池 </summary>
     FusionPool = 6,
 
-    /// <summary> 一般魚魚物件 </summary>
+    //  一般魚魚物件
     NormalFish_0 = 100,
     NormalFish_1 = 101,
     NormalFish_2 = 102,
@@ -251,10 +251,13 @@ public enum NetworkPrefabEnum
     NormalFish_8 = 108,
     NormalFish_9 = 109,
 
-    /// <summary> 特殊魚物件 </summary>
+    // 特殊魚物件
     StingrayFish = 200,
     SharkFish = 201,
     DragonFish = 202,
+
+    // 流水魚物件
+    TurnoverFish_0 = 300,
 }
 
 /// <summary>

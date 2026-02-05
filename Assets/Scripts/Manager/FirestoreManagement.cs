@@ -495,6 +495,12 @@ public class FishData
     /// <summary> 最大獎勵金幣倍數 </summary>
     public double MaxMagnification;
 
+    /// <summary> 生成所需流水量倍數(關卡最大流水量 * 倍數) </summary>
+    public double NeedTurnoverOdds;
+
+    /// <summary> 獲得免費子彈數量 </summary>
+    public int FreeBullet;
+
     /// <summary>
     /// 轉換成NetworkStruct
     /// </summary>
@@ -508,6 +514,8 @@ public class FishData
             Magnification = this.Magnification,
             MinMagnification = this.MinMagnification,
             MaxMagnification = this.MaxMagnification,
+            NeedTurnoverOdds = this.NeedTurnoverOdds,
+            FreeBullet = this.FreeBullet,
         };
     }
 
@@ -543,6 +551,12 @@ public struct FishData_Network : INetworkStruct
 
     /// <summary> 最大獎勵金幣倍數 </summary>
     public double MaxMagnification;
+
+    /// <summary> 生成所需流水量倍數(關卡最大流水量 * 倍數) </summary>
+    public double NeedTurnoverOdds;
+
+    /// <summary> 獲得免費子彈數量 </summary>
+    public int FreeBullet;
 }
 
 /// <summary>

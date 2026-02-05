@@ -44,6 +44,7 @@ public class PlayerTurret : NetworkBehaviour
     Fish TargetLockingFish;
     Transform TargetLockingObj;
 
+    GameTerrain GameTerrain;
     GameView GameView;
     Coroutine UpdateUICoroutine;
 
@@ -77,8 +78,9 @@ public class PlayerTurret : NetworkBehaviour
         }
     }
 
-    public void SetData(int turretIndex, int seatIndex)
+    public void SetData(GameTerrain gameTerrain, int turretIndex, int seatIndex)
     {
+        GameTerrain = gameTerrain;
         TurretIndex = turretIndex;
         SeatIndex = seatIndex;
     }
@@ -469,6 +471,9 @@ public class PlayerTurret : NetworkBehaviour
                 {
                     FirestoreDataManagement.Instance.GameTempData.ChangeTempAccountCoin(changeValue: -totalCost, isInvokeChange: true);
                     FirestoreDataManagement.Instance.GameTempData.RecodJackpot += totalCost;
+
+                    // 累積關卡流水
+                    GameTerrain?.AddTotalTurnover(addValue: totalCost);
                 }                    
 
                 // 觸發後座力
