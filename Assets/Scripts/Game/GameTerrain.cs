@@ -59,9 +59,14 @@ public class GameTerrain : NetworkBehaviour
 
     // 冰凍時間
     [Networked] public TickTimer FreezeTimer { get; set; }
-    
+
     // 累積流水
-    [Networked] public double TotalTurnover { get; set; }
+    [Networked, OnChangedRender(nameof(OnTotalTurnoverChange))]
+    public double TotalTurnover { get; set; }
+
+    // 累積流水監聽事件
+    public delegate void TotalTurnoverChange();
+    public event TotalTurnoverChange TotalTurnoverChangeDelegate;
 
     WayPointMain WayPointMain;
     Transform FishPool;
@@ -1184,6 +1189,14 @@ public class GameTerrain : NetworkBehaviour
         {
             TotalTurnover += addValue;
         }
+    }
+
+    /// <summary>
+    /// 增累積流水變更
+    /// </summary>
+    private void OnTotalTurnoverChange()
+    {
+        TotalTurnoverChangeDelegate?.Invoke();
     }
 
     #endregion

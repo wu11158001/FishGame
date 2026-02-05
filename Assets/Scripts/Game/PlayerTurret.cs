@@ -127,6 +127,14 @@ public class PlayerTurret : NetworkBehaviour
         OnCostChanged();
     }
 
+    public override void Render()
+    {
+        if(!Object.HasStateAuthority)
+        {
+            OnRotation();
+        }
+    }
+
     public override void FixedUpdateNetwork()   
     {
         if (Object == null || !Object.IsValid)

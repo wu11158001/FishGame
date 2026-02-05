@@ -25,7 +25,6 @@ public class GuideSpecialUnit : MonoBehaviour
         LocalizedString MessageLocalized = new();
         string tableName = LocalizationManagement.Instance.TableName;
 
-        string topMessage = "";
         switch (fishType)
         {
             // 魟魚
@@ -33,7 +32,7 @@ public class GuideSpecialUnit : MonoBehaviour
                 MessageLocalized.SetReference(tableName, "Stingray Fish Message");
                 // 隨機給予{0}-{1}倍獎勵\n最高<size=48><color=#FAFF51> {2}X </color></size>!
                 MessageLocalized.Arguments = new object[] { fishData.MinMagnification, fishData.MaxMagnification, fishData.MaxMagnification };
-                topMessage = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
+                TopMessageText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
                 break;
 
             // 鯊魚
@@ -41,7 +40,7 @@ public class GuideSpecialUnit : MonoBehaviour
                 MessageLocalized.SetReference(tableName, "Shark Fish Message");
                 // 可獲得一次轉輪遊戲，結束獲得對應的倍率\n最高<size=48><color=#FAFF51> {0}X </color></size>!
                 MessageLocalized.Arguments = new object[] { fishData.MaxMagnification };
-                topMessage = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
+                TopMessageText.text = $"{fishData.MinMagnification}X - {fishData.MaxMagnification}X";
                 break;
 
             // 金龍
@@ -51,7 +50,7 @@ public class GuideSpecialUnit : MonoBehaviour
                 int maxOdds = (int)((fishData.Magnification * fishData.MaxMagnification) + (30 * 3));
                 // 固定獲得{0}倍獎勵，並捕獲全屏魚群，獎勵再翻倍，最高翻倍X{1}\n最高<size=48><color=#FAFF51> {2}X </color></size>!
                 MessageLocalized.Arguments = new object[] { fishData.Magnification, fishData.MaxMagnification, maxOdds };
-                topMessage = $"{fishData.Magnification}X - {maxOdds}X";
+                TopMessageText.text = $"{fishData.Magnification}X - {maxOdds}X";
                 break;
 
             // 流水魚_0
@@ -59,18 +58,17 @@ public class GuideSpecialUnit : MonoBehaviour
                 MessageLocalized.SetReference(tableName, "Turnover fish message");
                 // 固定獲得{0}倍獎勵，並獲得免費{1}發子彈，子彈捕獲倍率增加{2}倍!
                 MessageLocalized.Arguments = new object[] { fishData.Magnification, fishData.FreeBullet, LocalData.FreeBulletAddOdds };
-                topMessage = UpdateTurnoverProgress();
+                UpdateTurnoverProgress();
                 break;
         }
 
-        TopMessageText.text = topMessage;
         MessageText.text = MessageLocalized.GetLocalizedString();
     }
 
     /// <summary>
     /// 更新流水進度
     /// </summary>
-    private string UpdateTurnoverProgress()
+    public void UpdateTurnoverProgress()
     {
         LocalizedString topMessageLocalized = new();
 
@@ -106,7 +104,5 @@ public class GuideSpecialUnit : MonoBehaviour
             topMessageLocalized.Arguments = new object[] { percentage.ToString("F0") };
             TopMessageText.text = topMessageLocalized.GetLocalizedString();
         }
-        
-        return topMessageLocalized.GetLocalizedString();
     }
 }

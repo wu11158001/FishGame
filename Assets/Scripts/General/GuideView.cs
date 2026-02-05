@@ -29,6 +29,7 @@ public class GuideView : BasicView
     List<GuideNormalUnit> NormalUnitDatas = new();
     List<GuideSpecialUnit> TurnoverUnitDatas = new();
     GuideSpecialUnit SpecialData = null;
+    GameTerrain GameTerrain;
 
     int CurrPage = 0;
 
@@ -39,6 +40,8 @@ public class GuideView : BasicView
         MoveRect.DOKill();
         LeftBtn.GetComponent<RectTransform>().DOKill();
         RightBtn.GetComponent<RectTransform>().DOKill();
+
+        GameTerrain.TotalTurnoverChangeDelegate -= UpdateTurnoverProgress;
     }
 
     protected override void Start()
@@ -47,6 +50,13 @@ public class GuideView : BasicView
 
         LeftBtn.onClick.AddListener(() => { SwitchPanel(false); });
         RightBtn.onClick.AddListener(() => { SwitchPanel(true); });
+
+        if (GameTerrain == null)
+            GameTerrain = UnityEngine.Object.FindFirstObjectByType<GameTerrain>();
+        if (GameTerrain != null)
+        {
+            GameTerrain.TotalTurnoverChangeDelegate += UpdateTurnoverProgress;
+        }
     }
 
     private void Initialize()
@@ -248,5 +258,16 @@ public class GuideView : BasicView
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(MoveRect);
+    }
+
+    /// <summary>
+    /// 更新流水進度
+    /// </summary>
+    private void UpdateTurnoverProgress()
+    {
+        foreach (var turnover in TurnoverUnitDatas)
+        {
+            turnover.UpdateTurnoverProgress();
+        }
     }
 }
