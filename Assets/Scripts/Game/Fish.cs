@@ -366,7 +366,7 @@ public class Fish : NetworkBehaviour
     /// <summary>
     /// 擊中判斷
     /// </summary>
-    public void GetHit(double initCost, double addOdds, NetworkPrefabEnum hitEffect)
+    public void GetHit(double initCost, double addOdds, NetworkPrefabEnum hitEffect, Vector3 hitEffectPos)
     {
         if (IsDie)
             return;
@@ -374,7 +374,6 @@ public class Fish : NetworkBehaviour
         FishData_Network fishData = FishData_Network;
 
         // 產生擊中效果
-        Vector3 hitEffectPos = transform.position;
         hitEffectPos.y = 0;
         NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
                 key: hitEffect,

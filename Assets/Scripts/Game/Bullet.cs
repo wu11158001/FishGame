@@ -216,8 +216,10 @@ public class Bullet : NetworkBehaviour
         NetworkPrefabEnum hitEffect = NetworkPrefabEnum.NormalHitEffect;
         if (BulletSpriteIndex == 1)
             hitEffect = NetworkPrefabEnum.ElectroHitEffect;
+        // 擊中效果位置
+        Vector3 hitEffectPos = transform.position;
 
-        fish.GetHit(initCost, addOdds, hitEffect);
+        fish.GetHit(initCost, addOdds, hitEffect, hitEffectPos);
 
         Runner.Despawn(Object);
     }

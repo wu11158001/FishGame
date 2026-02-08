@@ -214,7 +214,15 @@ public class SpecialEffectController : NetworkBehaviour
     {
         // 產生流星雨特效
         if (AddressableManagement.Instance != null)
-            _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.Skill_MeteorRain);
+            _ = AddressableManagement.Instance.CreateGamePrefab(
+                prefabType: GamePrefabEnum.Skill_MeteorRain,
+                callback: (obj) =>
+                {
+                    obj.transform.rotation =
+                        FirestoreDataManagement.Instance.GameTempData.IsMirror ?
+                        Quaternion.Euler(0, 180, 0) :
+                        Quaternion.Euler(0, 0, 0);
+                });
 
         if(data.PlayerRef == Runner.LocalPlayer)
         {
@@ -257,8 +265,10 @@ public class SpecialEffectController : NetworkBehaviour
                 double addOdds = 0;
                 // 擊中效果
                 NetworkPrefabEnum hitEffect = NetworkPrefabEnum.ExplosionHitEffect;
+                // 擊中效果位置
+                Vector3 hitEffectPos = activeFishData.FishList[hitTarget].gameObject.transform.position;
 
-                activeFishData.FishList[hitTarget].GetHit(initCost, addOdds, hitEffect);
+                activeFishData.FishList[hitTarget].GetHit(initCost, addOdds, hitEffect, hitEffectPos);
                
                 yield return new WaitForSeconds(yieldTime);
             }
@@ -323,7 +333,10 @@ public class SpecialEffectController : NetworkBehaviour
                 double addOdds = 0;
                 // 擊中效果
                 NetworkPrefabEnum hitEffect = NetworkPrefabEnum.SnowHitEffect;
-                fish.GetHit(initCost, addOdds, hitEffect);
+                // 擊中效果位置
+                Vector3 hitEffectPos = fish.gameObject.transform.position;
+
+                fish.GetHit(initCost, addOdds, hitEffect, hitEffectPos);
             }
         }
     }
