@@ -228,7 +228,7 @@ public enum NetworkPrefabEnum
     Bullet = 2,
 
     /// <summary> 魚捕獲特效 </summary>
-    FishHitEffect = 4,
+    FishCatchEffect = 4,
 
     /// <summary> 特殊效果控制中心 </summary>
     SpecialEffectController = 5,
@@ -241,6 +241,12 @@ public enum NetworkPrefabEnum
 
     /// <summary> 擊中特效_閃電 </summary>
     ElectroHitEffect = 51,
+
+    /// <summary> 擊中特效_爆炸 </summary>
+    ExplosionHitEffect = 52,
+
+    /// <summary> 擊中特效_寒冰 </summary>
+    SnowHitEffect = 53,
 
     //  一般魚魚物件
     NormalFish_0 = 100,
@@ -286,14 +292,23 @@ public enum GamePrefabEnum
     /// <summary> 遊戲暫存資料 </summary>
     GameTempData = 5,
 
-    /// <summary> 技能_鎖定 </summary>
+    /// <summary> 場景魚控制中心 </summary>
+    FishManager,
+
+    /// <summary> 基本技能_鎖定 </summary>
     Skill_Locking = 50,
+
+    /// <summary> 能量技能0_流星雨 </summary>
+    Skill_MeteorRain = 51,
+
+    /// <summary> 能量技能1_冰之爆裂 </summary>
+    Skill_CrystalsCrossfade = 52,
 
     /// <summary> 金龍全屏捕獲特效 </summary>
     DragonFullHitEffect = 70,
 
     /// <summary> 金龍全屏捕獲倍率效果物件 </summary>
-    DragonFullOdds,
+    DragonFullOdds = 71,
 
     /// <summary> 噴發物件 </summary>
     StingrayFishCoin = 90,      // 特殊魚硬幣_魟魚

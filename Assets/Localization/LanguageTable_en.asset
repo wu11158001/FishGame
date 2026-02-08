@@ -293,6 +293,28 @@ MonoBehaviour:
       The bullet capture rate is increased by {2} times!
     m_Metadata:
       m_Items: []
+  - m_Id: 15930922708439040
+    m_Localized: Skill-1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15931012999221248
+    m_Localized: Skill-2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16125502926032896
+    m_Localized: At the lowest multiplier, catch fish randomly a maximum of {1} times
+      within {0} seconds.
+    m_Metadata:
+      m_Items:
+      - rid: 8068190351354495079
+  - m_Id: 16125859190214656
+    m_Localized: Catch all fish on the screen once at the lowest multiplier.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16547048819724288
+    m_Localized: When energy is low, firing bullets can accumulate energy.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
@@ -307,3 +329,4 @@ MonoBehaviour:
         - id: 12736600768974848
         - id: 12848306807574528
         - id: 15379127212904448
+        - id: 16125502926032896

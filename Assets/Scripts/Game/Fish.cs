@@ -2,6 +2,7 @@ using UnityEngine;
 using Fusion;
 using System.Linq;
 using System.Collections;
+using System;
 
 public class Fish : NetworkBehaviour
 {
@@ -31,10 +32,20 @@ public class Fish : NetworkBehaviour
     LocalPool LocalPool;
     Transform CoinTextPool;
     GameTerrain GameTerrain;
+    FishManager FishManager;
+    GameView GameView;
+    SpecialEffectController SpecialEffectController;
+    CameraShake CameraShake;
+    Transform EffectPool;
 
     private void OnDestroy()
     {
         StopAllCoroutines();
+    }
+
+    private void Start()
+    {
+        GameView = FindFirstObjectByType<GameView>();
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -47,6 +58,11 @@ public class Fish : NetworkBehaviour
             if (GameTerrain != null)
                 GameTerrain.UpdateCurrFishCount(-1);
         }
+
+        if (FishManager == null)
+            FishManager = UnityEngine.Object.FindFirstObjectByType<FishManager>();
+        if (FishManager != null)
+            FishManager.UnregisterFish(this);
     }
 
     public void SetData(NetworkPrefabEnum fishType, bool isMirror, int depth, int wayPointId, int skipWaypoint, float customDuration = 0)
@@ -97,8 +113,15 @@ public class Fish : NetworkBehaviour
 
     public override void Spawned()
     {
+        if (FishManager == null)
+            FishManager = UnityEngine.Object.FindFirstObjectByType<FishManager>();
+        if (FishManager != null)
+            FishManager.RegisterFish(this);
+
         if (FishModel != null)
             FishModel.SetActive(true);
+
+        EffectPool = GameObject.Find(FusionPoolNameEnum.EffectPool.ToString()).transform;
 
         SetPathPoints();
 
@@ -165,6 +188,14 @@ public class Fish : NetworkBehaviour
             return;
 
         Move();
+    }
+
+    /// <summary>
+    /// 獲取魚資料
+    /// </summary>
+    public FishData_Network GetFishData()
+    {
+        return FishData_Network;
     }
 
     #region 控制
@@ -330,7 +361,246 @@ public class Fish : NetworkBehaviour
 
     #endregion
 
-    #region 擊中判斷與效果
+    #region 擊中判斷
+
+    /// <summary>
+    /// 擊中判斷
+    /// </summary>
+    public void GetHit(double initCost, double addOdds, NetworkPrefabEnum hitEffect)
+    {
+        if (IsDie)
+            return;
+
+        FishData_Network fishData = FishData_Network;
+
+        // 產生擊中效果
+        Vector3 hitEffectPos = transform.position;
+        hitEffectPos.y = 0;
+        NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                key: hitEffect,
+                Pos: hitEffectPos,
+                rot: Quaternion.identity,
+                parent: EffectPool,
+                player: Object.InputAuthority);
+
+        // 判斷階段(休閒/咬分/吐分)
+        GamePeriod period = GamePeriod.IdlePeriod;
+        GamePeriod playerPeriod = FirestoreDataManagement.Instance.GameTempData.TempAccountData.GamePeriod;
+        GamePeriod levelPeriod = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.GamePeriod;
+        if (playerPeriod == GamePeriod.IdlePeriod)
+        {
+            // 玩家屬於休閒期，依照關卡設置
+            period = levelPeriod;
+        }
+        else
+        {
+            // 玩家屬於吐分/咬分期，依照玩家設置
+            period = playerPeriod;
+        }
+
+        // 如果屬於休閒期，判斷獎池
+        if (period == GamePeriod.IdlePeriod)
+        {
+            double payoutPeriodValue = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.PayoutPeriodValue;
+            double suckingPeriodValue = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.SuckingPeriodValue;
+            double jackpot = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.Jackpot;
+
+            if (jackpot < suckingPeriodValue)
+                period = GamePeriod.SuckingPeriod;
+            else if (jackpot > payoutPeriodValue)
+                period = GamePeriod.PayoutPeriod;
+        }
+
+        // 各階段給予機率變化
+        double probability = fishData.Probability;
+        switch (period)
+        {
+            // 休閒期
+            case GamePeriod.IdlePeriod:
+                // 依照魚的機率
+                probability = fishData.Probability;
+                break;
+
+            // 咬分期
+            case GamePeriod.SuckingPeriod:
+                // 減少機率
+                float lose = Mathf.Max(0, (float)FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.SuckingPeriodLose);
+                probability /= lose;
+                break;
+
+            // 吐分期
+            case GamePeriod.PayoutPeriod:
+                // 增加機率
+                float add = Mathf.Max(0, (float)FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.PayoutPeriodAdd);
+                probability *= add;
+                break;
+        }
+
+        double hitValue = UnityEngine.Random.value;
+
+        if (hitValue <= probability)
+        {
+            // 獲得金幣
+            double reward = initCost * (fishData.Magnification + addOdds);
+
+            // 特殊使用_轉盤Index
+            int spinIndex = -1;
+            // 是否及時更新金幣
+            bool isUpdateCoin = true;
+            // 爆金文字
+            string eruptionCoinString = StringUtility.CurrencyFormat(reward);
+            // 座位
+            int seatIndex = FirestoreDataManagement.Instance.GameTempData.LocalSeatIndex;
+            // 是否只有本地顯示
+            bool isLocalShow = true;
+
+            switch (fishData.FishType)
+            {
+                // 特殊魚_魟魚
+                case NetworkPrefabEnum.StingrayFish:
+                    int specailMagnification = UnityEngine.Random.Range((int)fishData.MinMagnification, (int)fishData.MaxMagnification + 1);
+                    reward = initCost * (specailMagnification + addOdds);
+
+                    eruptionCoinString = $"{StringUtility.CurrencyFormat(specailMagnification + addOdds)}X";
+                    isLocalShow = false;
+                    break;
+
+                // 特殊魚_鯊魚
+                case NetworkPrefabEnum.SharkFish:
+                    int segmentCount = 8;
+                    // 原始 step
+                    double rawStep = (fishData.MaxMagnification - fishData.MinMagnification) / (double)(segmentCount - 1);
+                    // 四捨五入到最近的「漂亮數字」(例如 5 或 10)
+                    int step = (int)(Math.Round(rawStep / 5.0) * 5);
+                    int[] values = new int[segmentCount];
+                    for (int i = 0; i < segmentCount; i++)
+                    {
+                        values[i] = (int)(fishData.MinMagnification + step * i);
+                        if (values[i] >= fishData.MaxMagnification) values[i] = (int)fishData.MaxMagnification;
+                    }
+                    spinIndex = UnityEngine.Random.Range(0, values.Length);
+                    reward = initCost * (values[spinIndex] + addOdds);
+
+                    eruptionCoinString = "Big Win !";
+                    isLocalShow = false;
+                    break;
+
+                // 特殊魚_金龍
+                case NetworkPrefabEnum.DragonFish:
+                    eruptionCoinString = $"{StringUtility.CurrencyFormat(fishData.Magnification + addOdds)}X";
+                    isLocalShow = false;
+                    break;
+            }
+
+            // 判斷獎池
+            if (FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.Jackpot < reward)
+                return;
+
+            // 當前不可射擊
+            if (FirestoreDataManagement.Instance.GameTempData.IsStopShot)
+                return;
+
+            // 產生魚捕獲效果
+            BoxCollider[] colliders = GetComponentsInChildren<BoxCollider>();
+            foreach (var collider in colliders)
+            {
+                NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
+                            key: NetworkPrefabEnum.FishCatchEffect,
+                            Pos: collider.transform.position,
+                            rot: Quaternion.identity,
+                            parent: EffectPool,
+                            player: Object.InputAuthority);
+            }
+
+            switch (fishData.FishType)
+            {
+                // 特殊魚_魟魚
+                case NetworkPrefabEnum.StingrayFish:
+                    // 攝影機震動
+                    if (CameraShake == null)
+                        CameraShake = FindFirstObjectByType<CameraShake>();
+                    if (CameraShake != null)
+                        CameraShake.DoShake();
+                    break;
+
+                // 特殊魚_鯊魚
+                case NetworkPrefabEnum.SharkFish:
+                    // 不及時更新金幣
+                    isUpdateCoin = false;
+                    // 不可射擊
+                    FirestoreDataManagement.Instance.GameTempData.IsStopShot = true;
+                    // 開啟遮罩
+                    GameView.MaskEnable(true);
+
+                    // 攝影機震動
+                    if (CameraShake == null)
+                        CameraShake = FindFirstObjectByType<CameraShake>();
+                    if (CameraShake != null)
+                        CameraShake.DoShake();
+                    break;
+
+                // 特殊魚_金龍
+                case NetworkPrefabEnum.DragonFish:
+                    // 不可射擊
+                    FirestoreDataManagement.Instance.GameTempData.IsStopShot = true;
+
+                    // 金龍全屏捕獲魚
+                    if (SpecialEffectController == null)
+                        SpecialEffectController = UnityEngine.Object.FindFirstObjectByType<SpecialEffectController>();
+                    if (SpecialEffectController != null)
+                    {
+                        WaterFullHitData waterFullHitData = new()
+                        {
+                            PlayerRef = Runner.LocalPlayer,
+                            DefaultCost = initCost,
+                            SeatIndex = seatIndex,
+                            Odds = UnityEngine.Random.Range(1, 4),
+                            DragonReward = reward,
+                        };
+                        SpecialEffectController.DragonFullHit(data: waterFullHitData);
+                    }
+
+                    // 攝影機震動
+                    if (CameraShake == null)
+                        CameraShake = FindFirstObjectByType<CameraShake>();
+                    if (CameraShake != null)
+                        CameraShake.DoShake();
+                    break;
+
+                // 流水魚_0
+                case NetworkPrefabEnum.TurnoverFish_0:
+                    // 攝影機震動
+                    if (CameraShake == null)
+                        CameraShake = FindFirstObjectByType<CameraShake>();
+                    if (CameraShake != null)
+                        CameraShake.DoShake();
+
+                    // 更新玩家免費子彈
+                    FirestoreDataManagement.Instance.GameTempData.ChangeTempAccountFreeBullet(changeValue: fishData.FreeBullet);
+                    break;
+            }
+
+            // 魚被捕獲
+            FishHitData fishHitData = new()
+            {
+                Player = Runner.LocalPlayer,
+                EruptionCoinString = eruptionCoinString,
+                Reward = reward,
+                SeatIndex = seatIndex,
+                IsLocalShow = isLocalShow,
+                SpinWheelIndex = spinIndex,
+            };
+            GetCatch(fishHitData);
+
+            // 更新獎池與玩家金幣
+            FirestoreDataManagement.Instance.GameTempData.RecodJackpot -= reward;
+            FirestoreDataManagement.Instance.GameTempData.ChangeTempAccountCoin(changeValue: reward, isInvokeChange: isUpdateCoin);
+        }
+    }
+
+    #endregion
+
+    #region 捕獲判斷與效果
 
     /// <summary>
     /// 顯示爆金文字
@@ -436,9 +706,9 @@ public class Fish : NetworkBehaviour
     }
 
     /// <summary>
-    /// 魚被擊中
+    /// 魚被捕獲
     /// </summary>
-    public void GetHit(FishHitData fishHitData)
+    public void GetCatch(FishHitData fishHitData)
     {
         if(fishHitData.IsLocalShow)
         {
@@ -454,11 +724,11 @@ public class Fish : NetworkBehaviour
 
         DisableModel();
 
-        RPC_GetHit(fishHitData);
+        RPC_GetCatch(fishHitData);
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RPC_GetHit(FishHitData fishHitData)
+    public void RPC_GetCatch(FishHitData fishHitData)
     {
         // 全域產生效果
         if(!fishHitData.IsLocalShow)
@@ -534,14 +804,6 @@ public class Fish : NetworkBehaviour
     }
 
     #endregion
-
-    /// <summary>
-    /// 獲取魚資料
-    /// </summary>
-    public FishData_Network GetFishData()
-    {
-        return FishData_Network;
-    }
 }
 
 /// <summary>

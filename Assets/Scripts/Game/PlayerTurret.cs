@@ -53,6 +53,7 @@ public class PlayerTurret : NetworkBehaviour
     GameTerrain GameTerrain;
     GameView GameView;
     Coroutine UpdateUICoroutine;
+    FishManager FishManager;
 
     // 本次發射不射擊
     bool DoNotFireThisTime;
@@ -302,47 +303,27 @@ public class PlayerTurret : NetworkBehaviour
     private void TakeNewLockingTarget()
     {
         // 自動射擊開啟，目標消失，隨機獲取新目標
-        int fishLayer = LayerMask.NameToLayer("Fish");
-        GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
-        List<Fish> fishList = new();
-        List<Transform> targetObjList = new();
-        foreach (GameObject obj in allObjects)
+        if (FishManager == null)
+            FishManager = UnityEngine.Object.FindFirstObjectByType<FishManager>();
+        if(FishManager != null)
         {
-            Fish fish = obj.GetComponentInParent<Fish>();
-            if (fish == null)
-                continue;
+            ActiveFishData activeFishData = FishManager.GetActiveFishes();
 
-            BoxCollider[] colliders = fish.GetComponentsInChildren<BoxCollider>();
-
-            foreach (var box in colliders)
+            if (activeFishData.FishList.Count > 0)
             {
-                bool isInSceneX = box.gameObject.transform.position.x >= -LockingSidePosX && box.gameObject.transform.position.x <= LockingSidePosX;
-                bool isInSceneZ = box.gameObject.transform.position.z >= -LockingSidePosY && box.gameObject.transform.position.z <= LockingSidePosY;
+                int randomIndex = Random.Range(0, activeFishData.FishList.Count);
+                TargetLockingFish = activeFishData.FishList[randomIndex];
+                TargetLockingObj = activeFishData.TargetObjList[randomIndex];
 
-                if (obj.layer == fishLayer && isInSceneX && isInSceneZ && fish != null)
-                {
-                    fishList.Add(fish);
-                    targetObjList.Add(box.gameObject.transform);
-                    break;
-                }
+                Skill_LockingAni.SetTrigger("Restart");
+                Skill_Locking.SetActive(true);
             }
-        }
-        Fish[] fishs = fishList.ToArray();
-
-        if (fishs.Length > 0)
-        {
-            int randomIndex = Random.Range(0, fishs.Length);
-            TargetLockingFish = fishs[randomIndex];
-            TargetLockingObj = targetObjList[randomIndex];
-
-            Skill_LockingAni.SetTrigger("Restart");
-            Skill_Locking.SetActive(true);
-        }
-        else
-        {
-            TargetLockingFish = null;
-            TargetLockingObj = null;
-            Skill_Locking.SetActive(false);
+            else
+            {
+                TargetLockingFish = null;
+                TargetLockingObj = null;
+                Skill_Locking.SetActive(false);
+            }
         }
     }
 
@@ -514,6 +495,14 @@ public class PlayerTurret : NetworkBehaviour
 
                 // 觸發後座力
                 CurrentRecoil = RecoilDistance;
+
+                // 累積能量(每發子彈+1)
+                FirestoreDataManagement.Instance.GameTempData.CurrEnergy += CurrShotPoints.Count;
+                if (FirestoreDataManagement.Instance.GameTempData.CurrEnergy >= LocalData.MaxEnergy)
+                    FirestoreDataManagement.Instance.GameTempData.CurrEnergy = LocalData.MaxEnergy;
+
+                if(GameView != null)
+                    GameView.UpdateEnergySkill(FirestoreDataManagement.Instance.GameTempData.CurrEnergy);
 
                 for (int i = 0; i < CurrShotPoints.Count; i++)
                 {

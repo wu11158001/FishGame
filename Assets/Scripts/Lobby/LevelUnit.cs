@@ -52,8 +52,8 @@ public class LevelUnit : MonoBehaviour
         if (FirestoreDataManagement.Instance != null)
         {
             double jackpot = FirestoreDataManagement.Instance.GetLevelData(levelType: levelType).Jackpot;
-            JackpotText.text = StringUtility.CurrencyFormat(jackpot);
             CurrentJackpot = jackpot;
+            SetJackpotText();
         }
 
         StartListenLevelData(levelType: levelType);
@@ -169,8 +169,21 @@ public class LevelUnit : MonoBehaviour
         // 更新獎池
         DOTween.To(() => CurrentJackpot, x => CurrentJackpot = x, newJackpot, 1f)
             .OnUpdate(() => {
-                JackpotText.text = CurrentJackpot.ToString("#,##0");
+                SetJackpotText();
             });
+    }
+
+    /// <summary>
+    /// 設置獎池文字內容
+    /// </summary>
+    private void SetJackpotText()
+    {
+        double currJackpot = CurrentJackpot;
+
+        if(currJackpot < 10000)
+            currJackpot = UnityEngine.Random.Range(10000, 15000);
+
+        JackpotText.text = currJackpot.ToString("#,##0");
     }
 
     #endregion

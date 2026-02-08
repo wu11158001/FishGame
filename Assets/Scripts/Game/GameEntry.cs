@@ -45,7 +45,9 @@ public class GameEntry : MonoBehaviour
             var task1 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.WayPointMain);
             // 產生本地物件池
             var task2 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.LocalPool);
-            await Task.WhenAll(task1, task2);
+            // 產生場景魚控制中心
+            var task3 = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.FishManager);
+            await Task.WhenAll(task1, task2, task3);
 
             IsMatchmaking = true;
             CheckJoinRoomDic.Clear();

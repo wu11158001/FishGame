@@ -279,6 +279,26 @@ MonoBehaviour:
     m_Key: Turnover fish message
     m_Metadata:
       m_Items: []
+  - m_Id: 15930922708439040
+    m_Key: Skill-1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15931012999221248
+    m_Key: Skill-2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16125502926032896
+    m_Key: Skill-0_Describle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16125859190214656
+    m_Key: Skill-1_Describle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16547048819724288
+    m_Key: Insufficient energy
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

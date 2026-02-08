@@ -74,6 +74,8 @@ public class GameTempData : MonoBehaviour
     public event Skill_AutoClose IsSkill_AutoCloseDelegate;
     // 技能_鎖定
     public bool IsSkill_Locking { get; set; }
+    // 當前累積能量
+    public int CurrEnergy { get; set; }
 
     protected void OnDestroy()
     {
@@ -106,6 +108,8 @@ public class GameTempData : MonoBehaviour
         IsStopShot = false;
         IsSkill_Auto = false;
         IsSkill_Locking = false;
+
+        CurrEnergy = 0;
     }
 
     #region 關卡資料監聽

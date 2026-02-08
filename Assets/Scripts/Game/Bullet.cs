@@ -17,19 +17,11 @@ public class Bullet : NetworkBehaviour
     Transform EffectPool;
     Fish LocalTargetFish;
     Transform TargetLockingObj;
-    GameView GameView;
-    SpecialEffectController SpecialEffectController;
-    CameraShake CameraShake;
 
     bool IsFreeBullet;
 
     readonly Vector2 MinBounds = new(-10f, -6f);
     readonly Vector2 MaxBounds = new(10f, 6f);
-
-    private void Start()
-    {
-        GameView = FindFirstObjectByType<GameView>();
-    }
 
     public void SetData(Fish targetLockingFish, Transform targetLockingObj, bool isFreeBullet, int bulletSpriteIndex)
     {
@@ -47,7 +39,7 @@ public class Bullet : NetworkBehaviour
         EffectPool = GameObject.Find(FusionPoolNameEnum.EffectPool.ToString()).transform;
         LocalTargetFish = null;
 
-        if (Object.HasStateAuthority)
+        if (Object != null && Object.HasStateAuthority)
         {
             Direction = transform.forward;
         }
@@ -201,8 +193,7 @@ public class Bullet : NetworkBehaviour
     /// <summary>
     /// 擊中目標
     /// </summary>
-    /// <param name="hit"></param>
-    private void HitTarget(Fish fish)
+    public void HitTarget(Fish fish, double bulletCost = -1)
     {
         if (fish == null)
         {
@@ -212,246 +203,21 @@ public class Bullet : NetworkBehaviour
         }
 
         if (FirestoreDataManagement.Instance == null || FirestoreDataManagement.Instance.GameTempData == null)
+        {
+            Runner.Despawn(Object);
             return;
+        }
 
-        // 產生子彈擊中效果
+        // 初始花費(下注)
+        double initCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost;
+        // 免費子彈增加倍率
+        double addOdds = IsFreeBullet ? LocalData.FreeBulletAddOdds : 0;
+        // 子彈擊中效果
         NetworkPrefabEnum hitEffect = NetworkPrefabEnum.NormalHitEffect;
         if (BulletSpriteIndex == 1)
             hitEffect = NetworkPrefabEnum.ElectroHitEffect;
 
-        NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
-                        key: hitEffect,
-                        Pos: transform.position,
-                        rot: Quaternion.identity,
-                        parent: EffectPool,
-                        player: Object.InputAuthority);
-
-        FishData_Network fishData = fish.GetFishData();
-
-        // 判斷階段(休閒/咬分/吐分)
-        GamePeriod period = GamePeriod.IdlePeriod;
-        GamePeriod playerPeriod = FirestoreDataManagement.Instance.GameTempData.TempAccountData.GamePeriod;
-        GamePeriod levelPeriod = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.GamePeriod;
-        if(playerPeriod == GamePeriod.IdlePeriod)
-        {
-            // 玩家屬於休閒期，依照關卡設置
-            period = levelPeriod;
-        }
-        else
-        {
-            // 玩家屬於吐分/咬分期，依照玩家設置
-            period = playerPeriod;
-        }
-
-        // 如果屬於休閒期，判斷獎池
-        if(period == GamePeriod.IdlePeriod)
-        {
-            double payoutPeriodValue = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.PayoutPeriodValue;
-            double suckingPeriodValue = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.SuckingPeriodValue;
-            double jackpot = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.Jackpot;
-
-            if (jackpot < suckingPeriodValue)
-                period = GamePeriod.SuckingPeriod;
-            else if(jackpot > payoutPeriodValue)
-                period = GamePeriod.PayoutPeriod;
-        }
-
-        // 各階段給予機率變化
-        double probability = fishData.Probability;
-        switch (period)
-        {
-            // 休閒期
-            case GamePeriod.IdlePeriod:
-                // 依照魚的機率
-                probability = fishData.Probability;
-                break;
-
-            // 咬分期
-            case GamePeriod.SuckingPeriod:
-                // 減少機率
-                float lose = Mathf.Max(0, (float)FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.SuckingPeriodLose);
-                probability /= lose;
-                break;
-
-            // 吐分期
-            case GamePeriod.PayoutPeriod:
-                // 增加機率
-                float add = Mathf.Max(0, (float)FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.PayoutPeriodAdd);
-                probability *= add;
-                break;
-        }      
-
-        double hitValue = UnityEngine.Random.value;
-
-        if (hitValue <= probability)
-        {
-            // 免費子彈增加倍率
-            double freeBulletAddOdds = IsFreeBullet ? LocalData.FreeBulletAddOdds : 0;
-
-            // 獲得金幣
-            double currDefaultCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost;
-            double reward = currDefaultCost * (fishData.Magnification + freeBulletAddOdds);
-
-            // 特殊使用_轉盤Index
-            int spinIndex = -1;
-            // 是否及時更新金幣
-            bool isUpdateCoin = true;
-            // 爆金文字
-            string eruptionCoinString = StringUtility.CurrencyFormat(reward);
-            // 座位
-            int seatIndex = FirestoreDataManagement.Instance.GameTempData.LocalSeatIndex;
-            // 是否只有本地顯示
-            bool isLocalShow = true;
-
-            int specailMagnification = 0;
-            switch (fishData.FishType)
-            {
-                // 特殊魚_魟魚
-                case NetworkPrefabEnum.StingrayFish:
-                    specailMagnification = UnityEngine.Random.Range((int)fishData.MinMagnification, (int)fishData.MaxMagnification + 1);
-                    reward = currDefaultCost * (specailMagnification + freeBulletAddOdds);
-
-                    eruptionCoinString = $"{StringUtility.CurrencyFormat(specailMagnification + freeBulletAddOdds)}X";
-                    isLocalShow = false;
-                    break;
-
-                // 特殊魚_鯊魚
-                case NetworkPrefabEnum.SharkFish:
-                    int segmentCount = 8;
-                    // 原始 step
-                    double rawStep = (fishData.MaxMagnification - fishData.MinMagnification) / (double)(segmentCount - 1);
-                    // 四捨五入到最近的「漂亮數字」(例如 5 或 10)
-                    int step = (int)(Math.Round(rawStep / 5.0) * 5);
-                    int[] values = new int[segmentCount];
-                    for (int i = 0; i < segmentCount; i++)
-                    {
-                        values[i] = (int)(fishData.MinMagnification + step * i);
-                        if (values[i] >= fishData.MaxMagnification) values[i] = (int)fishData.MaxMagnification;
-                    }
-                    spinIndex = UnityEngine.Random.Range(0, values.Length);
-                    reward = currDefaultCost * (values[spinIndex] + freeBulletAddOdds);
-
-                    eruptionCoinString = "Big Win !";
-                    isLocalShow = false;
-                    break;
-
-                // 特殊魚_金龍
-                case NetworkPrefabEnum.DragonFish:
-                    eruptionCoinString = $"{StringUtility.CurrencyFormat(fishData.Magnification + freeBulletAddOdds)}X";
-                    isLocalShow = false;
-                    break;
-            }
-
-            // 判斷獎池
-            if (FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.Jackpot < reward)
-            {
-                Runner.Despawn(Object);
-                return;
-            }
-
-            // 當前不可射擊
-            if (FirestoreDataManagement.Instance.GameTempData.IsStopShot)
-            {
-                Runner.Despawn(Object);
-                return;
-            }
-
-            // 產生魚捕獲效果
-            BoxCollider[] colliders = fish.GetComponentsInChildren<BoxCollider>();
-            foreach (var collider in colliders)
-            {
-                NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
-                            key: NetworkPrefabEnum.FishHitEffect,
-                            Pos: collider.transform.position,
-                            rot: Quaternion.identity,
-                            parent: EffectPool,
-                            player: Object.InputAuthority);
-            }
-
-            switch (fishData.FishType)
-            {
-                // 特殊魚_魟魚
-                case NetworkPrefabEnum.StingrayFish:
-                    // 攝影機震動
-                    if (CameraShake == null)
-                        CameraShake = FindFirstObjectByType<CameraShake>();
-                    if (CameraShake != null)
-                        CameraShake.DoShake();
-                    break;
-
-                // 特殊魚_鯊魚
-                case NetworkPrefabEnum.SharkFish:
-                    // 不及時更新金幣
-                    isUpdateCoin = false;
-                    // 不可射擊
-                    FirestoreDataManagement.Instance.GameTempData.IsStopShot = true;
-                    // 開啟遮罩
-                    GameView.MaskEnable(true);
-
-                    // 攝影機震動
-                    if (CameraShake == null)
-                        CameraShake = FindFirstObjectByType<CameraShake>();
-                    if (CameraShake != null)
-                        CameraShake.DoShake();
-                    break;
-
-                // 特殊魚_金龍
-                case NetworkPrefabEnum.DragonFish:
-                    // 不可射擊
-                    FirestoreDataManagement.Instance.GameTempData.IsStopShot = true;
-
-                    // 金龍全屏捕獲魚
-                    if (SpecialEffectController == null)
-                        SpecialEffectController = UnityEngine.Object.FindFirstObjectByType<SpecialEffectController>();
-                    if (SpecialEffectController != null)
-                    {
-                        WaterFullHitData waterFullHitData = new()
-                        {
-                            PlayerRef = Runner.LocalPlayer,
-                            DefaultCost = currDefaultCost,
-                            SeatIndex = seatIndex,
-                            Odds = UnityEngine.Random.Range(1, 4),
-                            DragonReward = reward,
-                        };
-                        SpecialEffectController.DragonFullHit(data: waterFullHitData);
-                    }
-
-                    // 攝影機震動
-                    if (CameraShake == null)
-                        CameraShake = FindFirstObjectByType<CameraShake>();
-                    if (CameraShake != null)
-                        CameraShake.DoShake();
-                    break;
-
-                // 流水魚_0
-                case NetworkPrefabEnum.TurnoverFish_0:
-                    // 攝影機震動
-                    if (CameraShake == null)
-                        CameraShake = FindFirstObjectByType<CameraShake>();
-                    if (CameraShake != null)
-                        CameraShake.DoShake();
-
-                    // 更新玩家免費子彈
-                    FirestoreDataManagement.Instance.GameTempData.ChangeTempAccountFreeBullet(changeValue: fishData.FreeBullet);
-                    break;
-            }
-
-            // 魚被擊中
-            FishHitData fishHitData = new()
-            {
-                Player = Runner.LocalPlayer,
-                EruptionCoinString = eruptionCoinString,
-                Reward = reward,
-                SeatIndex = seatIndex,
-                IsLocalShow = isLocalShow,
-                SpinWheelIndex = spinIndex,
-            };
-            fish.GetHit(fishHitData);
-
-            // 更新獎池與玩家金幣
-            FirestoreDataManagement.Instance.GameTempData.RecodJackpot -= reward;
-            FirestoreDataManagement.Instance.GameTempData.ChangeTempAccountCoin(changeValue: reward, isInvokeChange: isUpdateCoin);
-        }
+        fish.GetHit(initCost, addOdds, hitEffect);
 
         Runner.Despawn(Object);
     }

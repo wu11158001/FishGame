@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System;
 using DG.Tweening;
 using TMPro;
-using System.Collections.Generic;
 
 public class LobbyView : BasicView
 {
@@ -75,7 +74,7 @@ public class LobbyView : BasicView
         LevelBtn.onClick.AddListener(() =>
         {
             AreaMoveEffectSwitch(isShow: false);
-            AddressableManagement.Instance.OpenLevelView();
+            AddressableManagement.Instance.OpenLevelView(closeAction: () => { AreaMoveEffectSwitch(isShow: true); });
         });
 
         // 7日簽到按鈕

@@ -98,8 +98,9 @@ public abstract class BasicView : MonoBehaviour
     {
         if(PopUpRect != null && IsUsePopUp)
         {
+            PopUpRect.DOKill();
             PopUpRect.anchoredPosition = new(0, -LocalData.TargetResolution.y);
-            PopUpRect.DOAnchorPos(Vector2.zero, PopUpTime).SetEase(Ease.OutBack);
+            PopUpRect.DOAnchorPos(Vector2.zero, PopUpTime).SetEase(Ease.OutBack).SetLink(PopUpRect.gameObject);
         }
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using Fusion;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// 遊戲特殊效果控制中心
@@ -10,10 +11,13 @@ public class SpecialEffectController : NetworkBehaviour
 {
     Transform EffectPool;
     GameView GameView;
+    FishManager FishManager;
+    Transform BulletPool;
 
     public override void Spawned()
     {
         EffectPool = GameObject.Find(FusionPoolNameEnum.EffectPool.ToString()).transform;
+        BulletPool = GameObject.Find(FusionPoolNameEnum.BulletPool.ToString()).transform;
     }
 
     #region 金龍全屏捕獲魚
@@ -35,8 +39,6 @@ public class SpecialEffectController : NetworkBehaviour
     /// <summary>
     /// 金龍全屏捕獲魚_效果總控制
     /// </summary>
-    /// <param name="data"></param>
-    /// <returns></returns>
     private IEnumerator IDragonFullHit(WaterFullHitData data)
     {
         if (GameView == null)
@@ -55,7 +57,7 @@ public class SpecialEffectController : NetworkBehaviour
         // 等待特效結束
         yield return new WaitForSeconds(3);            
 
-        // 場上所有魚擊中處理
+        // 場上所有魚捕獲處理
         double totalReward = DragonFullHit_FishsHandle(data);
 
         // 其他玩家回復
@@ -110,10 +112,13 @@ public class SpecialEffectController : NetworkBehaviour
     }
 
     /// <summary>
-    /// 金龍全屏捕獲魚_場上所有魚擊中處理
+    /// 金龍全屏捕獲魚_場上所有魚捕獲處理
     /// </summary>
     private double DragonFullHit_FishsHandle(WaterFullHitData data)
     {
+        if (data.PlayerRef != Runner.LocalPlayer)
+            return 0;
+
         double totalReward = 0;
 
         foreach (var netObj in Runner.GetAllNetworkObjects())
@@ -128,11 +133,11 @@ public class SpecialEffectController : NetworkBehaviour
                     foreach (var collider in colliders)
                     {
                         NetworkPrefabManagement.Instance.SpawnNetworkPrefab(
-                                    key: NetworkPrefabEnum.FishHitEffect,
+                                    key: NetworkPrefabEnum.FishCatchEffect,
                                     Pos: collider.transform.position,
                                     rot: Quaternion.identity,
                                     parent: EffectPool,
-                                    player: Object.InputAuthority);
+                                    player: data.PlayerRef);
                     }
 
                     //魚擊中處理
@@ -152,7 +157,7 @@ public class SpecialEffectController : NetworkBehaviour
                         IsLocalShow = false,
                         SpinWheelIndex = -1,
                     };
-                    fish.GetHit(fishHitData);
+                    fish.GetCatch(fishHitData);
                 }
             }
         }
@@ -184,6 +189,146 @@ public class SpecialEffectController : NetworkBehaviour
     }
 
     #endregion
+
+    #region 能量技能0_流星雨
+
+    /// <summary>
+    /// 能量技能0_流星雨
+    /// </summary>
+    public void MeteorRain(EenergSkillData data)
+    {
+        RPC_MeteorRain(data);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_MeteorRain(EenergSkillData data)
+    {
+        StartCoroutine(IMeteorRainHandle(data));
+    }
+
+    /// <summary>
+    /// 能量技能0_流星雨效果總控
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator IMeteorRainHandle(EenergSkillData data)
+    {
+        // 產生流星雨特效
+        if (AddressableManagement.Instance != null)
+            _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.Skill_MeteorRain);
+
+        if(data.PlayerRef == Runner.LocalPlayer)
+        {
+            // 尋找擊中目標
+            yield return IMeteorRainHit(data);
+        }      
+    }
+
+    /// <summary>
+    /// 能量技能0_流星雨尋找擊中目標
+    /// </summary>
+    private IEnumerator IMeteorRainHit(EenergSkillData data)
+    {
+        yield return new WaitForSeconds(1);
+
+        if (FishManager == null)
+            FishManager = UnityEngine.Object.FindFirstObjectByType<FishManager>();
+        if (FishManager != null)
+        {
+            // 效果持續時間
+            float durationTime = LocalData.Skill_0EffectDuration;
+            // 最多嘗試捕獲魚數量
+            int maxHitFishs = LocalData.Skill_0MaxHitFish;
+            // 等待尋找下一隻魚時間
+            float yieldTime = durationTime / maxHitFishs;           
+
+            for (int i = 0; i < maxHitFishs; i++)
+            {
+                ActiveFishData activeFishData = FishManager.GetActiveFishes();
+
+                if (activeFishData.FishList == null || activeFishData.FishList.Count == 0)
+                    yield break;
+
+                // 隨機挑選目標
+                int hitTarget = UnityEngine.Random.Range(0, activeFishData.FishList.Count);
+
+                // 初始花費(下注)
+                double initCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.MinCost;
+                // 增加倍率
+                double addOdds = 0;
+                // 擊中效果
+                NetworkPrefabEnum hitEffect = NetworkPrefabEnum.ExplosionHitEffect;
+
+                activeFishData.FishList[hitTarget].GetHit(initCost, addOdds, hitEffect);
+               
+                yield return new WaitForSeconds(yieldTime);
+            }
+        }
+    }
+
+    #endregion
+
+    #region 能量技能1_冰之爆裂
+
+    /// <summary>
+    /// 能量技能1_冰之爆裂
+    /// </summary>
+    public void CrystalsCrossfade(EenergSkillData data)
+    {
+        RPC_CrystalsCrossfade(data);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_CrystalsCrossfade(EenergSkillData data)
+    {
+        StartCoroutine(ICrystalsCrossfadeHandle(data));
+    }
+
+    /// <summary>
+    /// 能量技能1_冰之爆裂效果總控
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ICrystalsCrossfadeHandle(EenergSkillData data)
+    {
+        // 產生流星雨特效
+        if (AddressableManagement.Instance != null)
+            _ = AddressableManagement.Instance.CreateGamePrefab(prefabType: GamePrefabEnum.Skill_CrystalsCrossfade);
+
+        if (data.PlayerRef == Runner.LocalPlayer)
+        {
+            // 尋找擊中目標
+            yield return ICrystalsCrossfadeHit(data);
+        }
+    }
+
+    /// <summary>
+    /// 能量技能1_冰之爆裂尋找擊中目標
+    /// </summary>
+    private IEnumerator ICrystalsCrossfadeHit(EenergSkillData data)
+    {
+        yield return new WaitForSeconds(1);
+
+        if (FishManager == null)
+            FishManager = UnityEngine.Object.FindFirstObjectByType<FishManager>();
+        if (FishManager != null)
+        {
+            ActiveFishData activeFishData = FishManager.GetActiveFishes();
+            foreach (Fish fish in activeFishData.FishList)
+            {
+                if (fish == null)
+                    continue;
+
+                // 初始花費(下注)
+                double initCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.MinCost;
+                // 增加倍率
+                double addOdds = 0;
+                // 擊中效果
+                NetworkPrefabEnum hitEffect = NetworkPrefabEnum.SnowHitEffect;
+                fish.GetHit(initCost, addOdds, hitEffect);
+            }
+        }
+    }
+
+    #endregion
 }
 
 /// <summary>
@@ -205,4 +350,19 @@ public struct WaterFullHitData: INetworkStruct
 
     /// <summary> 金龍獲得獎勵 </summary>
     public double DragonReward;
+}
+
+/// <summary>
+/// 能量技能資料
+/// </summary>
+public struct EenergSkillData: INetworkStruct
+{
+    /// <summary> 發起玩家 </summary>
+    public PlayerRef PlayerRef;
+
+    /// <summary> 子彈花費 </summary>
+    public double DefaultCost;
+
+    /// <summary> 發起玩家座位 </summary>
+    public int SeatIndex;
 }
