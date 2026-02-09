@@ -25,6 +25,8 @@ public class GameTempData : MonoBehaviour
     public List<Vector3> SeatPositions { get; set; } = new();
     // 進入關卡資料獲取檢測
     Action<CheckJoinRoomDataEnum, bool> GetCurrentLevelDataAction;
+    // 當前子彈花費
+    public double CurrBulletCost { get; private set; }
     // 當前子彈花費變更事件
     public delegate void CurrCostChange(double cost);
     public event CurrCostChange CurrCostChangeDelegate;
@@ -231,12 +233,10 @@ public class GameTempData : MonoBehaviour
     {
         if(levelData != null)
         {
-            double currDefaultCost = CurrentLevelData.DefaultCost;
-
             CurrentLevelData = levelData;
 
-            // 子彈花費本地不更新
-            CurrentLevelData.DefaultCost = currDefaultCost;
+            if (CurrBulletCost == 0)
+                CurrBulletCost = levelData.DefaultCost;
         }
     }
 
@@ -490,13 +490,13 @@ public class GameTempData : MonoBehaviour
             -CurrentLevelData.Gradient :
             CurrentLevelData.Gradient;
 
-        double currCost = CurrentLevelData.DefaultCost;
+        double currCost = CurrBulletCost;
         currCost += changeValue;
 
         if (currCost <= CurrentLevelData.MinCost) currCost = CurrentLevelData.MinCost;
         if (currCost >= CurrentLevelData.MaxCost) currCost = CurrentLevelData.MaxCost;
 
-        CurrentLevelData.DefaultCost = currCost;
+        CurrBulletCost = currCost;
         CurrCostChangeDelegate?.Invoke(currCost);
     }
 

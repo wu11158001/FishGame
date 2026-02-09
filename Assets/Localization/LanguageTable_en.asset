@@ -302,13 +302,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16125502926032896
-    m_Localized: At the lowest multiplier, catch fish randomly a maximum of {1} times
-      within {0} seconds.
+    m_Localized: Capture a maximum of 2 fish randomly within 1 second with a score
+      of 0.
     m_Metadata:
       m_Items:
       - rid: 8068190351354495079
   - m_Id: 16125859190214656
-    m_Localized: Catch all fish on the screen once at the lowest multiplier.
+    m_Localized: Attempt to catch the full-screen fish once with a score of {0}.
     m_Metadata:
       m_Items: []
   - m_Id: 16547048819724288

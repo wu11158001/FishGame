@@ -120,7 +120,7 @@ public class PlayerTurret : NetworkBehaviour
                     Skill_LockingAni = Skill_Locking.GetComponent<Animator>();
                 });
 
-            CurrCostChange(FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost);
+            CurrCostChange(FirestoreDataManagement.Instance.GameTempData.CurrBulletCost);
             StartCoroutine(IYieldShow());
         }
 
@@ -457,7 +457,7 @@ public class PlayerTurret : NetworkBehaviour
 
                 // 判斷子彈花費
                 double accountCoin = FirestoreDataManagement.Instance.GameTempData.TempAccountData.Coins;
-                double currCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost;
+                double currCost = FirestoreDataManagement.Instance.GameTempData.CurrBulletCost;
                 double totalCost = currCost * CostShotCount;
 
                 if (accountCoin < totalCost)

@@ -260,7 +260,7 @@ public class SpecialEffectController : NetworkBehaviour
                 int hitTarget = UnityEngine.Random.Range(0, activeFishData.FishList.Count);
 
                 // 初始花費(下注)
-                double initCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.MinCost;
+                double initCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost;
                 // 增加倍率
                 double addOdds = 0;
                 // 擊中效果
@@ -328,7 +328,7 @@ public class SpecialEffectController : NetworkBehaviour
                     continue;
 
                 // 初始花費(下注)
-                double initCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.MinCost;
+                double initCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost;
                 // 增加倍率
                 double addOdds = 0;
                 // 擊中效果

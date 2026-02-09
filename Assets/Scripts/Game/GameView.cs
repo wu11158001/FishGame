@@ -192,10 +192,23 @@ public class GameView : BasicView
         string tableName = LocalizationManagement.Instance.TableName;
         LocalizedString Skill_0DescribeLocalized = new();
         Skill_0DescribeLocalized.SetReference(tableName, "Skill-0_Describle");
-        Skill_0DescribeLocalized.Arguments = new object[] { LocalData.Skill_0EffectDuration + 2, LocalData.Skill_0MaxHitFish };
-        // 以最低倍率{0}秒內隨機捕獲最多{1}條魚1次
+        Skill_0DescribeLocalized.Arguments = new object[] 
+        {
+            FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost,
+            LocalData.Skill_0EffectDuration + 2,
+            LocalData.Skill_0MaxHitFish 
+        };
+        // 以{0}分數在{1}秒內隨機嘗試捕獲最多{2}條魚1次
         Skill_0DescribeText.text = Skill_0DescribeLocalized.GetLocalizedString();
-        Skill_1DescribeText.text = LocalizationManagement.Instance.GetLocalizedString("Skill-1_Describle");
+
+        LocalizedString Skill_1DescribeLocalized = new();
+        Skill_1DescribeLocalized.SetReference(tableName, "Skill-1_Describle");
+        Skill_1DescribeLocalized.Arguments = new object[]
+        {
+            FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost,
+        };
+        // 以{0}分數對全屏魚嘗試捕獲1次
+        Skill_1DescribeText.text = Skill_1DescribeLocalized.GetLocalizedString();
     }
 
     public void SetData(int localSeat, bool isMirror, Action closeAction)

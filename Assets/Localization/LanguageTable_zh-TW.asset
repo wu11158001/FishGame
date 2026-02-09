@@ -301,12 +301,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 16125502926032896
-    m_Localized: "\u4EE5\u6700\u4F4E\u500D\u7387{0}\u79D2\u5167\u96A8\u6A5F\u6355\u7372\u9B5A\u6700\u591A{1}\u6B21"
+    m_Localized: "\u4EE5{0}\u5206\u6578\u5728{1}\u79D2\u5167\u96A8\u6A5F\u5617\u8A66\u6355\u7372\u6700\u591A{2}\u689D\u9B5A1\u6B21"
     m_Metadata:
       m_Items:
       - rid: 8068190351354495078
   - m_Id: 16125859190214656
-    m_Localized: "\u4EE5\u6700\u4F4E\u500D\u7387\u5C0D\u5168\u5C4F\u9B5A\u6355\u73721\u6B21"
+    m_Localized: "\u4EE5{0}\u5206\u6578\u5C0D\u5168\u5C4F\u9B5A\u5617\u8A66\u6355\u73721\u6B21"
     m_Metadata:
       m_Items: []
   - m_Id: 16547048819724288

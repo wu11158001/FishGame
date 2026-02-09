@@ -52,7 +52,7 @@ Material:
     - _ParallelogramCornerRadius: 0
     - _ParallelogramSkew: 0
     - _PentagonTipRadius: 0.001
-    - _PentagonTipSize: 1
+    - _PentagonTipSize: 8.47
     - _PixelWorldScale: 2
     - _ShapeRotation: 0
     - _Stencil: 0
@@ -85,8 +85,8 @@ Material:
     - _GradientColor6: {r: 0, g: 0, b: 0, a: 0}
     - _GradientColor7: {r: 0, g: 0, b: 0, a: 0}
     - _HexagonCornerRadius: {r: 1, g: 1, b: 1, a: 1}
-    - _HexagonTipRadius: {r: 1, g: 1, b: 0, a: 0}
-    - _HexagonTipSize: {r: 1, g: 1, b: 0, a: 0}
+    - _HexagonTipRadius: {r: 1, g: 17.07, b: 0, a: 0}
+    - _HexagonTipSize: {r: 33.92, g: 1.6, b: 0, a: 0}
     - _NStarPolygonOffset: {r: 0, g: 0, b: 0, a: 0}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _PentagonCornerRadius: {r: 0, g: 0, b: 0, a: 0}

@@ -209,7 +209,7 @@ public class Bullet : NetworkBehaviour
         }
 
         // 初始花費(下注)
-        double initCost = FirestoreDataManagement.Instance.GameTempData.CurrentLevelData.DefaultCost;
+        double initCost = FirestoreDataManagement.Instance.GameTempData.CurrBulletCost;
         // 免費子彈增加倍率
         double addOdds = IsFreeBullet ? LocalData.FreeBulletAddOdds : 0;
         // 子彈擊中效果
