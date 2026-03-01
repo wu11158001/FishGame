@@ -4,7 +4,7 @@ pipeline {
     // 定義環境變數，方便之後修改
     environment {
         // 請確保這裡的路徑與你電腦上的 Unity.exe 一致 (注意反斜線要雙寫 \\)
-        UNITY_EXE = 'E:\Unity\6000.3.2f1\Editor\\Unity.exe'
+        UNITY_EXE = 'E:\\Unity\\6000.3.2f1\\Editor\\Unity.exe'
         PROJECT_PATH = "${WORKSPACE}"
         BUILD_TARGET = 'WebGL'
         // 打包輸出的資料夾
