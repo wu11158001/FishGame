@@ -20,11 +20,7 @@ pipeline {
         }
 
         stage('Checkout') {
-            steps {
-                git url: 'https://github.com/wu11158001/FishGame.git', 
-                branch: 'main', 
-                credentialsId: 'github-token'
-            }
+            checkout scm
         }
 
         stage('Unity Build WebGL') {
