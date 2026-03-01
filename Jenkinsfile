@@ -20,7 +20,10 @@ pipeline {
         }
 
         stage('Checkout') {
-            checkout scm
+            steps {
+                // 這會自動沿用你在 Jenkins 任務設定中定義的分支與憑據
+                checkout scm
+            }
         }
 
         stage('Unity Build WebGL') {
